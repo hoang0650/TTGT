@@ -1,0 +1,65 @@
+<div *ngIf="!event">
+    <h3 class="ui header center aligned">Đăng cảnh báo</h3>
+    <form class="ui form stis-notice-popup" #popupForm="ngForm">
+        <div class="field">
+            <select class="ui dropdown" required="required" name="eventType" [(ngModel)]="map.event['type']" (change)="map.chooseTypeEvent(map.event['type'])">
+                <option value="{{type.key}}" hidden="hidden" *ngFor="let type of map.listEventType | keyvalue">{{$any(type.value).name}}</option>
+            </select>
+        </div>
+        <div class="field">
+            <input type="text" name="place" placeholder="Vị trí" required [(ngModel)]="map.event['desc'][0]" (keyup)="map.component.changeDetectorRef.detectChanges()">
+        </div>
+        <div class="field">
+            <input type="text" name="status" placeholder="Tình trạng" required [(ngModel)]="map.event['desc'][1]" (keyup)="map.component.changeDetectorRef.detectChanges()">
+        </div>
+        <div class="field">
+            <textarea placeholder="Thông tin thêm" name="description" [(ngModel)]="map.event['desc'][2]" (keyup)="map.component.changeDetectorRef.detectChanges()"
+                rows="2"></textarea>
+        </div>
+        <div class="field">
+            <label>Hình ảnh</label>
+            <div class="contain-image-event" *ngIf="map.event['snapshot']">
+                <img [src]="map.event['snapshot']">
+                <div class="remove-image-event-icon" (click)="map.removeEventImage()"><i class="trash icon"></i></div>
+            </div>
+            <input name="image" id="imageUpload" type="file" accept="image/*" (change)="map.previewImage()" *ngIf="!map.event['snapshot']">
+        </div>
+        <div class="field">
+            <div><b>*</b> Cầm kéo để thay đổi</div>
+        </div>
+        <div class="field align-button">
+            <button class="ui button red" type="reset" (click)="map.cancelEvent()">Hủy</button>
+            <button class="ui button blue" [disabled]="!popupForm.valid" (click)="map.submitEvent(map.event)">Đăng</button>
+        </div>
+    </form>
+</div>
+
+<div *ngIf="event">
+    <h3 class="ui header center aligned">Thông tin cảnh báo</h3>
+    <form class="ui form stis-notice-popup" #popupForm="ngForm">
+        <div class="field">
+            <select class="ui dropdown" disabled required="required" name="eventType" [(ngModel)]="event['type']">
+                <option value="{{type.key}}" hidden="hidden" *ngFor="let type of map.listEventType | keyvalue">{{$any(type.value).name}}</option>
+            </select>
+        </div>
+        <div class="field">
+            <input type="text" name="place" disabled placeholder="Vị trí" required [(ngModel)]="event['desc'][0]">
+        </div>
+        <div class="field">
+            <input type="text" name="status" disabled placeholder="Tình trạng" required [(ngModel)]="event['desc'][1]">
+        </div>
+        <div class="field">
+            <textarea placeholder="Thông tin thêm" disabled name="description" [(ngModel)]="event['desc'][2]"
+                rows="2"></textarea>
+        </div>
+        <div class="field"  *ngIf="event['snapshot']">
+            <label>Hình ảnh</label>
+            <div class="contain-image-event">
+                <img src="{{event['snapshot']}}">
+            </div>
+        </div>
+        <div class="field align-button">
+            <button class="ui button red" type="button" (click)="closePopup()">Đóng</button>
+        </div>
+    </form>
+</div>

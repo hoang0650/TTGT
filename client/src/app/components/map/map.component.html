@@ -1,1 +1,346 @@
-<p>map works!</p>
+<div class="map-leaflet"
+        leaflet
+        [leafletOptions]="options"
+        (leafletMapReady)="initMap($event)">
+</div>
+
+<div class="map-search">
+    <nz-input-group class="map-search-bar" [nzSuffix]="searchQuery.length > 0 ? suffixIconClose : suffixIconSearch" [nzSize]="'large'">
+      <input type="text" nz-input placeholder="Tìm vị trí" [(ngModel)]="searchQuery" appSearchRoads [appSearchRoadsText]="searchQuery" (newListRoads)="searchResults = $event" (isSearch)="isSearch = $event"/>
+    </nz-input-group>
+    <ng-template #suffixIconSearch>
+      <i nz-icon nzType="search"></i>
+    </ng-template>
+    <ng-template #suffixIconClose>
+        <i nz-icon nzType="close" (click)="searchIconClick()"></i>
+    </ng-template>
+
+    <div class="results transition visible" *ngIf="searchResults?.length > 0 && isSearch">
+        <ul nz-menu>
+            <li class="map-search-result" nz-menu-item *ngFor="let result of searchResults; index as i" (click)="searchSelect(result)">
+                <b>{{result.properties.name}}</b>
+                <br>
+                {{result.properties.city}}
+            </li>
+        </ul>
+    </div>
+    <div class="results transition visible" *ngIf="searchResults?.length <= 0 && isSearch" style="background-color: white;">
+        <a class="result">
+            <div class="content">
+                <div class="title">Không tìm thấy</div>
+                <div class="description">Hãy thử lại</div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- <div class="search-road ui form">
+    <div class="ui fluid left icon input">
+        <input type="text" [(ngModel)]="searchText" placeholder="Tìm vị trí" appSearchRoads [appSearchRoadsText]="searchText" (newListRoads)="listRoads = $event">
+        <i class="search icon"></i>
+    </div>
+    <div id="searchRoadResult" *ngIf="listRoads?.features?.length > 0" class="ui fluid search search-list" [(ngModel)]="listRoads">
+        <div class="results transition visible">
+            <a class="result" *ngFor="let road of listRoads.features" (click)="searchRoad(road)">
+                <div class="content">
+                    <div class="title">{{road.properties.name}}</div>
+                    <div class="description">{{road.properties.city}}</div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div> -->
+
+<!-- <div id="sidebar" class="leaflet-sidebar collapsed">
+    <div class="leaflet-sidebar-tabs" >
+        <ul role="tablist" >
+            <li><a href="#home" role="tab"><i class="bars icon"></i></a></li>
+            <li><a href="#incidents" role="tab"><i class="exclamation circle icon"></i></a></li>
+            <li><a href="#cameras" role="tab"><i class="video icon"></i></a></li>
+            <li><a href="#parkings" role="tab"><i class="parking icon"></i></a></li>
+        </ul>
+    </div>
+
+    <div class="leaflet-sidebar-content">
+        <div class="leaflet-sidebar-pane"  id="home">
+            <h1 class="leaflet-sidebar-header">
+                Bản đồ
+                <span class="leaflet-sidebar-close"><i class="angle left icon"></i></span>
+            </h1>
+
+            <div class="ui segment">
+                <div class="ui fluid search locationSearch">
+                    <div class="ui fluid icon large input" >
+                        <input id="search" class="prompt" type="text" placeholder="Tìm kiếm" (keyup)="searchChange()" [(ngModel)]="searchQuery">
+                        <i class="link icon" [ngClass]="{search: !isSearch, remove: isSearch}" (click)="searchIconClick()"></i>
+                    </div>
+                    <div class="results transition visible" *ngIf="searchResults?.length > 0 && isSearch">
+                        <a class="result" id="search-{{i + 1}}" *ngFor="let result of searchResults; index as i" (click)="searchSelect(result)">
+                            <div class="content">
+                                <div class="title">{{result.properties.name}}</div>
+                                <div class="description">{{result.properties.city}}</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="results transition visible" *ngIf="searchResults?.length <= 0 && isSearch">
+                        <a class="result">
+                            <div class="content">
+                                <div class="title">Không tìm thấy</div>
+                                <div class="description">Hãy thử lại</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="ui top attached tabular three item menu">
+                    <div id="opTrafficTab" class="item link no-animate" [ngClass]="{active: currentTab==='traffic'}" (click)="toggleTab('traffic')">
+                        Giao thông
+                    </div>
+                    <div id="opRoadeventTab" class="item link no-animate" [ngClass]="{active: currentTab==='roadevent'}" (click)="toggleTab('roadevent')">
+                        Phân luồng
+                    </div>
+                    <div id="opSearchTab" class="item link no-animate" [ngClass]="{active: currentTab==='info'}" (click)="toggleTab('info')">
+                        Thông tin tĩnh
+                    </div>
+                </div>
+    
+                <div class="ui bottom attached three tab segment" [ngClass]="{active: currentTab === 'traffic'}">
+
+                    <div class="ui toggle checkbox">
+                        <input id="tggTraffic" type="checkbox" name="traffic" [(ngModel)]="trafficChildren['traffic']" (change)="toggleTrafficActive()">
+                        <label>Vận tốc trung bình</label>
+                    </div>
+                    <div class="contain-legend container" *ngIf="trafficChildren['traffic']">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="legend-line green"></div><span>{{legendTrafficText.normal}}</span>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="legend-line yellow"></div><span>{{legendTrafficText.slow}}</span>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="legend-line orange"></div><span>{{legendTrafficText.congestion}}</span>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="legend-line red"></div><span>{{legendTrafficText.jam}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="ui toggle checkbox">
+                        <input id="tggEvent" type="checkbox" name="incidents" [(ngModel)]="trafficChildren['incidents']" (change)="toggleIncidentActive()">
+                        <label>Cảnh báo <span *ngIf="listEvent.length > 0" class="badge important">{{listEvent.length}}</span></label>
+                    </div>
+                    <div *ngIf="trafficChildren['incidents']"><b>*</b> Nhấp chuột phải vào bản đồ để tạo cảnh báo</div>
+                    <br>
+                    <div class="ui toggle checkbox">
+                        <input id="tggCamera" type="checkbox" name="cameras" [(ngModel)]="trafficChildren['cameras']" (change)="toggleCameraActive()">
+                        <label>Camera giao thông</label>
+                    </div>
+                    <br>
+                    <div class="ui toggle checkbox">
+                        <input id="tggParking" type="checkbox" name="parkings" [(ngModel)]="trafficChildren['parkings']" (change)="toggleParkingActive()">
+                        <label>Bãi giữ xe</label>
+                    </div>           
+                </div>
+
+    
+                <div class="ui bottom attached three tab segment" [ngClass]="{active: currentTab === 'roadevent'}">
+                    <div class="ui segment">
+                        <div class="ui fluid left icon input">
+                            <input id="filterRoadEvent" type="text" placeholder="Tìm nhanh" [(ngModel)]="filterRoadEvent" class="form-control">
+                                <i class="filter icon "></i>
+                        </div>
+                        <div class="ui middle aligned selection divided list">
+                            <div class="item" id="{{roadEvent._id}}" *ngFor="let roadEvent of (listRoadEvents | searchFilter: filterRoadEvent: ['geoObject', 'featureCollection', 'properties', 'name'])">
+                                <div class="ui toggle checkbox">
+                                    <input type="checkbox" (click)="toggleRoadEvent(roadEvent)">
+                                    <label> 
+                                        <span class="header">{{roadEvent.geoObject.featureCollection.properties.name}}</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui bottom attached three tab segment" [ngClass]="{active: currentTab==='info'}">
+                    <div class="ui segment">
+                        <div class="ui fluid left icon input">
+                            <input id="filterStaticMap" type="text" placeholder="Tìm nhanh" [(ngModel)]="filterStaticMap" class="form-control">
+                                <i class="filter icon "></i>
+                        </div>
+                        <div class="ui middle aligned selection divided list">
+                            <div class="item" id="{{staticmap._id}}" *ngFor="let staticmap of (listStaticMaps | searchFilter: filterStaticMap: ['staticMapData', 'name'])">
+                                <div class="ui toggle checkbox">
+                                    <input type="checkbox" (click)="toggleStaticMap(staticmap)">
+                                    <label> 
+                                        <span class="header">{{staticmap.staticMapData.name}}</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="leaflet-sidebar-pane" id="incidents" [hidden]="!trafficChildren['incidents']">
+            <h1 class="leaflet-sidebar-header">
+                Cảnh báo giao thông
+                <span class="leaflet-sidebar-close"><i class="angle left icon"></i></span>
+            </h1>
+
+            <div class="ui segment">
+                <div class="contain-notification" *ngIf="listEvent.length <= 0">
+                    <div class="notification-item">Hiện tại chưa có cảnh báo nào</div>
+                </div>
+
+                <div class="ui large feed">
+                    <div id="event-{{event._id}}" class="event" [ngClass]="{'active-event': event._id == chosenMarkers['incident']}" *ngFor="let event of listEvent | orderBy:['createdAt']:['desc']" (click)="chooseIncident(event)">
+                        <div class="label event-icon">
+                            <i class="circle icon {{listEventType[event.type].color}}"></i>
+                        </div>
+                        <div class="content">
+                            <div class="summary">
+                                <a class="user">{{event.desc[0]}}</a>
+                                <div class="date">
+                                    <span>{{event.createdAt | amLocale:'vi' | amTimeAgo }}</span>
+                                </div>
+                            </div>
+                            <div class="extra text">
+                                {{event.desc[1]}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="leaflet-sidebar-pane" id="cameras" [hidden]="!trafficChildren['cameras']">
+            <h1 class="leaflet-sidebar-header">
+                Camera giao thông
+                <span class="leaflet-sidebar-close"><i class="angle left icon"></i></span>
+            </h1>
+
+            <div class="ui segment">
+                <div class="ui fluid card">
+                    <div class="ui dimmer" [ngClass]="{'active':cameraLoading}"> 
+                        <div class="ui large indeterminate text loader">Đang kết nối</div>
+                    </div>
+                    <div id="opBigCamera" class="image" ng-click="map.showBigImage = !map.showBigImage">
+                        <img *ngIf="!chosenMarkers['camera']" src="//dummyimage.com/600x400/000/fff&text=Vui lòng chọn camera">
+                        <img *ngIf="chosenMarkers['camera'] && chosenMarkers['camera']?.liveviewUrl" (error)="imageError($event)" src="{{chosenMarkers['camera'].url}}" (load)="cameraLoading = false">
+                        <img *ngIf="chosenMarkers['camera'] && !chosenMarkers['camera']?.liveviewUrl || chosenMarkers['camera']?.liveview === ''" src="//dummyimage.com/600x400/000/fff&text=Camera sai thông số" (load)="cameraLoading = false">
+                        <img *ngIf="chosenMarkers['camera']" class="angle-camera" src="assets/images/compass.png" [ngStyle]="chosenMarkers['camera']?.angleStyle">
+                        <div id="crEventCamera" class="contain-create-event-icon" (click)="createdEventByCamera(chosenMarkers['camera']);$event.stopPropagation()"><i class="warning sign icon"></i></div>
+                    </div>
+                    <div class="content" *ngIf="chosenMarkers['camera']">
+                        <div class="header">{{chosenMarkers['camera'].id}} - {{chosenMarkers['camera'].name}}</div>
+                        <div class="meta">
+                            <span class="date">{{chosenMarkers['camera'].lastUpdated | amLocale:'vi' | amTimeAgo }}</span>
+                            <span id="faCamera" class="right floated star" (click)="favoriteCamera(chosenMarkers['camera'])"><i class="star icon" [ngClass]="{'orange': checkExistInFavoriteList(chosenMarkers['camera']._id)}"></i>Quan tâm</span>
+                            <span class="right floated like share-camera" (click)="share('camera', chosenMarkers['camera']._id)"><i class="share alternate icon"></i>Chia sẻ</span>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="ui cards" [ngClass]="{'limit':limitParking, 'unlimited': !limitParking}">
+                    <div class="card fluid">
+                        <div class="content">
+                            <div class="header">Quan tâm</div>
+                        </div>
+                    </div>
+                    <div class="card fluid"  *ngIf="listFavoriteCamera.length <= 0">
+                        <div class="content">
+                            <div class="metadata">Bạn chưa quan tâm camera nào</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card fluid" (click)="chooseCameraFromList(cameraFavorite.fId)" *ngFor="let cameraFavorite of listFavoriteCamera; index as i">
+                        <div class="image">
+                            <img src="{{backend}}api/snapshot/{{cameraFavorite.fId}}" (error)="imageError($event)">
+                        </div>
+                        <div class="content">
+                            <div class="header">
+                                {{i+1}} . {{cameraFavorite.fName}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        </div>
+
+        <div class="leaflet-sidebar-pane" id="parkings" [hidden]="!trafficChildren['parkings']">
+            <h1 class="leaflet-sidebar-header">
+                Bãi đậu xe
+                <span class="leaflet-sidebar-close"><i class="angle left icon"></i></span>
+            </h1>
+            <div class="ui segment">
+                <div class="ui blue card fluid" *ngIf="chosenMarkers['parking']">
+                    <i title="Tìm đường tới bãi đỗ xe này" ng-click="map.routeToParking(map.selectedParking)" class="navigate-icon map outline icon"></i>
+                    <div class="content">
+                        <a class="ui blue ribbon label">{{chosenMarkers['parking']?.name || 'Không tên'}}</a>
+                        <p></p>
+                        <div class="meta">Địa chỉ: {{chosenMarkers['parking']?.addr}}</div>
+                        <p></p>
+                        <div class="ui blue labels">
+                            <div class="ui label"> Ô tô </div>
+                            <div class="ui label"> Xe máy </div>
+                        </div>
+                        <div class="ui middle aligned divided list">
+                            <div class="item" *ngIf="chosenMarkers['parking']?.price_details">
+                                <div class="ui horizontal label"> Mức giá </div> {{chosenMarkers['parking'].price_details}}
+                            </div>
+                            <div class="item" *ngIf="chosenMarkers['parking']?.worktime_details">
+                                <div class="ui horizontal label"> Thời gian </div> {{chosenMarkers['parking'].worktime_details}}
+                            </div>
+                            <div class="item" *ngIf="chosenMarkers['parking']?.note">
+                                <div class="ui horizontal label"> Ghi chú </div> {{chosenMarkers['parking'].note}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="extra content">
+                        <span class="left floated like" (click)="share('parking', chosenMarkers['parking']?._id)"><i class="share alternate icon"></i>Chia sẻ</span>
+                        <span class="right floated star" (click)="favoriteParking(chosenMarkers['parking'])"><i [ngClass]="{'orange': checkParkingExistInFavoriteList(chosenMarkers['parking']._id)}" class="star icon"></i>Quan tâm</span>
+                    </div>
+                </div>
+
+
+                <div class="ui cards" [ngClass]="{'limit':limitParking, 'unlimited': !limitParking}">
+                    <div class="card fluid">
+                        <div class="content">
+                            <div class="header">Quan tâm</div>
+                        </div>
+                    </div>
+                    <div class="card fluid"  *ngIf="listFavoriteParking.length <= 0">
+                        <div class="content">
+                            <div class="metadata">Bạn chưa quan tâm bãi giữ xe nào</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card fluid" (click)="chooseParkingFromList(parkingFavorite.fId)" *ngFor="let parkingFavorite of listFavoriteParking; index as i">
+                        <div class="content">
+                            <div class="parking-header">{{i+1}} . {{parkingFavorite.fName}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="leaflet-sidebar-pane" id="statics" [hidden]="!trafficChildren['statics']">
+            <h1 class="leaflet-sidebar-header">
+                Thông tin tĩnh
+                <span class="leaflet-sidebar-close"><i class="angle left icon"></i></span>
+            </h1>
+        </div>
+
+        <div class="leaflet-sidebar-pane" id="roadevents" [hidden]="!trafficChildren['roadevents']">
+            <h1 class="leaflet-sidebar-header">
+                Phân luồng giao thông
+                <span class="leaflet-sidebar-close"><i class="angle left icon"></i></span>
+            </h1>
+
+        </div>
+    </div>
+</div> -->

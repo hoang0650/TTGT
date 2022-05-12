@@ -1,0 +1,10 @@
+<div id="staticPopup">
+    <table class="ui two celled column table" *ngIf="properties">
+        <tbody>
+            <tr *ngFor="let column of properties; index as i">
+                <td class="center aligned" *ngIf="!column.isHide"><strong>{{column.name}}</strong></td>
+                <td class="left aligned" *ngIf="!column.isHide">{{popupData[i]}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

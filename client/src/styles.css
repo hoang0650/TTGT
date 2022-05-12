@@ -1,1 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
+  
+.map-leaflet {
+    height: 100%;
+}
+
+.map-search {
+    position: absolute;
+    width: 33%;
+    top: 0px;
+    padding: 10px 10px;
+    z-index: 999;
+}
+
+.map-search-result {
+    height: auto !important
+}
+
+/* .map-search-bar {
+    border-radius: 20px !important;
+} */
