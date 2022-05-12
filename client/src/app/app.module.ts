@@ -11,20 +11,33 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MapComponent } from './components/map/map.component';
-
+import { HeaderComponent } from './components/header/header.component';
+import { CellDirective } from './modules/directive/cell.directive';
+import { ColumnDirective } from './modules/directive/column.directive';
+import { HeaderDirective } from './modules/directive/header.directive';
+import {NzLayoutModule} from 'ng-zorro-antd/layout';
+import {NzMenuModule} from 'ng-zorro-antd/menu';
+import {NzDropDownModule} from 'ng-zorro-antd/dropdown';
 registerLocaleData(en);
 
 @NgModule({
   declarations: [
     AppComponent,
-    MapComponent
+    MapComponent,
+    HeaderComponent,
+    CellDirective,
+    ColumnDirective,
+    HeaderDirective
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NzLayoutModule,
+    NzMenuModule,
+    NzDropDownModule
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent]
