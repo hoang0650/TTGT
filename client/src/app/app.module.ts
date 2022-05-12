@@ -11,7 +11,6 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MapComponent } from './components/map/map.component';
-<<<<<<< HEAD
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { StaticMapPopupComponent } from './components/static-map-popup/static-map-popup.component';
 import { MapPopupCreateEventComponent } from './components/map-popup-create-event/map-popup-create-event.component';
@@ -25,34 +24,28 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { SearchRoadsDirective } from './directives/search-roads.directive';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
-
-=======
 import { HeaderComponent } from './components/header/header.component';
 import { CellDirective } from './modules/directive/cell.directive';
 import { ColumnDirective } from './modules/directive/column.directive';
 import { HeaderDirective } from './modules/directive/header.directive';
 import {NzLayoutModule} from 'ng-zorro-antd/layout';
 import {NzMenuModule} from 'ng-zorro-antd/menu';
-import {NzDropDownModule} from 'ng-zorro-antd/dropdown';
->>>>>>> 25a19f26db45f0954734ed83388f268ca4acabad
+
 registerLocaleData(en);
 
 @NgModule({
   declarations: [
     AppComponent,
     MapComponent,
-<<<<<<< HEAD
     StaticMapPopupComponent,
     MapPopupCreateEventComponent,
     SearchFilterPipe,
     OrderByPipe,
     SearchRoadsDirective,
-=======
     HeaderComponent,
     CellDirective,
     ColumnDirective,
     HeaderDirective
->>>>>>> 25a19f26db45f0954734ed83388f268ca4acabad
   ],
   imports: [
     BrowserModule,
@@ -60,7 +53,6 @@ registerLocaleData(en);
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-<<<<<<< HEAD
     NzModalModule,
     NzInputModule,
     LeafletModule,
@@ -68,12 +60,10 @@ registerLocaleData(en);
     NzButtonModule,
     NzIconModule,
     NzDropDownModule,
-    NzTypographyModule
-=======
+    NzTypographyModule,
     NzLayoutModule,
     NzMenuModule,
     NzDropDownModule
->>>>>>> 25a19f26db45f0954734ed83388f268ca4acabad
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent]
