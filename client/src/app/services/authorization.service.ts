@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import {AuthService} from '@auth0/auth0-angular';
 import { AdminService } from './admin.service';
 import { Router } from '@angular/router';
-import {JwtHelperService} from '@auth0/angular-jwt'
+import {JwtHelperService} from '@auth0/angular-jwt';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthorizationService {
 
+  idToken ='';
   constructor(public auth:AuthService, public admin:AdminService,private router: Router,private jwtHelper:JwtHelperService) { }
 
   get userProfile(): any {
@@ -18,7 +19,7 @@ export class AuthorizationService {
       return {};
     }
   }
-  aud='https://dev-0gy0vn9g.us.auth0.com/api/v2/';
+  aud='https://dev-0gy0vn9g.us.auth0.com';
   scop = 'openid profile app_metadata roles name email username';
   
   roles:any = {
@@ -28,18 +29,24 @@ export class AuthorizationService {
   };
 
   authorize() {
-    return this.auth.getIdTokenClaims({audience:this.aud,scope:this.scop}).subscribe({
-      next: (data)=>{
-        console.log(data);
-        this.setSession(data);
-        this.router.navigate(['/home']);
-        this.profile(()=>{});
-      },
-      error: (err)=>{
-        this.router.navigate(['/home']);
-        console.log(err);
+    return this.auth.getAccessTokenSilently().subscribe({
+      next: (token:string)=>{
+        this.idToken = token;
+        localStorage.setItem('id_token',JSON.stringify(this.idToken))
       }
     })
+    // this.auth.getIdTokenClaims({audience:this.aud,scope:this.scop}).subscribe({
+    //   next: (data)=>{
+    //     console.log(data);
+    //     this.setSession(data);
+    //     this.router.navigate(['/home']);
+    //     this.profile(()=>{});
+    //   },
+    //   error: (err)=>{
+    //     this.router.navigate(['/home']);
+    //     console.log(err);
+    //   }
+    // })
   }
 
 

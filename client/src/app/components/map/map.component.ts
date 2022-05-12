@@ -140,10 +140,10 @@ export class MapComponent implements OnInit {
       zoomControl: false
     }
 
-    setInterval(() => {
-      console.log(this.searchResults);
-      console.log(this.isSearch);
-    }, 1000)
+    // setInterval(() => {
+    //   console.log(this.searchResults);
+    //   console.log(this.isSearch);
+    // }, 1000)
   }
 
   ngOnInit(): void {

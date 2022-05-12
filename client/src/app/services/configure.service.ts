@@ -8,7 +8,7 @@ export class ConfigureService {
 
   constructor() { }
   
-  backend = '//localhost:3000/'
+  backend = 'http://localhost:3000/'
   livemap = '//map.thongtingiaothong.vn/'
   mapapi = '//api.thongtingiaothong.vn/'
   realtime = '//localhost:3002/realtime/'

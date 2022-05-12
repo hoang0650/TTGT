@@ -12,6 +12,7 @@ import { AdminService } from './services/admin.service';
 export class AppComponent {
   title = 'client';
   profile?:any;
+  idToken ='';
   constructor(public auth:AuthorizationService, public authservice:AuthService, public admin:AdminService){}
 
   ngOnInit():void{
@@ -32,7 +33,7 @@ export class AppComponent {
         if(this.profile){
           console.log(this.profile);
           
-          this.auth.userHasRoles
+          // this.auth.userHasRoles
           this.auth.authorize
           localStorage.setItem('profile', JSON.stringify(this.profile));
           

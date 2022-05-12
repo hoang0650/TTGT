@@ -7,7 +7,7 @@ import { en_US } from 'ng-zorro-antd/i18n';
 import { registerLocaleData  } from '@angular/common';
 import en from '@angular/common/locales/en';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule,HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MapComponent } from './components/map/map.component';
 import { NzModalModule } from 'ng-zorro-antd/modal';
@@ -33,7 +33,7 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { JwtModule } from '@auth0/angular-jwt';
 import { NzImageModule } from 'ng-zorro-antd/image';
-import { AuthModule,AuthService, AuthHttpInterceptor, HttpMethod, ICache, Cacheable } from '@auth0/auth0-angular';
+import { AuthModule,AuthHttpInterceptor } from '@auth0/auth0-angular';
 
 registerLocaleData(en);
 export function tokenGetters() {
@@ -56,24 +56,6 @@ export function tokenGetters() {
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    NzModalModule,
-    NzInputModule,
-    LeafletModule,
-    MomentModule,
-    NzButtonModule,
-    NzIconModule,
-    NzDropDownModule,
-    NzTypographyModule,
-    NzLayoutModule,
-    NzMenuModule,
-    NzDropDownModule,
-    NzDividerModule,
-    NzCardModule,
-    NzImageModule,
-    JwtModule,
     AuthModule.forRoot({
       domain: 'https://dev-0gy0vn9g.us.auth0.com',
       clientId: '4iTVIOrKT5vVjBvDK0felIGt4TqCfOLV',
@@ -138,8 +120,30 @@ export function tokenGetters() {
         allowedDomains: ["localhost:3000/api/admin","localhost:3000/api/admin/*"],    
       },
     }),
+    FormsModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    NzModalModule,
+    NzInputModule,
+    LeafletModule,
+    MomentModule,
+    NzButtonModule,
+    NzIconModule,
+    NzDropDownModule,
+    NzTypographyModule,
+    NzLayoutModule,
+    NzMenuModule,
+    NzDropDownModule,
+    NzDividerModule,
+    NzCardModule,
+    NzImageModule,
+    
+    
   ],
-  providers: [{ provide: NZ_I18N, useValue: en_US, useClass: AuthHttpInterceptor, multi:true}],
+  providers: [
+    // { provide: NZ_I18N, useValue: en_US, multi:true},
+    {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi:true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
