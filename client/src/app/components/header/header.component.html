@@ -50,30 +50,19 @@
         <!-- <li  nz-submenu nzTitle ="Thoát">
           <a (click)="logout()">Thoát</a>
         </li> -->
-        <li *ngIf="!appCom.profile" style="float: right;" nz-submenu nzTitle="Đăng nhập" >
-            <ul>
-              <li nz-menu-item nzMatchRouter>
-                <a (click)="login()">Đăng nhập</a>
-              </li>
-            </ul>
-        </li>
-
-        <li *ngIf="appCom.profile"  style="float: right;" nz-submenu>
-          <a >
-              <img nz-image [nzSrc]="appCom.profile['picture']">
-          </a>
-          <ul>
-        <li><a (click)="logout()">Thoát</a></li>
-      </ul>
-        </li>
+        
 
         
-        <a nz-dropdown [nzDropdownMenu]="menu">Hover me</a>
+
+        <li nz-menu-item  style="float: right;">
+          <img *ngIf="appCom.profile" height="32px" width="32px" style="border-radius: 20px;" nz-image [nzSrc]="appCom.profile['picture']">
+          <a nz-dropdown [nzDropdownMenu]="menu">{{!appCom.profile ? 'Đăng nhập' : appCom.profile['nickname']}}</a>
+        </li>
         <nz-dropdown-menu #menu="nzDropdownMenu">
           <ul nz-menu>
-            <li nz-menu-item>1st menu item</li>
-            <li nz-menu-item>2nd menu item</li>
-            <li nz-menu-item>3rd menu item</li>
+            <li nz-menu-item *ngIf="!appCom.profile" (click)="login()">Đăng nhập</li>
+
+            <li nz-menu-item *ngIf="appCom.profile" (click)="logout()">Thoát</li>
           </ul>
         </nz-dropdown-menu>
     </ul>
