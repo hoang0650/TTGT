@@ -1,16 +1,8 @@
 <nz-header nzTheme="dark">
-  <!-- <div class="logo">
-    <a href="https://ng.ant.design/" target="_blank">
-      <img alt="logo" src="assets/images/localize/logo.png">
-      <h1>Ant Design Of Angular</h1>
-    </a>
-  </div> -->
+    
     <ul nz-menu nzMode="horizontal" >
-        <!-- <li nz-menu nzOpen>
-          <a href="" target="_blank">
-            <img alt="logo" src="assets/images/localize/logo.png" style="height: 40px;">
-          </a>
-
+        <!-- <li nz-menu>
+          <img nz-image nzSrc="assets/images/localize/logo.png" height="40px" width="50px">
         </li> -->
         <li  nz-submenu nzTitle ="Giới thiệu">
           <a>Giới thiệu</a>
@@ -54,15 +46,36 @@
           </ul>
         </li>
         <li  nz-submenu nzTitle ="Cảnh báo giao thông">
-          <a>Cảnh báo giao thông</a>
         </li>
-        <li style="float: right;" nz-submenu nzTitle="Đăng nhập" nzIcon="Login" >
+        <!-- <li  nz-submenu nzTitle ="Thoát">
+          <a (click)="logout()">Thoát</a>
+        </li> -->
+        <li *ngIf="!appCom.profile" style="float: right;" nz-submenu nzTitle="Đăng nhập" >
             <ul>
               <li nz-menu-item nzMatchRouter>
-                <a>Đăng nhập</a>
+                <a (click)="login()">Đăng nhập</a>
               </li>
             </ul>
         </li>
+
+        <li *ngIf="appCom.profile"  style="float: right;" nz-submenu>
+          <a >
+              <img nz-image [nzSrc]="appCom.profile['picture']">
+          </a>
+          <ul>
+        <li><a (click)="logout()">Thoát</a></li>
+      </ul>
+        </li>
+
+        
+        <a nz-dropdown [nzDropdownMenu]="menu">Hover me</a>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <ul nz-menu>
+            <li nz-menu-item>1st menu item</li>
+            <li nz-menu-item>2nd menu item</li>
+            <li nz-menu-item>3rd menu item</li>
+          </ul>
+        </nz-dropdown-menu>
     </ul>
 </nz-header>
  

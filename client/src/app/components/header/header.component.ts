@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-
+import { AuthorizationService } from 'src/app/services/authorization.service';
+import { AuthService } from '@auth0/auth0-angular';
+import { AppComponent } from 'src/app/app.component';
 // import {Menu} from 'ng-zorro-antd';
 @Component({
   selector: 'app-header',
@@ -8,9 +10,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
   isCollapsed = false;
-  constructor() { }
+  constructor(public auth:AuthorizationService, public auth0:AuthService, public appCom:AppComponent) { }
 
   ngOnInit(): void {
   }
+  
+  login(){
+    return this.auth.login();
+  }
+
+  logout(){
+    return this.auth.logout();
+  }
+
+  // getProFile(){
+  //   return this.auth.profile;
+  // }
+
+
+  
 
 }

@@ -1,0 +1,82 @@
+{
+    "guest":[
+        {"url": "/api/parking", "method": "GET"},
+        {"url": "api\/cameras\/((?!getdefaultcamera).)*$", "method": "GET"},
+        {"url": "/api/roadwork", "method": "GET"},
+        {"url": "/api/event/getalltype", "method": "GET"},
+        {"url": "/api/event", "method": "GET"},
+        {"url": "/api/news", "method": "GET"}
+    ],
+    "user": [
+        {"url": "api\/cameras\/((?!getdefaultcamera|getcameratype|getcameraconfig).)*$", "method": "GET"},
+        {"url": "/api/cameras/groups", "method": "GET"},
+        {"url": "api\/snapshot", "method": "GET"},
+        {"url": "/api/event/sortbylocation", "method": "GET"},
+        {"url": "/api/event/getalltype", "method": "GET"},
+        {"url": "/api/event", "method": "GET"},
+        {"url": "api\/event", "method": "GET"},
+        {"url": "/api/event", "method": "POST"},
+
+        {"url": "/api/news", "method": "GET"},
+
+        {"url": "api\/parking", "method": "GET"},
+        {"url": "api\/roadevent", "method": "GET"},
+        {"url": "api\/roadwork", "method": "GET"},
+        {"url": "api\/staticmap", "method": "GET"},
+        {"url": "api\/user", "method": "POST"},
+        {"url": "api\/user", "method": "GET"},
+        {"url": "/api/setting/getfrontendsetting", "method": "GET"},
+        {"url": "/api/setting/getfirstfrontendsetting", "method": "GET"},
+        {"url": "/api/setting/getmapurl", "method": "GET"}
+    ],
+    "admin": [
+        {"url": "/api/cameras", "method": "POST"},
+        {"url": "/api/cameras", "method": "PUT"},
+        {"url": "/api/cameras", "method": "DELETE"},
+        {"url": "api\/cameras", "method": "GET"},
+        {"url": "/api/cameras/groups", "method": "POST"},
+        {"url": "/api/cameras/groups", "method": "PUT"},
+        {"url": "/api/cameras/groups", "method": "DELETE"},
+        {"url": "api\/cameras/groups", "method": "GET"},
+        {"url": "api\/snapshot", "method": "GET"},
+        {"url": "/api/snapshot/getcamerapreview", "method": "POST"},
+        {"url": "api\/event", "method": "GET"},
+        {"url": "api\/event", "method": "PUT"},
+        {"url": "/api/event", "method": "POST"},
+
+        {"url": "/api/news", "method": "GET"},
+        
+        {"url": "api\/parking", "method": "POST"},
+        {"url": "/api/parking", "method": "PUT"},
+        {"url": "/api/parking", "method": "DELETE"},
+        {"url": "api\/parking", "method": "GET"},
+        {"url": "/api/roadevent", "method": "POST"},
+        {"url": "/api/roadevent", "method": "PUT"},
+        {"url": "/api/roadevent", "method": "DELETE"},
+        {"url": "api\/roadevent", "method": "GET"},
+        {"url": "api\/roadwork", "method": "POST"},
+        {"url": "/api/roadwork", "method": "PUT"},
+        {"url": "api\/roadwork", "method": "DELETE"},
+        {"url": "api\/roadwork", "method": "GET"},
+        {"url": "api\/setting", "method": "POST"},
+        {"url": "api\/setting", "method": "GET"},
+        {"url": "api\/staticmap", "method": "POST"},
+        {"url": "api\/staticmap", "method": "PUT"},
+        {"url": "api\/staticmap", "method": "DELETE"},
+        {"url": "api\/staticmap", "method": "GET"},
+        {"url": "api\/user", "method": "POST"},
+        {"url": "api\/user", "method": "GET"},
+        {"url": "api\/stats", "method": "GET"}
+    ],
+    "superadmin": [
+        {"url": "api\/admin", "method": "GET"},
+        {"url": "api\/admin", "method": "POST"},
+        {"url": "api\/groups", "method": "GET"},
+        {"url": "api\/groups", "method": "POST"},
+        {"url": "api\/groups", "method": "DELETE"},
+
+        {"url": "/api/setting/getfrontendsetting", "method": "GET"},
+        {"url": "/api/setting/getfirstfrontendsetting", "method": "GET"},
+        {"url": "/api/setting/getmapurl", "method": "GET"}
+    ]
+}
