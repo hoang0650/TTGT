@@ -28,8 +28,10 @@ import { HeaderComponent } from './components/header/header.component';
 import { CellDirective } from './modules/directive/cell.directive';
 import { ColumnDirective } from './modules/directive/column.directive';
 import { HeaderDirective } from './modules/directive/header.directive';
-import {NzLayoutModule} from 'ng-zorro-antd/layout';
-import {NzMenuModule} from 'ng-zorro-antd/menu';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzCardModule } from 'ng-zorro-antd/card';
 
 registerLocaleData(en);
 
@@ -63,7 +65,9 @@ registerLocaleData(en);
     NzTypographyModule,
     NzLayoutModule,
     NzMenuModule,
-    NzDropDownModule
+    NzDropDownModule,
+    NzDividerModule,
+    NzCardModule
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent]

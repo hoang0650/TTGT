@@ -1,55 +1,85 @@
-<div class="map-leaflet"
+<div class="map-layout">
+    <div class="map-leaflet"
         leaflet
         [leafletOptions]="options"
         (leafletMapReady)="initMap($event)">
-</div>
-
-<div class="map-search">
-    <nz-input-group class="map-search-bar" [nzSuffix]="searchQuery.length > 0 ? suffixIconClose : suffixIconSearch" [nzSize]="'large'">
-      <input type="text" nz-input placeholder="Tìm vị trí" [(ngModel)]="searchQuery" appSearchRoads [appSearchRoadsText]="searchQuery" (newListRoads)="searchResults = $event" (isSearch)="isSearch = $event"/>
-    </nz-input-group>
-    <ng-template #suffixIconSearch>
-      <i nz-icon nzType="search"></i>
-    </ng-template>
-    <ng-template #suffixIconClose>
-        <i nz-icon nzType="close" (click)="searchIconClick()"></i>
-    </ng-template>
-
-    <div class="results transition visible" *ngIf="searchResults?.length > 0 && isSearch">
-        <ul nz-menu>
-            <li class="map-search-result" nz-menu-item *ngFor="let result of searchResults; index as i" (click)="searchSelect(result)">
-                <b>{{result.properties.name}}</b>
-                <br>
-                {{result.properties.city}}
-            </li>
-        </ul>
     </div>
-    <div class="results transition visible" *ngIf="searchResults?.length <= 0 && isSearch" style="background-color: white;">
-        <a class="result">
-            <div class="content">
-                <div class="title">Không tìm thấy</div>
-                <div class="description">Hãy thử lại</div>
+
+    <div class="map-search">
+        <div>
+            <nz-input-group class="map-search-bar" [nzSuffix]="searchQuery.length > 0 ? suffixIconClose : suffixIconSearch" [nzSize]="'large'">
+                <input type="text" nz-input placeholder="Tìm vị trí" [(ngModel)]="searchQuery" appSearchRoads [appSearchRoadsText]="searchQuery" (newListRoads)="searchResults = $event" (isSearch)="isSearch = $event"/>
+            </nz-input-group>
+            <ng-template #suffixIconSearch>
+            <i nz-icon nzType="search"></i>
+            </ng-template>
+            <ng-template #suffixIconClose>
+                <i nz-icon nzType="close" (click)="searchIconClick()"></i>
+            </ng-template>
+    
+            <div class="results transition visible" *ngIf="searchResults?.length > 0 && isSearch">
+                <ul nz-menu>
+                    <li class="map-search-result" nz-menu-item *ngFor="let result of searchResults; index as i" (click)="searchSelect(result)">
+                        <b>{{result.properties.name}}</b>
+                        <br>
+                        {{result.properties.city}}
+                    </li>
+                </ul>
             </div>
-        </a>
-    </div>
-</div>
+            <div class="results transition visible" *ngIf="searchResults?.length <= 0 && isSearch" style="background-color: white;">
+                <a class="result">
+                    <div class="content">
+                        <div class="title">Không tìm thấy</div>
+                        <div class="description">Hãy thử lại</div>
+                    </div>
+                </a>
+            </div>
+        </div>
 
-<!-- <div class="search-road ui form">
-    <div class="ui fluid left icon input">
-        <input type="text" [(ngModel)]="searchText" placeholder="Tìm vị trí" appSearchRoads [appSearchRoadsText]="searchText" (newListRoads)="listRoads = $event">
-        <i class="search icon"></i>
+        <button nz-button  [nzSize]="'large'" nzShape="round"><i nz-icon nzType="camera"></i>Camera</button>
+        
     </div>
-    <div id="searchRoadResult" *ngIf="listRoads?.features?.length > 0" class="ui fluid search search-list" [(ngModel)]="listRoads">
-        <div class="results transition visible">
-            <a class="result" *ngFor="let road of listRoads.features" (click)="searchRoad(road)">
-                <div class="content">
-                    <div class="title">{{road.properties.name}}</div>
-                    <div class="description">{{road.properties.city}}</div>
-                </div>
-            </a>
+
+
+    
+    <button class="map-layout-info-button" nz-button nzType="primary" [@mapLayoutInfoButton]="isOpen ? 'open' : 'closed'" (click)="toggle()">
+        <i nz-icon nzType="{{isOpen ? 'left' : 'right'}}"></i>
+    </button>
+
+    <div [@mapLayoutInfo]="isOpen ? 'open' : 'closed'" class="map-layout-info">
+        <div class="map-layout-info-header"></div>
+        <nz-divider></nz-divider>
+        <div class="map-layout-info-content">
+        
+            <nz-card nzTitle="Card title">
+                <p>Card content</p>
+                <p>Card content</p>
+                <p>Card content</p>
+            </nz-card>
+            <nz-card nzTitle="Card title">
+                <p>Card content</p>
+                <p>Card content</p>
+                <p>Card content</p>
+            </nz-card>
+            <nz-card nzTitle="Card title">
+                <p>Card content</p>
+                <p>Card content</p>
+                <p>Card content</p>
+            </nz-card>
+            <nz-card nzTitle="Card title">
+                <p>Card content</p>
+                <p>Card content</p>
+                <p>Card content</p>
+            </nz-card>
+            <nz-card nzTitle="Card title">
+                <p>Card content</p>
+                <p>Card content</p>
+                <p>Card content</p>
+            </nz-card>
+        
         </div>
     </div>
-</div> -->
+</div>
 
 <!-- <div id="sidebar" class="leaflet-sidebar collapsed">
     <div class="leaflet-sidebar-tabs" >

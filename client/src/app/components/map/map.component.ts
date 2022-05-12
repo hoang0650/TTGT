@@ -14,13 +14,48 @@ import { RoadEventsService } from 'src/app/services/road-events.service';
 import { StaticMapService } from 'src/app/services/static-map.service';
 import { MapPopupCreateEventComponent } from '../map-popup-create-event/map-popup-create-event.component';
 import { StaticMapPopupComponent } from '../static-map-popup/static-map-popup.component';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 declare var $: any
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.css']
+  styleUrls: ['./map.component.css'],
+  animations: [
+    trigger('mapLayoutInfo', [
+      state('open', style({
+        position: 'absolute',
+        left: '0%',
+      })),
+      state('closed', style({
+        position: 'absolute',
+        left: '-408px',
+      })),
+      transition('open => closed', [
+        animate('0.3s')
+      ]),
+      transition('closed => open', [
+        animate('0.3s')
+      ]),
+    ]),
+    trigger('mapLayoutInfoButton', [
+    state('open', style({
+      position: 'absolute',
+      left: '408px',
+    })),
+    state('closed', style({
+      position: 'absolute',
+      left: '0px',
+    })),
+    transition('open => closed', [
+      animate('0.3s')
+    ]),
+    transition('closed => open', [
+      animate('0.3s')
+    ]),
+    ]),
+  ]
 })
 export class MapComponent implements OnInit {
   options: L.MapOptions;
@@ -908,5 +943,12 @@ export class MapComponent implements OnInit {
     component.changeDetectorRef.detectChanges();
 
     return component.location.nativeElement;
+  }
+
+  isOpen = true;
+
+  toggle() {
+    this.searchQuery = this.isOpen ? "Mở":"Đóng"
+    this.isOpen = !this.isOpen;
   }
 }

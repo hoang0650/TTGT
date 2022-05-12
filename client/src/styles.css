@@ -1,12 +1,45 @@
 /* You can add global styles to this file, and also import other style files */
   
+.map-layout {
+    position: relative;
+    height: 100%;
+}
+
+.map-layout-info {
+    top: 0px;
+    width: 408px;
+    height: 100%;
+    z-index: 998;
+    display: flex;
+    flex-direction: column;
+    background-color: whitesmoke;
+}
+
+.map-layout-info-header {
+    height: 40px;
+    flex: 1 0 auto;
+}
+
+.map-layout-info-button {
+    top:50%;
+    left: 408px;
+    position:absolute;
+    z-index: 999;
+}
+
+.map-layout-info-content {
+    flex: 1 1 auto;
+    max-height: 100%;
+    overflow-y: scroll;
+}
+
 .map-leaflet {
     height: 100%;
 }
 
 .map-search {
     position: absolute;
-    width: 33%;
+    width: 408px;
     top: 0px;
     padding: 10px 10px;
     z-index: 999;
@@ -14,6 +47,10 @@
 
 .map-search-result {
     height: auto !important
+}
+
+nz-layout {
+   height: 100% !important;
 }
 
 /* .map-search-bar {
