@@ -1,0 +1,54 @@
+<nz-layout>
+    <nz-sider class="menu-sidebar"
+            nzCollapsible
+            nzWidth="256px"
+            nzBreakpoint="md"
+            [(nzCollapsed)]="isCollapsed"
+            [nzTrigger]="null">
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <li nz-submenu nzOpen nzTitle="Cấu hình" nzIcon="dashboard">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a  routerLink="/welcome">Tình trạng camera</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a>Tình trạng giao thông</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a> Sự kiện giao thông</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    </nz-sider>
+    <nz-content>
+        <nz-breadcrumb>
+            <nz-breadcrumb-item>User</nz-breadcrumb-item>
+            <nz-breadcrumb-item>Bill</nz-breadcrumb-item>
+        </nz-breadcrumb>
+          <div class="inner-content">
+            <form nz-form id="configForm" name="configForm" #configForm="ngForm">
+                
+                  <!-- <nz-form-label [nzSpan]="6" nzFor="email">E-mail</nz-form-label>
+                  <nz-form-control [nzSpan]="14">
+                    <input nz-input name="email" type="email" id="email">
+                  </nz-form-control> -->
+                  <router-outlet>
+                  </router-outlet>
+                
+              </form>
+          </div>
+          <nz-footer>
+              Ant Design ©2020 Implement By Angular
+              <!-- <ul>
+                <li nz-menu-item></li>
+              </ul> -->
+              <button nz-button nzType="primary"  style="float:right;">Chỉnh sửa</button>
+          </nz-footer>
+        </nz-content>
+        
+        
+      </nz-layout>
+
+
+

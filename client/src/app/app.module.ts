@@ -7,7 +7,10 @@ import { en_US } from 'ng-zorro-antd/i18n';
 import { registerLocaleData  } from '@angular/common';
 import en from '@angular/common/locales/en';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule,HTTP_INTERCEPTORS } from '@angular/common/http';
+import { CellDirective } from './modules/directive/cell.directive';
+import { ColumnDirective } from './modules/directive/column.directive';
+import { HeaderDirective } from './modules/directive/header.directive';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MapComponent } from './components/map/map.component';
 import { NzModalModule } from 'ng-zorro-antd/modal';
@@ -17,23 +20,27 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { SearchFilterPipe } from './pipes/search-filter.pipe';
 import { MomentModule } from 'ngx-moment';
 import { OrderByPipe } from './pipes/order-by.pipe';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
+import { JwtModule } from '@auth0/angular-jwt';
 import { SearchRoadsDirective } from './directives/search-roads.directive';
+// import Nz-zorro
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { HeaderComponent } from './components/header/header.component';
-import { CellDirective } from './modules/directive/cell.directive';
-import { ColumnDirective } from './modules/directive/column.directive';
-import { HeaderDirective } from './modules/directive/header.directive';
-import { NzLayoutModule } from 'ng-zorro-antd/layout';
-import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzLayoutModule} from 'ng-zorro-antd/layout';
+import { NzMenuModule} from 'ng-zorro-antd/menu';
+import { NzImageModule } from 'ng-zorro-antd/image';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzCardModule } from 'ng-zorro-antd/card';
-import { JwtModule } from '@auth0/angular-jwt';
-import { NzImageModule } from 'ng-zorro-antd/image';
-import { AuthModule,AuthHttpInterceptor } from '@auth0/auth0-angular';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+//
+import { AuthModule, AuthHttpInterceptor} from '@auth0/auth0-angular';
+import { AdminComponent } from './components/admin/admin.component';
+
 
 registerLocaleData(en);
 export function tokenGetters() {
@@ -51,11 +58,34 @@ export function tokenGetters() {
     HeaderComponent,
     CellDirective,
     ColumnDirective,
-    HeaderDirective
+    HeaderDirective,
+    AdminComponent,
+ 
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    NzModalModule,
+    NzInputModule,
+    LeafletModule,
+    MomentModule,
+    NzButtonModule,
+    NzIconModule,
+    NzDropDownModule,
+    NzTypographyModule,
+    NzLayoutModule,
+    NzMenuModule,
+    NzDropDownModule,
+    NzImageModule,
+    NzFormModule,
+    NzBreadCrumbModule,
+    NzDividerModule,
+    NzCardModule,
+    NzCheckboxModule,
+    JwtModule,
     AuthModule.forRoot({
       domain: 'https://dev-0gy0vn9g.us.auth0.com',
       clientId: '4iTVIOrKT5vVjBvDK0felIGt4TqCfOLV',
@@ -120,29 +150,10 @@ export function tokenGetters() {
         allowedDomains: ["localhost:3000/api/admin","localhost:3000/api/admin/*"],    
       },
     }),
-    FormsModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    NzModalModule,
-    NzInputModule,
-    LeafletModule,
-    MomentModule,
-    NzButtonModule,
-    NzIconModule,
-    NzDropDownModule,
-    NzTypographyModule,
-    NzLayoutModule,
-    NzMenuModule,
-    NzDropDownModule,
-    NzDividerModule,
-    NzCardModule,
-    NzImageModule,
-    
-    
   ],
   providers: [
-    // { provide: NZ_I18N, useValue: en_US, multi:true},
-    {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi:true }
+     // { provide: NZ_I18N, useValue: en_US, multi:true},
+     {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi:true }
   ],
   bootstrap: [AppComponent]
 })

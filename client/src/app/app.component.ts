@@ -33,7 +33,7 @@ export class AppComponent {
         if(this.profile){
           console.log(this.profile);
           
-          // this.auth.userHasRoles
+          this.auth.userHasRoles
           this.auth.authorize
           localStorage.setItem('profile', JSON.stringify(this.profile));
           

@@ -7,8 +7,8 @@
         <li  nz-submenu nzTitle ="Giới thiệu">
           <a>Giới thiệu</a>
         </li>
-        <li  nz-submenu nzTitle ="Bản đồ">
-          <a>Bản đồ</a>
+        <li  nz-submenu nzTitle ="Bản đồ" [routerLink]="['/map']">
+          <!-- <a [routerLink]= "['/map']">Bản đồ</a> -->
         </li>
         <li nz-submenu nzTitle="Quản lý">
           <ul>
@@ -35,7 +35,7 @@
         <li nz-submenu nzTitle="Quản trị">
           <ul>
             <li nz-menu-item nzMatchRouter>
-              <a>Cấu hình</a>
+              <a [routerLink]="['/admin']">Cấu hình</a>
             </li>
             <li nz-menu-item nzMatchRouter>
               <a>Tài khoản</a>
