@@ -47,13 +47,6 @@
         </li>
         <li  nz-submenu nzTitle ="Cảnh báo giao thông">
         </li>
-        <!-- <li  nz-submenu nzTitle ="Thoát">
-          <a (click)="logout()">Thoát</a>
-        </li> -->
-        
-
-        
-
         <li nz-menu-item  style="float: right;">
           <img *ngIf="appCom.profile" height="32px" width="32px" style="border-radius: 20px;" nz-image [nzSrc]="appCom.profile['picture']">
           <a nz-dropdown [nzDropdownMenu]="menu">{{!appCom.profile ? 'Đăng nhập' : appCom.profile['nickname']}}</a>
