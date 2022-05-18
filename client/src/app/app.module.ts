@@ -36,9 +36,19 @@ import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
+import { NzTableModule} from 'ng-zorro-antd/table';
+
 //
 import { AuthModule, AuthHttpInterceptor} from '@auth0/auth0-angular';
 import { AdminComponent } from './components/admin/admin.component';
+import { AdminConfigTrafficComponent } from './components/admin-config-traffic/admin-config-traffic.component';
+import { AdminConfigEventComponent } from './components/admin-config-event/admin-config-event.component';
+import { AdminConfigConfirmComponent } from './components/admin-config-confirm/admin-config-confirm.component';
+import { AdminNotificationComponent } from './components/admin-notification/admin-notification.component';
+import { AdminGroupsComponent } from './components/admin-groups/admin-groups.component';
+import { AdminGroupsEditComponent } from './components/admin-groups-edit/admin-groups-edit.component';
+import { AdminUsersComponent } from './components/admin-users/admin-users.component';
 
 
 registerLocaleData(vi);
@@ -59,6 +69,13 @@ export function tokenGetters() {
     ColumnDirective,
     HeaderDirective,
     AdminComponent,
+    AdminConfigTrafficComponent,
+    AdminConfigEventComponent,
+    AdminConfigConfirmComponent,
+    AdminNotificationComponent,
+    AdminGroupsComponent,
+    AdminGroupsEditComponent,
+    AdminUsersComponent,
  
   ],
   imports: [
@@ -84,7 +101,9 @@ export function tokenGetters() {
     NzDividerModule,
     NzCardModule,
     NzCheckboxModule,
-    JwtModule,
+    NzBadgeModule,
+    NzTableModule,
+    
     AuthModule.forRoot({
       domain: 'https://dev-0gy0vn9g.us.auth0.com',
       clientId: '4iTVIOrKT5vVjBvDK0felIGt4TqCfOLV',

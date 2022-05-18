@@ -1,0 +1,246 @@
+<!-- <ul nz-menu>
+    <li nz-menu-item><span>ĐƯờng dẫn</span> không được để trống</li>
+    <li nz-menu-item><span>Đường dẫn</span> phải đúng định dạng</li>
+    <li nz-menu-item><span>Thời gian</span> không được để trống</li>
+    <li nz-menu-item><span>Thời gian cập nhật tình hình giao thông</span>phải là số nguyên lớn hơn 0 và nhỏ hơn</li>
+    <li nz-menu-item><span>Chu kỳ thời gian phân tích tình trạng giao thông</span>phải là số nguyên lớn hơn 0 và nhỏ hơn</li>
+    <li nz-menu-item><span>Chu kỳ thời gian tổng hợp tình trạng giao thông</span>phải là số nguyên lớn hơn 0 và nhỏ hơn</li>
+    <li nz-menu-item><span>Vận tốc</span>không được để trống</li>
+    <li nz-menu-item><span>Vận tốc</span>phải là số nguyên và lớn hơn 0</li>
+    <li nz-menu-item><span>Loại</span>không được để trống</li>
+    <li nz-menu-item><span>Vận tốc</span>của<strong></strong>không được lớn hơn</li>
+    <li nz-menu-item><span>Vận tốc</span>của<strong></strong>không được lớn hơn</li>
+    <li nz-menu-item><span>Vận tốc</span>của<strong></strong>không được nhỏ hơn</li>
+    <li nz-menu-item><span>Vận tốc</span>của<strong></strong>không được nhỏ hơn</li>
+</ul> -->
+
+<form nz-form style="height: 100%;">
+    <nz-form-item>
+        <nz-form-label [nzSpan]="6">Cấu hình bản đồ</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+        <a nz-dropdown [nzDropdownMenu]="menu">Custom</a>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+              <ul nz-menu>
+                <li nz-menu-item>Custom</li>
+                <li nz-menu-item>FPT</li>
+              </ul>
+          </nz-dropdown-menu>
+        </nz-form-control>
+      </nz-form-item >
+  
+
+          <table class="form-item">
+                <thead>
+                    <tr>
+                        <th colSpan="50">Bản đồ</th>
+                        <th colSpan="50">Đường dẫn</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="50">
+                            Hình
+                            
+                        </td>
+                        <td colspan="50">
+                            
+                            <div class="field-item">
+                                <div class="field-label label" style="margin-top: 24px;">
+                                    <input class="input-table1" placeholder="1" type="text" [placeholder]="['//map.thongtingiaothong.vn//transport-notext/{z}/{x}/{y}.png']">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="50">
+                            Chữ
+                        </td>
+                        <td colspan="50">
+                            <div class="field-item">
+                                <div class="field-label label" style="margin-top: 10px;">
+                                    <input class="input-table1" placeholder="2" type="text" [placeholder]="['//map.thongtingiaothong.vn//transport-text/{z}/{x}/{y}.png']">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="50">
+                            Kết hợp hình và chữ
+                        </td>
+                        <td colspan="50">
+                            <div class="field-item">
+                                <div class="field-label label">
+                                    <input class="input-table1" placeholder="10" type="text" [placeholder]="['//map.thongtingiaothong.vn//transport-full/{z}/{x}/{y}.png']">    
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+          </table>
+     
+       
+      <nz-form-item>
+        <table class="form-item" style="margin-top: 24px;">
+            <thead>
+                <tr>
+                    <th colSpan="50">Loại</th>
+                    <th colSpan="50">Thời gian</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="50">
+                      Thời gian cập nhật tình trạng giao thông <br/>
+                      <small>(1 phút - 10 phút)</small>
+                    </td>
+                    <td colspan="50">
+                        
+                        <div class="field-item">
+                            <div class="field-label label" style="margin-top: 24px;">
+                                <input class="input-table2" placeholder="1" type="number">
+                                <label class="label" style="margin-left:3px">Phút</label>
+  
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="50">
+                      Chu kỳ thời gian phân tích tình trạng giao thông <br/>
+                      <small>(1 phút - 10 phút)</small>
+                    </td>
+                    <td colspan="50">
+                        <div class="field-item">
+                            <div class="field-label label" style="margin-top: 10px;">
+                                <input class="input-table2" placeholder="2" type="number">
+                                <label class="label" style="margin-left:3px">Phút</label>
+  
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="50">
+                      Chu kỳ thời gian tổng hợp tình trạng giao thông <br/>
+                      <small>(1 phút - 10 phút)</small>
+                    </td>
+                    <td colspan="50">
+                        <div class="field-item">
+                            <div class="field-label label">
+  
+                                <input class="input-table2" placeholder="10" type="number">
+                                <label class="label" style="margin-left:3px">Giây</label>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+      </nz-form-item>
+
+      <nz-form-item style="margin-bottom: 50px;">
+        <table class="form-item">
+            <thead>
+                <tr>
+                    <th colSpan="50">Vận tốc km/h</th>
+                    <th colSpan="50">Loại</th>
+                    <th colSpan="50">Màu đại diện</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="50">
+                        <div class="field-item">
+                            <div class="field-label">
+                                <input class="input-table2" placeholder="< 5" type="number">  
+                            </div>
+                        </div>
+                    </td>
+                    <td colspan="50">
+                        
+                        <div class="field-item">
+                            <div class="field-label">
+                                <input class="input-table1" placeholder="Ùn tắc" type="text">  
+                            </div>
+                        </div>
+                    </td>
+                    <td colspan="50">
+                        <div class="field-item">
+                            <span class="legend-line-red"></span>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="50">
+                        <div class="field-item">
+
+                            <div class="field-label">
+                                <input class="input-table2" placeholder="< 10" type="number">  
+                            </div>
+                        </div>
+                    </td>
+                    <td colspan="50">
+                        <div class="field-item">
+                            <div class="field-label">
+                                <input class="input-table1" placeholder="Đông xe" type="text">
+                            </div>
+                        </div>
+                    </td>
+                    <td colspan="50">
+                        <div class="field-item">
+                            <span class="legend-line-orange"></span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="50">
+                        <div class="field-item">
+                            <div class="field-label ">
+                                <input class="input-table2" placeholder="< 15" type="number">  
+                            </div>
+                        </div>
+                            
+                    </td>
+                    <td colspan="50">
+                        <div class="field-item">
+                            <div class="field-label">
+                                 <input class="input-table1" placeholder="Di chuyển chậm" type="text">
+                            </div>
+                        </div>
+                    </td>
+                    <td colspan="50">
+                        <div class="field-item">
+                            <span class="legend-line-yellow"></span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="50">
+                        <div class="field-item">
+
+                            <div class="field-label">
+                                <input class="input-table2" placeholder=">= 15" type="number">  
+                            </div>
+                        </div>
+                    </td>
+                    <td colspan="50">
+                        <div class="field-item">
+                            <div class="field-label">
+                                 <input class="input-table1" placeholder="Thông thoáng" type="text">
+                            </div>
+                        </div>
+                    </td>
+                    <td colspan="50">
+                        <div class="field-item">
+                            <span class="legend-line-green"></span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+      </nz-form-item>
+
+</form>
+
+

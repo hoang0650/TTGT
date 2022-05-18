@@ -1,4 +1,4 @@
-<label class="label">Hình ảnh khi mất kết nối</label>
+<label class="label">Hình ảnh khi mất kết nối với thông báo</label>
 <div class="field-label label" style="margin-left: 20px;">
     <input type="checkbox">
     <label style="margin-left: 10px;"> Chữ </label>
@@ -8,13 +8,77 @@
     <label style="margin-left: 10px;"> Tùy chọn </label>
 </div>
 <br>
-<div class="field-item">
+<div class="field-item" style="margin-top: 10px;">
     <label class="label">Chữ hiển thị</label>
-    <input style="margin-left: 30px;" name="email" type="email" id="email" placeholder="Mất kết nối">
+    <input class="input" style="margin-left: 30px;" name="email" type="email" id="email" placeholder="Mất kết nối">
+    <label class="label" style="margin-left: 100px">Cấu hình thời gian</label>
 </div>
-<form nz-form>
+<div class="field-item" width="100%">
+    <img src="assets/images/localize/logo.png" height="240px" width="35%">
+    <!-- <span style="padding-left: 5px;" width="10%"></span> -->
+    <div class="field-item" style="padding-left: 32px;" width="auto">
+        <table class="form-item">
+            <thead>
+                <tr>
+                    <th>Loại</th>
+                    <th>Thời gian</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        Thời gian gián đoạn khi phát sinh trạng thái "Mất kết nối" <br/>
+                        <small>(1 phút - 60 phút)</small>
+                    </td>
+                    <td>
+                        
+                        <div class="field-item">
+                            <div class="field-label label" style="margin-top: 24px;">
+                                <input class="input-table" placeholder="1" type="number">
+                                <label class="label" style="margin-left:3px">Phút</label>
 
-</form>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Thời gian cập nhật tình trạng camera <br/>
+                        <small>(1 phút - 10 phút)</small>
+                    </td>
+                    <td>
+                        <div class="field-item">
+                            <div class="field-label label" style="margin-top: 10px;">
+                                <input class="input-table" placeholder="2" type="number">
+                                <label class="label" style="margin-left:3px">Phút</label>
+
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Thời gian tải lại hình ảnh camera <br/>
+                        <small>(1 giây - 60 giây)</small>
+                    </td>
+                    <td>
+                        <div class="field-item">
+                            <div class="field-label label">
+
+                                <input class="input-table" placeholder="10" type="number">
+                                <label class="label" style="margin-left:3px">Giây</label>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </div>
+</div>
+
+
+
 
  
 
