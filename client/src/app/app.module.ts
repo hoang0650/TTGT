@@ -2,10 +2,9 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NZ_I18N } from 'ng-zorro-antd/i18n';
-import { en_US } from 'ng-zorro-antd/i18n';
+import { NZ_I18N, vi_VN } from 'ng-zorro-antd/i18n';
 import { registerLocaleData  } from '@angular/common';
-import en from '@angular/common/locales/en';
+import vi from '@angular/common/locales/vi';
 import { FormsModule } from '@angular/forms';
 import { CellDirective } from './modules/directive/cell.directive';
 import { ColumnDirective } from './modules/directive/column.directive';
@@ -42,7 +41,7 @@ import { AuthModule, AuthHttpInterceptor} from '@auth0/auth0-angular';
 import { AdminComponent } from './components/admin/admin.component';
 
 
-registerLocaleData(en);
+registerLocaleData(vi);
 export function tokenGetters() {
   return localStorage.getItem('id_token');
 }
@@ -152,7 +151,7 @@ export function tokenGetters() {
     }),
   ],
   providers: [
-     // { provide: NZ_I18N, useValue: en_US, multi:true},
+     { provide: NZ_I18N, useValue: vi_VN },
      {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi:true }
   ],
   bootstrap: [AppComponent]

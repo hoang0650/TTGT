@@ -31,6 +31,7 @@
     flex: 1 1 auto;
     max-height: 100%;
     overflow-y: scroll;
+    padding: 0 5px;
 }
 
 .map-leaflet {
@@ -39,10 +40,19 @@
 
 .map-search {
     position: absolute;
-    width: 408px;
     top: 0px;
     padding: 10px 10px;
     z-index: 999;
+    display: flex;
+}
+
+.map-search-bar {
+    width: 388px;
+    margin-right: 10px;
+}
+
+.map-search-button {
+    margin: 0px 10px;
 }
 
 .map-search-result {
@@ -53,6 +63,130 @@ nz-layout {
    height: 100% !important;
 }
 
-/* .map-search-bar {
-    border-radius: 20px !important;
-} */
+
+/* For Marker */
+.modify-marker {
+    border-radius: 50%;
+    position: absolute;
+    opacity: 0.7!important;
+}
+
+.modify-marker:hover {
+    opacity: 1!important;
+}
+
+.marker-background {
+    border-radius: 50%;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+.modify-marker.selected {
+    opacity: 1!important;
+}
+
+.modify-marker.selected > .marker-background {
+    border: 2px solid black;
+}
+
+.modify-marker > .marker-background {
+    background-color: #696969;
+}
+
+.modify-marker.good > .marker-background {
+    background-color: #4183d7;
+}
+
+.modify-marker.error > .marker-background {
+    background-color: #f44336;
+}
+
+.modify-marker.new > .marker-background {
+    background-color: #21ba45;
+}
+
+.marker-icon {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+}
+
+.modify-marker.normal > .marker-icon {
+    background-image: url(assets/images/markers/marker-camera-icon.png);
+}
+
+.modify-marker.ptz > .marker-icon {
+    background-image: url(assets/images/markers/marker-ptz-camera-icon.png);
+}
+
+.modify-marker.undefined > .marker-content::after {
+    content: "?";
+    position: absolute;
+    left: 15%;
+    font-weight: bold;
+    bottom: 10%;
+}
+
+.modify-marker.undefined > .marker-content::after {
+    color: #f44336;
+}
+.modify-marker.error.undefined > .marker-content::after {
+    color: #4183d7;
+}
+
+.modify-marker.error > .marker-content::after {
+    font-size: 80%;
+}
+
+.circle-cluster {
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    border-radius: 50%;
+    font-size: 10px;
+    color: #fff;
+    text-align: center;
+    background: red;
+    right: -5px;
+    top: -5px;
+    position: absolute;
+}
+
+.marker-parking {
+    width: 33.5px;
+    height: 40px;
+    background-size: 33.5px 40px;
+    
+    background-image: url(assets/images/parking.png);
+}
+
+
+.marker-parking.selected {
+    background-image: url(assets/images/parking_select.png);
+}
+
+
+/* Camera  */
+
+.angle-camera {
+    top: 4px;
+    opacity: 0.7;
+    position: absolute;
+    right: 4px;
+    width: 40px;
+}
+
+.map-camera-image {
+    width: 338px;
+}
+
+.yellow {
+    color: #eaae00 !important;
+}
+
+.map-layout-info-content-button {
+    padding-left: 5px;
+    font-weight: bold;
+}

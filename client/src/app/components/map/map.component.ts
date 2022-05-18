@@ -60,7 +60,6 @@ declare var $: any
 export class MapComponent implements OnInit {
   options: L.MapOptions;
   sideMap?: L.Map;
-  sidebar?: L.Control.Sidebar;
   mapurl: string;
   currentTab: string;
 
@@ -100,6 +99,9 @@ export class MapComponent implements OnInit {
   filterStaticMap: any;
   paramMap: any;
   backend: string;
+  shareLink?: string;
+
+  isShare: boolean;
   
   constructor(private configure:ConfigureService, private staticMapService:StaticMapService, private markerService:MarkerService, private roadEventService:RoadEventsService, private route:ActivatedRoute, private location:Location, private mapService:MapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private geocoding:GeocodingService, private cameraService:CameraService, private parkingService:ParkingService, private cdRef:ChangeDetectorRef) {
     this.currentTab = "traffic";
@@ -111,7 +113,7 @@ export class MapComponent implements OnInit {
     this.listFavoriteParking = []
     this.mapurl = configure.livemap;
     this.isSubmit = true;
-    // this.userInfo = JSON.parse(localStorage.getItem("profile") || "")
+    this.userInfo = JSON.parse(localStorage.getItem("profile") || "")
     this.isSearch = false
     this.searchQuery = ""
     this.filterRoadEvent = ""
@@ -128,6 +130,8 @@ export class MapComponent implements OnInit {
     location.replaceState("./map")
     
     this.trafficChildren = {} 
+
+    this.isShare = false
 
     this.options = {
       layers: [
@@ -151,16 +155,13 @@ export class MapComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.sidebar?.remove()
+
   }
 
 
   initMap(event:L.Map) {
     this.sideMap = event
     L.control.zoom({ position: 'topright' }).addTo(this.sideMap);
-
-    // this.sidebar = L.control.sidebar({ closeButton: false, position: 'left', autopan: false, container:'sidebar' }).addTo(this.sideMap);
-    // this.sidebar.open("home")
 
     this.sideMap.on({
       contextmenu: (event:any) => {
@@ -349,7 +350,7 @@ export class MapComponent implements OnInit {
             html: `<div class="marker-background"></div>` +
                   `<div class="circle-cluster">${markers.length}</div>` +
                   `<div class="marker-icon"></div>` +
-                  `<div class="marker-content">}</div>`
+                  `<div class="marker-content"></div>`
           });
           
           
@@ -383,7 +384,6 @@ export class MapComponent implements OnInit {
       icon: icon,
     }).on({
       click: () => {
-        this.sidebar?.open("parkings")
         this.sideMap?.flyTo([parking.loc.coordinates[1], parking.loc.coordinates[0]])
         this.chosenMarkers['parking'] = parking
         this.cdRef.detectChanges()
@@ -402,8 +402,7 @@ export class MapComponent implements OnInit {
       rotationAngle: camera.ptz ? 0 : camera.angle
     }).on({
       click: () => {
-        
-        this.sidebar?.open("cameras")
+      
         this.sideMap?.flyTo([camera.loc.coordinates[1], camera.loc.coordinates[0]])
         
         if (camera.angle) {
@@ -486,7 +485,6 @@ export class MapComponent implements OnInit {
 
         var marker = this.createTrafficEventMarker(latlng, trafficEvent.type).bindPopup(popup).on({
           popupopen: () => {
-            this.sidebar?.open("incidents")
             this.chooseIncident(trafficEvent)
           }
         })
@@ -749,7 +747,6 @@ export class MapComponent implements OnInit {
       if (this.paramMap.type == "camera") {
         this.listCamera.forEach((camera:any) => {
           if (camera._id == this.paramMap.id) {
-            this.sidebar?.open("cameras")
             this.sideMap?.flyTo([camera.loc.coordinates[1], camera.loc.coordinates[0]], 15)
             if (camera.angle) {
               camera.angleStyle = {
@@ -771,7 +768,6 @@ export class MapComponent implements OnInit {
       } else if (this.paramMap.type == "parking") {
         this.listParking.forEach((parking:any) => {
           if (parking._id == this.paramMap.id) {
-            this.sidebar?.open("parkings")
             this.sideMap?.flyTo([parking.loc.coordinates[1], parking.loc.coordinates[0]])
             this.chosenMarkers['parking'] = parking;
             this.cdRef.detectChanges()
@@ -780,7 +776,6 @@ export class MapComponent implements OnInit {
       } else if (this.paramMap.type == "event") {
         this.listEvent.forEach((event:any) => {
           if (event._id == this.paramMap.id) {
-            this.sidebar?.open("incidents")
             this.sideMap?.flyTo([event.loc.coordinates[1], event.loc.coordinates[0]])
             this.chosenMarkers['incident'] = event;
             this.cdRef.detectChanges()
@@ -877,9 +872,9 @@ export class MapComponent implements OnInit {
   }
 
   share(type:string, id:string) {
-    var shareLink = location.origin + '/map?type=' + type + '&id=' + id;
-
-    console.log(shareLink);
+    this.shareLink = location.origin + '/map?type=' + type + '&id=' + id;
+    this.isShare = true
+    this.cdRef.detectChanges()
     
     // this.modalService.show(MapShareModalComponent, 
     //   {
@@ -950,5 +945,10 @@ export class MapComponent implements OnInit {
   toggle() {
     this.searchQuery = this.isOpen ? "Mở":"Đóng"
     this.isOpen = !this.isOpen;
+  }
+
+  closeModal() {
+    this.isShare = false
+    this.shareLink = ""
   }
 }

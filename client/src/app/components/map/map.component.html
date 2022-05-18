@@ -6,8 +6,8 @@
     </div>
 
     <div class="map-search">
-        <div>
-            <nz-input-group class="map-search-bar" [nzSuffix]="searchQuery.length > 0 ? suffixIconClose : suffixIconSearch" [nzSize]="'large'">
+        <div class="map-search-bar">
+            <nz-input-group [nzSuffix]="searchQuery.length > 0 ? suffixIconClose : suffixIconSearch" [nzSize]="'large'">
                 <input type="text" nz-input placeholder="Tìm vị trí" [(ngModel)]="searchQuery" appSearchRoads [appSearchRoadsText]="searchQuery" (newListRoads)="searchResults = $event" (isSearch)="isSearch = $event"/>
             </nz-input-group>
             <ng-template #suffixIconSearch>
@@ -36,7 +36,8 @@
             </div>
         </div>
 
-        <button nz-button  [nzSize]="'large'" nzShape="round"><i nz-icon nzType="camera"></i>Camera</button>
+        <button class="map-search-button" nz-button [nzSize]="'large'" nzShape="round"><i nz-icon nzType="video-camera"></i>Camera</button>
+        <button class="map-search-button" nz-button [nzSize]="'large'" nzShape="round"><i nz-icon nzType="camera"></i>Bãi đỗ xe</button>
         
     </div>
 
@@ -50,12 +51,41 @@
         <div class="map-layout-info-header"></div>
         <nz-divider></nz-divider>
         <div class="map-layout-info-content">
+            <nz-card [nzCover]="cameraCover">
+                <img *ngIf="chosenMarkers['camera']" class="angle-camera" src="assets/images/compass.png" [ngStyle]="chosenMarkers['camera']?.angleStyle">
+                <div id="crEventCamera" class="contain-create-event-icon" (click)="createdEventByCamera(chosenMarkers['camera']);$event.stopPropagation()"><i class="warning sign icon"></i></div>
+            
+                <div *ngIf="chosenMarkers['camera']" >
+                    <nz-card-meta>
+                        <p><span class="date">{{chosenMarkers['camera'].lastUpdated | amLocale:'vi' | amTimeAgo }}</span></p></nz-card-meta> 
+                    <nz-row>
+                        <nz-col nzFlex="1">
+                            <button nz-button nzBlock="true" (click)="share('camera', chosenMarkers['camera']._id)">
+                                <i class="fa-solid fa-share-from-square"></i>
+                                <span class="map-layout-info-content-button">Chia sẻ</span>
+                            </button>
+                        </nz-col>
+                        <nz-col nzFlex="1">
+                            <button nz-button nzBlock="true" (click)="favoriteCamera(chosenMarkers['camera'])">
+                                <i class="fa-solid fa-star" [ngClass]="{'yellow': checkExistInFavoriteList(chosenMarkers['camera']._id)}"></i>
+                                <span class="map-layout-info-content-button" [ngClass]="{'yellow': checkExistInFavoriteList(chosenMarkers['camera']._id)}">Quan tâm</span>
         
-            <nz-card nzTitle="Card title">
-                <p>Card content</p>
-                <p>Card content</p>
-                <p>Card content</p>
+                              </button>
+                        </nz-col>
+                    </nz-row>
+                    
+                      
+                </div>
+
             </nz-card>
+
+            <ng-template #cameraCover>
+                <img class="map-camera-image" *ngIf="!chosenMarkers['camera']" src="//dummyimage.com/600x400/000/fff&text=Vui lòng chọn camera">
+                <img class="map-camera-image" *ngIf="chosenMarkers['camera'] && chosenMarkers['camera']?.liveviewUrl" (error)="imageError($event)" src="{{chosenMarkers['camera'].url}}" (load)="cameraLoading = false">
+                <img class="map-camera-image" *ngIf="chosenMarkers['camera'] && !chosenMarkers['camera']?.liveviewUrl || chosenMarkers['camera']?.liveview === ''" src="//dummyimage.com/600x400/000/fff&text=Camera sai thông số" (load)="cameraLoading = false">
+            </ng-template>
+            <nz-divider nzText="Quan tâm"></nz-divider>
+            
             <nz-card nzTitle="Card title">
                 <p>Card content</p>
                 <p>Card content</p>
@@ -357,20 +387,36 @@
                 </div>
             </div>
         </div>
-
-        <div class="leaflet-sidebar-pane" id="statics" [hidden]="!trafficChildren['statics']">
-            <h1 class="leaflet-sidebar-header">
-                Thông tin tĩnh
-                <span class="leaflet-sidebar-close"><i class="angle left icon"></i></span>
-            </h1>
-        </div>
-
-        <div class="leaflet-sidebar-pane" id="roadevents" [hidden]="!trafficChildren['roadevents']">
-            <h1 class="leaflet-sidebar-header">
-                Phân luồng giao thông
-                <span class="leaflet-sidebar-close"><i class="angle left icon"></i></span>
-            </h1>
-
-        </div>
     </div>
 </div> -->
+
+
+<!-- <div class="ui inverted segment">
+    <form class="ui inverted form">
+        <div class="field">
+            <label>Copy link để chia sẻ</label>
+            <input type="text" [value]="shareLink" disabled="disabled">
+        </div>
+        <div>
+            <button class="ui inverted button" type="button" (click)="modalRef.hide()">Đóng</button>
+        </div>
+    </form>
+</div> -->
+
+<nz-modal
+      [(nzVisible)]="isShare"
+      [nzTitle]="modalTitle"
+      [nzContent]="modalContent"
+      [nzFooter]="modalFooter"
+      (nzOnCancel)="closeModal()"
+    >
+      <ng-template #modalTitle>Chia sẻ</ng-template>
+
+      <ng-template #modalContent>
+        <p nz-typography nzCopyable [nzContent]="shareLink"></p>
+      </ng-template>
+
+      <ng-template #modalFooter>
+        <button nz-button nzType="primary" (click)="closeModal()">Đóng</button>
+      </ng-template>
+    </nz-modal>
