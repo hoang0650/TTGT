@@ -102,6 +102,8 @@ export class MapComponent implements OnInit {
   shareLink?: string;
 
   isShare: boolean;
+  currentMode?:string;
+  dividerText?:string;
   
   constructor(private configure:ConfigureService, private staticMapService:StaticMapService, private markerService:MarkerService, private roadEventService:RoadEventsService, private route:ActivatedRoute, private location:Location, private mapService:MapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private geocoding:GeocodingService, private cameraService:CameraService, private parkingService:ParkingService, private cdRef:ChangeDetectorRef) {
     this.currentTab = "traffic";
@@ -206,7 +208,7 @@ export class MapComponent implements OnInit {
         default:
       }
     });
-    console.log(this.listFavoriteParking);
+    console.log(this.listFavoriteCamera);
     
     this.cdRef.detectChanges()
   }
@@ -226,6 +228,8 @@ export class MapComponent implements OnInit {
       if (camera._id == camid) {
         this.sideMap?.flyTo([camera.loc.coordinates[1], camera.loc.coordinates[0]], 15)
         this.chosenMarkers['camera'] = camera
+        console.log(camera);
+        
       }
     })
   }
@@ -387,6 +391,7 @@ export class MapComponent implements OnInit {
         this.sideMap?.flyTo([parking.loc.coordinates[1], parking.loc.coordinates[0]])
         this.chosenMarkers['parking'] = parking
         this.cdRef.detectChanges()
+        this.setCurrentMode("parkings")
       }
     })
 
@@ -402,7 +407,6 @@ export class MapComponent implements OnInit {
       rotationAngle: camera.ptz ? 0 : camera.angle
     }).on({
       click: () => {
-      
         this.sideMap?.flyTo([camera.loc.coordinates[1], camera.loc.coordinates[0]])
         
         if (camera.angle) {
@@ -421,6 +425,7 @@ export class MapComponent implements OnInit {
 
         this.chosenMarkers['camera'] = camera;
         this.cdRef.detectChanges()
+        this.setCurrentMode("cameras")
         // this.selectCamera(camera)
       }
     })
@@ -460,6 +465,7 @@ export class MapComponent implements OnInit {
     this.isSearch = false;
     this.searchQuery = '';
     this.searchResults = [];
+    this.cdRef.detectChanges()
   }
 
   searchSelect(result:any) {
@@ -940,15 +946,33 @@ export class MapComponent implements OnInit {
     return component.location.nativeElement;
   }
 
-  isOpen = true;
+  isOpen = false;
 
-  toggle() {
+  toggle(onoff?:boolean) {
     this.searchQuery = this.isOpen ? "Mở":"Đóng"
-    this.isOpen = !this.isOpen;
+    this.isOpen = onoff || !this.isOpen;
+    this.cdRef.detectChanges()
   }
 
   closeModal() {
     this.isShare = false
     this.shareLink = ""
+  }
+
+  setCurrentMode(mode?:string) {
+    this.currentMode = mode
+    if (mode == "cameras") {
+      this.dividerText = "Camera"
+    } else if (mode == "parkings") {
+      this.dividerText = "Bãi đỗ xe"
+    } else {
+      this.dividerText = ""
+    }
+
+    if (mode) {
+      this.toggle(true)
+    } else {
+      this.toggle(false)
+    }
   }
 }

@@ -99,6 +99,17 @@ export class ConfigureService {
     },
   }
 
+  options:any = {
+    layers: [
+      this.baselayer.tiles,
+    ],
+    attributionControl:false,
+    worldCopyJump: true,
+    center: [  10.762622, 106.660172 ],
+    zoom: 14,
+    zoomControl: false
+  }
+
   center = {
     lng: 106.660172,
     lat: 10.762622,

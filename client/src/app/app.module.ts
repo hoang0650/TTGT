@@ -38,8 +38,7 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzTableModule} from 'ng-zorro-antd/table';
-
-//
+import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { AuthModule, AuthHttpInterceptor} from '@auth0/auth0-angular';
 import { AdminComponent } from './components/admin/admin.component';
 import { AdminConfigTrafficComponent } from './components/admin-config-traffic/admin-config-traffic.component';
@@ -49,6 +48,13 @@ import { AdminNotificationComponent } from './components/admin-notification/admi
 import { AdminGroupsComponent } from './components/admin-groups/admin-groups.component';
 import { AdminGroupsEditComponent } from './components/admin-groups-edit/admin-groups-edit.component';
 import { AdminUsersComponent } from './components/admin-users/admin-users.component';
+import { EventsManagerComponent } from './components/events-manager/events-manager.component';
+import { EventsManagerPopupComponent } from './components/events-manager-popup/events-manager-popup.component';
+import { FilterPipe } from './pipes/filter.pipe';
+import { CamerasComponent } from './components/cameras/cameras.component';
+import { RoadworksComponent } from './components/roadworks/roadworks.component';
+import { SafePipeModule } from 'safe-pipe';
+import { ParkingsComponent } from './components/parkings/parkings.component';
 
 
 registerLocaleData(vi);
@@ -76,6 +82,12 @@ export function tokenGetters() {
     AdminGroupsComponent,
     AdminGroupsEditComponent,
     AdminUsersComponent,
+    EventsManagerComponent,
+    EventsManagerPopupComponent,
+    FilterPipe,
+    CamerasComponent,
+    RoadworksComponent,
+    ParkingsComponent,
  
   ],
   imports: [
@@ -93,6 +105,7 @@ export function tokenGetters() {
     NzDropDownModule,
     NzTypographyModule,
     NzLayoutModule,
+    SafePipeModule,
     NzMenuModule,
     NzDropDownModule,
     NzImageModule,
@@ -103,6 +116,7 @@ export function tokenGetters() {
     NzCheckboxModule,
     NzBadgeModule,
     NzTableModule,
+    AccordionModule.forRoot(),
     
     AuthModule.forRoot({
       domain: 'https://dev-0gy0vn9g.us.auth0.com',

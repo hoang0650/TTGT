@@ -4,27 +4,23 @@
         <!-- <li nz-menu>
           <img nz-image nzSrc="assets/images/localize/logo.png" height="40px" width="50px">
         </li> -->
-        <li  nz-submenu nzTitle ="Giới thiệu">
-          <a>Giới thiệu</a>
-        </li>
-        <li  nz-submenu nzTitle ="Bản đồ" [routerLink]="['/map']">
-          <!-- <a [routerLink]= "['/map']">Bản đồ</a> -->
-        </li>
-        <li nz-submenu nzTitle="Quản lý">
+        <li  nz-submenu nzTitle="Giới thiệu"></li>
+        <li  nz-submenu nzTitle="Bản đồ" [routerLink]="['/map']"></li>
+        <li nz-submenu nzTitle="Quản lý" >
           <ul>
             <li nz-menu-item nzMatchRouter>
-              <a routerLink="">Cảnh báo giao thông</a>
+              <a [routerLink]="['/events']">Cảnh báo giao thông</a>
             </li>
             <li nz-menu-item nzMatchRouter>
-              <a>Camera giao thông</a>
+              <a [routerLink]="['/cameras']">Camera giao thông</a>
             </li>
             <li nz-menu-item nzMatchRouter>
-              <a>Công trình thi công</a>
+              <a [routerLink]="['/roadworks']">Công trình thi công</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a [routerLink]="['/parkings']">Bãi đỗ xe</a>
             </li>
             <nz-divider class="ant-divider-inner-text" nzPlain nzText="Thông tin"></nz-divider>
-            <li nz-menu-item nzMatchRouter>
-              <a>Bãi đỗ xe</a>
-            </li>
             <li nz-menu-item nzMatchRouter>
               <a>Phân luồng giao thông</a>
             </li>
