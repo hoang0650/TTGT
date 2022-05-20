@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NZ_I18N, vi_VN } from 'ng-zorro-antd/i18n';
-import { registerLocaleData  } from '@angular/common';
+import { DatePipe, registerLocaleData  } from '@angular/common';
 import vi from '@angular/common/locales/vi';
 import { FormsModule } from '@angular/forms';
 import { CellDirective } from './modules/directive/cell.directive';
@@ -55,6 +55,10 @@ import { CamerasComponent } from './components/cameras/cameras.component';
 import { RoadworksComponent } from './components/roadworks/roadworks.component';
 import { SafePipeModule } from 'safe-pipe';
 import { ParkingsComponent } from './components/parkings/parkings.component';
+import { StaticMapComponent } from './components/static-map/static-map.component';
+import { RoadeventsComponent } from './components/roadevents/roadevents.component';
+import { StatsEventsComponent } from './components/stats-events/stats-events.component';
+import { NgChartsModule } from 'ng2-charts';
 
 
 registerLocaleData(vi);
@@ -88,6 +92,9 @@ export function tokenGetters() {
     CamerasComponent,
     RoadworksComponent,
     ParkingsComponent,
+    StaticMapComponent,
+    RoadeventsComponent,
+    StatsEventsComponent,
  
   ],
   imports: [
@@ -117,6 +124,7 @@ export function tokenGetters() {
     NzBadgeModule,
     NzTableModule,
     AccordionModule.forRoot(),
+    NgChartsModule,
     
     AuthModule.forRoot({
       domain: 'https://dev-0gy0vn9g.us.auth0.com',
@@ -184,8 +192,9 @@ export function tokenGetters() {
     }),
   ],
   providers: [
-     { provide: NZ_I18N, useValue: vi_VN },
-     {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi:true }
+    { provide: NZ_I18N, useValue: vi_VN },
+    {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi:true },
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })

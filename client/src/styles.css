@@ -17,6 +17,16 @@
     background-color: whitesmoke;
 }
 
+.map-layout-info-right {
+    top: 0px;
+    width: 408px;
+    height: 100%;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    background-color: whitesmoke;
+}
+
 
 .map-layout-info-header {
     height: 40px;
@@ -243,6 +253,63 @@ nz-layout {
 }
 .marker-parking.selected {
     background-image: url(assets/images/parking_select.png);
+}
+
+.extend-label-road-event {
+    white-space: nowrap;
+    background-color: inherit;
+    border-color: inherit;
+    color: white;
+    position: absolute;
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: 14px;
+    height: 30px;
+    transform: translate(-50%, -50%);
+}
+
+.extend-marker-road-event {
+    white-space: nowrap;
+    background-color: inherit;
+    border-color: inherit;
+    color: white;
+    position: absolute;
+    padding: 4px 8px;
+    border-radius: 5px;
+    left: calc(100% + 6px);
+    bottom: calc(50% - 15px);
+    font-size: 14px;
+    height: 30px;
+}
+
+.extend-image-road-event {
+    white-space: nowrap;
+    background-color: red;
+    border-color: red;
+    color: white;
+    position: absolute;
+    padding: 4px 8px;
+    border-radius: 5px;
+    left: calc(100% + 6px);
+    bottom: calc(50% - 15px);
+    font-size: 14px;
+    height: 30px;
+}
+
+.extend-marker-road-event::before {
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    content: "";
+    position: absolute;
+    border-right: 8px solid black;
+    border-right-color: inherit;
+    bottom: 9px;
+    left: -8px;
+}
+
+.image-marker {
+    height: inherit;
+    width: auto;
 }
 
 .marker-roadwork {

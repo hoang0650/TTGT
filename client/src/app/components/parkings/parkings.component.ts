@@ -215,7 +215,9 @@ export class ParkingsComponent implements OnInit {
     district.forEach((element:any) => {
         bound.push([element.loc.coordinates[1], element.loc.coordinates[0]]);
     });
-    this.sideMap.flyToBounds(L.latLngBounds(bound))
+    this.sideMap.flyToBounds(L.latLngBounds(bound), {
+      paddingBottomRight: [408, 0]
+    })
   };
 
   exportCSV() {
