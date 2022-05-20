@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthorizationService } from 'src/app/services/authorization.service';
 import { AuthService } from '@auth0/auth0-angular';
+import { Location } from '@angular/common'
 import { AppComponent } from 'src/app/app.component';
 // import {Menu} from 'ng-zorro-antd';
 @Component({
@@ -10,7 +11,7 @@ import { AppComponent } from 'src/app/app.component';
 })
 export class HeaderComponent implements OnInit {
   isCollapsed = false;
-  constructor(public auth:AuthorizationService, public auth0:AuthService, public appCom:AppComponent) { }
+  constructor(public auth:AuthorizationService, public auth0:AuthService, public appCom:AppComponent, private location:Location) { }
 
   ngOnInit(): void {
   }
@@ -21,6 +22,10 @@ export class HeaderComponent implements OnInit {
 
   logout(){
     return this.auth.logout();
+  }
+
+  isActive(viewLocation: string) {
+    return viewLocation === this.location.path();
   }
 
   // getProFile(){

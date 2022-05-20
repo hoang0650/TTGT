@@ -1,10 +1,9 @@
-<nz-header nzTheme="dark">
-    
-    <ul nz-menu nzMode="horizontal" >
+<!-- <nz-header nzTheme="dark">
+    <ul nz-menu nzMode="horizontal" > -->
         <!-- <li nz-menu>
           <img nz-image nzSrc="assets/images/localize/logo.png" height="40px" width="50px">
         </li> -->
-        <li  nz-submenu nzTitle="Giới thiệu"></li>
+        <!-- <li  nz-submenu nzTitle="Giới thiệu"></li>
         <li  nz-submenu nzTitle="Bản đồ" [routerLink]="['/map']"></li>
         <li nz-submenu nzTitle="Quản lý" >
           <ul>
@@ -22,10 +21,10 @@
             </li>
             <nz-divider class="ant-divider-inner-text" nzPlain nzText="Thông tin"></nz-divider>
             <li nz-menu-item nzMatchRouter>
-              <a>Phân luồng giao thông</a>
+              <a [routerLink]="['/roadevents']">Phân luồng giao thông</a>
             </li>
             <li nz-menu-item nzMatchRouter>
-              <a>Lớp thông tin tĩnh</a>
+              <a [routerLink]="['/staticmaps']">Lớp thông tin tĩnh</a>
             </li>
           </ul>
         </li>
@@ -42,7 +41,7 @@
             </li>
           </ul>
         </li>
-        <li  nz-submenu nzTitle ="Cảnh báo giao thông">
+        <li  nz-submenu nzTitle ="Cảnh báo giao thông" [routerLink]="['/events/stats']">
         </li>
         <li nz-menu-item  style="float: right;">
           <img *ngIf="appCom.profile" height="32px" width="32px" style="border-radius: 20px;" nz-image [nzSrc]="appCom.profile['picture']">
@@ -54,7 +53,100 @@
 
             <li nz-menu-item *ngIf="appCom.profile" (click)="logout()">Thoát</li>
           </ul>
-        </nz-dropdown-menu>
-    </ul>
-</nz-header>
- 
+        </nz-dropdown-menu> -->
+        
+    <!-- </ul>
+</nz-header> -->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-light">
+  <div class="container-fluid">
+    
+    <img class="navbar-brand" alt="Brand" src="assets/images/localize/logo.png" height="40px" />
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mb-2 mb-lg-0 justify-content-start">
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page">Home</a>
+        </li>
+        <li class="nav-item" [ngClass]="{'active': isActive('/map')}">
+          <a class="nav-link" [routerLink]="['/map']">Bản đồ</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Quản lý
+          </a>
+          
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li>
+              <a class="dropdown-item" [routerLink]="['/events']">Cảnh báo giao thông</a>
+            </li>
+            <li>
+              <a class="dropdown-item" [routerLink]="['/cameras']">Camera giao thông</a>
+            </li>
+            <li>
+              <a class="dropdown-item" [routerLink]="['/roadworks']">Công trình thi công</a>
+            </li>
+            <li>
+              <a class="dropdown-item" [routerLink]="['/parkings']">Bãi đỗ xe</a>
+            </li>
+            <nz-divider class="ant-divider-inner-text" nzPlain nzText="Thông tin"></nz-divider>
+            <li>
+              <a class="dropdown-item" [routerLink]="['/roadevents']">Phân luồng giao thông</a>
+            </li>
+            <li>
+              <a class="dropdown-item" [routerLink]="['/staticmaps']">Lớp thông tin tĩnh</a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Quản trị
+          </a>
+          
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li>
+              <a class="dropdown-item" [routerLink]="['/config']">Cấu hình</a>
+            </li>
+            <li>
+              <a class="dropdown-item" [routerLink]="['/cameras']">Người dùng</a>
+            </li>
+            <li>
+              <a class="dropdown-item" [routerLink]="['/roadworks']">Nhóm người dùng</a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Thống kê
+          </a>
+          
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li>
+              <a class="dropdown-item" [routerLink]="['/events/stats']">Cảnh báo giao thông</a>
+            </li>
+          </ul>
+        </li>
+        
+      </ul>
+      <ul class="navbar-nav mb-2 mb-lg-0 ms-auto justify-content-end">
+        <li class="nav-item" *ngIf="!appCom.profile">
+          <a class="nav-link" aria-current="page" (click)="login()">Đăng nhập</a>
+        </li>
+        <li class="nav-item dropdown" *ngIf="appCom.profile">
+          <a class="nav-link dropdown" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img class="rounded-circle profile-image" [src]="appCom.profile['picture']">
+            <span>{{appCom.profile['nickname']}}</span> <span class="caret"></span>
+          </a>
+
+          <ul class="dropdown-menu" aria-labelledby="userDropdown">
+            <li>
+              <a class="dropdown-item" (click)="logout()">Đăng xuất</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

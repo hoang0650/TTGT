@@ -1,0 +1,165 @@
+<!-- <div class="management-with-map staticmap-management">
+    <div class="map" 
+        leaflet 
+        [leafletOptions]="options"
+        (leafletMapReady)="initMap($event)">
+        <div *ngFor="let geojson of geojsons | keyvalue; trackBy:trackByFn" [leafletLayer]="$any(geojson).value"></div>
+    </div>
+
+    <div id="sidebar" class="leaflet-sidebar collapsed" >
+        <div class="leaflet-sidebar-tabs">
+            <ul role="tablist">
+                <li [ngClass]="appCom.defaultTheme ? '' : 'custom-color-sidebar'"><a href="#home" role="tab"><i class="bars icon"></i></a></li>
+            </ul>
+        </div>
+
+        <div class="leaflet-sidebar-content">
+            <div class="leaflet-sidebar-pane" id="home">
+                <h1 class="leaflet-sidebar-header" [ngClass]="appCom.defaultTheme ? 'leaflet-sidebar-header' : 'custom-color'">
+                    <span class="leaflet-sidebar-close"><i class="angle left icon"></i></span>
+                </h1>
+
+                <div class="ui segments full-height no-spacing ">
+                    <div class="ui segment">
+                        <h2 class="ui teal center aligned icon header">
+                            <div class="content">
+                                Lớp thông tin tĩnh
+                                <div class="sub header">Quản lý, sử dụng các thông tin tĩnh trên địa bàn thành phố</div>
+                            </div>
+                        </h2>
+                        <div class="ui icon success message" *ngIf="notice">
+                            <i class="check icon"></i>
+                            <div class="header">
+                                {{notice}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui right aligned clearing secondary segment">
+                        <div class="ui left floated simple compact dropdown labeled icon button">
+                            <i class="cloud download icon"></i>
+                            <span class="text">Xuất dữ liệu</span>
+                            <div class="menu">
+                                <div class="item" (click)="exportCSV()">
+                                    <i class="file outline icon"></i> CSV
+                                </div>
+                                <div class="item disabled">
+                                    <i class="file excel outline icon"></i>Excel
+                                </div>
+                                <div class="item disabled">
+                                    <i class="file code outline icon"></i>JSON
+                                </div>
+                            </div>
+                        </div>
+                        <a [href]="objectUrl | safe: 'url'" *ngIf="exported" download="{{'ttgt_lop-thong-tin-tinh.csv'}}" [ngClass]="{'loading': !objectUrl, 'disabled': !objectUrl}" class="ui left floated compact icon button">
+                            <i class="download icon"></i>
+                        </a>
+                        <a class="ui compact labeled icon button" id="btnAddStaticTop" data-tooltip="Thêm lớp thông tin mới" data-position="top right" [routerLink]="['./create']"> <i class="add icon"></i> Thêm</a>
+                    </div>
+                    <div class="ui segment">
+                        <div class="ui fluid left icon input">
+                            <input id="filter" type="text" placeholder="Tìm nhanh" [(ngModel)]="searchText" class="form-control">
+                            <i class="filter icon "></i>
+                        </div>
+                    </div>
+                    <div class="ui segment">
+                        <div class="ui middle aligned selection divided list">
+                            <div [ngClass]="{'active': staticMap['selected']}" class="item" (click)="selectStaticMap(staticMap)" *ngFor="let staticMap of listData | searchFilter: searchText:['staticMapData', 'name']">
+                                <div class="left floated content ">
+                                    <div *ngIf="!staticMap?.staticMapData?.icon" class="ui simple dropdown label color-picker {{staticMap.color ? staticMap.color : 'black'}}">
+                                        <div class="menu ui grid">
+                                            <div class="item {{item.key}} four wide column item-color-hover" (click)="changeColorStaticMap(staticMap, item.key);$event.stopPropagation()" *ngFor="let item of listColors | keyvalue"></div>
+                                        </div>
+                                    </div>
+                                    <img *ngIf="staticMap?.staticMapData?.icon" class="ui avatar image" src="{{staticMap.staticMapData.icon.data.iconUrl}}">
+                                </div>
+                                <div class="right floated content ">
+                                    <a class="ui icon button" [routerLink]="['.', staticMap.staticMapData._id, 'update']" data-tooltip="Chỉnh sửa lớp thông tin" data-position="top right"><i class="ui write icon"></i></a>
+                                </div>
+                                <div class="content">
+                                    <span class="header"> {{staticMap.staticMapData.name}} </span>
+                                    <span> {{staticMap.staticMapData.description}} </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui right aligned clearing secondary segment">
+                        <a class="ui compact labeled icon button" id="btnAddStaticBottom" data-tooltip="Thêm lớp thông tin mới" data-position="top right" [routerLink]="['./create']"> <i class="add icon"></i> Thêm</a>
+                    </div>
+                </div>               
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<div class="map-layout">
+    <div class="map-leaflet"
+        leaflet
+        [leafletOptions]="configure.options"
+        (leafletMapReady)="initMap($event)">
+    </div>
+
+    <div class="map-search">
+        <div class="map-search-bar">
+            <nz-input-group [nzSuffix]="searchQuery.length > 0 ? suffixIconClose : suffixIconSearch" [nzSize]="'large'">
+                <input type="text" nz-input placeholder="Tìm vị trí" [(ngModel)]="searchQuery" appSearchRoads [appSearchRoadsText]="searchQuery" (newListRoads)="searchResults = $event" (isSearch)="isSearch = $event"/>
+            </nz-input-group>
+            <ng-template #suffixIconSearch>
+            <i nz-icon nzType="search"></i>
+            </ng-template>
+            <ng-template #suffixIconClose>
+                <i nz-icon nzType="close" (click)="searchIconClick()"></i>
+            </ng-template>
+    
+            <div class="results transition visible" *ngIf="searchResults?.length > 0 && isSearch">
+                <ul nz-menu>
+                    <li class="map-search-result" nz-menu-item *ngFor="let result of searchResults; index as i" (click)="searchSelect(result)">
+                        <b>{{result.properties.name}}</b>
+                        <br>
+                        {{result.properties.city}}
+                    </li>
+                </ul>
+            </div>
+            <div class="results transition visible" *ngIf="searchResults?.length <= 0 && isSearch" style="background-color: white;">
+                <a class="result">
+                    <div class="content">
+                        <div class="title">Không tìm thấy</div>
+                        <div class="description">Hãy thử lại</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <button class="map-layout-info-button" nz-button nzType="primary" [@mapLayoutInfoButton]="isOpen ? 'open' : 'closed'" (click)="toggleLayoutInfo()">
+        <i nz-icon nzType="{{isOpen ? 'right' : 'left'}}"></i>
+    </button>
+
+    <div [@mapLayoutInfo]="isOpen ? 'open' : 'closed'" class="map-layout-info-right">
+        <div>
+            <nz-divider nzText="Lớp Thông Tin Tĩnh"></nz-divider>
+        </div>
+        <div class="map-layout-info-content">
+            <div class="ui segment">
+                <div class="ui middle aligned selection divided list">
+                    <div [ngClass]="{'active': staticMap['selected']}" class="item" (click)="selectStaticMap(staticMap)" *ngFor="let staticMap of listData | searchFilter: searchText:['staticMapData', 'name']">
+                        <div class="left floated content ">
+                            <div *ngIf="!staticMap?.staticMapData?.icon" class="ui simple dropdown label color-picker {{staticMap.color ? staticMap.color : 'black'}}">
+                                <div class="menu ui grid">
+                                    <div class="item {{item.key}} four wide column item-color-hover" (click)="changeColorStaticMap(staticMap, item.key);$event.stopPropagation()" *ngFor="let item of listColors | keyvalue"></div>
+                                </div>
+                            </div>
+                            <img *ngIf="staticMap?.staticMapData?.icon" class="ui avatar image" src="{{staticMap.staticMapData.icon.data.iconUrl}}">
+                        </div>
+                        <div class="right floated content ">
+                            <a class="ui icon button" [routerLink]="['.', staticMap.staticMapData._id, 'update']" data-tooltip="Chỉnh sửa lớp thông tin" data-position="top right"><i class="ui write icon"></i></a>
+                        </div>
+                        <div class="content">
+                            <span class="header"> {{staticMap.staticMapData.name}} </span>
+                            <span> {{staticMap.staticMapData.description}} </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
