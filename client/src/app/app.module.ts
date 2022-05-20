@@ -38,6 +38,7 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzTableModule} from 'ng-zorro-antd/table';
+//
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { AuthModule, AuthHttpInterceptor} from '@auth0/auth0-angular';
 import { AdminComponent } from './components/admin/admin.component';
@@ -55,7 +56,7 @@ import { CamerasComponent } from './components/cameras/cameras.component';
 import { RoadworksComponent } from './components/roadworks/roadworks.component';
 import { SafePipeModule } from 'safe-pipe';
 import { ParkingsComponent } from './components/parkings/parkings.component';
-
+import { MainComponent } from './components/main/main.component';
 
 registerLocaleData(vi);
 export function tokenGetters() {
@@ -88,6 +89,7 @@ export function tokenGetters() {
     CamerasComponent,
     RoadworksComponent,
     ParkingsComponent,
+    MainComponent,
  
   ],
   imports: [
