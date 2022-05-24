@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,Input } from '@angular/core';
 import { AuthorizationService } from 'src/app/services/authorization.service';
 import { AuthService } from '@auth0/auth0-angular';
 import { Location } from '@angular/common'
@@ -10,6 +10,7 @@ import { AppComponent } from 'src/app/app.component';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
+  @Input() roles:string[] = []
   isCollapsed = false;
   constructor(public auth:AuthorizationService, public auth0:AuthService, public appCom:AppComponent, private location:Location) { }
 

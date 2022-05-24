@@ -15,8 +15,9 @@ import { StatsEventsComponent } from './components/stats-events/stats-events.com
 import { AdminConfigTestComponent } from './components/admin-config-test/admin-config-test.component';
 import { MainComponent } from './components/main/main.component';
 const routes: Routes = [
-  { path: 'map', component: MapComponent },
+  { path: '', redirectTo: 'home', pathMatch: 'full'},
   { path: 'home', component:MainComponent},
+  { path: 'map', component: MapComponent },
   { path: 'config', component:AdminComponent,
     children:[
       { path: '', redirectTo: 'camera', pathMatch: 'full'},

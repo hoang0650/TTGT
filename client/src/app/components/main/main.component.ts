@@ -3,6 +3,7 @@ import { ConfigureService } from 'src/app/services/configure.service';
 import { MapService } from 'src/app/services/map.service';
 import { AppComponent } from 'src/app/app.component';
 import { NewService } from 'src/app/services/new.service';
+import * as AOS from 'aos';
 declare var $: any;
 @Component({
   selector: 'app-main',
@@ -25,6 +26,7 @@ export class MainComponent implements OnInit {
   constructor(public appCom: AppComponent,private configure:ConfigureService, private mapService:MapService, private newService:NewService) { }
 
   ngOnInit(): void {
+    AOS.init();
     this.getAllType()
     this.getInfoOfUser()
     this.newService.getNew().subscribe({

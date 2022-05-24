@@ -45,7 +45,8 @@
               "node_modules/leaflet.markercluster/dist/MarkerCluster.css",
               "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "node_modules/fomantic-ui/dist/semantic.min.css"
+              "node_modules/fomantic-ui/dist/semantic.min.css",
+              "node_modules/aos/dist/aos.css"
             ],
             "scripts": [
               "node_modules/leaflet/dist/leaflet-src.js",
@@ -55,7 +56,8 @@
               "node_modules/moment/locale/vi.js",
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js",
-              "node_modules/fomantic-ui/dist/semantic.min.js"
+              "node_modules/fomantic-ui/dist/semantic.min.js",
+              "node_modules/aos/dist/aos.js"
             ]
           },
           "configurations": {
