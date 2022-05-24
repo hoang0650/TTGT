@@ -1,4 +1,4 @@
-<h4 class="ui dividing header">Cấu hình cảnh báo tình trạng cảnh báo</h4>
+<h2 class="ui dividing header">Cấu hình cảnh báo tình trạng cảnh báo</h2>
 <div class="ui show error message" [ngClass]="{'transform': admin.errorValidate}" *ngIf="admin.configForm.invalid">
     <ul class="list">
         <li *ngIf="admin.configForm.controls.refreshTime.errors?.required"><span class="config-error-message">Thời gian cập nhật cảnh báo</span> không được để trống</li>
@@ -6,10 +6,12 @@
         <li *ngIf="admin.configForm.controls.jamName.errors?.required || admin.configForm.controls.congestionName.errors?.required || admin.configForm.controls.incidentName.errors?.required || admin.configForm.controls.floodName.errors?.required || admin.configForm.controls.normalName.errors?.required"><span class="config-error-message">Loại</span> không được để trống</li>
     </ul>
 </div>
+
 <div class="field inline">
-    <label>Thời gian cập nhật cảnh báo <small>(1 giây - 60 giây)</small>
-    </label>
+    <label><h4>Thời gian cập nhật cảnh báo <small>(1 giây - 60 giây)</small></h4></label>
     <span *ngIf="!admin.editMode">{{admin.setting.trafficEvents.refreshTime}} giây</span>
+    
+      
     <div class="ui right labeled input" *ngIf="admin.editMode">
         <input name="refreshTime" required="required" pattern="{{admin.configValidate.refreshEvent.regexr}}" type="number" placeholder="1" [(ngModel)]="admin.setting.trafficEvents.refreshTime">
         <div class="ui basic label">
@@ -17,8 +19,9 @@
         </div>
     </div>
 </div>
-<div class="inline fields">
-    <label for="fruit">Giọng đọc cảnh báo</label>
+
+<div class="fields inline">
+    <label><h4>Giọng đọc cảnh báo</h4></label>
     <div class="field">
         <div class="ui radio checkbox">
             <input name="voiceType" type="radio" [(ngModel)]="admin.setting.trafficEvents.voiceType" value="male">
@@ -39,7 +42,7 @@
     </div>
 </div>
 <div class="field">
-    <label>Cấu hình tên gọi và màu cho từng khoảng vận tốc</label>
+    <label><h4>Cấu hình tên gọi và màu cho từng khoảng vận tốc</h4></label>
     <div class="table-responsive">
         <table class="ui unstackable celled padded table">
             <thead>

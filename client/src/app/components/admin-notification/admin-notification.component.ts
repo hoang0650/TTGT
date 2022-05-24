@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-admin-notification',
@@ -6,10 +7,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./admin-notification.component.css']
 })
 export class AdminNotificationComponent implements OnInit {
+  @Input() currentSession?:string;
 
-  constructor() { }
+  constructor(private modalRef:NzModalRef) { }
 
   ngOnInit(): void {
+    
   }
 
+  close() {
+    this.modalRef.close()
+  }
 }

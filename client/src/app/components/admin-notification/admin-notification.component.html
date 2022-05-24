@@ -1,1 +1,15 @@
-<p>admin-notification works!</p>
+<div *nzModalTitle>
+    <div class="ui icon header">
+        <i class="settings icon"></i> Đang có người chỉnh sửa
+    </div>
+</div>
+
+<div>
+    <h3>Hiện tại {{currentSession}} đang chỉnh sửa cấu hình <br/> Xin vui lòng thử vào lúc khác</h3>
+</div>
+
+<div *nzModalFooter>
+    <div class="ui green ok inverted button" (click)="close()">
+        <i class="checkmark icon"></i> Đồng ý
+    </div>
+</div>

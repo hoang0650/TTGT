@@ -16,10 +16,14 @@ export class MapPopupCreateEventComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+    setTimeout(() => {
+      this.cdRef.detectChanges()
+    }, 300)
   }
 
   closePopup() {
+    console.log("Lô");
+    
     this.map.markers['incidents'][this.event?._id].closePopup()
   }
 }

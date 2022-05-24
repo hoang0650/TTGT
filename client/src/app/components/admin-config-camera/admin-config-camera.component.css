@@ -1,0 +1,7 @@
+::ng-deep td {
+    vertical-align: middle !important;
+}
+
+.ui.radio.checkbox > label {
+    margin: 0;
+}

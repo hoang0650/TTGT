@@ -1,6 +1,6 @@
 
 
-<h4 class="ui dividing header">Cấu hình cảnh báo tình trạng camera</h4>
+<h2 class="ui dividing header">Cấu hình cảnh báo tình trạng camera</h2>
 <div class="ui show error message" [ngClass]="{'transform': admin.errorValidate}" *ngIf="admin.configForm.invalid && admin.editMode">
     <ul class="list">
         <li *ngIf="admin.configForm.controls.imageError.errors?.required"><span class="config-error-message">Hình ảnh khi mất kết nối với thông báo</span> không được để trống</li>
@@ -17,7 +17,7 @@
     </ul>
 </div>
 <div class="fields inline">
-    <label>Hình ảnh khi mất kết nối với thông báo</label>
+    <label><h4>Hình ảnh khi mất kết nối với thông báo</h4></label>
     <div class="field">
         <div class="ui radio checkbox">
             <input type="radio" name="imageType" [(ngModel)]="admin.setting.cameraSituations.imageError['imageType']" value="text">
@@ -33,7 +33,7 @@
     </div>
 </div>
 <div class="field inline" *ngIf="admin.setting.cameraSituations.imageError.imageType == 'text'">
-    <label>Chữ hiển thị</label>
+    <label><h4>Chữ hiển thị</h4></label>
     <span *ngIf="!admin.editMode && admin.setting.cameraSituations.imageError.imageType == 'text'">{{admin.setting.cameraSituations.imageError.text}}</span>
     <input required="required" name="imageError" *ngIf="admin.editMode" type="text" placeholder="Có lỗi kết nối" [(ngModel)]="admin.setting.cameraSituations.imageError.text">
 </div>
@@ -51,7 +51,7 @@
     </div>
 </div>
 <div class="field">
-    <label>Cấu hình thời gian</label>
+    <label><h4>Cấu hình thời gian</h4></label>
     <table class="ui unstackable celled padded table">
         <thead>
             <tr>

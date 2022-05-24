@@ -35,6 +35,7 @@ nz-footer {
   justify-content: flex-end;
   align-content: center;
   align-items: center;
+  background-color: #001529;
 }
 
 nz-sider {
@@ -44,4 +45,9 @@ nz-sider {
 ::ng-deep .ant-layout-sider-trigger {
   position: absolute;
   top: 0;
+}
+
+nz-footer > button {
+  margin-right: 30px;
+  width: 100px;
 }
