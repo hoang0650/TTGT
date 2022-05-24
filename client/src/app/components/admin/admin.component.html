@@ -1,95 +1,16 @@
-<!-- <nz-layout>
-      <nz-sider nzCollapsible nzWidth="200px">
-        <div class="logo"></div>
-        <ul nz-menu nzTheme="dark" nzMode="inline">
-          <li nz-submenu nzTitle="Cấu hình" nzIcon="dashboard">
-            <ul>
-              <li nz-menu-item nzMatchRoute> <a [routerLink]="chooseConfigPageAble()? ['./configCamera']: null"  [ngClass]="{active: isActive('/admin/configCamera')}">Tình trạng camera</a> </li>
-              <li nz-menu-item nzMatchRoute> <a [routerLink]="chooseConfigPageAble()? ['./configTraffic']: null" [ngClass]="{active: isActive('/admin/configTraffic')}">Tình trạng giao thông</a> </li>
-              <li nz-menu-item nzMatchRoute> <a [routerLink]="chooseConfigPageAble()? ['./configEvent']: null" [ngClass]="{active: isActive('/admin/configEvent')}">Sự kiện giao thông</a> </li>
-            </ul>
-          </li>
-        </ul>
-      </nz-sider>
-      <nz-layout>
-        <div class="inner-content">
-          <nz-content style="z-index: 999;"> 
-            <form (ngSubmit)="openPopupConfig('save')">
-              <router-outlet>
-                  <nz-breadcrumb>
-                    <nz-breadcrumb-item *ngIf="setting.status != 'applied' && setting.status != 'error'"><p nz-submenu nzIcon="wait">Cấu hình hệ thống có thay đổi</p><p>Sẽ tự động cập nhật trong <time>{{timeToUpdate | amLocale:'vi' | amTimeAgo}}</time></p></nz-breadcrumb-item>
-                  </nz-breadcrumb>
-
-                </router-outlet>
-            </form>
-          </nz-content>
-        </div>
-        <nz-footer style="z-index: 1000;">Ant Design ©2020 Implement By Angular
-          <button *ngIf="!editMode" nz-button nzType="primary" style="float: right;" (click)="startSetting()">Chỉnh sửa</button>
-          <button *ngIf="editMode" nz-button nzType="primary" style="float: right;" type="submit" [disabled]="!configForm.dirty">Lưu</button>
-          <button *ngIf="editMode" nz-button nzType="primary" style="float: right;" type="button" (click)="openPopupConfig('cancel')" class="ui tiny button">Hủy</button>
-        </nz-footer>
-      </nz-layout>
-    </nz-layout>
-        
-       
-        
-
-
- -->
-
- <!-- <div class="config-menu" [ngClass]="{'toggle-menu': toggleMenu}">
-  <div class="ui inverted vertical menu mobile-only">
-      <div class="item">
-          <div class="header" (click)="toggleMenu = !toggleMenu"><span class="glyphicon glyphicon-menu-hamburger"></span> Cấu hình</div>
-          <div class="menu">
-              <a [routerLink]="chooseConfigPageAble() ? ['./camera'] : null" [ngClass]="{active: isActive('/admin/camera')}" class="item"><i class="record icon"></i> Tình trạng camera</a>
-              <a [routerLink]="chooseConfigPageAble() ? ['./traffic'] : null" [ngClass]="{active: isActive('/admin/traffic')}" class="item"><i class="map icon"></i> Tình trạng giao thông</a>
-              <a [routerLink]="chooseConfigPageAble() ? ['./event'] : null" [ngClass]="{active: isActive('/admin/event')}" class="item"><i class="warning circle icon"></i> Sự kiện giao thông</a>
-          </div>
-      </div>
-  </div>
-</div>
-
-<div id="configPage" class="config-page" [ngClass]="{'toggle-menu': toggleMenu}">
-  <form id="configForm" name="configForm" #configForm="ngForm" class="ui form config-contain" (ngSubmit)="openPopupConfig('save')" novalidate="novalidate">
-
-      <div class="ui icon negative message" *ngIf="setting.status != 'applied' && setting.status != 'error'">
-          <i class="wait icon"></i>
-          <div class="content">
-              <div class="header">
-                  Cấu hình hệ thống có thay đổi
-              </div>
-              <p>Sẽ tự động cập nhật trong <time>{{timeToUpdate | amLocale:'vi' | amTimeAgo}}</time></p>
-          </div>
-      </div>
-      
-      <router-outlet></router-outlet>
-
-      <div class="config-footer">
-          <div class="contain-config-button">
-              <span class="expire-setting" *ngIf="sessionObject.expiredAt && editMode">Phiên làm việc của bạn sẽ hết hạn trong <span>{{sessionObject.expiredAt | amLocale:'vi' | amTimeAgo}}</span></span>
-              <button *ngIf="!editMode" type="button" (click)="startSetting()" class="ui tiny button">Chỉnh sửa</button>
-              <button *ngIf="editMode" type="submit" class="ui tiny primary button" [disabled]="!configForm.dirty">Lưu</button>
-              <button *ngIf="editMode" type="button" (click)="openPopupConfig('cancel')" class="ui tiny button">Hủy</button>
-          </div>
-      </div>
-  </form>
-</div> -->
-
 <nz-layout>
     <nz-sider nzCollapsible nzWidth="200px">
         <ul nz-menu nzTheme="dark" nzMode="inline">
             <li nz-menu-item [nzSelected]="isActive('/config/camera')" [routerLink]="chooseConfigPageAble()? ['./camera']: null">
-                <i nz-icon nzType="pie-chart"></i>
-                <span>Trình trạng camera</span>
+                <i nz-icon><i class="fa-solid fa-video"></i></i>
+                <span>Tình trạng camera</span>
             </li>
             <li nz-menu-item [nzSelected]="isActive('/config/traffic')" [routerLink]="chooseConfigPageAble()? ['./traffic']: null">
-                <i nz-icon nzType="pie-chart"></i>
+                <i nz-icon><i class="fa-solid fa-traffic-light"></i></i>
                 <span>Tình trạng giao thông</span>
             </li>
             <li nz-menu-item [nzSelected]="isActive('/config/event')" [routerLink]="chooseConfigPageAble()? ['./event']: null">
-                <i nz-icon nzType="pie-chart"></i>
+                <i nz-icon><i class="fa-solid fa-road-circle-exclamation"></i></i>
                 <span>Sự kiện giao thông</span>
             </li>
         </ul>
@@ -116,7 +37,7 @@
         <nz-footer>
             <button *ngIf="!editMode" nz-button nzType="primary" (click)="startSetting()">Chỉnh sửa</button>
             <button *ngIf="editMode" nz-button nzType="primary" type="submit" [disabled]="!configForm.dirty">Lưu</button>
-            <button *ngIf="editMode" nz-button nzType="primary" type="button" (click)="openPopupConfig('cancel')" class="ui tiny button">Hủy</button>
+            <button *ngIf="editMode" nz-button nzType="primary" nzDanger type="button" (click)="openPopupConfig('cancel')">Hủy</button>
         </nz-footer>
     </nz-layout>
 </nz-layout>

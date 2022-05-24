@@ -1,1 +1,27 @@
-<p>events-manager-popup works!</p>
+<h3 class="ui header center aligned">Thông tin cảnh báo</h3>
+    <form class="ui form stis-notice-popup" #popupForm="ngForm">
+        <div class="field">
+            <select class="ui dropdown" disabled required="required" name="eventType" [(ngModel)]="event['type']">
+                <option value="{{type.key}}" hidden="hidden" *ngFor="let type of eventManager.listEventType | keyvalue">{{$any(type.value).name}}</option>
+            </select>
+        </div>
+        <div class="field">
+            <input type="text" name="place" disabled placeholder="Vị trí" required [(ngModel)]="event['desc'][0]">
+        </div>
+        <div class="field">
+            <input type="text" name="status" disabled placeholder="Tình trạng" required [(ngModel)]="event['desc'][1]">
+        </div>
+        <div class="field">
+            <textarea placeholder="Thông tin thêm" disabled name="description" [(ngModel)]="event['desc'][2]"
+                rows="2"></textarea>
+        </div>
+        <div class="field"  *ngIf="event['snapshot']">
+            <label>Hình ảnh</label>
+            <div class="contain-image-event">
+                <img src="{{event['snapshot']}}">
+            </div>
+        </div>
+        <div class="field align-button">
+            <button class="ui button red" type="button" (click)="closePopup()">Đóng</button>
+        </div>
+    </form>

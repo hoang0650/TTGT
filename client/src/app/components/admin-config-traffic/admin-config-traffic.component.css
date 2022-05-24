@@ -1,0 +1,44 @@
+::ng-deep .legend-line-red {
+    margin-right: 8px;
+    height:10px;
+    display: inline-block;
+    width: 100px;
+    background:#db2828;
+    border-bottom:1px solid #db2828;
+}
+
+::ng-deep  .legend-line-orange {
+    margin-right: 8px;
+    height:10px;
+    display: inline-block;
+    width: 100px;
+    background:#f26202;
+    border-bottom:1px solid #f26202;
+}
+
+::ng-deep .legend-line-yellow {
+    margin-right: 8px;
+    height:10px;
+    display: inline-block;
+    width: 100px;
+    background:#eaae00;
+    border-bottom:1px solid #eaae00;
+}
+
+::ng-deep .legend-line-green {
+    margin-right: 8px;
+    height:10px;
+    display: inline-block;
+    width: 100px;
+    background:#16ab39;
+    border-bottom:1px solid #16ab39;
+}
+
+
+::ng-deep td {
+    vertical-align: middle !important;
+}
+
+.ui.radio.checkbox > label {
+    margin: 0;
+}

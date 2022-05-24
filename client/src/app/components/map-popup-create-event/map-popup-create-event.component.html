@@ -7,13 +7,13 @@
             </select>
         </div>
         <div class="field">
-            <input type="text" name="place" placeholder="Vị trí" required [(ngModel)]="map.event['desc'][0]" (keyup)="map.component.changeDetectorRef.detectChanges()">
+            <input type="text" name="place" placeholder="Vị trí" required [(ngModel)]="map.event['desc'][0]" (keyup)="cdRef.detectChanges()">
         </div>
         <div class="field">
-            <input type="text" name="status" placeholder="Tình trạng" required [(ngModel)]="map.event['desc'][1]" (keyup)="map.component.changeDetectorRef.detectChanges()">
+            <input type="text" name="status" placeholder="Tình trạng" required [(ngModel)]="map.event['desc'][1]" (keyup)="cdRef.detectChanges()">
         </div>
         <div class="field">
-            <textarea placeholder="Thông tin thêm" name="description" [(ngModel)]="map.event['desc'][2]" (keyup)="map.component.changeDetectorRef.detectChanges()"
+            <textarea placeholder="Thông tin thêm" name="description" [(ngModel)]="map.event['desc'][2]" (keyup)="cdRef.detectChanges()"
                 rows="2"></textarea>
         </div>
         <div class="field">

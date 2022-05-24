@@ -1,4 +1,4 @@
-<h4 class="ui dividing header">Cấu hình phân tích tình trạng giao thông</h4>
+<h2 class="ui dividing header">Cấu hình phân tích tình trạng giao thông</h2>
 <div class="ui show error message" [ngClass]="{'transform': admin.errorValidate}" *ngIf="admin.configForm.invalid">
     <ul class="list">
         <li *ngIf="admin.configForm.controls.mapUrlNoText.errors?.required || admin.configForm.controls.mapUrlText.errors?.required || admin.configForm.controls.slowName.errors?.required || admin.configForm.controls.mapUrlFull.errors?.required"><span class="config-error-message">Đường dẫn</span> không được để trống</li>
@@ -21,12 +21,8 @@
     </ul>
 </div>
 <div class="field inline">
-    <label>Cấu hình bản đồ</label>
+    <label><h4>Cấu hình bản đồ</h4></label>
     <span *ngIf="!admin.editMode">{{admin.setting.trafficSituations.mapUrl.name}}</span>
-    <!-- <select name="mapType" *ngIf="admin.editMode" class="ui dropdown" [(ngModel)]="admin.setting.trafficSituations.mapUrl.mapType"
-    (change)="admin.chooseType(admin.setting.trafficSituations.mapUrl.mapType)">
-        <option *ngFor="let type of admin.listMapType" value="{{type.mapType}}">{{type.name}}
-    </select> -->
     <select name="mapType" *ngIf="admin.editMode" class="ui dropdown" [(ngModel)]="admin.setting.trafficSituations.mapUrl.mapType"
     (change)="admin.chooseType(admin.setting.trafficSituations.mapUrl.mapType)">
         <option *ngFor="let type of admin.listMapType | keyvalue" [value]="type.key">{{$any(type.value).name}}</option>
@@ -73,7 +69,7 @@
     </table>
 </div>
 <div class="field">
-    <label>Cấu hình thời gian</label>
+    <label><h4>Cấu hình thời gian</h4></label>
     <table class="ui unstackable celled padded table">
         <thead>
             <tr>
@@ -134,7 +130,7 @@
     </table>
 </div>
 <div class="field">
-    <label>Cấu hình màu cho từng khoảng vận tốc</label>
+    <label><h4>Cấu hình màu cho từng khoảng vận tốc</h4></label>
     <table class="ui unstackable celled padded table">
         <thead>
             <tr>
@@ -158,7 +154,7 @@
                     <input name="jamName" required="required" *ngIf="admin.editMode" type="text" placeholder="Ùn tắc" [(ngModel)]="admin.setting.trafficSituations.configVelocity.jam.name">
                 </td>
                 <td>
-                    <div class="legend-line red">
+                    <div class="legend-line-red">
                     </div>
                 </td>
             </tr>
@@ -176,7 +172,7 @@
                     <input name="congestionName" required="required" *ngIf="admin.editMode" type="text" placeholder="Đông xe" [(ngModel)]="admin.setting.trafficSituations.configVelocity.congestion.name">
                 </td>
                 <td>
-                    <div class="legend-line orange">
+                    <div class="legend-line-orange">
                     </div>
                 </td>
             </tr>
@@ -195,7 +191,7 @@
                     <input name="slowName" required="required" *ngIf="admin.editMode" type="text" placeholder="Di chuyển chậm" [(ngModel)]="admin.setting.trafficSituations.configVelocity.slow.name">
                 </td>
                 <td>
-                    <div class="legend-line yellow">
+                    <div class="legend-line-yellow">
                     </div>
                 </td>
             </tr>
@@ -208,7 +204,7 @@
                     <input name="normalName" required="required" *ngIf="admin.editMode" type="text" placeholder="Thông thoáng" [(ngModel)]="admin.setting.trafficSituations.configVelocity.normal.name">
                 </td>
                 <td>
-                    <div class="legend-line green">
+                    <div class="legend-line-green">
                     </div>
                 </td>
             </tr>

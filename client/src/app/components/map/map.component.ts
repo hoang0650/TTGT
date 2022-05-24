@@ -145,11 +145,6 @@ export class MapComponent implements OnInit {
       zoom: 14,
       zoomControl: false
     }
-
-    // setInterval(() => {
-    //   console.log(this.searchResults);
-    //   console.log(this.isSearch);
-    // }, 1000)
   }
 
   ngOnInit(): void {
@@ -181,7 +176,7 @@ export class MapComponent implements OnInit {
 
     setTimeout(() => {
       this.sideMap?.invalidateSize()
-    }, 1500)
+    }, 300)
 
     this.getAllStaticMaps()
     this.getAllRoadEvents()
@@ -881,41 +876,28 @@ export class MapComponent implements OnInit {
     this.shareLink = location.origin + '/map?type=' + type + '&id=' + id;
     this.isShare = true
     this.cdRef.detectChanges()
-    
-    // this.modalService.show(MapShareModalComponent, 
-    //   {
-    //     initialState: {
-    //       shareLink: shareLink,
-    //     },
-    //     class: 'modal-dialogue-centered modal-xl share-popup',
-    //     backdrop: 'static',
-    //     keyboard: true
-    //   }
-    // )
   }
 
   trackByFn(item:any) {
     return item;
   }
 
-  createCustomPopup(trafficEvent?:any) { 
-    if( this.component) {
+  createCustomPopup(trafficEvent?:any, isNew=false) { 
+    if( this.component && isNew) {
       this.component?.destroy()
     }
     const factory = this.componentFactoryResolver.resolveComponentFactory(MapPopupCreateEventComponent);
-    this.component = factory.create(this.injector);
-    this.component.instance.event = trafficEvent
-    //Set the component inputs manually 
-
-    // component.instance.someinput2 = "example";
-
-    //Subscribe to the components outputs manually (if any)        
-    // component.instance.someoutput.subscribe(() => console.log("output handler fired"));
-
-    //Manually invoke change detection, automatic wont work, but this is Ok if the component doesn't change
-    this.component.changeDetectorRef.detectChanges();
-
-    return this.component.location.nativeElement;
+    if (isNew) {
+      var component = factory.create(this.injector);
+      component.instance.event = trafficEvent
+      component.changeDetectorRef.detectChanges();
+      return component.location.nativeElement
+    } else {
+      this.component = factory.create(this.injector);
+      this.component.instance.event = trafficEvent
+      this.component.changeDetectorRef.detectChanges();
+      return this.component.location.nativeElement
+    }
   }
 
   previewImage() {

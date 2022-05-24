@@ -14,6 +14,7 @@ import { RoadeventsComponent } from './components/roadevents/roadevents.componen
 import { StatsEventsComponent } from './components/stats-events/stats-events.component';
 import { AdminConfigTestComponent } from './components/admin-config-test/admin-config-test.component';
 import { MainComponent } from './components/main/main.component';
+import { AdminUsersComponent } from './components/admin-users/admin-users.component';
 const routes: Routes = [
   { path: 'map', component: MapComponent },
   { path: 'home', component:MainComponent},
@@ -26,7 +27,9 @@ const routes: Routes = [
       { path: 'test', component: AdminConfigTestComponent },
    ],
   },
-  
+  {
+    path: 'users', component: AdminUsersComponent
+  },
   { path: 'events',
     children: [
       { path: '', component:EventsManagerComponent },

@@ -38,6 +38,8 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzTableModule} from 'ng-zorro-antd/table';
+import { NzAffixModule } from 'ng-zorro-antd/affix';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 //
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { AuthModule, AuthHttpInterceptor} from '@auth0/auth0-angular';
@@ -124,12 +126,14 @@ export function tokenGetters() {
     NzDropDownModule,
     NzImageModule,
     NzFormModule,
+    NzAffixModule,
     NzBreadCrumbModule,
     NzDividerModule,
     NzCardModule,
     NzCheckboxModule,
     NzBadgeModule,
     NzTableModule,
+    NzToolTipModule,
     AccordionModule.forRoot(),
     NgChartsModule,
     

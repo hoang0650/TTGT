@@ -49,11 +49,13 @@ declare var $:any;
 })
 export class EventsManagerComponent implements OnInit {
   statusList: any;
+  statusListArray: any;
   status: string;
   options: any;
   sideMap: any;
   listEventType: any;
   listEvents: any;
+  listEventsForFilter: any;
   chooseEventId: any;
   filter: any;
   isLoadingStatus: boolean;
@@ -68,13 +70,15 @@ export class EventsManagerComponent implements OnInit {
   searchResults:any;
 
   constructor(private configure:ConfigureService, private eventService:EventService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cdRef:ChangeDetectorRef) {
-    this.status = "Tất cả"
-    this.filter = {}
+    this.status = "created"
+    this.filter = {status:this.status}
     this.markers = {}
     this.isLoadingStatus = false;
     this.isSearch = false;
     this.searchQuery = '';
     this.searchResults = [];
+    this.listEvents = []
+    this.listEventsForFilter = []
   
     this.options = {
       layers: [
@@ -112,6 +116,25 @@ export class EventsManagerComponent implements OnInit {
         color: 'red'
       }
     };
+
+    this.statusListArray = [
+      {
+        id: 'created',
+        name: 'Mới',
+      },
+      {
+        id: 'approved',
+        name: 'Đã duyệt',
+      },
+      {
+        id: 'rejected',
+        name: 'Không duyệt',
+      },
+      {
+        id: 'all',
+        name: 'Tất cả'
+      },
+    ]
 
     this.jamIcon = {
       normal: {
@@ -175,32 +198,31 @@ export class EventsManagerComponent implements OnInit {
   };
 
   drawMarker(listEvents:any) {
-    this.markers = {};
+    this.removeMarkers()
     listEvents.forEach((event:any) => {
       this.markers[event._id] = this.createMarkerEvent(event);
+      var popup = L.popup({
+        closeButton:false,
+        className:'stis-create-incident-popup'
+      }).setContent(this.createCustomPopup(event))
+
+
+      this.markers[event._id].bindPopup(popup)
+      this.sideMap?.addLayer(this.markers[event._id])
     });
   };
 
-  filterListEvent(status?:any, color?:any) {
-    if (status) {
-      this.status = status.name
-
-      if (status.id === 'all') {
-        delete this.filter['status'];
-      } else if (status.id !== null) {
-        this.filter['status'] = status.id;
-      }
-    }
-    
-    if (color === this.filter['color']) {
-      this.filter['color'] = undefined;
-    } else if (color !== null) {
-      this.filter['color'] = color;
+  filterListEvent() {
+    if (this.status === 'all') {
+      this.filter = {}
+    } else {
+      this.filter = {status: this.status};
     }
 
     if (this.listEvents) {
-      var listEventsForFilter = _.filter(this.listEvents, this.filter);
-      this.drawMarker(listEventsForFilter);
+      this.listEventsForFilter = _.filter(this.listEvents, this.filter);
+      
+      this.drawMarker(this.listEventsForFilter);
     }
   };
 
@@ -209,7 +231,6 @@ export class EventsManagerComponent implements OnInit {
       next: (res:any) => {
         
         this.listEvents = res
-        console.log(res);
         
         this.listEvents.forEach((event:any, index:number) => {
           event.color = this.listEventType[event.type].color;
@@ -218,25 +239,24 @@ export class EventsManagerComponent implements OnInit {
           }
         })
         this.isLoadingStatus = false
-        this.drawMarkers()
+        this.filterListEvent()
         // this.sideMap.closePopup(this.eventPopup)
       }
     })
   };
 
-  drawMarkers() {
+  removeMarkers() {
     if (this.markers) {
-      console.log(this.markers);
-      
       Object.keys(this.markers).forEach((id:string) => {
-        console.log("removed");
         this.markers[id].closePopup()
         this.sideMap?.removeLayer(this.markers[id])
       })
       this.markers = {}
     }
+  }
 
-    console.log(this.listEvents);
+  drawMarkers() {
+    this.removeMarkers()
     
     this.listEvents.forEach((trafficEvent:any) => {
       var latlng = [trafficEvent.loc.coordinates[1], trafficEvent.loc.coordinates[0]]
@@ -332,16 +352,22 @@ export class EventsManagerComponent implements OnInit {
     })
   };
 
-  createCustomPopup(trafficEvent?:any) { 
-    if( this.component) {
+  createCustomPopup(trafficEvent?:any, isNew=false) { 
+    if( this.component && isNew) {
       this.component?.destroy()
     }
     const factory = this.componentFactoryResolver.resolveComponentFactory(EventsManagerPopupComponent);
-    this.component = factory.create(this.injector);
-    this.component.instance.event = trafficEvent
-    this.component.changeDetectorRef.detectChanges();
-
-    return this.component.location.nativeElement;
+    if (isNew) {
+      var component = factory.create(this.injector);
+      component.instance.event = trafficEvent
+      component.changeDetectorRef.detectChanges();
+      return component.location.nativeElement
+    } else {
+      this.component = factory.create(this.injector);
+      this.component.instance.event = trafficEvent
+      this.component.changeDetectorRef.detectChanges();
+      return this.component.location.nativeElement
+    }
   }
 
   searchIconClick() {

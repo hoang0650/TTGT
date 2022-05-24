@@ -1,0 +1,8 @@
+::ng-deep .ant-modal-header {
+    text-align: center;
+    margin: auto;
+}
+
+::ng-deep .ant-modal-body {
+    text-align: center;
+}

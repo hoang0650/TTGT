@@ -5,6 +5,7 @@ import { SettingService } from 'src/app/services/setting.service';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal'
 import { AdminNotificationComponent } from '../admin-notification/admin-notification.component';
 import { AdminConfigConfirmComponent } from '../admin-config-confirm/admin-config-confirm.component';
+import { MessageService } from 'src/app/services/message.service';
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
@@ -122,7 +123,7 @@ export class AdminComponent implements OnInit {
   modalRef?: NzModalRef;
   listMapType:any = [];
   
-  constructor(private location:Location, private settingService:SettingService,private modalService:NzModalService) { 
+  constructor(private location:Location, private settingService:SettingService,private modalService:NzModalService, public message:MessageService) { 
     this.editMode = false;
 
     const newDate = new Date();
@@ -138,6 +139,7 @@ export class AdminComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getMapURL()
   }
 
   chooseConfigPageAble() {
@@ -175,51 +177,48 @@ export class AdminComponent implements OnInit {
 
   openPopupConfig(type:string){
     if(this.configForm.valid || (type !== 'save')){
-      var popupConfirm = this.modalService.info({})
+      var form = this.message.getMessageObj().POPUP(type,'');
+
+      var popupConfirm = this.modalService.create({
+        nzContent: AdminConfigConfirmComponent,
+        nzComponentParams: {
+          form: form
+        }
+      })
+
+      popupConfirm.afterClose.subscribe((reponse:string) => {
+        if (type == 'save') {
+          if (reponse == 'yes') {
+            this.saveSetting()
+          }
+        } else if (type == 'revert') {
+          if (reponse == 'yes') {
+            this.loadSettingFromLocal()
+          } else {
+            this.removeSettingFromLocal()      
+          }
+        } else if (type == 'expire') {
+          if (reponse == 'yes') {
+            this.saveSettingToLocal()
+          } else {
+            this.expiredSession()
+          }
+        } else {
+          if (reponse == 'yes') {
+            this.cancelSetting()
+          }
+        }
+      })
     }
   }
-  // openPopupConfig(type:string) {
-  //   if (this.configForm.valid || (type !== 'save')) {
-  //     var popupConfirm = this.modalService.show(AdminConfigConfirmComponent, {
-  //       initialState: {
-  //         type:type
-  //       }
-  //     })
- 
-  //     popupConfirm.onHidden?.subscribe({
-  //       next: (reponse:any) => {
-  //         if (type == 'save') {
-  //           if (reponse == 'yes') {
-  //             this.saveSetting()
-  //           }
-  //         } else if (type == 'revert') {
-  //           if (reponse == 'yes') {
-  //             this.loadSettingFromLocal()
-  //           } else {
-  //             this.removeSettingFromLocal()      
-  //           }
-  //         } else if (type == 'expire') {
-  //           if (reponse == 'yes') {
-  //             this.saveSettingToLocal()
-  //           } else {
-  //             this.expiredSession()
-  //           }
-  //         } else {
-  //           if (reponse == 'yes') {
-  //             this.cancelSetting()
-  //           }
-  //         }
-  //       }
-  //     })
-  //   } else {
-  //     this.animateValidate();
-  //   }
-  // };
+
   sessionObject:any   = localStorage.getItem('sessionObject') || {};
 
   getMapURL() {
     this.settingService.getMapUrl().subscribe({
       next: (res) => {
+        console.log(res);
+        
         this.listMapType = res;
       }
     }) 
@@ -242,18 +241,23 @@ export class AdminComponent implements OnInit {
     return true;
   };
 
-  // openModal() {
-  //   this.modalRef = this.modalService.show(AdminNotificationComponent, 
-  //     {
-  //       initialState: {
-  //         currentSession: this.currentSession,
-  //       },
-  //       class: 'modal-dialogue-centered modal-md',
-  //       backdrop: 'static',
-  //       keyboard: true
-  //     }
-  //   )
-  // };
+  openNotification() {
+    this.modalRef = this.modalService.create({
+      nzContent: AdminNotificationComponent,
+      nzComponentParams: {
+        currentSession: this.currentSession
+      }
+    })
+    //   {
+    //     initialState: {
+    //       currentSession: this.currentSession,
+    //     },
+    //     class: 'modal-dialogue-centered modal-md',
+    //     backdrop: 'static',
+    //     keyboard: true
+    //   }
+    // )
+  };
 
   expiredSession() {
     this.editMode = false;
@@ -277,9 +281,8 @@ export class AdminComponent implements OnInit {
         {
           next: (session:any) => {
             if (session.name) {
-              this.sessionObject = session;
-              this.currentSession = this.sessionObject.name;
-              // this.openModal();
+              this.currentSession = session.name;
+              this.openNotification();
             } else {
               this.sessionObject = session;
               localStorage.setItem('sessionObject', JSON.stringify(session));
