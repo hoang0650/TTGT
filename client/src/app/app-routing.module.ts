@@ -12,6 +12,7 @@ import { ParkingsComponent } from './components/parkings/parkings.component';
 import { StaticMapComponent } from './components/static-map/static-map.component';
 import { RoadeventsComponent } from './components/roadevents/roadevents.component';
 import { StatsEventsComponent } from './components/stats-events/stats-events.component';
+import { AdminConfigTestComponent } from './components/admin-config-test/admin-config-test.component';
 const routes: Routes = [
   { path: 'map', component: MapComponent },
   { path: 'config', component:AdminComponent,
@@ -20,6 +21,7 @@ const routes: Routes = [
       { path: 'camera', component: AdminConfigCameraComponent },
       { path: 'traffic', component: AdminConfigTrafficComponent },
       { path: 'event', component: AdminConfigEventComponent },
+      { path: 'test', component: AdminConfigTestComponent },
    ],
   },
   

@@ -1,114 +1,110 @@
-<div class="field-item" style="margin-top: 10px;">
-    <label class="label">Thời gian cập nhật cảnh báo <small> (1 giây - 60 giây)</small></label>
-    <input class="input" style="margin-left: 30px;" name="email" type="number" id="email" placeholder="34">
-    <label class="label" style="margin-left: 10px">giây</label>
+<h4 class="ui dividing header">Cấu hình cảnh báo tình trạng cảnh báo</h4>
+<div class="ui show error message" [ngClass]="{'transform': admin.errorValidate}" *ngIf="admin.configForm.invalid">
+    <ul class="list">
+        <li *ngIf="admin.configForm.controls.refreshTime.errors?.required"><span class="config-error-message">Thời gian cập nhật cảnh báo</span> không được để trống</li>
+        <li *ngIf="admin.configForm.controls.refreshTime.errors?.pattern"><span class="config-error-message">Thời gian cập nhật cảnh báo</span> phải là số nguyên lớn hơn 0 và nhỏ hơn <!--{{admin.configValidate.refreshEvent.value}}--></li>
+        <li *ngIf="admin.configForm.controls.jamName.errors?.required || admin.configForm.controls.congestionName.errors?.required || admin.configForm.controls.incidentName.errors?.required || admin.configForm.controls.floodName.errors?.required || admin.configForm.controls.normalName.errors?.required"><span class="config-error-message">Loại</span> không được để trống</li>
+    </ul>
 </div>
-<label class="label">Giọng đọc cảnh báo</label>
-<div class="field-label label" style="margin-left: 20px;">
-    <input type="checkbox">
-    <label style="margin-left: 10px;"> Nam </label>
+<div class="field inline">
+    <label>Thời gian cập nhật cảnh báo <small>(1 giây - 60 giây)</small>
+    </label>
+    <span *ngIf="!admin.editMode">{{admin.setting.trafficEvents.refreshTime}} giây</span>
+    <div class="ui right labeled input" *ngIf="admin.editMode">
+        <input name="refreshTime" required="required" pattern="{{admin.configValidate.refreshEvent.regexr}}" type="number" placeholder="1" [(ngModel)]="admin.setting.trafficEvents.refreshTime">
+        <div class="ui basic label">
+            giây
+        </div>
+    </div>
 </div>
-<div class="field-label label">
-    <input type="checkbox">
-    <label style="margin-left: 10px;"> Nữ </label>
+<div class="inline fields">
+    <label for="fruit">Giọng đọc cảnh báo</label>
+    <div class="field">
+        <div class="ui radio checkbox">
+            <input name="voiceType" type="radio" [(ngModel)]="admin.setting.trafficEvents.voiceType" value="male">
+            <label>Nam</label>
+        </div>
+    </div>
+    <div class="field">
+        <div class="ui radio checkbox">
+            <input name="voiceType" type="radio" [(ngModel)]="admin.setting.trafficEvents.voiceType" value="female">
+            <label>Nữ</label>
+        </div>
+    </div>
+    <div class="field">
+        <div class="ui radio checkbox">
+            <input name="voiceType" [disabled]="!admin.editMode" type="radio" [(ngModel)]="admin.setting.trafficEvents.voiceType" value="both">
+            <label>Cả hai</label>
+        </div>
+    </div>
 </div>
-<div class="field-label label">
-    <input type="checkbox">
-    <label style="margin-left: 10px;"> Cả hai </label>
+<div class="field">
+    <label>Cấu hình tên gọi và màu cho từng khoảng vận tốc</label>
+    <div class="table-responsive">
+        <table class="ui unstackable celled padded table">
+            <thead>
+                <tr>
+                    <th class="eight wide">Loại</th>
+                    <th class="eight wide">Màu đại diện</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <p *ngIf="!admin.editMode">{{admin.setting.trafficEvents.configVelocity.jam.name}}</p>
+                        <input name="jamName" required="required" *ngIf="admin.editMode" type="text" placeholder="Ùn tắc" [(ngModel)]="admin.setting.trafficEvents.configVelocity.jam.name">
+                    </td>
+                    <td class="single line">
+                        <div class="label">
+                            <i class="circle icon red"></i>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p *ngIf="!admin.editMode">{{admin.setting.trafficEvents.configVelocity.incident.name}}</p>
+                        <input name="incidentName" required="required" *ngIf="admin.editMode" type="text" placeholder="Tai nạn" [(ngModel)]="admin.setting.trafficEvents.configVelocity.incident.name">
+                    </td>
+                    <td class="single line">
+                        <div class="label">
+                            <i class="circle icon orange"></i>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p *ngIf="!admin.editMode">{{admin.setting.trafficEvents.configVelocity.congestion.name}}</p>
+                        <input name="congestionName" required="required" *ngIf="admin.editMode" type="text" placeholder="Đông xe" [(ngModel)]="admin.setting.trafficEvents.configVelocity.congestion.name">
+                    </td>
+                    <td class="single line">
+                        <div class="label">
+                            <i class="circle icon yellow"></i>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p *ngIf="!admin.editMode">{{admin.setting.trafficEvents.configVelocity.flood.name}}</p>
+                        <input name="floodName" required="required" *ngIf="admin.editMode" type="text" placeholder="Ngập nước" [(ngModel)]="admin.setting.trafficEvents.configVelocity.flood.name">
+                    </td>
+                    <td class="single line">
+                        <div class="label">
+                            <i class="circle icon yellow"></i>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p *ngIf="!admin.editMode">{{admin.setting.trafficEvents.configVelocity.normal.name}}</p>
+                        <input name="normalName" required="required" *ngIf="admin.editMode" type="text" placeholder="Thông thoáng" [(ngModel)]="admin.setting.trafficEvents.configVelocity.normal.name">
+                    </td>
+                    <td class="single line">
+                        <div class="label">
+                            <i class="circle icon green"></i>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
-<br>
-<label class="label">Cấu hình tên gọi và màu cho từng khoảng vận tốc</label>
-<br>
-<!-- <div class="field-label label" style="z-index: 900;"> -->
-    <table class="form-item" style="text-align: center;" >
-        <thead>
-            <tr>
-                <th colSpan="50">Loại</th>
-                <th colSpan="50">Màu đại diện</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td colspan="50">
-                    <div class="field-item" style="margin-top: 24px;">
-                        <div class="field-label label">
-                            <input class="input-table2" placeholder="Ùn tắc" type="text">
-                        </div>
-                    </div>
-                </td>
-                <td colspan="50">
-                    
-                    <div class="field-item" style="margin-top: 24px;">
-                        <div class="field-item">
-                            <span class="legend-line-red"></span>
-                        
-
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="50">
-                    <div class="field-item">
-                        <div class="field-label label">
-                            <input class="input-table2" placeholder="Tai nạn" type="text">
-                        </div>
-                    </div>
-                </td>
-                <td colspan="50">
-                    <div class="field-item">
-                        
-                            <span class="legend-line-orange"></span>
-                     
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="50">
-                    <div class="field-item">
-                        <div class="field-label label">
-                            <input class="input-table2" placeholder="Đông xe" type="text">
-                        </div>
-                    </div>
-                </td>
-                <td colspan="50">
-                    <div class="field-item">
-                        <span class="legend-line-yellow"></span>
-                    </div>
-                </td>
-                        
-                        
-            </tr>
-            <tr>
-                <td colspan="50">
-                    <div class="field-item">
-                        <div class="field-label label">
-                            <input class="input-table2" placeholder="Ngập nước" type="text">
-                        </div>
-                    </div>
-                </td>
-                <td colspan="50">
-                    <div class="field-item">
-                                <span class="legend-line-yellow"></span>
-                            </div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="50">
-                    <div class="field-item">
-                        <div class="field-label label">
-                            <input class="input-table2" placeholder="Thông thoáng" type="text">
-                        </div>
-                    </div>
-                </td>
-                <td colspan="50">
-                    <div class="field-item">
-                        <span class="legend-line-green"></span>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <br>
-    <br>
-<!-- </div> -->

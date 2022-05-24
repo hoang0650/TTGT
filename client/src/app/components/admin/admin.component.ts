@@ -344,4 +344,6 @@ export class AdminComponent implements OnInit {
       }
     }
   }
+
+  isCollapsed = false
 }

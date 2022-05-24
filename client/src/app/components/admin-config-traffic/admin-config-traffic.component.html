@@ -1,246 +1,217 @@
-<!-- <ul nz-menu>
-    <li nz-menu-item><span>ĐƯờng dẫn</span> không được để trống</li>
-    <li nz-menu-item><span>Đường dẫn</span> phải đúng định dạng</li>
-    <li nz-menu-item><span>Thời gian</span> không được để trống</li>
-    <li nz-menu-item><span>Thời gian cập nhật tình hình giao thông</span>phải là số nguyên lớn hơn 0 và nhỏ hơn</li>
-    <li nz-menu-item><span>Chu kỳ thời gian phân tích tình trạng giao thông</span>phải là số nguyên lớn hơn 0 và nhỏ hơn</li>
-    <li nz-menu-item><span>Chu kỳ thời gian tổng hợp tình trạng giao thông</span>phải là số nguyên lớn hơn 0 và nhỏ hơn</li>
-    <li nz-menu-item><span>Vận tốc</span>không được để trống</li>
-    <li nz-menu-item><span>Vận tốc</span>phải là số nguyên và lớn hơn 0</li>
-    <li nz-menu-item><span>Loại</span>không được để trống</li>
-    <li nz-menu-item><span>Vận tốc</span>của<strong></strong>không được lớn hơn</li>
-    <li nz-menu-item><span>Vận tốc</span>của<strong></strong>không được lớn hơn</li>
-    <li nz-menu-item><span>Vận tốc</span>của<strong></strong>không được nhỏ hơn</li>
-    <li nz-menu-item><span>Vận tốc</span>của<strong></strong>không được nhỏ hơn</li>
-</ul> -->
-
-<form nz-form style="height: 100%;">
-    <nz-form-item>
-        <nz-form-label [nzSpan]="6">Cấu hình bản đồ</nz-form-label>
-        <nz-form-control [nzSpan]="14">
-        <a nz-dropdown [nzDropdownMenu]="menu">Custom</a>
-          <nz-dropdown-menu #menu="nzDropdownMenu">
-              <ul nz-menu>
-                <li nz-menu-item>Custom</li>
-                <li nz-menu-item>FPT</li>
-              </ul>
-          </nz-dropdown-menu>
-        </nz-form-control>
-      </nz-form-item >
-  
-
-          <table class="form-item">
-                <thead>
-                    <tr>
-                        <th colSpan="50">Bản đồ</th>
-                        <th colSpan="50">Đường dẫn</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="50">
-                            Hình
-                            
-                        </td>
-                        <td colspan="50">
-                            
-                            <div class="field-item">
-                                <div class="field-label label" style="margin-top: 24px;">
-                                    <input class="input-table1" placeholder="1" type="text" [placeholder]="['//map.thongtingiaothong.vn//transport-notext/{z}/{x}/{y}.png']">
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="50">
-                            Chữ
-                        </td>
-                        <td colspan="50">
-                            <div class="field-item">
-                                <div class="field-label label" style="margin-top: 10px;">
-                                    <input class="input-table1" placeholder="2" type="text" [placeholder]="['//map.thongtingiaothong.vn//transport-text/{z}/{x}/{y}.png']">
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="50">
-                            Kết hợp hình và chữ
-                        </td>
-                        <td colspan="50">
-                            <div class="field-item">
-                                <div class="field-label label">
-                                    <input class="input-table1" placeholder="10" type="text" [placeholder]="['//map.thongtingiaothong.vn//transport-full/{z}/{x}/{y}.png']">    
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-          </table>
-     
-       
-      <nz-form-item>
-        <table class="form-item" style="margin-top: 24px;">
-            <thead>
-                <tr>
-                    <th colSpan="50">Loại</th>
-                    <th colSpan="50">Thời gian</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="50">
-                      Thời gian cập nhật tình trạng giao thông <br/>
-                      <small>(1 phút - 10 phút)</small>
-                    </td>
-                    <td colspan="50">
-                        
-                        <div class="field-item">
-                            <div class="field-label label" style="margin-top: 24px;">
-                                <input class="input-table2" placeholder="1" type="number">
-                                <label class="label" style="margin-left:3px">Phút</label>
-  
-                            </div>
+<h4 class="ui dividing header">Cấu hình phân tích tình trạng giao thông</h4>
+<div class="ui show error message" [ngClass]="{'transform': admin.errorValidate}" *ngIf="admin.configForm.invalid">
+    <ul class="list">
+        <li *ngIf="admin.configForm.controls.mapUrlNoText.errors?.required || admin.configForm.controls.mapUrlText.errors?.required || admin.configForm.controls.slowName.errors?.required || admin.configForm.controls.mapUrlFull.errors?.required"><span class="config-error-message">Đường dẫn</span> không được để trống</li>
+        <li *ngIf="admin.configForm.controls.mapUrlNoText.errors?.pattern || admin.configForm.controls.mapUrlText.errors?.pattern || admin.configForm.controls.slowName.errors?.required || admin.configForm.controls.mapUrlFull.errors?.pattern"><span class="config-error-message">Đường dẫn</span> phải đúng định dạng {{"//*.*/*/{z}/{x}/{y}*"}}</li>
+        <li *ngIf="admin.configForm.controls.refreshTime.errors?.required || admin.configForm.controls.analyticPeriod.errors?.required || admin.configForm.controls.aggregatePeriod.errors?.required"><span class="config-error-message">Thời gian</span> không được để trống</li>
+        <li *ngIf="admin.configForm.controls.refreshTime.errors?.pattern"><span class="config-error-message">Thời gian cập nhật tình trạng giao thông</span> phải là số nguyên lớn hơn 0 và
+            nhỏ hơn {{admin.configValidate.refreshTrafix.value}}
+        </li>
+        <li *ngIf="admin.configForm.controls.analyticPeriod.errors?.pattern"><span class="config-error-message">Chu kỳ thời gian phân tích tình trạng giao thông</span> phải là số nguyên lớn
+            hơn 0 và nhỏ hơn {{admin.configValidate.analyticPeriod.value}}</li>
+        <li *ngIf="admin.configForm.controls.aggregatePeriod.errors?.pattern"><span class="config-error-message">Chu kỳ thời gian tổng hợp tình trạng giao thông</span> phải là số nguyên lớn hơn
+            0 và nhỏ hơn {{admin.configValidate.refreshEvent.value}}</li>
+        <li *ngIf="admin.configForm.controls.jamSpeed.errors?.required || admin.configForm.controls.congestionSpeed.errors?.required || admin.configForm.controls.slowSpeed.errors?.required"><span class="config-error-message">Vận tốc</span> không được để trống</li>
+        <li *ngIf="admin.configForm.controls.jamSpeed.errors?.pattern || admin.configForm.controls.congestionSpeed.errors?.pattern || admin.configForm.controls.slowSpeed.errors?.pattern"><span class="config-error-message">Vận tốc</span> phải là số nguyên và lớn hơn 0</li>
+        <li *ngIf="admin.configForm.controls.jamName.errors?.required || admin.configForm.controls.congestionName.errors?.required || admin.configForm.controls.slowName.errors?.required || admin.configForm.controls.normalName.errors?.required"><span class="config-error-message">Loại</span> không được để trống</li>
+        <li *ngIf="admin.configForm.controls.jamSpeed.errors?.max"><span class="config-error-message">Vận tốc</span> của <strong>{{admin.setting.trafficSituations.configVelocity.jam.name}}</strong>            không được lớn hơn <strong>{{admin.setting.trafficSituations.configVelocity.congestion.name}}</strong></li>
+        <li *ngIf="admin.configForm.controls.congestionSpeed.errors?.max"><span class="config-error-message">Vận tốc</span> của <strong>{{admin.setting.trafficSituations.configVelocity.congestion.name}}</strong>            không được lớn hơn <strong>{{admin.setting.trafficSituations.configVelocity.slow.name}}</strong></li>
+        <li *ngIf="admin.configForm.controls.congestionSpeed.errors?.min"><span class="config-error-message">Vận tốc</span> của <strong>{{admin.setting.trafficSituations.configVelocity.congestion.name}}</strong>            không được nhỏ hơn <strong>{{admin.setting.trafficSituations.configVelocity.jam.name}}</strong></li>
+        <li *ngIf="admin.configForm.controls.slowSpeed.errors?.min"><span class="config-error-message">Vận tốc</span> của <strong>{{admin.setting.trafficSituations.configVelocity.slow.name}}</strong>            không được nhỏ hơn <strong>{{admin.setting.trafficSituations.configVelocity.congestion.name}}</strong></li>
+    </ul>
+</div>
+<div class="field inline">
+    <label>Cấu hình bản đồ</label>
+    <span *ngIf="!admin.editMode">{{admin.setting.trafficSituations.mapUrl.name}}</span>
+    <!-- <select name="mapType" *ngIf="admin.editMode" class="ui dropdown" [(ngModel)]="admin.setting.trafficSituations.mapUrl.mapType"
+    (change)="admin.chooseType(admin.setting.trafficSituations.mapUrl.mapType)">
+        <option *ngFor="let type of admin.listMapType" value="{{type.mapType}}">{{type.name}}
+    </select> -->
+    <select name="mapType" *ngIf="admin.editMode" class="ui dropdown" [(ngModel)]="admin.setting.trafficSituations.mapUrl.mapType"
+    (change)="admin.chooseType(admin.setting.trafficSituations.mapUrl.mapType)">
+        <option *ngFor="let type of admin.listMapType | keyvalue" [value]="type.key">{{$any(type.value).name}}</option>
+    </select>
+    <table class="ui unstackable celled padded table">
+        <thead>
+            <tr>
+                <th class="eight wide">Bản đồ</th>
+                <th class="eight wide">Đường dẫn</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Hình
+                </td>
+                <td>
+                    <p *ngIf="!admin.editMode">{{admin.setting.trafficSituations.mapUrl.values.street}}</p>
+                    <input [disabled]="admin.setting.trafficSituations.mapUrl.mapType != ['custom']" *ngIf="admin.editMode" name="mapUrlNoText"
+                        [(ngModel)]="admin.setting.trafficSituations.mapUrl.values.street" required="required" type="text" pattern="\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*){z}.*{x}.*{y}([-a-zA-Z0-9@:%_\+.~#?&//=]*)">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Chữ
+                </td>
+                <td>
+                    <p *ngIf="!admin.editMode">{{admin.setting.trafficSituations.mapUrl.values.streetName}}</p>
+                    <input [disabled]="admin.setting.trafficSituations.mapUrl.mapType != ['custom']" *ngIf="admin.editMode" name="mapUrlText"
+                        [(ngModel)]="admin.setting.trafficSituations.mapUrl.values.streetName" required="required" type="text" pattern="\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*){z}.*{x}.*{y}([-a-zA-Z0-9@:%_\+.~#?&//=]*)">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Kết hợp hình và chữ
+                </td>
+                <td>
+                    <p *ngIf="!admin.editMode">{{admin.setting.trafficSituations.mapUrl.values.full}}</p>
+                    <input [disabled]="admin.setting.trafficSituations.mapUrl.mapType != ['custom']" *ngIf="admin.editMode" name="mapUrlFull"
+                        [(ngModel)]="admin.setting.trafficSituations.mapUrl.values.full" required="required" type="text" pattern="\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*){z}.*{x}.*{y}([-a-zA-Z0-9@:%_\+.~#?&//=]*)">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="field">
+    <label>Cấu hình thời gian</label>
+    <table class="ui unstackable celled padded table">
+        <thead>
+            <tr>
+                <th class="eight wide">Loại</th>
+                <th class="eight wide">Thời gian</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Thời gian cập nhật tình trạng giao thông <br/>
+                    <small>(1 phút - 10 phút)</small>
+                </td>
+                <td>
+                    <p *ngIf="!admin.editMode">{{admin.setting.trafficSituations.refreshTime}} phút</p>
+                    <div *ngIf="admin.editMode" class="ui right labeled input">
+                        <input name="refreshTime" pattern="{{admin.configValidate.refreshTrafix.regexr}}" required="required" type="number" placeholder="1"
+                            [(ngModel)]="admin.setting.trafficSituations.refreshTime">
+                        <div class="ui basic label">
+                            phút
                         </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="50">
-                      Chu kỳ thời gian phân tích tình trạng giao thông <br/>
-                      <small>(1 phút - 10 phút)</small>
-                    </td>
-                    <td colspan="50">
-                        <div class="field-item">
-                            <div class="field-label label" style="margin-top: 10px;">
-                                <input class="input-table2" placeholder="2" type="number">
-                                <label class="label" style="margin-left:3px">Phút</label>
-  
-                            </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Chu kỳ thời gian phân tích tình trạng giao thông <br/>
+                    <small>(1 phút - 10 phút)</small>
+                </td>
+                <td>
+                    <p *ngIf="!admin.editMode">{{admin.setting.trafficSituations.analyticPeriod}} phút</p>
+                    <div *ngIf="admin.editMode" class="ui right labeled input">
+                        <input name="analyticPeriod" pattern="{{admin.configValidate.analyticPeriod.regexr}}" required="required" type="number" placeholder="1"
+                            [(ngModel)]="admin.setting.trafficSituations.analyticPeriod">
+                        <div class="ui basic label">
+                            phút
                         </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="50">
-                      Chu kỳ thời gian tổng hợp tình trạng giao thông <br/>
-                      <small>(1 phút - 10 phút)</small>
-                    </td>
-                    <td colspan="50">
-                        <div class="field-item">
-                            <div class="field-label label">
-  
-                                <input class="input-table2" placeholder="10" type="number">
-                                <label class="label" style="margin-left:3px">Giây</label>
-                            </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Chu kỳ thời gian tổng hợp tình trạng giao thông <br/>
+                    <small>(1 phút - 10 phút)</small>
+                </td>
+                <td>
+                    <p *ngIf="!admin.editMode">{{admin.setting.trafficSituations.aggregatePeriod}} phút</p>
+                    <div *ngIf="admin.editMode" class="ui right labeled input">
+                        <input name="aggregatePeriod" pattern="{{admin.configValidate.aggregatePeriod.regexr}}" required="required" type="number" placeholder="1"
+                            [(ngModel)]="admin.setting.trafficSituations.aggregatePeriod">
+                        <div class="ui basic label">
+                            phút
                         </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-      </nz-form-item>
-
-      <nz-form-item style="margin-bottom: 50px;">
-        <table class="form-item">
-            <thead>
-                <tr>
-                    <th colSpan="50">Vận tốc km/h</th>
-                    <th colSpan="50">Loại</th>
-                    <th colSpan="50">Màu đại diện</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="50">
-                        <div class="field-item">
-                            <div class="field-label">
-                                <input class="input-table2" placeholder="< 5" type="number">  
-                            </div>
-                        </div>
-                    </td>
-                    <td colspan="50">
-                        
-                        <div class="field-item">
-                            <div class="field-label">
-                                <input class="input-table1" placeholder="Ùn tắc" type="text">  
-                            </div>
-                        </div>
-                    </td>
-                    <td colspan="50">
-                        <div class="field-item">
-                            <span class="legend-line-red"></span>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td colspan="50">
-                        <div class="field-item">
-
-                            <div class="field-label">
-                                <input class="input-table2" placeholder="< 10" type="number">  
-                            </div>
-                        </div>
-                    </td>
-                    <td colspan="50">
-                        <div class="field-item">
-                            <div class="field-label">
-                                <input class="input-table1" placeholder="Đông xe" type="text">
-                            </div>
-                        </div>
-                    </td>
-                    <td colspan="50">
-                        <div class="field-item">
-                            <span class="legend-line-orange"></span>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="50">
-                        <div class="field-item">
-                            <div class="field-label ">
-                                <input class="input-table2" placeholder="< 15" type="number">  
-                            </div>
-                        </div>
-                            
-                    </td>
-                    <td colspan="50">
-                        <div class="field-item">
-                            <div class="field-label">
-                                 <input class="input-table1" placeholder="Di chuyển chậm" type="text">
-                            </div>
-                        </div>
-                    </td>
-                    <td colspan="50">
-                        <div class="field-item">
-                            <span class="legend-line-yellow"></span>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="50">
-                        <div class="field-item">
-
-                            <div class="field-label">
-                                <input class="input-table2" placeholder=">= 15" type="number">  
-                            </div>
-                        </div>
-                    </td>
-                    <td colspan="50">
-                        <div class="field-item">
-                            <div class="field-label">
-                                 <input class="input-table1" placeholder="Thông thoáng" type="text">
-                            </div>
-                        </div>
-                    </td>
-                    <td colspan="50">
-                        <div class="field-item">
-                            <span class="legend-line-green"></span>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-      </nz-form-item>
-
-</form>
-
-
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="field">
+    <label>Cấu hình màu cho từng khoảng vận tốc</label>
+    <table class="ui unstackable celled padded table">
+        <thead>
+            <tr>
+                <th class="four wide">Vận tốc km/h</th>
+                <th class="four wide">Loại</th>
+                <th class="four wide">Màu đại diện</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <p *ngIf="!admin.editMode">&lt; {{admin.setting.trafficSituations.configVelocity.jam.speed}}</p>
+                    <div *ngIf="admin.editMode" class="ui left icon input">
+                        <input name="jamSpeed" max="{{admin.setting.trafficSituations.configVelocity.congestion.speed}}" pattern="\d+" required="required" type="number"
+                            placeholder="5" [(ngModel)]="admin.setting.trafficSituations.configVelocity.jam.speed">
+                        <i class="angle left icon"></i>
+                    </div>
+                </td>
+                <td>
+                    <p *ngIf="!admin.editMode">{{admin.setting.trafficSituations.configVelocity.jam.name}}</p>
+                    <input name="jamName" required="required" *ngIf="admin.editMode" type="text" placeholder="Ùn tắc" [(ngModel)]="admin.setting.trafficSituations.configVelocity.jam.name">
+                </td>
+                <td>
+                    <div class="legend-line red">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p *ngIf="!admin.editMode">&lt; {{admin.setting.trafficSituations.configVelocity.congestion.speed}}</p>
+                    <div *ngIf="admin.editMode" class="ui left icon input">
+                        <input name="congestionSpeed" min="{{admin.setting.trafficSituations.configVelocity.jam.speed}}" max="{{admin.setting.trafficSituations.configVelocity.slow.speed}}"
+                            pattern="\d+" required="required" type="number" placeholder="10" [(ngModel)]="admin.setting.trafficSituations.configVelocity.congestion.speed">
+                        <i class="angle left icon"></i>
+                    </div>
+                </td>
+                <td>
+                    <p *ngIf="!admin.editMode">{{admin.setting.trafficSituations.configVelocity.congestion.name}}</p>
+                    <input name="congestionName" required="required" *ngIf="admin.editMode" type="text" placeholder="Đông xe" [(ngModel)]="admin.setting.trafficSituations.configVelocity.congestion.name">
+                </td>
+                <td>
+                    <div class="legend-line orange">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p *ngIf="!admin.editMode">&lt; {{admin.setting.trafficSituations.configVelocity.slow.speed}}</p>
+                    <div *ngIf="admin.editMode" class="ui left icon input">
+                        <input name="slowSpeed" min="{{admin.setting.trafficSituations.configVelocity.congestion.speed}}" pattern="\d+" required="required"
+                            type="number" placeholder="15" [(ngModel)]="admin.setting.trafficSituations.configVelocity.slow.speed"
+                            (change)="admin.setting.trafficSituations.configVelocity.normal.speed = admin.setting.trafficSituations.configVelocity.slow.speed">
+                        <i class="angle left icon"></i>
+                    </div>
+                </td>
+                <td>
+                    <p *ngIf="!admin.editMode">{{admin.setting.trafficSituations.configVelocity.slow.name}}</p>
+                    <input name="slowName" required="required" *ngIf="admin.editMode" type="text" placeholder="Di chuyển chậm" [(ngModel)]="admin.setting.trafficSituations.configVelocity.slow.name">
+                </td>
+                <td>
+                    <div class="legend-line yellow">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>&gt;= {{admin.setting.trafficSituations.configVelocity.normal.speed}}</p>
+                </td>
+                <td>
+                    <p *ngIf="!admin.editMode">{{admin.setting.trafficSituations.configVelocity.normal.name}}</p>
+                    <input name="normalName" required="required" *ngIf="admin.editMode" type="text" placeholder="Thông thoáng" [(ngModel)]="admin.setting.trafficSituations.configVelocity.normal.name">
+                </td>
+                <td>
+                    <div class="legend-line green">
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

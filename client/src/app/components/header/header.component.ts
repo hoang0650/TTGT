@@ -25,7 +25,19 @@ export class HeaderComponent implements OnInit {
   }
 
   isActive(viewLocation: string) {
-    return viewLocation === this.location.path();
+    return this.location.path() == viewLocation;
+  }
+
+  isActiveList(viewLocationList: string[]) {
+    for (let viewLocation of viewLocationList) {
+      if (viewLocation.includes('*')) {
+        if (this.location.path().startsWith(viewLocation.slice(0, -2))) {
+
+          return true
+        }
+      }
+    }
+    return viewLocationList.includes(this.location.path());
   }
 
   // getProFile(){

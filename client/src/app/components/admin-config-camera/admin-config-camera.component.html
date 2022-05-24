@@ -1,86 +1,112 @@
-<label class="label">Hình ảnh khi mất kết nối với thông báo</label>
-<div class="field-label label" style="margin-left: 20px;">
-    <input type="checkbox">
-    <label style="margin-left: 10px;"> Chữ </label>
-</div>
-<div class="field-label label">
-    <input type="checkbox">
-    <label style="margin-left: 10px;"> Tùy chọn </label>
-</div>
-<br>
-<div class="field-item" style="margin-top: 10px;">
-    <label class="label">Chữ hiển thị</label>
-    <input class="input" style="margin-left: 30px;" name="email" type="email" id="email" placeholder="Mất kết nối">
-    <label class="label" style="margin-left: 100px">Cấu hình thời gian</label>
-</div>
-<div class="field-item" width="100%">
-    <img src="assets/images/localize/logo.png" height="240px" width="35%">
-    <!-- <span style="padding-left: 5px;" width="10%"></span> -->
-    <div class="field-item" style="padding-left: 32px;" width="auto">
-        <table class="form-item">
-            <thead>
-                <tr>
-                    <th>Loại</th>
-                    <th>Thời gian</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        Thời gian gián đoạn khi phát sinh trạng thái "Mất kết nối" <br/>
-                        <small>(1 phút - 60 phút)</small>
-                    </td>
-                    <td>
-                        
-                        <div class="field-item">
-                            <div class="field-label label" style="margin-top: 24px;">
-                                <input class="input-table" placeholder="1" type="number">
-                                <label class="label" style="margin-left:3px">Phút</label>
 
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Thời gian cập nhật tình trạng camera <br/>
-                        <small>(1 phút - 10 phút)</small>
-                    </td>
-                    <td>
-                        <div class="field-item">
-                            <div class="field-label label" style="margin-top: 10px;">
-                                <input class="input-table" placeholder="2" type="number">
-                                <label class="label" style="margin-left:3px">Phút</label>
 
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Thời gian tải lại hình ảnh camera <br/>
-                        <small>(1 giây - 60 giây)</small>
-                    </td>
-                    <td>
-                        <div class="field-item">
-                            <div class="field-label label">
-
-                                <input class="input-table" placeholder="10" type="number">
-                                <label class="label" style="margin-left:3px">Giây</label>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        
+<h4 class="ui dividing header">Cấu hình cảnh báo tình trạng camera</h4>
+<div class="ui show error message" [ngClass]="{'transform': admin.errorValidate}" *ngIf="admin.configForm.invalid && admin.editMode">
+    <ul class="list">
+        <li *ngIf="admin.configForm.controls.imageError.errors?.required"><span class="config-error-message">Hình ảnh khi mất kết nối với thông báo</span> không được để trống</li>
+        <li *ngIf="admin.configForm.controls.errorTime.errors?.required || admin.configForm.controls.refreshTime.errors?.required"><span class="config-error-message">Thời gian</span> không được để trống</li>
+        <li *ngIf="admin.configForm.controls.errorTime.errors?.pattern"><span class="config-error-message">Thời gian gián đoạn khi phát sinh trạng thái "Mất kết nối"</span> phải là số nguyên
+            lớn hơn 0 và nhỏ hơn {{admin.configValidate.errorTime.value}}
+        </li>
+        <li *ngIf="admin.configForm.controls.refreshTime.errors?.pattern"><span class="config-error-message">Thời gian tải lại hình ảnh camera	</span> phải là số nguyên lớn hơn 0 và nhỏ hơn
+            {{admin.configValidate.refreshTime.value}}
+        </li>
+        <li *ngIf=" admin.configForm.controls.refreshCameraLayer.errors?.pattern "><span class="config-error-message">Thời gian cập nhật tình trạng camera	</span> phải là số nguyên lớn hơn 0 và nhỏ hơn
+            {{admin.configValidate.refreshCameraLayer.value}}
+        </li>
+    </ul>
+</div>
+<div class="fields inline">
+    <label>Hình ảnh khi mất kết nối với thông báo</label>
+    <div class="field">
+        <div class="ui radio checkbox">
+            <input type="radio" name="imageType" [(ngModel)]="admin.setting.cameraSituations.imageError['imageType']" value="text">
+            <label>Chữ</label>
+        </div>
+    </div>
+    
+    <div class="field">
+        <div class="ui radio checkbox">
+            <input [disabled]="!admin.editMode" type="radio" name="imageType" [(ngModel)]="admin.setting.cameraSituations.imageError.imageType" value="image">
+            <label>Tùy chọn</label>
+        </div>
     </div>
 </div>
-
-
-
-
- 
-
-
-  
+<div class="field inline" *ngIf="admin.setting.cameraSituations.imageError.imageType == 'text'">
+    <label>Chữ hiển thị</label>
+    <span *ngIf="!admin.editMode && admin.setting.cameraSituations.imageError.imageType == 'text'">{{admin.setting.cameraSituations.imageError.text}}</span>
+    <input required="required" name="imageError" *ngIf="admin.editMode" type="text" placeholder="Có lỗi kết nối" [(ngModel)]="admin.setting.cameraSituations.imageError.text">
+</div>
+<div class="field inline" *ngIf="admin.setting.cameraSituations.imageError.imageType == 'image' && admin.editMode">
+    <label for="imageUpload" class="button-upload"><i class="upload icon"></i> Tải hình</label>
+    <input name="image" id="imageUpload" type="file" accept="image/*" (change)="admin.previewImage()">
+</div>
+<div class="field">
+    <span *ngIf="!admin.setting.cameraSituations.imageError">Chưa có hình</span>
+    <div class="ui large image" *ngIf="admin.setting.cameraSituations.imageError.imageType == 'text'">
+        <img src="//dummyimage.com/600x400/000/ff0000&text={{admin.setting.cameraSituations.imageError.text}}">
+    </div>
+    <div class="ui large image" *ngIf="admin.setting.cameraSituations.imageError.imageType == 'image'">
+        <img [src]="admin.setting.cameraSituations.imageError.image">
+    </div>
+</div>
+<div class="field">
+    <label>Cấu hình thời gian</label>
+    <table class="ui unstackable celled padded table">
+        <thead>
+            <tr>
+                <th class="eight wide">Loại</th>
+                <th class="eight wide">Thời gian</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Thời gian gián đoạn khi phát sinh trạng thái "Mất kết nối" <br/>
+                    <small>(1 phút - 60 phút)</small>
+                </td>
+                <td>
+                    <p *ngIf="!admin.editMode">{{admin.setting.cameraSituations.errorTime}} phút</p>
+                    <div *ngIf="admin.editMode" class="ui right labeled input">
+                        <input name="errorTime" pattern="{{admin.configValidate.errorTime.regexr}}" required="required" type="number" placeholder="1" [(ngModel)]="admin.setting.cameraSituations.errorTime">
+                        <div class="ui basic label">
+                            phút
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Thời gian cập nhật tình trạng camera <br/>
+                    <small>(1 phút - 10 phút)</small>
+                </td>
+                <td>
+                    <p *ngIf="!admin.editMode">{{admin.setting.cameraSituations.refreshCameraLayer}} phút</p>
+                    <div *ngIf="admin.editMode" class="ui right labeled input">
+                        <input name="refreshCameraLayer" pattern="{{admin.configValidate.refreshCameraLayer.regexr}}" required="required" type="number" placeholder="1"
+                            [(ngModel)]="admin.setting.cameraSituations.refreshCameraLayer">
+                        <div class="ui basic label">
+                            phút
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Thời gian tải lại hình ảnh camera <br/>
+                    <small>(1 giây - 60 giây)</small>
+                </td>
+                <td>
+                    <p *ngIf="!admin.editMode">{{admin.setting.cameraSituations.refreshTime}} giây</p>
+                    <div *ngIf="admin.editMode" class="ui right labeled input">
+                        <input name="refreshTime" pattern="{{admin.configValidate.refreshCamera.regexr}}" required="required" type="number" placeholder="1"
+                        [(ngModel)]="admin.setting.cameraSituations.refreshTime">
+                        <div class="ui basic label">
+                            giây
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

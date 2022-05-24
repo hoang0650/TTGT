@@ -92,64 +92,65 @@
         <i nz-icon nzType="{{isOpen ? 'right' : 'left'}}"></i>
     </button>
 
-    <div [@mapLayoutInfo]="isOpen ? 'open' : 'closed'" class="map-layout-info-right">
-        <div class="ui segments">
-            <div class="ui segment">
-                <h2 class="ui center aligned icon header">
-                  <div class="content">
-                    Thống kê cảnh báo
-                  </div>
-                </h2>
-              </div>
-              <div class="ui secondary segment">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-5">
-                            <label>Ngày bắt đầu</label>
-                            <input nz-input nzSize="small" id="startDate" [(ngModel)]="startDate" type="date">
+    <div [@mapLayoutInfo]="isOpen ? 'open' : 'closed'" class="map-layout-info-right" #mapLayoutInfo>
+            <div class="map-layout-info-content">
+            <div class="ui segments">
+                <div class="ui segment">
+                    <h2 class="ui center aligned icon header">
+                        <div class="content">
+                            Thống kê cảnh báo
                         </div>
-                        <div class="col-5">
-                            <label>Ngày kết thúc</label>
-                            <input nz-input nzSize="small" id="endDate" [(ngModel)]="endDate" type="date">
+                    </h2>
+                </div>
+                <div class="ui secondary segment">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-6">
+                                <label>Ngày bắt đầu</label>
+                                <input nz-input nzSize="small" id="startDate" [(ngModel)]="startDate" type="date">
+                            </div>
+                            <div class="col-6">
+                                <label>Ngày kết thúc</label>
+                                <input nz-input nzSize="small" id="endDate" [(ngModel)]="endDate" type="date">
+                            </div>
                         </div>
-                        <div class="col-2">
-                            <button nz-button nzType="primary" class="d-flex justify-content-end">Xem</button>
-                        </div>
-                    </div>
-                  </div>
-                <!-- <div class="ui form">
-                    <div class="fields">
-                        <div class="six wide field required">
-                            <label>Ngày bắt đầu</label>
-                            <input id="startDate" [(ngModel)]="startDate" type="date">
-                        </div>
-                        <div class="six wide field required">
-                            <label>Ngày kết thúc</label>
-                            <input id="endDate" [(ngModel)]="endDate" type="date">
-                        </div>
-                        <div class="four wide field">
-                            <label>&nbsp;</label>
-                            <a class="ui fluid button" (click)="refresh()">Xem</a>
+                        <div class="row">
+                            <div class="col-6">
+                                <button nz-button nzType="primary" class="d-flex justify-content-end">Xem</button>
+                            </div>
+                            <div class="col-6">
+                                <a class="ui fluid icon button" [ngClass]="{'loading': !exported, 'disabled': !exportUrl}" [href]="exportUrl | safe: 'url'" download="ttgt_events.csv">
+                                    <i class="cloud download icon" ></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                    <div class="fields">
-                        
-                        <div class="two wide field">
-                        <label>&nbsp;</label>
-                            <a class="ui fluid icon button" [ngClass]="{'loading': !exported, 'disabled': !exportUrl}" [href]="exportUrl | safe: 'url'" download="ttgt_events.csv">
-                            <i class="cloud download icon" ></i>
-                            </a>
-                        </div>
-                    </div>
-                </div> -->
+                </div>
             </div>
-        </div>
-        <div class="map-layout-info-content">
+
             <div class="ui segment" [ngClass]="{'loading':isWeeklyLoading}">
                 <canvas baseChart [data]="weekly" [type]="chartType">
                 </canvas>
             </div>
             <div class="ui segment" [ngClass]="{'loading':isMonthlyLoading}">
+                <canvas baseChart [data]="monthly" [type]="chartType">
+                </canvas>
+            </div>
+
+
+            <div class="ui segment" [ngClass]="{'loading':isMonthlyLoading}">
+                <canvas baseChart [data]="monthly" [type]="chartType">
+                </canvas>
+            </div><div class="ui segment" [ngClass]="{'loading':isMonthlyLoading}">
+                <canvas baseChart [data]="monthly" [type]="chartType">
+                </canvas>
+            </div><div class="ui segment" [ngClass]="{'loading':isMonthlyLoading}">
+                <canvas baseChart [data]="monthly" [type]="chartType">
+                </canvas>
+            </div><div class="ui segment" [ngClass]="{'loading':isMonthlyLoading}">
+                <canvas baseChart [data]="monthly" [type]="chartType">
+                </canvas>
+            </div><div class="ui segment" [ngClass]="{'loading':isMonthlyLoading}">
                 <canvas baseChart [data]="monthly" [type]="chartType">
                 </canvas>
             </div>
