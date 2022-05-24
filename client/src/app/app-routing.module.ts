@@ -13,8 +13,10 @@ import { StaticMapComponent } from './components/static-map/static-map.component
 import { RoadeventsComponent } from './components/roadevents/roadevents.component';
 import { StatsEventsComponent } from './components/stats-events/stats-events.component';
 import { AdminConfigTestComponent } from './components/admin-config-test/admin-config-test.component';
+import { MainComponent } from './components/main/main.component';
 const routes: Routes = [
   { path: 'map', component: MapComponent },
+  { path: 'home', component:MainComponent},
   { path: 'config', component:AdminComponent,
     children:[
       { path: '', redirectTo: 'camera', pathMatch: 'full'},
