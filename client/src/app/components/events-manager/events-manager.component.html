@@ -162,7 +162,7 @@
             <div class="ui segment"  *ngIf="listEventsForFilter.length == 0">
                 <h4 class="ui center aligned header">
                     <div class="content">
-                        Không có cảnh báo {{statusList[status].name.toLowerCase()}}
+                        Không có cảnh báo {{statusList[status].name.toLowerCase() == 'tất cả' ? 'nào' : statusList[status].name.toLowerCase()}}
                     </div>
                 </h4>
             </div>

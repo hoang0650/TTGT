@@ -43,11 +43,78 @@
     </button>
 
     <div [@mapLayoutInfo]="isOpen ? 'open' : 'closed'" class="map-layout-info-right">
-        <div>
-            <nz-divider nzText="Lớp Thông Tin Tĩnh"></nz-divider>
-        </div>
-        <div class="map-layout-info-content">
+        <div class="map-layout-info-content" #mapLayoutInfo>
+            <div class="ui segments">
+                <div class="ui segment">
+                    <h2 class="ui center aligned header">
+                        <div class="content">
+                            Phân luồng giao thông
+                        </div>
+                    </h2>
+                </div>
+                <div class="ui secondary segment no-padding">
+                    <nz-affix [nzTarget]="mapLayoutInfo">
+                        <div  class="affix-header">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-6 p-0">
+                                        <div class="btn-group">
+                                            <button class="btn btn-success" type="button" [routerLink]="['./create']">
+                                                <i class="fa-solid fa-plus"></i>
+                                                Thêm
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 p-0">
+                                        <div class="btn-group float-end">
+                    
+                                            <button class="btn btn-secondary dropdown" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="cloud download icon"></i>
+                                                Xuất dữ liệu
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                                                
+                                                <li><a class="dropdown-item" (click)="exportCSV()"><i class="file outline icon"></i> CSV</a></li>
+                                                <li><a class="dropdown-item" (click)="exportCSV()"><i class="file excel outline icon"></i> Excel</a></li>
+                                                <li><a class="dropdown-item" (click)="exportCSV()"><i class="file code outline icon"></i> JSON</a></li>
+                                            </ul>
+   
+                                            <a class="btn btn-secondary" [href]="objectUrl | safe: 'url'" download="ttgt_camera-giao-thong.csv" [ngClass]="{'loading': !objectUrl, 'disabled': !objectUrl}">
+                                                <i class="download icon"></i>
+                                            </a>
+                                        </div>
+                                        
+                                    </div>                        
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <nz-input-group [nzSuffix]="suffixIconFilter">
+                                        <input type="text" nz-input placeholder="Tìm nhanh" [(ngModel)]="filter"/>
+                                    </nz-input-group>
+                                    <ng-template #suffixIconFilter>
+                                        <i nz-icon><i class="filter icon"></i></i>
+                                    </ng-template>                                   
+                                </div>     
+                            </div>
+                        </div>
+                    </nz-affix>
+                </div>
+            </div>
+
             <div class="ui segment">
+                <h4 class="ui center aligned header" *ngIf="roadevents.length == 0">
+                    <div class="content" *ngIf="isLoading">
+                        <div class="row">
+                            <nz-spin nzSimple></nz-spin>
+                            Đang tải...
+                        </div>
+                    </div>
+                    <div class="content" *ngIf="!isLoading && roadevents.length == 0">
+                        <nz-spin nzSimple></nz-spin>
+                        Không có lớp thông tin tĩnh nào
+                    </div>
+                </h4>
+
                 <div class="ui middle aligned selection divided list">
                     <div class="item" id="{{roadevent._id}}" [ngClass]="{'active': roadevent._id === choosedRoadevent?._id}" *ngFor="let roadevent of (roadevents | searchFilter: filter: ['featureCollection', 'properties', 'name'])"
                         (click)="selectRoadevent(roadevent)">

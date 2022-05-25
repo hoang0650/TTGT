@@ -55,7 +55,7 @@
               "node_modules/moment/moment.js",
               "node_modules/moment/locale/vi.js",
               "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
               "node_modules/fomantic-ui/dist/semantic.min.js",
               "node_modules/aos/dist/aos.js"
             ]

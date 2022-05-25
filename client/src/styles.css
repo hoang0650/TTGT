@@ -15,7 +15,8 @@
     z-index: 998;
     display: flex;
     flex-direction: column;
-    background-color: whitesmoke;
+    background-color: rgba(245, 245, 245, 0.9);
+    padding: 0 0 5px 0;
 }
 
 .map-layout-info-right {
@@ -25,7 +26,8 @@
     z-index: 1000;
     display: flex;
     flex-direction: column;
-    background-color: whitesmoke;
+    background-color: rgba(245, 245, 245, 0.9);
+    padding: 0 0 5px 0;
 }
 
 
@@ -308,6 +310,56 @@ nz-layout {
     left: -8px;
 }
 
+.marker-road-event.red, .item.red, .legend-line.red, .marker-arrow.red {
+    background-color: #db2828 !important;
+    border-color: #db2828 !important;
+}
+
+.marker-road-event.green, .item.green, .legend-line.green, .marker-arrow.green {
+    background-color: #21ba45 !important;
+    border-color: #21ba45 !important;
+}
+
+.marker-road-event.blue, .item.blue, .legend-line.blue, .marker-arrow.blue {
+    background-color: #2185d0 !important;
+    border-color: #2185d0 !important;
+}
+
+.marker-road-event.purple, .item.purple, .legend-line.purple, .marker-arrow.purple {
+    background-color: #a333c8 !important;
+    border-color: #a333c8 !important;
+}
+
+.marker-road-event.black, .item.black, .legend-line.black, .marker-arrow.black {
+    background-color: #1b1c1d !important;
+    border-color: #1b1c1d !important;
+}
+
+.marker-road-event.orange, .item.orange, .legend-line.orange, .marker-arrow.orange {
+    background-color: #f26202 !important;
+    border-color: #f26202 !important;
+}
+
+.marker-road-event.yellow, .item.yellow, .legend-line.yellow, .marker-arrow.yellow {
+    background-color: #eaae00 !important;
+    border-color: #eaae00 !important;
+}
+
+.marker-road-event.teal, .item.teal, .legend-line.teal, .marker-arrow.teal {
+    background-color: #009c95 !important;
+    border-color: #009c95 !important;
+}
+
+.marker-road-event.pink, .item.pink, .legend-line.pink, .marker-arrow.pink {
+    background-color: #e61a8d !important;
+    border-color: #e61a8d !important;
+}
+
+.marker-road-event.brown, .item.brown, .legend-line.brown, .marker-arrow.brown {
+    background-color: #975b33 !important;
+    border-color: #975b33 !important;
+}
+
 .image-marker {
     height: inherit;
     width: auto;
@@ -368,7 +420,7 @@ nz-layout {
 
 /* Scroll bar */
 ::-webkit-scrollbar {
-    width: 6px;
+    width: 6px !important;
     overflow-y: auto;
     background: grey;
     box-shadow: inset 0 0 4px #707070;
@@ -391,12 +443,11 @@ nz-layout {
     position : relative; 
     background : rgb(243, 244, 245) none repeat scroll 0% 0% / auto padding-box border-box; 
     box-shadow : rgba(34, 36, 38, 0.15) 0px 1px 2px 0px; 
-    margin : 0px; 
+    margin : 0; 
     border-radius : 0px 0px 4px 4px; 
     margin-bottom : 0px; 
     top : 0px; 
     bottom : 0px; 
-    width : 386.4px; 
     border-right : 0px none rgba(0, 0, 0, 0.6); 
     border-bottom : 0px none rgba(0, 0, 0, 0.6); 
     border-left : 0px none rgba(0, 0, 0, 0.6); 
@@ -411,4 +462,3 @@ nz-layout {
 .no-padding {
     padding: 0 !important;
 }
-

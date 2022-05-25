@@ -192,17 +192,17 @@ export class ParkingsComponent implements OnInit {
     this.cdRef.detectChanges()
   };
 
-  filterCustome(item:any) {
+  filterCustome(item:any, arg:string) {
     if (item.addr && item.name) {
-      if (!this.filter || ((item.addr + '').toLowerCase().indexOf(this.filter.toLowerCase()) !== -1) || ((item.name + '').toLowerCase().indexOf(this.filter.toLowerCase()) !== -1)) {
+      if (!arg || ((item.addr + '').toLowerCase().indexOf(arg.toLowerCase()) !== -1) || ((item.name + '').toLowerCase().indexOf(arg.toLowerCase()) !== -1)) {
         return true;
       }
     } else if (item.addr) {
-      if (!this.filter || ((item.addr + '').toLowerCase().indexOf(this.filter.toLowerCase()) !== -1)) {
+      if (!arg || ((item.addr + '').toLowerCase().indexOf(arg.toLowerCase()) !== -1)) {
         return true;
       }
     } else if (item.name) {
-      if (!this.filter || ((item.name + '').toLowerCase().indexOf(this.filter.toLowerCase()) !== -1)) {
+      if (!arg || ((item.name + '').toLowerCase().indexOf(arg.toLowerCase()) !== -1)) {
         return true;
       }
     }

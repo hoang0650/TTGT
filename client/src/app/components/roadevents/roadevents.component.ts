@@ -59,9 +59,11 @@ export class RoadeventsComponent implements OnInit {
   type: string
   showLength: any;
   geoLayer: L.GeoJSON<any>;
+  isLoading: boolean;
 
   constructor(private messageService:MessageService, private roadeventsService:RoadEventsService, public configure:ConfigureService, private route:ActivatedRoute, private markerService:MarkerService, private cdRef:ChangeDetectorRef) {
     this.exported = false
+    this.isLoading = true;
     this.showLength = {}
     this.type = route.snapshot.queryParamMap.get("state") || ""
     this.id = route.snapshot.queryParamMap.get("id") || ""

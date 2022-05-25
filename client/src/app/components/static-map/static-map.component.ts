@@ -58,6 +58,7 @@ export class StaticMapComponent implements OnInit {
   exported: boolean;
   objectUrl: any;
   geojsons: any;
+  isLoading: boolean;
 
   constructor(private messageService:MessageService, private route:ActivatedRoute, public configure:ConfigureService, private markerService:MarkerService, private staticMap:StaticMapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cdRef:ChangeDetectorRef) {
     this.params = route.snapshot.paramMap
@@ -66,6 +67,7 @@ export class StaticMapComponent implements OnInit {
     this.searchText = ""
     this.listColors = markerService.getListColors();
     this.exported = false;
+    this.isLoading = true
 
     this.options = {
       layers: [
@@ -108,6 +110,8 @@ export class StaticMapComponent implements OnInit {
             //     selectStaticMap(staticMapObject);
             // }
         });
+
+        this.isLoading = false
       }
     })
   }

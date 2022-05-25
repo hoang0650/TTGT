@@ -1,1 +1,96 @@
-<p>admin-groups works!</p>
+<div>
+    <div class="ui segments">
+        <div class="ui segment">
+            <h2 class="ui teal center aligned icon header">
+                <i class="users icon"></i>
+                <div class="content">
+                    Quản lý nhóm
+                    <div class="sub header">Quản lý các nhóm của hệ thống, phân quyền, thêm bớt tài khoản, ...</div>
+                </div>
+            </h2>
+            <div class="ui info icon message">
+                <i class="info icon"></i>
+                <div class="content">
+                    <ul class="list">
+                        <li>Bấm nút
+                            <p class="ui icon label"> <i class="add icon"></i> Thêm nhóm mới</p> để thêm nhóm mới</li>
+                        hoặc
+                        <li>Bấm chuột vào nhóm để xem chi tiết thành viên và quyền của nhóm</li>
+                        <li>Bấm nút
+                            <p class="ui label"> <i class="write  icon"></i></p> để chỉnh sửa, thay đổi thông tin nhóm</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="ui positive icon message" *ngIf="lastResult">
+                <i class="checkmark icon"></i>
+                <div class="content">
+                    Nhóm đã được <span class="ui label">{{lastResult === 'remove' ?'xóa':'cập nhật'}}</span> thành công!
+                </div>
+            </div>
+        </div>
+
+        <div class="ui right aligned clearing secondary segment">
+            <button class="ui compact labeled icon button" id="btnAddGroupTop" data-tooltip="Thêm nhóm" data-position="top right" (click)="openEdit()">  <i class="add icon"></i> Thêm nhóm mới</button>
+        </div>
+
+        <div class="ui segment">
+            <table class="ui very selectable basic table">
+                <tbody>
+                    <tr  *ngFor="let group of groups" (click)="selectGroup(group)" [ngClass]="{positive: group.isSelected}">
+                        <td class="collapsing">
+                            <button class="no-animate ui compact icon button" (click)="toggleEdit(group, $event);">
+                                <i class="write icon"></i>
+                            </button>
+                        </td>
+                        <td class=" ">
+                            <h4 class="ui header">
+                                <div class="content">
+                                    <span>{{group.name}}</span>
+                                    <div class="sub header">{{group.description}}</div>
+                                </div>
+                            </h4>
+                        </td>
+                        <td>
+                            <div class="ui  segments">
+                                <div class="ui secondary segment">
+                                    <span>{{group.users.length}}</span> thành viên
+                                </div>
+                                <div class="ui tertiary segment" *ngIf="group.isSelected">
+                                    <div class="ui middle aligned selection divided list">
+                                        <div class="item" *ngFor="let user of group.users">
+                                            <img [src]="user.picture" class="left floated mini ui rounded image">
+                                            <div class="content">
+                                                <div class="header">{{user.username}}</div>
+                                                <span>{{user.email}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="ui  segments">
+                                <div class="ui secondary segment">
+                                    {{group.permissionsStats.total - group.permissionsStats.none}} quyền ({{group.permissionsStats.read || 0}} Xem | {{group.permissionsStats.update
+                                    || 0}} Cập nhật | {{group.permissionsStats.manage || 0}} Quản lý)
+                                </div>
+                                <div class="ui tertiary segment" *ngIf="group.isSelected && group.permissionsStats.total - group.permissionsStats.none !== 0">
+                                    <div class="ui middle aligned selection divided list">
+                                        <ng-container *ngFor="let permission of group.permissions | keyvalue">
+                                            <div class="item" *ngIf="permission.value !== 'none'">
+                                                <div class="content">
+                                                    <div class="header">{{permissionToText[$any(permission.key)]}}</div>
+                                                    {{roleToText[$any(permission.value)]}}
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

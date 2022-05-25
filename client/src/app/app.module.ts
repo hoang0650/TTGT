@@ -40,6 +40,7 @@ import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzTableModule} from 'ng-zorro-antd/table';
 import { NzAffixModule } from 'ng-zorro-antd/affix';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 //
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { AuthModule, AuthHttpInterceptor} from '@auth0/auth0-angular';
@@ -132,6 +133,7 @@ export function tokenGetters() {
     NzCardModule,
     NzCheckboxModule,
     NzBadgeModule,
+    NzSpinModule,
     NzTableModule,
     NzToolTipModule,
     AccordionModule.forRoot(),

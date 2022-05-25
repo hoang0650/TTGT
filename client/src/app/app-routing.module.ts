@@ -15,6 +15,7 @@ import { StatsEventsComponent } from './components/stats-events/stats-events.com
 import { AdminConfigTestComponent } from './components/admin-config-test/admin-config-test.component';
 import { MainComponent } from './components/main/main.component';
 import { AdminUsersComponent } from './components/admin-users/admin-users.component';
+import { AdminGroupsComponent } from './components/admin-groups/admin-groups.component';
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
   { path: 'home', component:MainComponent},
@@ -30,6 +31,9 @@ const routes: Routes = [
   },
   {
     path: 'users', component: AdminUsersComponent
+  },
+  {
+    path: 'groups', component: AdminGroupsComponent
   },
   { path: 'events',
     children: [

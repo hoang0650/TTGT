@@ -97,7 +97,7 @@
             <div class="map-layout-info-content" #mapLayoutInfo>
                 <div class="ui segments">
                     <div class="ui segment">
-                        <h2 class="ui center aligned icon header">
+                        <h2 class="ui center aligned header">
                             <div class="content">
                                 Thống kê cảnh báo
                             </div>
@@ -110,20 +110,20 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <label>Ngày bắt đầu</label>
-                                            <input nz-input nzSize="small" id="startDate" [(ngModel)]="startDate" type="date">
+                                            <input nz-input id="startDate" [(ngModel)]="startDate" type="date">
                                         </div>
                                         <div class="col-6">
                                             <label>Ngày kết thúc</label>
-                                            <input nz-input nzSize="small" id="endDate" [(ngModel)]="endDate" type="date">
+                                            <input nz-input id="endDate" [(ngModel)]="endDate" type="date">
                                         </div>
                                     </div>
+                                    <br>
                                     <div class="row">
-                                        <div class="col-6">
-                                            <button nz-button nzType="primary" class="d-flex justify-content-end">Xem</button>
-                                        </div>
-                                        <div class="col-6">
-                                            <a class="ui fluid icon button" [ngClass]="{'loading': !exported, 'disabled': !exportUrl}" [href]="exportUrl | safe: 'url'" download="ttgt_events.csv">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary">Xem</button>
+                                            <a class="btn btn-secondary" [ngClass]="{'loading': !exported, 'disabled': !exportUrl}" [href]="exportUrl | safe: 'url'" download="ttgt_events.csv">
                                                 <i class="cloud download icon" ></i>
+                                                Xuất CSV
                                             </a>
                                         </div>
                                     </div>
