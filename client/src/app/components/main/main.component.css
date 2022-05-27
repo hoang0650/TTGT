@@ -691,9 +691,8 @@ body {
     background: #2e7eed;
     color: #fff;
     transition: 0.3s;
-    z-index: 999556;
+    z-index: 2000;
     cursor: pointer;
-    display: none;
   }
   
   .scroll-top-to:hover {

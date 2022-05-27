@@ -41,6 +41,7 @@ import { NzTableModule} from 'ng-zorro-antd/table';
 import { NzAffixModule } from 'ng-zorro-antd/affix';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzMessageModule } from 'ng-zorro-antd/message'
 //
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { AuthModule, AuthHttpInterceptor} from '@auth0/auth0-angular';
@@ -66,6 +67,9 @@ import { StatsEventsComponent } from './components/stats-events/stats-events.com
 import { NgChartsModule } from 'ng2-charts';
 import { AdminConfigTestComponent } from './components/admin-config-test/admin-config-test.component';
 import { AdminConfigCameraComponent } from './components/admin-config-camera/admin-config-camera.component';
+import { Auth0Service } from './shared/auth0.service';
+import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 
 registerLocaleData(vi);
@@ -105,6 +109,8 @@ export function tokenGetters() {
     StatsEventsComponent,
     AdminConfigTestComponent,
     AdminConfigCameraComponent,
+    UnauthorizedComponent,
+    NotFoundComponent,
  
   ],
   imports: [
@@ -136,6 +142,7 @@ export function tokenGetters() {
     NzSpinModule,
     NzTableModule,
     NzToolTipModule,
+    NzMessageModule,
     AccordionModule.forRoot(),
     NgChartsModule,
     
@@ -146,14 +153,30 @@ export function tokenGetters() {
       scope: 'openid profile app_metadata roles name email username',
       redirectUri: window.location.origin,
       responseType:'token id_token',
-      cacheLocation: 'localstorage',
-      useRefreshTokens: true,
+      cacheLocation: 'memory',
+      // useRefreshTokens: true,
       httpInterceptor:{
       allowedList:[
+          {
+            uri: '/api',
+            allowAnonymous:true,
+            
+          },
+          {
+            uri: '/api/*',
+            allowAnonymous:true
+          },
+          {
+            uri: 'http://localhost:3000/api',
+            allowAnonymous:true
+          },
+          {
+            uri: 'http://localhost:3000/api/*',
+            allowAnonymous:true
+          },
           'http://localhost:3000/api/admin',
           'http://localhost:3000/api/admin/*',
           'http://localhost:3000/api/setting',
-          'http://localhost:3000/api/setting/getimageerror',
           'http://localhost:3000/api/setting/*',
           'http://localhost:3000/api/parking',
           'http://localhost:3000/api/parking/*',
@@ -183,9 +206,6 @@ export function tokenGetters() {
           'http://localhost:3000/api/news/*',
           'http://localhost:3000/api/user',
           'http://localhost:3000/api/user/*',
-          '/api',
-          '/api/setting/getimageerror',
-          '/api/*',
           {
             uri: 'https://dev-0gy0vn9g.us.auth0.com/api/v2/*',
             tokenOptions:{
@@ -204,7 +224,7 @@ export function tokenGetters() {
       },
     }),
   ],
-  providers: [
+  providers: [Auth0Service,
     { provide: NZ_I18N, useValue: vi_VN },
     {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi:true },
     DatePipe

@@ -16,16 +16,20 @@ import { AdminConfigTestComponent } from './components/admin-config-test/admin-c
 import { MainComponent } from './components/main/main.component';
 import { AdminUsersComponent } from './components/admin-users/admin-users.component';
 import { AdminGroupsComponent } from './components/admin-groups/admin-groups.component';
+import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
+// import { AuthGuard } from '@auth0/auth0-angular';
+import { AuthGuard } from './shared/auth.guard';
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
   { path: 'home', component:MainComponent},
-  { path: 'map', component: MapComponent },
-  { path: 'config', component:AdminComponent,
+  { path: 'map', component: MapComponent , canActivate:[AuthGuard], data:{allowedRoles:['superadmin']}},
+  { path: 'config', component:AdminComponent, canActivate:[AuthGuard], data:{allowedRoles:['admin','superadmin']},
     children:[
       { path: '', redirectTo: 'camera', pathMatch: 'full'},
-      { path: 'camera', component: AdminConfigCameraComponent },
-      { path: 'traffic', component: AdminConfigTrafficComponent },
-      { path: 'event', component: AdminConfigEventComponent },
+      { path: 'camera', component: AdminConfigCameraComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin','superadmin']} },
+      { path: 'traffic', component: AdminConfigTrafficComponent, canActivate:[AuthGuard], data:{allowedRoles:['superadmin']}},
+      { path: 'event', component: AdminConfigEventComponent, canActivate:[AuthGuard], data:{allowedRoles:['superadmin']}},
       { path: 'test', component: AdminConfigTestComponent },
    ],
   },
@@ -45,7 +49,9 @@ const routes: Routes = [
   { path: 'roadworks', component:RoadworksComponent },
   { path: 'parkings', component:ParkingsComponent },
   { path: 'staticmaps', component:StaticMapComponent },
-  { path: 'roadevents', component:RoadeventsComponent }
+  { path: 'roadevents', component:RoadeventsComponent },
+  { path: 'unauthorized', component:UnauthorizedComponent },
+  { path: 'notfound', component:NotFoundComponent}
 ];
 
 @NgModule({
