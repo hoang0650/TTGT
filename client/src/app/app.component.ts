@@ -14,12 +14,14 @@ export class AppComponent {
   profile?:any;
   idToken ='';
   roles = ['guest'];
+  loginInterval?:any
+  loginTry = 0;
   constructor(public auth:AuthorizationService, public authservice:AuthService, public admin:AdminService){}
 
   ngOnInit():void{
-    setTimeout(()=>{
+    this.loginInterval = setInterval(()=>{
       this.getLogin();
-    },2000)
+    }, 1000)
    
   }
 
@@ -29,6 +31,8 @@ export class AppComponent {
       next: (user) => {
         this.profile = user
         
+        
+
         if (this.profile) {
           this.getRoles()
           
@@ -36,7 +40,11 @@ export class AppComponent {
           this.getIdToken()
           localStorage.setItem('profile',JSON.stringify(this.profile));
 
-
+          clearInterval(this.loginInterval)
+        }
+        this.loginTry += 1
+        if (this.loginTry >= 5) {
+          clearInterval(this.loginInterval)
         }
       },
       error: (err)=>{
