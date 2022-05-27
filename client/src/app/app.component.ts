@@ -31,7 +31,6 @@ export class AppComponent {
         // }
         this.profile = user
         if(this.profile){
-          console.log(this.profile);
           
           this.auth.userHasRoles
           this.auth.authorize

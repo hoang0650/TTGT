@@ -462,3 +462,7 @@ nz-layout {
 .no-padding {
     padding: 0 !important;
 }
+
+.form-label.required :after {
+    content:" *";color:red;
+}

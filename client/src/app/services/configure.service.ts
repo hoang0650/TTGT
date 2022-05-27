@@ -116,7 +116,7 @@ export class ConfigureService {
     zoom: 14
   }
 
-  mapCameraMarkerIcon = {
+  mapCameraMarkerIcon:any = {
       type: 'div',
       className: 'map-camera-marker',
       iconSize: [32, 32],
@@ -130,21 +130,21 @@ export class ConfigureService {
       iconAnchor: [12, 12]
   }
 
-  mapCameraNewMarkerIcon = {
+  mapCameraNewMarkerIcon:any = {
       type: 'div',
       className: 'map-camera-new-marker',
       iconSize: [32, 32],
       iconAnchor: [16, 16]
   }
 
-  mapCameraPTZMarkerIcon = {
+  mapCameraPTZMarkerIcon:any = {
       type: 'div',
       className: 'map-camera-ptz-marker',
       iconSize: [32, 32],
       iconAnchor: [16, 16]
   }
   
-  mapCameraNewPTZMarkerIcon = {
+  mapCameraNewPTZMarkerIcon:any = {
       type: 'div',
       className: 'map-camera-ptz-new-marker',
       iconSize: [32, 32],

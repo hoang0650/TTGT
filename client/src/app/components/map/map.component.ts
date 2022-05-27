@@ -15,6 +15,7 @@ import { StaticMapService } from 'src/app/services/static-map.service';
 import { MapPopupCreateEventComponent } from '../map-popup-create-event/map-popup-create-event.component';
 import { StaticMapPopupComponent } from '../static-map-popup/static-map-popup.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 declare var $: any
 
@@ -105,7 +106,7 @@ export class MapComponent implements OnInit {
   currentMode?:string;
   dividerText?:string;
   
-  constructor(private configure:ConfigureService, private staticMapService:StaticMapService, private markerService:MarkerService, private roadEventService:RoadEventsService, private route:ActivatedRoute, private location:Location, private mapService:MapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private geocoding:GeocodingService, private cameraService:CameraService, private parkingService:ParkingService, private cdRef:ChangeDetectorRef) {
+  constructor(private configure:ConfigureService, private staticMapService:StaticMapService, private markerService:MarkerService, private roadEventService:RoadEventsService, private route:ActivatedRoute, private location:Location, private mapService:MapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private geocoding:GeocodingService, private cameraService:CameraService, private parkingService:ParkingService, private cdRef:ChangeDetectorRef, private nzMessage:NzMessageService) {
     this.currentTab = "traffic";
     this.limitParking = true
     this.listEvent = []
@@ -211,7 +212,6 @@ export class MapComponent implements OnInit {
   getInfoOfUser() {
     this.mapService.getInfoOfUser().subscribe({
       next: (res) => {
-        console.log(res);
         
         this.resetList(res);
       }
@@ -593,9 +593,11 @@ export class MapComponent implements OnInit {
           this.newCreateEvent.closePopup()
           this.sideMap?.removeLayer(this.newCreateEvent)
           delete this.newCreateEvent
+
+          this.nzMessage.success('Đã tạo cảnh báo mới, chờ quản trị viên duyệt')
         },
         error: (err) => {
-          console.log(err);
+          this.nzMessage.error('Tạo cảnh báo mới thất bại, hãy thử lại')
           this.isSubmit = true
         }
       })

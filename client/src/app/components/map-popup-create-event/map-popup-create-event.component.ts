@@ -22,8 +22,6 @@ export class MapPopupCreateEventComponent implements OnInit {
   }
 
   closePopup() {
-    console.log("Lô");
-    
     this.map.markers['incidents'][this.event?._id].closePopup()
   }
 }

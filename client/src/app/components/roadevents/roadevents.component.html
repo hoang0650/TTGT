@@ -104,14 +104,12 @@
             <div class="ui segment">
                 <h4 class="ui center aligned header" *ngIf="roadevents.length == 0">
                     <div class="content" *ngIf="isLoading">
-                        <div class="row">
-                            <nz-spin nzSimple></nz-spin>
-                            Đang tải...
-                        </div>
+                        <nz-spin nzSimple></nz-spin>
+                        Đang tải...
                     </div>
                     <div class="content" *ngIf="!isLoading && roadevents.length == 0">
                         <nz-spin nzSimple></nz-spin>
-                        Không có lớp thông tin tĩnh nào
+                        Không có phân luồng giao thông nào
                     </div>
                 </h4>
 

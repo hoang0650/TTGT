@@ -61,11 +61,13 @@ export class CamerasComponent implements OnInit {
   selectedDist: any;
   filterText: string;
   notice: any;
+  isLoading: boolean;
 
 
   constructor(private messageService:MessageService, public configure:ConfigureService, private staticData:StaticService, private cameraService:CameraService, private markerModify:MarkerService, private route:ActivatedRoute, private viewportScroller: ViewportScroller, private location:Location, private cdRef:ChangeDetectorRef) {
     this.mess = this.messageService.getMessageObj();
     this.filterText = ""
+    this.isLoading = true;
   }
 
   ngOnInit(): void {
@@ -84,6 +86,7 @@ export class CamerasComponent implements OnInit {
           next: (cameras:any) => {
 
             this.cameras = cameras;
+            this.isLoading = false;
   
             cameras.forEach((camera:any) => {
               this.markers[camera._id] = this.setMarkerForCamera(camera);
@@ -169,10 +172,10 @@ export class CamerasComponent implements OnInit {
 
   setMarkerForCamera(camera:any) {
     var marker:any = {};
-
-
+    
     marker = L.marker([camera.loc.coordinates[1], camera.loc.coordinates[0]], {
       draggable: false,
+      
       icon: camera.ptz ? this.markerModify.getIcon('good', 'ptz') : this.markerModify.getIcon('good', 'normal'),
       rotationAngle: camera.ptz ? 0 : camera.angle
     }).on({

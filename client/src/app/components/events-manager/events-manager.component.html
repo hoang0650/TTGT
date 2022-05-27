@@ -141,7 +141,7 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-8">
-                                        <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon" [(ngModel)]="status" (change)="filterListEvent()">
+                                        <select class="form-select" aria-label="Example select with button addon" [(ngModel)]="status" (change)="filterListEvent()">
                                             <option *ngFor="let statusData of statusListArray" value="{{statusData.id}}">{{statusData.name}} </option>
                                         </select>
                                     </div>

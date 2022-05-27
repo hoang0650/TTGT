@@ -253,6 +253,18 @@
                 </div>
             </div>
 
+            <div class="ui segment" *ngIf="cameras.length == 0">
+                <h4 class="ui center aligned header">
+                    <div class="content" *ngIf="isLoading">
+                        <nz-spin nzSimple></nz-spin>
+                        Đang tải...
+                    </div>
+                    <div class="content" *ngIf="!isLoading && cameras.length == 0">
+                        Không có camera nào
+                    </div>
+                </h4>
+            </div>
+
             <accordion [isAnimated]="true" [closeOthers]="true">
                 <div *ngIf="!filterText "> 
                     <div *ngFor="let district of districts">

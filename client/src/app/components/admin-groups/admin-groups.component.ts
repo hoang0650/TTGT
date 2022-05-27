@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { AdminService } from 'src/app/services/admin.service';
 import { GroupService } from 'src/app/services/group.service';
@@ -67,7 +68,7 @@ export class AdminGroupsComponent implements OnInit {
     manage: 'Quản lý'
   };
 
-  constructor(public admin:AdminService, public modalService:NzModalService, private groupsService:GroupService) { }
+  constructor(public admin:AdminService, public modalService:NzModalService, private groupsService:GroupService, private nzMessage:NzMessageService) { }
 
   ngOnInit(): void {
     this.isUsersLoading = true;
@@ -107,9 +108,7 @@ export class AdminGroupsComponent implements OnInit {
               return curUser.user_id != guser.user_id
             })
           })
-          console.log(this.currentUsers);
-          
-
+        
           group.permissionsStats = {};
           for(var key in group.permissions){
             var value = group.permissions[key];
@@ -159,9 +158,14 @@ export class AdminGroupsComponent implements OnInit {
 
     modalRef.afterClose.subscribe({
       next: (res) => {
-        this.lastResult = res
+        if (res == 'created') {
+          this.nzMessage.create('success', 'Đã tạo nhóm mới')
+        } else if (res == 'updated') {
+          this.nzMessage.create('success', 'Đã cập nhật nhóm mới')
+        } else if (res == 'removed') {
+          this.nzMessage.create('success', 'Đã xóa nhóm')
+        }
         this.getGroup()
-
       }
     })
   }

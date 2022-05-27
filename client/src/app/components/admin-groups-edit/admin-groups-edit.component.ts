@@ -133,7 +133,7 @@ export class AdminGroupsEditComponent implements OnInit {
     this.groupService.delete(this.group._id).subscribe({
       next: (res:any) => {
         this.isRemoving = true
-        this.modalRef.close("remove")
+        this.modalRef.close("removed")
       }
     })
   }

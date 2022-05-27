@@ -31,7 +31,7 @@ export class MainComponent implements OnInit {
     this.getInfoOfUser()
     this.newService.getNew().subscribe({
       next: (res:any) => {
-        console.log(res);
+
         
       }
     })
@@ -68,7 +68,6 @@ export class MainComponent implements OnInit {
     this.mapService.getAllEvent().subscribe({
       next: (res) => {
         this.listEvent = res
-        console.log(res);
         
         if (this.listEventType) {
           this.listEvent.forEach((event:any) => {

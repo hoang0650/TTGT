@@ -16,6 +16,7 @@ import { AdminConfigTestComponent } from './components/admin-config-test/admin-c
 import { MainComponent } from './components/main/main.component';
 import { AdminUsersComponent } from './components/admin-users/admin-users.component';
 import { AdminGroupsComponent } from './components/admin-groups/admin-groups.component';
+import { CamerasCreateComponent } from './components/cameras-create/cameras-create.component';
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
   { path: 'home', component:MainComponent},
@@ -41,7 +42,14 @@ const routes: Routes = [
       { path: 'stats', component:StatsEventsComponent }
     ]
   },
-  { path: 'cameras', component:CamerasComponent },
+  { path: 'cameras',
+    children: [
+      { path: '', component:CamerasComponent },
+      { path: 'create', component: CamerasCreateComponent },
+      { path: ':id/update', component: CamerasCreateComponent },
+      { path: '**', redirectTo:'' }
+    ]
+  },
   { path: 'roadworks', component:RoadworksComponent },
   { path: 'parkings', component:ParkingsComponent },
   { path: 'staticmaps', component:StaticMapComponent },

@@ -41,6 +41,8 @@ import { NzTableModule} from 'ng-zorro-antd/table';
 import { NzAffixModule } from 'ng-zorro-antd/affix';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 //
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { AuthModule, AuthHttpInterceptor} from '@auth0/auth0-angular';
@@ -66,6 +68,7 @@ import { StatsEventsComponent } from './components/stats-events/stats-events.com
 import { NgChartsModule } from 'ng2-charts';
 import { AdminConfigTestComponent } from './components/admin-config-test/admin-config-test.component';
 import { AdminConfigCameraComponent } from './components/admin-config-camera/admin-config-camera.component';
+import { CamerasCreateComponent } from './components/cameras-create/cameras-create.component';
 
 
 registerLocaleData(vi);
@@ -105,6 +108,7 @@ export function tokenGetters() {
     StatsEventsComponent,
     AdminConfigTestComponent,
     AdminConfigCameraComponent,
+    CamerasCreateComponent,
  
   ],
   imports: [
@@ -122,6 +126,7 @@ export function tokenGetters() {
     NzDropDownModule,
     NzTypographyModule,
     NzLayoutModule,
+    NzSelectModule,
     SafePipeModule,
     NzMenuModule,
     NzDropDownModule,
@@ -137,6 +142,7 @@ export function tokenGetters() {
     NzTableModule,
     NzToolTipModule,
     AccordionModule.forRoot(),
+    NzMessageModule,
     NgChartsModule,
     
     AuthModule.forRoot({
