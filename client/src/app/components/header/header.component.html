@@ -70,14 +70,13 @@
         <li class="nav-item" [ngClass]="{'active': isActive('/home')}">
           <a class="nav-link" aria-current="page" [routerLink]="['/home']">Giới thiệu</a>
         </li>
-        <li class="nav-item" [ngClass]="{'active': isActive('/map')}">
-          <a class="nav-link" *ngIf="appCom.profile && roles.indexOf('guest') < 0 || roles.indexOf('superadmin') <0" [routerLink]="['/map']">Bản đồ</a>
+        <li class="nav-item" *ngIf="roles.indexOf('superadmin') > -1" [ngClass]="{'active': isActive('/map')}">
+          <a class="nav-link" [routerLink]="['/map']">Bản đồ</a>
         </li>
-        <li class="nav-item dropdown" [ngClass]="{'active': isActiveList(['/events', '/cameras', '/roadworks', '/parkings', '/roadevents', '/staticmaps'])}">
+        <li class="nav-item dropdown" *ngIf="roles.indexOf('admin') > -1 || roles.indexOf('superadmin')>-1" [ngClass]="{'active': isActiveList(['/events', '/cameras', '/roadworks', '/parkings', '/roadevents', '/staticmaps'])}">
           <a class="nav-link dropdown" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Quản lý
           </a>
-          
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li>
               <a class="dropdown-item" [routerLink]="['/events']" [ngClass]="{'active': isActive('/events')}">Cảnh báo giao thông</a>
@@ -99,25 +98,27 @@
               <a class="dropdown-item" [routerLink]="['/staticmaps']" [ngClass]="{'active': isActive('/staticmaps')}">Lớp thông tin tĩnh</a>
             </li>
           </ul>
+          
         </li>
-        <li class="nav-item dropdown" [ngClass]="{'active': isActiveList(['/config/*', '/users', '/groups'])}">
+        <li class="nav-item dropdown" *ngIf="roles.indexOf('admin') > -1 || roles.indexOf('superadmin') > -1" [ngClass]="{'active': isActiveList(['/config/*', '/users', '/groups'])}">
           <a class="nav-link dropdown" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Quản trị
           </a>
           
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li>
-              <a class="dropdown-item" [ngClass]="{'active': isActive('/config')}" [routerLink]="['/config']">Cấu hình</a>
+              <a class="dropdown-item" *ngIf="roles.indexOf('admin')>-1 || roles.indexOf('superadmin')>-1" [ngClass]="{'active': isActive('/config')}" [routerLink]="['/config']">Cấu hình</a>
             </li>
             <li>
-              <a class="dropdown-item" [routerLink]="['/users']">Người dùng</a>
+              <a class="dropdown-item" *ngIf="roles.indexOf('superadmin')>-1" [ngClass]="{'active': isActive('/users')}" [routerLink]="['/users']">Người dùng</a>
             </li>
             <li>
-              <a class="dropdown-item" [routerLink]="['/groups']">Nhóm người dùng</a>
+              <a class="dropdown-item" *ngIf="roles.indexOf('superadmin')>-1" [ngClass]="{'active': isActive('/groups')}" [routerLink]="['/groups']">Nhóm người dùng</a>
             </li>
           </ul>
         </li>
-        <li class="nav-item dropdown" [ngClass]="{'active': isActiveList(['/events/stats'])}">
+        
+        <li class="nav-item dropdown" *ngIf="roles.indexOf('admin')>-1" [ngClass]="{'active': isActiveList(['/events/stats'])}">
           <a class="nav-link dropdown" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Thống kê
           </a>

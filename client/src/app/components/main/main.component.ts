@@ -27,6 +27,7 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     AOS.init();
+    this.pullDown();
     this.getAllType()
     this.getInfoOfUser()
     this.newService.getNew().subscribe({
@@ -60,9 +61,20 @@ export class MainComponent implements OnInit {
   }
 
   pullDown() {
-    $('html, body').animate({ scrollTop: window.innerHeight - 50 });
+    $(window).on('scroll',function(){
+      var scrollToTop = $('.scroll-top-to'),
+      scroll = $(window).scrollTop();
+      if(scroll >=200){
+        scrollToTop.fadeIn(200);
+      }else{
+        scrollToTop.fadeOut(100);
+      }
+    });
+    $('.scroll-top-to').on('click',function(){
+      $('html, body').animate({ scrollTop: 0 },50);
+      return false;
+    })
   }
-
 
   getAllEvent() {
     this.mapService.getAllEvent().subscribe({
@@ -87,5 +99,7 @@ export class MainComponent implements OnInit {
       }
     })
   }
+
+  
 
 }

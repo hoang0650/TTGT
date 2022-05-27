@@ -13,6 +13,7 @@ export class AppComponent {
   title = 'client';
   profile?:any;
   idToken ='';
+  roles = ['guest'];
   constructor(public auth:AuthorizationService, public authservice:AuthService, public admin:AdminService){}
 
   ngOnInit():void{
@@ -22,26 +23,48 @@ export class AppComponent {
    
   }
 
+
   getLogin() {
     this.authservice.getUser().subscribe({
-      next: (user:any) => {
-        // const accessToken = localStorage.getItem('access_token');
-        // if (!accessToken) {
-        //   throw new Error('Access token must exist to fetch profile');
-        // }
+      next: (user) => {
         this.profile = user
-        if(this.profile){
+        
+        if (this.profile) {
+          this.getRoles()
           
-          this.auth.userHasRoles
-          this.auth.authorize
-          localStorage.setItem('profile', JSON.stringify(this.profile));
           
+          this.getIdToken()
+          localStorage.setItem('profile',JSON.stringify(this.profile));
+
+
         }
       },
       error: (err)=>{
-        return err;
+        console.log(err);
       },
     });
+  }
+
+  getRoles() {
+    this.admin.getUser(this.profile.sub).subscribe({
+      next: (data:any) => {
+        this.roles = data.users.app_metadata.roles
+        const accessToken:any = localStorage.getItem('profile');
+        const profile = JSON.parse(accessToken);
+        
+        // const uRoles = profile['roles'] || [];
+        // this.roles.forEach((r)=>uRoles.include(r))
+      }
+    })
+  }
+
+  getIdToken() {
+    this.authservice.getAccessTokenSilently().subscribe({
+      next: (token:string) => {
+        this.idToken = token
+        localStorage.setItem('id_token',JSON.stringify(this.idToken));
+      }
+    })
   }
 
 

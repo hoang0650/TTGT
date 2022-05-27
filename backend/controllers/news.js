@@ -5,9 +5,9 @@
 // 	var filePath = path.join(__dirname, `../${absPath}`);
 // 	fs.readFile(filePath, { encoding: 'utf-8' }, (err, data) => { cb(err, data); });
 // };
-const New = require('../models/news');
+var New = require('../models/news');
 
-let MOCK_NEWS = [
+var MOCK_NEWS = [
     {
         title: 'Trung tâm Quản lý đường hầm sông Sài Gòn tổ chức thông tin tuyên truyền về tình hình Biển Đông',
         img: 'http://www.hamsongsaigon.com.vn/images/stories/tintuc/tintrungtam/tinchinhquyen/Nam2016/ThongtintuyentruyenvetinhhinhBienDongnam2016-08.07.2016/image004.jpg',

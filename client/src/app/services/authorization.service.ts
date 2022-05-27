@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import {AuthService} from '@auth0/auth0-angular';
 import { AdminService } from './admin.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import {JwtHelperService} from '@auth0/angular-jwt';
+import { NzMessageService } from 'ng-zorro-antd/message';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthorizationService {
 
   idToken ='';
-  constructor(public auth:AuthService, public admin:AdminService,private router: Router,private jwtHelper:JwtHelperService) { }
+  constructor(public auth:AuthService, public admin:AdminService,private jwtHelper:JwtHelperService,private route: ActivatedRoute, private message:NzMessageService) { }
 
   get userProfile(): any {
     if (this.isAuthenticated()) {
@@ -51,8 +52,15 @@ export class AuthorizationService {
 
 
   login() {
+    
     this.auth.loginWithRedirect();
+    var queryParam = this.route.snapshot.queryParamMap;
+    var result = queryParam.get('blocked');
     localStorage.getItem('id_token');
+    if(result){
+      console.log('something went wrong')
+      this.message.create('blocked','Tài khoản của bạn đang bị khóa');
+    }
     // return this.auth0.handleAuthentication()
     
   }
