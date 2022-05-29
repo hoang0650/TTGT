@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import * as _ from 'lodash';
+import { AuthorizationService } from '../services/authorization.service';
+import { AdminService } from '../services/admin.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 // import { profile } from 'console';
 
 // export function returnToken(){
@@ -15,33 +18,38 @@ import * as _ from 'lodash';
 
 export class Auth0Service {
   private headers: HttpHeaders = new HttpHeaders();
-  constructor(public router: Router, private http:HttpClient,private jwtHelperService: JwtHelperService) {  }
-
+  private blocked: boolean|undefined|null;
+  constructor(public router: Router,private jwtHelperService: JwtHelperService, 
+  private auth: AuthorizationService, private message: NzMessageService, private route:ActivatedRoute, private admin:AdminService) {  }
   isAuthorized(allowedRoles: string[]): boolean {
+    // console.log('check first');
+    // if(!this.auth.isAuthenticated()){
+
+    //   this.router.navigate(['notfound']);
+    // }
+    
     // check if the list of allowed roles is empty, if empty, authorize the user to access the page
     if (allowedRoles == null || allowedRoles.length === 0) {
       return false;
     }
-  
+    
     // get token from local storage or state management
-    var token: string = localStorage.getItem('id_token') || '{}';
-  
+    const token: string = localStorage.getItem('id_token') || '{}';
     // decode token to read the payload details
-    var decodeToken = this.jwtHelperService.decodeToken(token);
-  // check if it was decoded successfully, if not the token is not valid, deny access
+    const decodeToken = this.jwtHelperService.decodeToken(token);
+    const checkRole = _.intersection(allowedRoles,decodeToken['https://hoang0650.com/app_metadata']['roles']);
+   
+    // check if it was decoded successfully, if not the token is not valid, deny access
     if (!decodeToken) {
       console.log('Invalid token');
       return false;
     }
-    // const sort = decodeToken['https://hoang0650.com/roles'].indexOf(allowedRoles);
-    const checkRole = _.union(allowedRoles,decodeToken['https://hoang0650.com/roles']);
-    // [admin],[admin,superadmin].includes('admin')
-    if(!checkRole){
-      console.log('Invalid role');
+
+    if(checkRole.includes('superadmin')|| checkRole.includes('admin')){
+      return true;
+    }else {
       return false;
     }
-
-    return true;
 
   }
 }

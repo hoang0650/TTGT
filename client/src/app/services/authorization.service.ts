@@ -4,12 +4,16 @@ import { AdminService } from './admin.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthorizationService {
 
   idToken ='';
+  private isLoggIn = new ReplaySubject<boolean>(1);
+  isLogged = this.isLoggIn.asObservable();
+
   constructor(public auth:AuthService, public admin:AdminService,private jwtHelper:JwtHelperService,private route: ActivatedRoute, private message:NzMessageService) { }
 
   get userProfile(): any {
@@ -28,7 +32,7 @@ export class AuthorizationService {
     user: 'user',
     superadmin: 'superadmin'
   };
-
+ 
   authorize() {
     return this.auth.getAccessTokenSilently().subscribe({
       next: (token:string)=>{
@@ -49,20 +53,12 @@ export class AuthorizationService {
     //   }
     // })
   }
+ 
 
 
   login() {
-    
-    this.auth.loginWithRedirect();
-    var queryParam = this.route.snapshot.queryParamMap;
-    var result = queryParam.get('blocked');
-    localStorage.getItem('id_token');
-    if(result){
-      console.log('something went wrong')
-      this.message.create('blocked','Tài khoản của bạn đang bị khóa');
-    }
-    // return this.auth0.handleAuthentication()
-    
+      this.auth.loginWithRedirect();
+      localStorage.getItem('id_token');  
   }
 
   logout() {
@@ -89,8 +85,11 @@ export class AuthorizationService {
     // access token's expiry time
     const access_token:any = localStorage.getItem('expires_at');
     const expiresAt = JSON.parse(access_token);
+    console.log(expiresAt);
+    console.log(new Date().getTime() < expiresAt);
     // this.getProfile(() => { });
     return new Date().getTime() < expiresAt;
+    
   }
 
   public profile(data:any): void{

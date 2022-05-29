@@ -10,9 +10,15 @@ export class AdminService {
     return this.http.get(`${this.Root_url}`);
   }
 
-  getUser(id:any){
+  getUser(id:string){
     return this.http.get(`${this.Root_url}/${id}`);
   }
+
+  // getblockuser
+  getBlockUser(id:string){
+    return this.http.get(`${this.Root_url}/${id}/getblockuser`);
+  }
+
 
   blockUser(id: string, action:string, payload: Object){
     return this.http.post(`${this.Root_url}/${id}/${action}`,payload={'blocked':true});

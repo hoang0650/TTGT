@@ -31,29 +31,29 @@ const routes: Routes = [
   { path: 'config', component:AdminComponent, canActivate:[AuthGuard], data:{allowedRoles:['admin','superadmin']},
     children:[
       { path: '', redirectTo: 'camera', pathMatch: 'full'},
-      { path: 'camera', component: AdminConfigCameraComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin','superadmin']} },
-      { path: 'traffic', component: AdminConfigTrafficComponent, canActivate:[AuthGuard], data:{allowedRoles:['superadmin']}},
-      { path: 'event', component: AdminConfigEventComponent, canActivate:[AuthGuard], data:{allowedRoles:['superadmin']}},
+      { path: 'camera', component: AdminConfigCameraComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+      { path: 'traffic', component: AdminConfigTrafficComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
+      { path: 'event', component: AdminConfigEventComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
       { path: 'test', component: AdminConfigTestComponent },
    ],
   },
   {
-    path: 'users', component: AdminUsersComponent
+    path: 'users', component: AdminUsersComponent,canActivate:[AuthGuard], data:{allowedRoles:['superadmin']}
   },
   {
-    path: 'groups', component: AdminGroupsComponent
+    path: 'groups', component: AdminGroupsComponent,canActivate:[AuthGuard], data:{allowedRoles:['superadmin']}
   },
-  { path: 'events',
+  { path: 'events',canActivate:[AuthGuard], data:{allowedRoles:['admin']},
     children: [
-      { path: '', component:EventsManagerComponent },
-      { path: 'stats', component:StatsEventsComponent }
+      { path: '', component:EventsManagerComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+      { path: 'stats', component:StatsEventsComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}}
     ]
   },
-  { path: 'cameras',
+  { path: 'cameras',canActivate:[AuthGuard], data:{allowedRoles:['admin']},
     children: [
-      { path: '', component:CamerasComponent },
-      { path: 'create', component: CamerasCreateComponent },
-      { path: ':id/update', component: CamerasCreateComponent },
+      { path: '', component:CamerasComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
+      { path: 'create', component: CamerasCreateComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+      { path: ':id/update', component: CamerasCreateComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
       { path: '**', redirectTo:'' }
     ]
   },
@@ -82,6 +82,10 @@ const routes: Routes = [
       { path: '**', redirectTo:'' }
     ]
   },
+  // { path: 'roadworks', component:RoadworksComponent, canActivate:[AuthGuard], data:{allowedRoles:['admin']}},
+  // { path: 'parkings', component:ParkingsComponent, canActivate:[AuthGuard], data:{allowedRoles:['admin']}},
+  // { path: 'staticmaps', component:StaticMapComponent, canActivate:[AuthGuard], data:{allowedRoles:['admin']}},
+  // { path: 'roadevents', component:RoadeventsComponent, canActivate:[AuthGuard], data:{allowedRoles:['admin']}},
   { path: 'unauthorized', component:UnauthorizedComponent },
   { path: 'notfound', component:NotFoundComponent}
 ];
