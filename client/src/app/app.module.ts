@@ -157,8 +157,9 @@ export function tokenGetters() {
       audience: 'https://dev-0gy0vn9g.us.auth0.com/api/v2/',
       scope: 'openid profile app_metadata roles name email username',
       redirectUri: window.location.origin,
+      
       responseType:'token id_token',
-      cacheLocation: 'memory',
+      cacheLocation: 'localstorage',
       // useRefreshTokens: true,
       httpInterceptor:{
       allowedList:[
