@@ -21,6 +21,9 @@ import { UnauthorizedComponent } from './components/unauthorized/unauthorized.co
 import { NotFoundComponent } from './components/not-found/not-found.component';
 // import { AuthGuard } from '@auth0/auth0-angular';
 import { AuthGuard } from './shared/auth.guard';
+import { RoadworksCreateComponent } from './components/roadworks-create/roadworks-create.component';
+import { ParkingsCreateComponent } from './components/parkings-create/parkings-create.component';
+import { RoadeventsCreateComponent } from './components/roadevents-create/roadevents-create.component';
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
   { path: 'home', component:MainComponent},
@@ -54,10 +57,31 @@ const routes: Routes = [
       { path: '**', redirectTo:'' }
     ]
   },
-  { path: 'roadworks', component:RoadworksComponent },
-  { path: 'parkings', component:ParkingsComponent },
+  { path: 'roadworks',
+    children: [
+      { path: '', component:RoadworksComponent },
+      { path: 'create', component: RoadworksCreateComponent },
+      { path: ':id/update', component: RoadworksCreateComponent },
+      { path: '**', redirectTo:'' }
+    ]
+  },
+  { path: 'parkings',
+    children: [
+      { path: '', component:ParkingsComponent },
+      { path: 'create', component: ParkingsCreateComponent },
+      { path: ':id/update', component: ParkingsCreateComponent },
+      { path: '**', redirectTo:'' }
+    ]
+  },
   { path: 'staticmaps', component:StaticMapComponent },
-  { path: 'roadevents', component:RoadeventsComponent },
+  { path: 'roadevents',
+    children: [
+      { path: '', component:RoadeventsComponent },
+      { path: 'create', component: RoadeventsCreateComponent },
+      { path: ':id/update', component: RoadeventsCreateComponent },
+      { path: '**', redirectTo:'' }
+    ]
+  },
   { path: 'unauthorized', component:UnauthorizedComponent },
   { path: 'notfound', component:NotFoundComponent}
 ];

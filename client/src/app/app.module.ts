@@ -72,6 +72,10 @@ import { CamerasCreateComponent } from './components/cameras-create/cameras-crea
 import { Auth0Service } from './shared/auth0.service';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { RoadworksCreateComponent } from './components/roadworks-create/roadworks-create.component';
+import { ParkingsCreateComponent } from './components/parkings-create/parkings-create.component';
+import { RoadeventsCreateComponent } from './components/roadevents-create/roadevents-create.component';
+import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
 
 
 registerLocaleData(vi);
@@ -114,6 +118,9 @@ export function tokenGetters() {
     CamerasCreateComponent,
     UnauthorizedComponent,
     NotFoundComponent,
+    RoadworksCreateComponent,
+    ParkingsCreateComponent,
+    RoadeventsCreateComponent,
  
   ],
   imports: [
@@ -125,6 +132,7 @@ export function tokenGetters() {
     NzModalModule,
     NzInputModule,
     LeafletModule,
+    LeafletDrawModule,
     MomentModule,
     NzButtonModule,
     NzIconModule,

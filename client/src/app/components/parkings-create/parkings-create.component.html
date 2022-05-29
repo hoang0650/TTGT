@@ -1,0 +1,203 @@
+<!-- <div class="ui stackable grid full-height management-with-map">
+    <div class="sixteen wide mobile sixteen wide tablet eight wide computer column no-spacing left-side-map">
+        <div class="side-map" 
+            leaflet 
+            [leafletOptions]="options"
+            (leafletClick)="selectPosition($event)"
+            (leafletMapReady)="this.sideMap = $event">
+            <div *ngFor="let marker of markers | keyvalue; trackBy:trackByFn" [leafletLayer]="$any(marker).value"></div>
+        </div>
+    -->
+
+<div class="map-layout">
+    <div class="map-leaflet"
+        leaflet
+        [leafletOptions]="configure.options"
+        (leafletMapReady)="initMap($event)"
+        (leafletClick)="selectPosition($event)">
+        
+        <div [leafletLayer]="this.markers['newMarker']"></div>
+    </div>
+
+    <div class="map-search">
+        <div class="map-search-bar">
+            <nz-input-group [nzSuffix]="searchQuery.length > 0 ? suffixIconClose : suffixIconSearch" [nzSize]="'large'">
+                <input type="text" nz-input placeholder="Tìm vị trí" [(ngModel)]="searchQuery" appSearchRoads [appSearchRoadsText]="searchQuery" (newListRoads)="searchResults = $event" (isSearch)="isSearch = $event"/>
+            </nz-input-group>
+            <ng-template #suffixIconSearch>
+            <i nz-icon nzType="search"></i>
+            </ng-template>
+            <ng-template #suffixIconClose>
+                <i nz-icon nzType="close" (click)="searchIconClick()"></i>
+            </ng-template>
+    
+            <div class="results transition visible" *ngIf="searchResults?.length > 0 && isSearch">
+                <ul nz-menu>
+                    <li class="map-search-result" nz-menu-item *ngFor="let result of searchResults; index as i" (click)="searchSelect(result)">
+                        <b>{{result.properties.name}}</b>
+                        <br>
+                        {{result.properties.city}}
+                    </li>
+                </ul>
+            </div>
+            <div class="results transition visible" *ngIf="searchResults?.length <= 0 && isSearch" style="background-color: white;">
+                <a class="result">
+                    <div class="content">
+                        <div class="title">Không tìm thấy</div>
+                        <div class="description">Hãy thử lại</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <button class="map-layout-info-button" nz-button nzType="primary" [@mapLayoutInfoButton]="isOpen ? 'open' : 'closed'" (click)="toggleLayoutInfo()">
+        <i nz-icon nzType="{{isOpen ? 'right' : 'left'}}"></i>
+    </button>
+
+    <div [@mapLayoutInfo]="isOpen ? 'open' : 'closed'" class="map-layout-info-right">
+        <div class="map-layout-info-content" #mapLayoutInfo>
+            <div class="ui segments">
+                <div class="ui segment">
+                    <h2 class="ui center aligned header">
+                        <div class="content">
+                            {{(isCreate)?'Thêm bãi đỗ xe':'Chỉnh sửa bãi đỗ xe'}}
+                        </div>
+                    </h2>
+                </div>
+            </div>
+
+            <div class="ui segment">
+                <form #parkingForm="ngForm">
+                    <div class="container">
+
+                        <h3>Thông tin chung</h3>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="newParkingName" class="form-label required"><h5>Tên bãi</h5></label>
+                                    <input class="form-control" type="text" id="newParkingName" name="newParkingName" placeholder="Bãi xe tư nhân" (change)="inputChangeMethod()" [(ngModel)]="newParking['name']" />
+                                    <div class="ui pointing red basic label" *ngIf="error?.name">{{error.name}} </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="newParkingDist" class="form-label required"><h5>Quận</h5></label>
+                                    <select place class="form-select" id="newParkingDist" name="newParkingDist" (change)="inputChangeMethod()" [(ngModel)]="newParking['dist']">
+                                        <option value="" selected disabled hidden>Hãy chọn quận</option>
+                                        <option *ngFor="let item of districtList" value="{{item.district}}">{{item.district}}</option>
+                                    </select>    
+                                    <div class="ui pointing red basic label" *ngIf="error?.dist"> {{error.dist}} </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="newParkingAddr" class="form-label required"><h5>Địa chỉ</h5></label>
+                                    <input class="form-control" type="text" id="newParkingAddr" name="newParkingAddr" placeholder="Số 1 Đường Nguyễn Huệ" (change)="inputChangeMethod()" [(ngModel)]="newParking['addr']" />
+                                    <div class="ui pointing red basic label" *ngIf="error?.addr"> {{error.addr}} </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3>Thông tin trên bản đồ</h3>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="newParkingTmpLocation" class="form-label required"><h5>Vị trí</h5></label>
+                                    <div class="input-group">                                      
+                                        <input type="text" class="form-control" id="newParkingTmpLocation" name="newParkingTmpLocation" readonly placeholder="Chọn vị trí trên bản đồ" aria-describedby="buttonGetposition" [(ngModel)]="newParking['tmpLocation']">
+                                        <button class="btn btn-secondary" type="button" id="buttonGetposition" (click)="getPosition()"><i class="selected radio icon"></i>Lấy vị trí hiện tại</button>
+                                        <div class="ui pointing red basic label" *ngIf="error?.tmpLocation"> {{error.tmpLocation}} </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3>Thông tin dịch vụ</h3>
+                        <div class="row">
+                            <div class="col-md-12">                             
+                                <div class="mb-3">
+                                    <label for="newParkingCap" class="form-label required"><h5>Sức chứa</h5></label>
+                                    <input class="form-control" type="number" id="newParkingCap" name="newParkingCap" placeholder="100" (change)="inputChangeMethod()" [(ngModel)]="newParking['cap']" />
+                                    <div class="ui pointing red basic label" *ngIf="error?.cap"> {{error.cap}} </div>
+                                </div>
+
+                              
+                                <label class="form-label"><h5>Mức giá</h5></label>
+
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="newParkingVehicleTypeCar" name="newParkingVehicleTypeCar" [(ngModel)]="newParking['vehicle_type']['car']">
+                                        <label class="form-check-label" for="newParkingVehicleTypeCar">Ô tô</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="input-group" *ngIf="newParking['vehicle_type']['car']">
+                                        <span class="input-group-text">Từ</span>
+                                        <input type="text" class="form-control" name="newParkingPriceCarMin" placeholder="50,000 VND" (change)="inputChangeMethod()" [(ngModel)]="newParking['price']['car']['min']">
+                                        <span class="input-group-text">đến</span>
+                                        <input type="text" class="form-control" name="newParkingPriceCarMax" placeholder="100,000 VND" (change)="inputChangeMethod()" [(ngModel)]="newParking['price']['car']['max']">
+                                    </div>
+                                    <div class="ui pointing red basic label" *ngIf="error?.priceCar"> {{error.priceCar}} </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="newParkingVehicleTypeBike" name="newParkingVehicleTypeBike" [(ngModel)]="newParking['vehicle_type']['bike']">
+                                        <label class="form-check-label" for="newParkingVehicleTypeBike">Xe máy</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="input-group" *ngIf="newParking['vehicle_type']['bike']">
+                                        <span class="input-group-text">Từ</span>
+                                        <input type="text" class="form-control" name="newParkingPriceBikeMin" placeholder="5,000 VND" (change)="inputChangeMethod()" [(ngModel)]="newParking['price']['bike']['min']">
+                                        <span class="input-group-text">đến</span>
+                                        <input type="text" class="form-control" name="newParkingPriceBikeMax" placeholder="10,000 VND" (change)="inputChangeMethod()" [(ngModel)]="newParking['price']['bike']['max']">
+                                    </div>
+                                    <div class="ui pointing red basic label" *ngIf="error?.priceBike"> {{error.priceBike}} </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="newParkingPriceDetail" class="form-label required"><h5>Mức giá chi tiết</h5></label>
+                                    <textarea class="form-control" type="text" id="newParkingPriceDetail" name="newParkingPriceDetail" rows="3" (change)="inputChangeMethod()" [(ngModel)]="newParking['price_details']"  placeholder="Xe hơi: 50,000 VND / 1 tiếng"></textarea>
+                                    <div class="ui pointing red basic label" *ngIf="error?.price_details"> {{error.price_details}} </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label"><h5>Giờ hoạt động</h5></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Từ</span>
+                                        <input type="time" class="form-control" name="newParkingStartWork" placeholder="06:00" (change)="inputChangeMethod()" [(ngModel)]="newParking['worktime']['startWorking']">
+                                        <span class="input-group-text">đến</span>
+                                        <input type="time" class="form-control" name="newParkingEndWork" placeholder="23:00" (change)="inputChangeMethod()" [(ngModel)]="newParking['worktime']['endWorking']">
+                                    </div>
+                                    <div class="ui pointing red basic label" *ngIf="error?.working"> {{error.working}} </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="newParkingWorktimeDetail" class="form-label"><h5>Ngày hoạt động</h5></label>
+                                    <textarea class="form-control" type="text" id="newParkingWorktimeDetail" name="newParkingWorktimeDetail" rows="3" (change)="inputChangeMethod()" [(ngModel)]="newParking['worktime_details']"  placeholder="Các ngày trong tuần"></textarea>
+                                    <div class="ui pointing red basic label" *ngIf="error?.worktime_details"> {{error.worktime_details}} </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-3">
+                                <button class="btn btn-success" *ngIf="isCreate" type="button" [disabled]="!parkingForm.valid" (click)="create(newParking)">{{button.CREATE}}</button>
+                                <button class="btn btn-success" *ngIf="!isCreate" type="button" [disabled]="!parkingForm.valid" (click)="create(newParking)">{{button.UPDATE}}</button>
+                            </div>
+                            <div class="col-3 text-end">
+                                <button *ngIf="!isCreate" class="btn btn-danger" type="button" (click)="deleteParking(newParking)">{{button.REMOVE}}</button>
+                            </div>
+
+                            <div class="col-6 text-end">
+                                <button class="btn btn-secondary" (click)="back()" type="button">{{button.BACK}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -62,12 +62,14 @@ export class ParkingsComponent implements OnInit {
   selectedIcon:any;
   currentMarker: any;
   previousId: string;
+  isLoading = true;
 
   constructor(private messageService:MessageService, private parkingService:ParkingService, public configure:ConfigureService, private route:ActivatedRoute, private location:Location, private cdRef:ChangeDetectorRef) {
     this.exported = false
     this.filter = ""
     this.markers = {};
     this.previousId =""
+    this.listParking = []
 
     this.normalIcon = L.divIcon({
       className: 'marker-parking',
@@ -120,7 +122,8 @@ export class ParkingsComponent implements OnInit {
 
           this.listParking = parkings;
           this.listdistrict = result;
-        
+
+          this.isLoading = false;
           
           if (this.route.snapshot.paramMap.get('id')) {
             // focusAndExpandParking(this.route.snapshot.paramMap.get('id'));

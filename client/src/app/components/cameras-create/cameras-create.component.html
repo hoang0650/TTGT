@@ -79,7 +79,7 @@
                                     <label for="cameraGroup" class="form-label"><h5>Nhóm camera</h5></label>
                                     
                                     <select id="cameraGroup" multiple="" name="cameraGroup" class="form-select ui normal dropdown" >
-                                        <option value="{{camGroup._id}}" *ngFor="let camGroup of listCamGroup" (change)="inputChangeMethod($event)">{{ camGroup.name}}</option>
+                                        <option value="{{camGroup._id}}" *ngFor="let camGroup of listCamGroup" (change)="inputChangeMethod()">{{ camGroup.name}}</option>
                                     </select>
                                 </div>
 
@@ -98,7 +98,7 @@
                                         <option value="" selected disabled hidden>Hãy chọn quận</option>
                                         <option *ngFor="let item of districtList" value="{{item.district}}">{{item.district}}</option>
                                     </select>    
-                                    <div class="ui pointing red basic label" *ngIf="error.type"> {{error.dist}} </div>
+                                    <div class="ui pointing red basic label" *ngIf="error?.dist"> {{error.dist}} </div>
                                 </div>
 
                                 <div class="mb-3">

@@ -256,7 +256,8 @@ export class CamerasCreateComponent implements OnInit {
     return this.modalService.create({
       nzContent: AdminConfigConfirmComponent,
       nzComponentParams: {
-        form:form
+        form:form,
+        isMessage: true
       }
     })
   }
@@ -287,51 +288,23 @@ export class CamerasCreateComponent implements OnInit {
       this.cameraService.get(id).subscribe({
         next: (camera:any) => {
           this.newCamera = camera
+          if (!this.newCamera['values']) {
+            this.newCamera['values'] = {}
+          }
+          
 
           var cameraGroup = $('.ui.dropdown');
           if (camera.groups && camera.groups.length > 0) {
             camera.groups.forEach((group:any) => {
               cameraGroup.dropdown('set selected', `${group._id}`);
-
-              // this.listCamGroup.forEach((groupInList:any, index:number) => {
-              //   if (groupInList._id == group._id) {
-              //     cameraGroup.dropdown('set selected', `${index}: '${groupInList._id}'`);
-              //     console.log(`${index}: '${groupInList._id}'`);
-                  
-              //   }
-              // })   
             });
-          }
-          
-          
+          }          
   
           this.updateNewCamera({
             lat: camera.loc.coordinates[1],
             lng: camera.loc.coordinates[0]
           })
-  
-          // var listReference: any[] = [];
-          // camera.references.forEach((reference:any) => {
-          //   this.geojson['selected' + this.countGeo] = {
-          //     style: _.cloneDeep(this.selectedStyle),
-          //     _id: reference._id,
-          //     links: reference.links,
-          //     name: reference.name,
-          //     data: reference.data,
-          //     onEachFeature: (feature:any, layer:any) => {
-          //       layer.on({
-          //         click: () => {
-          //           this.selected.data = this.removeFeature(this.selected.data, feature);
-          //         }
-          //       });
-          //     }
-          //   };
-          //   this.geojson['selected' + this.countGeo].style.color = this.geoCameraColorCode;
-          //   listReference.push(this.geojson['selected' + this.countGeo]);
-          //   this.countGeo++;
-          // });
-  
-          // camera.references = listReference;
+
           this.newCamera.tmpLocation = camera.loc.coordinates[1].toFixed(4) + ' , ' + camera.loc.coordinates[0].toFixed(4);
           console.log(this.newCamera);
           
@@ -447,7 +420,9 @@ export class CamerasCreateComponent implements OnInit {
         },
         error: (err) => {
           // this.noti.dangerNotification('top','center');
-          if (err?.data?.code === 11000) {
+          console.log(err);
+          
+          if (err?.error?.err?.code === 11000) {
             this.openModal('duplicateCamera');
           }
         }
@@ -526,9 +501,7 @@ export class CamerasCreateComponent implements OnInit {
     }
   };
 
-  inputChangeMethod(event?:any) {
-    console.log(event);
-    
+  inputChangeMethod() {
     this.inputChange = true;
     this.updateNewCamera()
   };

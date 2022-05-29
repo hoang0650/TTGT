@@ -5,7 +5,8 @@
   <p>{{form.description}}</p>
 </div>
 <div *nzModalFooter>
-  <button class="ui blue button" *ngIf="adminConfirm" (click)="yes()">Có</button>
-  <button class="ui blue button" *ngIf="!adminConfirm" (click)="no()">Đóng</button>
-  <button class="ui red button" *ngIf="adminConfirm" (click)="no()">Không</button>
+  <button class="ui blue button" *ngIf="!isMessage && adminConfirm" (click)="yes()">Có</button>
+  <button class="ui blue button" *ngIf="!isMessage && !adminConfirm" (click)="no()">Đóng</button>
+  <button class="ui red button" *ngIf="!isMessage && adminConfirm" (click)="no()">Không</button>
+  <button class="ui blue button" *ngIf="isMessage" (click)="no()">Ok</button>
 </div>

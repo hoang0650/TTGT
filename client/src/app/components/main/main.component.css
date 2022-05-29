@@ -693,6 +693,7 @@ body {
     transition: 0.3s;
     z-index: 2000;
     cursor: pointer;
+    display: none;
   }
   
   .scroll-top-to:hover {

@@ -79,6 +79,10 @@ export class MessageService {
           deleteTemplate: {
             header: 'Xóa',
             description: 'Bạn có chắc chắn muốn xóa quan trắc này không?'
+          },
+          duplicateCamera: {
+            header: 'Trùng mã camera',
+            description: 'Bạn hãy dùng mã camera khác'
           }
         };
         return template[type];

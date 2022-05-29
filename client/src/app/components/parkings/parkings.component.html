@@ -119,8 +119,8 @@
                                                 </div>
                                                 <br/>
                                                 <div>
-                                                    <p *ngIf="parking?.worktime"><i class="calendar icon"></i> <span>Từ {{parking.worktime[0][0]}} đến
-                                                        {{parking.worktime[0][1]}} giờ </span>
+                                                    <p *ngIf="parking?.worktime"><i class="calendar icon"></i> <span>Từ {{parking.worktime['startWorking']}} đến
+                                                        {{parking.worktime['endWorking']}} giờ </span>
                                                     </p>
                                                     <p *ngIf="parking?.price_details"><img src="../../../assets/images/price_16.png" /> <span>{{parking.price_details}}</span></p>
                                                     <p *ngIf="parking?.cap"><i class="grid layout icon"></i> {{parking.cap}} chỗ</p>
@@ -138,6 +138,19 @@
                     </div>
                 </accordion>
             </div>
+
+            <div class="ui segment" *ngIf="listParking.length == 0">
+                <h4 class="ui center aligned header">
+                    <div class="content" *ngIf="isLoading">
+                        <nz-spin nzSimple></nz-spin>
+                        Đang tải...
+                    </div>
+                    <div class="content" *ngIf="!isLoading && listParking.length == 0">
+                        Không có bãi đỗ xe nào nào
+                    </div>
+                </h4>
+            </div>
+
             <div *ngIf="filter">
                 <accordion close-others="true">
                     <div *ngFor="let parking of listParking | filter:filterCustome:filter">

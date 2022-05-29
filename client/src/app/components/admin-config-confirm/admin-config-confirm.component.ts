@@ -9,6 +9,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 export class AdminConfigConfirmComponent implements OnInit {
   adminConfirm = true;
   @Input() form?: any;
+  @Input() isMessage?: any;
 
   constructor(private modalRef:NzModalRef) {
     

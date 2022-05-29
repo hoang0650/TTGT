@@ -43,7 +43,7 @@ export class AppComponent {
           clearInterval(this.loginInterval)
         }
         this.loginTry += 1
-        if (this.loginTry >= 5) {
+        if (this.loginTry >= 10) {
           clearInterval(this.loginInterval)
         }
       },
