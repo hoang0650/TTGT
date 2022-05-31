@@ -60,22 +60,24 @@ const routes: Routes = [
       { path: '**', redirectTo:'' }
     ]
   },
-  { path: 'roadworks',
+  { path: 'roadworks',canActivate:[AuthGuard], data:{allowedRoles:['admin']},
     children: [
-      { path: '', component:RoadworksComponent },
-      { path: 'create', component: RoadworksCreateComponent },
-      { path: ':id/update', component: RoadworksCreateComponent },
+      { path: '', component:RoadworksComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
+      { path: 'create', component: RoadworksCreateComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
+      { path: ':id/update', component: RoadworksCreateComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
       { path: '**', redirectTo:'' }
     ]
   },
-  { path: 'parkings',
+  { path: 'parkings', canActivate:[AuthGuard], data:{allowedRoles:['admin']},
     children: [
-      { path: '', component:ParkingsComponent },
-      { path: 'create', component: ParkingsCreateComponent },
-      { path: ':id/update', component: ParkingsCreateComponent },
+      { path: '', component:ParkingsComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
+      { path: 'create', component: ParkingsCreateComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
+      { path: ':id/update', component: ParkingsCreateComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
       { path: '**', redirectTo:'' }
     ]
   },
+  
+  { path: 'staticmaps', component:StaticMapComponent , canActivate:[AuthGuard], data:{allowedRoles:['admin']}},
   { path: 'staticmaps',
     children: [
       { path: '', component:StaticMapComponent },
@@ -84,11 +86,12 @@ const routes: Routes = [
       { path: '**', redirectTo:'' }
     ]
   },
+  { path: 'roadevents', canActivate:[AuthGuard], data:{allowedRoles:['admin']}},
   { path: 'roadevents',
     children: [
-      { path: '', component:RoadeventsComponent },
-      { path: 'create', component: RoadeventsCreateComponent },
-      { path: ':id/update', component: RoadeventsCreateComponent },
+      { path: '', component:RoadeventsComponent, canActivateChild:[AuthGuard],data:{allowedRoles:['admin']} },
+      { path: 'create', component: RoadeventsCreateComponent, canActivateChild:[AuthGuard],data:{allowedRoles:['admin']}},
+      { path: ':id/update', component: RoadeventsCreateComponent, canActivateChild:[AuthGuard],data:{allowedRoles:['admin']}},
       { path: '**', redirectTo:'' }
     ]
   },

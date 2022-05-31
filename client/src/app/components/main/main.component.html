@@ -43,17 +43,79 @@
 				<div class="col-lg-4 col-md-6 mt-5 mt-md-0 text-center">
 					<i class="ti-paint-bucket text-primary h1"></i>
 					<h3 class="mt-4 text-capitalize h5 ">Cảnh báo giao thông</h3>
-					<p class="regular text-muted">Đăng nhập để xem nội dung này.</p>
+					<div class="regular text-muted" *ngIf="!appCom.profile"><p>Đăng nhập để xem nội dung này</p></div>
+					<div class="regular text-muted" *ngIf="!!appCom.profile">
+						<div *ngIf="listEvent?.length <= 0">
+							Hiện tại chưa có cảnh báo nào
+						</div>
+						<div [routerLink]="['/map']" [queryParams]="{type:'event', id: event._id}" *ngFor="let event of listEvent | orderBy:['createdAt']:['desc']">
+							<div class="ui large feed">
+								<div class="event" [ngClass]="{'inverted': !isScrolled}">
+									<div class="label event-icon">
+										<i class="circle icon {{event.color}}"></i>
+									</div>
+									<div class="content">
+										<div class="summary">
+											<a class="user">{{event.desc[0]}}</a>
+											<div class="date">
+												<span>{{event.createdAt | amLocale:'vi' | amTimeAgo }}</span>
+											</div>
+										</div>
+										<div class="extra text">
+											{{event.desc[1]}}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="col-lg-4 col-md-6 mt-5 mt-md-0 text-center">
 					<i class="ti-shine text-primary h1"></i>
 					<h3 class="mt-4 text-capitalize h5 ">Tin tức - Sự kiện</h3>
-					<p class="regular text-muted">Đăng nhập để xem nội dung này.</p>
+					<div class="regular text-muted" [ngClass]="{'scroll-contain': isScrolled, 'default-contain': !isScrolled}">
+						<div scroll-only-this="scroll-only-this"  class="ui relaxed divided list">
+							<a *ngFor="let content of contents" class="text-primary" href="{{content.url}}" target="_blank" >{{content.title}}<nz-divider></nz-divider></a>
+						</div>
+					</div>
 				</div>
 				<div class="col-lg-4 col-md-12 mt-5 mt-lg-0 text-center">
 					<i class="ti-thought text-primary h1"></i>
 					<h3 class="mt-4 text-capitalize h5 ">Camera quan tâm</h3>
-					<p class="regular text-muted">Đăng nhập để xem nội dung này.</p>
+					<div class="regular text-muted" [ngClass]="{'scroll-contain': isScrolled, 'default-contain': !isScrolled}">
+						<div class="regular text-muted" *ngIf="!!appCom.profile">
+							<div *ngIf="favoriteList?.length <= 0">
+								Hiện tại chưa có cảnh báo nào
+							</div>
+							<div *ngIf="!appCom.profile">
+								Đăng nhập để xem các camera mà bạn quan tâm
+							</div>
+							<div  *ngIf="!!appCom.profile">
+								<div *ngIf="favoriteList?.length <= 0">
+									Bạn chưa quan tâm camera nào cả
+								</div>
+								<!-- <div class="item contain-history-camera" *ngFor="let camera of favoriteList" [routerLink]="['/map']" [queryParams]="{type:'camera', id: camera.fId}">
+									<img class="ui fluid image image-camera-main" src="{{backend}}api/snapshot/{{camera.fId}}" (error)="imageError($event)">
+									<div class="camera-name limit-character">{{camera.fName}}</div>
+									<nz-divider></nz-divider>
+								</div> -->
+								<div class="regular text-muted" [ngClass]="{'scroll-contain': isScrolled, 'default-contain': !isScrolled}">
+									<form nz-form scroll-only-this="scroll-only-this"  class="ui relaxed divided list" *ngFor="let camera of favoriteList" [routerLink]="['/map']" [queryParams]="{type:'camera', id: camera.fId}">
+										<!-- <nz-form-item> -->
+											<p>{{camera.fName}}</p>
+											<img nz-image width="55%" nzSrc="{{backend}}api/snapshot/{{camera.fId}}" (error)="imageError($event)">
+											<nz-divider></nz-divider>
+
+										<!-- </nz-form-item> -->
+									
+										
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- <div class="regular text-muted" *ngIf="!appCom.profile"><p>Đăng nhập để xem nội dung này</p></div> -->
+					
 				</div>
 			</div>
 		</div>
@@ -65,7 +127,7 @@
 		<div class="row">
 			<div class="col-lg-6 ml-auto justify-content-center">
 				<!-- Feature Mockup -->
-					<img data-aos="fade-right" class="img-fluid"  width="375px" height="500px"  src="assets/images/beach.jpg" alt="screenshot">
+					<img nz-image data-aos="fade-right" width="100%" nzSrc="assets/images/beach1.jpg"alt="screenshot">
 				
 			</div>
 			<div class="col-lg-6 mr-auto align-self-center">
@@ -112,7 +174,7 @@
 			<div class="col-lg-6 mr-auto justify-content-center">
 				<!-- Feature mockup -->
 				<div class="image-content" data-aos="fade-left">
-					<img class="img-fluid" src="assets/images/bridge.jpg" width="375px" height="500px" alt="ipad">
+					<img nz-image width="100%" nzSrc="assets/images/bridge.jpg" alt="ipad">
 				</div>
 			</div>
 		</div>
