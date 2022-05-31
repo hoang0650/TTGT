@@ -1,8 +1,10 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
 import _ from 'lodash';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { ConfigureService } from 'src/app/services/configure.service';
 import { MarkerService } from 'src/app/services/marker.service';
 import { MessageService } from 'src/app/services/message.service';
@@ -66,8 +68,9 @@ export class RoadworksComponent implements OnInit {
   updateRoadwork: any;
   currentMarker:any;
   geojson: any;
+  id?:string
 
-  constructor(public configure:ConfigureService, private messageService:MessageService, private roadworkService:RoadworkService, private location:Location, private cdRef:ChangeDetectorRef, private markerService:MarkerService) { 
+  constructor(public configure:ConfigureService, private route:ActivatedRoute, private messageService:MessageService, private roadworkService:RoadworkService, private location:Location, private cdRef:ChangeDetectorRef, private markerService:MarkerService, private nzMessage:NzMessageService) { 
     this.searchParams = (new URL(window.location.href)).searchParams
     this.mess = messageService.getMessageObj();
     this.oneDay = 24 * 60 * 60 * 1000;
@@ -102,6 +105,15 @@ export class RoadworksComponent implements OnInit {
       dashArray: '3',
       fillOpacity: 0.6
     };
+
+    if (this.route.snapshot.queryParamMap.get('result')) {
+      if (this.route.snapshot.queryParamMap.get('id')) {
+        this.id = this.route.snapshot.queryParamMap.get('id') || ""
+      }
+      
+      this.nzMessage.success(this.messageService.getMessageObj().NOTICE(this.route.snapshot.queryParamMap.get('result'), 'phân luồng giao thông'))
+      this.location.replaceState("./parkings")
+    }
   }
 
   ngOnInit(): void {
@@ -111,11 +123,6 @@ export class RoadworksComponent implements OnInit {
   initMap(map:any): void {
     this.sideMap = map
     this.loadRoadwork();
-
-    if (this.searchParams?.result) {
-      this.notice = this.mess.NOTICE(this.searchParams.result, 'công trình thi công');
-      this.location.replaceState("./")
-    }
   }
 
   typeListToIcon(type:any) {
@@ -249,6 +256,14 @@ export class RoadworksComponent implements OnInit {
             this.sideMap.addLayer(this.markers[rw._id])
           }
         })
+
+        if (this.id) {
+          this.listRoadwork.forEach((rw:any) => {
+            if (rw._id == this.id) {
+              this.openRoadworkDetail(rw)
+            } 
+          })
+        }
       }
     })
   }

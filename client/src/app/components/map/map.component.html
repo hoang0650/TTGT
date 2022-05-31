@@ -148,6 +148,12 @@
                             </nz-col>
                         </nz-row>              
                     </div>
+
+                    <div *ngIf="!chosenMarkers['parking']" >
+                        <nz-row>
+                            <h3>Vui lòng chọn bãi đỗ xe</h3>
+                        </nz-row>       
+                    </div>
                 </nz-card>
 
                 <nz-divider nzText="Quan tâm" class="divider-blue"></nz-divider>
@@ -195,7 +201,14 @@
                         <input id="filterRoadEvent" type="text" placeholder="Tìm nhanh" [(ngModel)]="filterRoadEvent" class="form-control">
                             <i class="filter icon "></i>
                     </div>
-                    <div class="ui middle aligned selection divided list">
+
+                    <h4 class="ui center aligned header" *ngIf="listRoadEvents.length <= 0">
+                        <div class="content">
+                            Không có phân luồng nào
+                        </div>
+                    </h4>
+
+                    <div class="ui middle aligned selection divided list" *ngIf="listRoadEvents.length > 0">
                         <div class="item" id="{{roadEvent._id}}" *ngFor="let roadEvent of (listRoadEvents | searchFilter: filterRoadEvent: ['geoObject', 'featureCollection', 'properties', 'name'])">
                             <div class="ui toggle checkbox">
                                 <input type="checkbox" (click)="toggleRoadEvent(roadEvent)">
@@ -237,7 +250,7 @@
                 </div>
 
 
-                <div class="ui segment">
+                <div class="ui segment" *ngIf="listEvent.length > 0">
                     <div class="content">
                         <div class="ui large feed">
                             <div id="event-{{event._id}}" class="event" [ngClass]="{'active-event': event._id == chosenMarkers['incident']}" *ngFor="let event of listEvent | orderBy:['createdAt']:['desc']" (click)="chooseIncident(event)">

@@ -99,6 +99,23 @@
                     </nz-affix>
                 </div>
             </div>
+
+            <div class="ui segment"  *ngIf="listRoadwork.length <= 0">
+                <h4 class="ui center aligned header">
+                    <div class="content">
+                        Không có công trình nào
+                    </div>
+                </h4>
+            </div>
+
+            <div class="ui segment"  *ngIf="(listRoadwork | orderBy: ['name'] | searchFilter: filter:['name'] | filter: statusFilter: statusFilterValues).length <= 0">
+                <h4 class="ui center aligned header">
+                    <div class="content">
+                        Không tìm thấy công trình nào
+                    </div>
+                </h4>
+            </div>
+
             <div class="ui segments no-border" *ngFor="let roadwork of listRoadwork | orderBy: ['name'] | searchFilter: filter:['name'] | filter: statusFilter: statusFilterValues" (click)="openRoadworkDetail(roadwork)">
                 <div class="ui secondary segment roadwork-header">
                     <h4>{{roadwork.name}}</h4>

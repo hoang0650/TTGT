@@ -442,25 +442,26 @@ export class RoadeventsCreateComponent implements OnInit {
       backdrop = 'static';
     }
 
-    // var popupConfirm = this.modalService.show(AdminConfigConfirmComponent, {
-    //   initialState: {
-    //     type:type
-    //   },
-    //   backdrop: backdrop,
-    //   keyboard: true,
-    // })
+    var form = this.messageService.getMessageObj().POPUP(type,'');
 
-    // popupConfirm.onHidden?.subscribe({
-    //   next: (reponse:any) => {
-    //     if (reponse === 'yes') {
-    //       if (type === 'back') {
-    //         this.goBack(this.id);
-    //       } else {
-    //         this.removeGeo();
-    //       }
-    //     }
-    //   }
-    // })
+    var popupConfirm = this.modalService.create({
+      nzContent: AdminConfigConfirmComponent,
+      nzComponentParams: {
+        form: form
+      }
+    })
+
+    popupConfirm.afterClose.subscribe({
+      next: (reponse:any) => {
+        if (reponse === 'yes') {
+          if (type === 'back') {
+            this.goBack(this.id);
+          } else {
+            this.removeGeo();
+          }
+        }
+      }
+    })
   }
 
   back() {

@@ -183,12 +183,14 @@ export class RoadworksCreateComponent implements OnInit {
   }
 
   modal(type:string) {
-    // return this.modalService.show(AdminConfigConfirmComponent, {
-    //   initialState: {
-    //     type:type
-    //   },
-    //   backdrop: true
-    // })
+    var form = this.messageService.getMessageObj().POPUP(type,'');
+
+    return this.modalService.create({
+      nzContent: AdminConfigConfirmComponent,
+      nzComponentParams: {
+        form: form
+      }
+    })
   }
 
   validateError(newRoadwork:any) {
@@ -285,13 +287,13 @@ export class RoadworksCreateComponent implements OnInit {
   back() {
     if (this.inputChange) {
       var modalInstance = this.modal('back');
-      // modalInstance.onHidden?.subscribe({
-      //   next: (reponse:string) => {
-      //     if (reponse === 'yes') {
-      //       this.router.navigateByUrl('/roadworks')
-      //     }
-      //   }
-      // })
+      modalInstance.afterClose.subscribe({
+        next: (res) => {
+          if (res === 'yes') {
+            this.router.navigateByUrl('/roadworks')
+          }
+        }
+      })
     } else {
       this.router.navigateByUrl('/roadworks')
     }
@@ -299,17 +301,17 @@ export class RoadworksCreateComponent implements OnInit {
 
   deleteRoadwork(roadwork:any) {
     var modalInstance = this.modal('remove');
-    // modalInstance.onHidden?.subscribe({
-    //   next: (response:string) => {
-    //     if (response === 'yes') {
-    //       this.roadworkService.delete(roadwork._id).subscribe({
-    //         next: (res) => {
-    //           this.router.navigate(['/roadworks'], {queryParams: {result:"remove"}})
-    //         }
-    //       })
-    //     }
-    //   }
-    // })
+    modalInstance.afterClose.subscribe({
+      next: (response:string) => {
+        if (response === 'yes') {
+          this.roadworkService.delete(roadwork._id).subscribe({
+            next: (res) => {
+              this.router.navigate(['/roadworks'], {queryParams: {result:"remove"}})
+            }
+          })
+        }
+      }
+    })
   }
 
   getPosition() {

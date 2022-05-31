@@ -174,7 +174,7 @@
                                     <div class="ui pointing red basic label" *ngIf="error?.working"> {{error.working}} </div>
                                 </div>
 
-                                <div class="mb-3">
+                                <div class="mb-3 required">
                                     <label for="newParkingWorktimeDetail" class="form-label"><h5>Ngày hoạt động</h5></label>
                                     <textarea class="form-control" type="text" id="newParkingWorktimeDetail" name="newParkingWorktimeDetail" rows="3" (change)="inputChangeMethod()" [(ngModel)]="newParking['worktime_details']"  placeholder="Các ngày trong tuần"></textarea>
                                     <div class="ui pointing red basic label" *ngIf="error?.worktime_details"> {{error.worktime_details}} </div>

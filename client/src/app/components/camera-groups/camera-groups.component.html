@@ -157,8 +157,7 @@
             
             <div class="ui segment" *ngIf="!group">
                 <div class="ui middle aligned selection divided list">
-                    <div class="item" [ngClass]="{active: cameraGroup.isSelected}" *ngFor="let cameraGroup of cameraGroups" ng-repeat=" | filter: cameraGroupsMgmt.filter"
-                        (click)="clickGroup(cameraGroup)">
+                    <div class="item" [ngClass]="{active: cameraGroup.isSelected}" *ngFor="let cameraGroup of cameraGroups | searchFilter:filter:['name']" (click)="clickGroup(cameraGroup)">
                         <div class="left floated content ">
                             <button class="ui icon button" (click)="editGroup(cameraGroup)"><i class="ui write icon"></i></button>
                         </div>
@@ -224,16 +223,19 @@
                                 <div class="ui clearing segment" *ngIf="isRemoving">
                                     <div class="ui negative icon message">
                                         <i class="warning icon"></i>
-                                        <div class="content">
-                                            <div class="header">
-                                                Bạn đang xóa nhóm camera
-                                            </div>
-                                            <p>Một khi bạn xóa nhóm, tất cả các thiết đặt liên quan đến nhóm sẽ bị xóa.</p>
-                                            <p>Việc này có ảnh hưởng lớn và không thể phục hồi.</p>
-                                            <p>Bạn có chắc chắn muốn xóa?</p>
+                                        <div class="header">
+                                            Bạn đang xóa nhóm camera
                                         </div>
-                                        <button class="ui negative button" type="button" (click)="confirmRemove(group)">Xóa nhóm</button>
-                                        <button class="ui button" type="button" (click)="abortRemove()">Không xóa</button>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <button class="ui negative button" type="button" (click)="confirmRemove(group)">Xóa nhóm</button>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <button class="ui button" type="button" (click)="abortRemove()">Không xóa</button>
+                                                </div>
+                                            </div>                                     
+                                        </div>                                      
                                     </div>
                                 </div>
                             </div>

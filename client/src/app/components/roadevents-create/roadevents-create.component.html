@@ -98,17 +98,17 @@
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label for="txtMapName" class="form-label required"><h5>Tên</h5></label>
-                                    <input class="form-control" type="text" id="txtMapName" name="txtMapName" placeholder="Phân luồng lễ 02/09" [(ngModel)]="geoObject.featureCollection.properties['name']" />
+                                    <input class="form-control" required type="text" id="txtMapName" name="txtMapName" placeholder="Phân luồng lễ 02/09" [(ngModel)]="geoObject.featureCollection.properties['name']" />
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="txtDescription" class="form-label required"><h5>Mô tả</h5></label>
-                                    <textarea class="form-control" type="text" id="txtDescription" name="txtDescription" rows="3" [(ngModel)]="geoObject.featureCollection.properties['desc']"  placeholder="Mô tả"></textarea>
+                                    <textarea class="form-control" required type="text" id="txtDescription" name="txtDescription" rows="3" [(ngModel)]="geoObject.featureCollection.properties['desc']"  placeholder="Mô tả"></textarea>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="txtUrl" class="form-label required"><h5>Đường dẫn liên kết</h5></label>
-                                    <input class="form-control" type="text" id="txtUrl" name="txtUrl" placeholder="http://..." [(ngModel)]="geoObject.featureCollection.properties['name']" />
+                                    <label for="txtUrl" class="form-label"><h5>Đường dẫn liên kết</h5></label>
+                                    <input class="form-control" type="text" id="txtUrl" name="txtUrl" placeholder="http://..." [(ngModel)]="geoObject.featureCollection.properties['url']" />
                                 </div>
 
                                 <div class="mb-3">
