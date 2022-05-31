@@ -95,8 +95,8 @@ var makeKey = function () {
 
 function getSession(req, res) 
 {
-   
-    if(req.user['https://hoang0650.com/roles'].indexOf('admin') < 0){
+
+    if(req.user['https://hoang0650.com/roles'].indexOf('admin') < 0 || req.user['https://hoang0650.com/roles'].indexOf('superadmin') < 0){
         return res.status(500).json({ message: 'NOT_PERMISSION' });
     }
     // console.log('req.user', req.user['https://hoang0650.com/roles']);

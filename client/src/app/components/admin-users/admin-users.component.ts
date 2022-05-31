@@ -8,7 +8,7 @@ import { AdminService } from 'src/app/services/admin.service';
 })
 export class AdminUsersComponent implements OnInit {
   isUsersLoading: boolean = true;
-  users: any = [];
+  users: string[] = [];
   lastUsersUpdated: Date = new Date();
   selectedUsers: any = [];
   searchnickname:string = "";

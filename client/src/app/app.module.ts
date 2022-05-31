@@ -43,6 +43,9 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzTimelineModule } from 'ng-zorro-antd/timeline';
 //
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { AuthModule, AuthHttpInterceptor} from '@auth0/auth0-angular';
@@ -155,6 +158,9 @@ export function tokenGetters() {
     NzTableModule,
     NzToolTipModule,
     NzMessageModule,
+    NzTabsModule,
+    NzAvatarModule,
+    NzTimelineModule,
     AccordionModule.forRoot(),
     NzMessageModule,
     NgChartsModule,
