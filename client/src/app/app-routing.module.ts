@@ -77,7 +77,7 @@ const routes: Routes = [
     ]
   },
   
-  { path: 'staticmaps', component:StaticMapComponent , canActivate:[AuthGuard], data:{allowedRoles:['admin']}},
+  // { path: 'staticmaps', component:StaticMapComponent , canActivate:[AuthGuard], data:{allowedRoles:['admin']}},
   { path: 'staticmaps',
     children: [
       { path: '', component:StaticMapComponent },
@@ -86,7 +86,7 @@ const routes: Routes = [
       { path: '**', redirectTo:'' }
     ]
   },
-  { path: 'roadevents', canActivate:[AuthGuard], data:{allowedRoles:['admin']}},
+  // { path: 'roadevents', canActivate:[AuthGuard], data:{allowedRoles:['admin']}},
   { path: 'roadevents',
     children: [
       { path: '', component:RoadeventsComponent, canActivateChild:[AuthGuard],data:{allowedRoles:['admin']} },
