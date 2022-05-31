@@ -166,6 +166,8 @@ app.use('/api/news', newsRouter);
 app.use('/api/roadwork', roadworkRouter);
 app.use('/api/monitors', monitorsRouter);
 app.use('/api/stats', statsRouter);
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
