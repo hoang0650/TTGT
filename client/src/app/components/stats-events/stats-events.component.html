@@ -120,7 +120,7 @@
                                     <br>
                                     <div class="row">
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-primary">Xem</button>
+                                            <button type="button" class="btn btn-primary" (click)="refresh()">Xem</button>
                                             <a class="btn btn-secondary" [ngClass]="{'loading': !exported, 'disabled': !exportUrl}" [href]="exportUrl | safe: 'url'" download="ttgt_events.csv">
                                                 <i class="cloud download icon" ></i>
                                                 Xuất CSV

@@ -217,7 +217,6 @@ export class AdminComponent implements OnInit {
   getMapURL() {
     this.settingService.getMapUrl().subscribe({
       next: (res) => {
-        console.log(res);
         
         this.listMapType = res;
       }

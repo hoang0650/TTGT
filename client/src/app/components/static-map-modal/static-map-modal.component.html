@@ -15,7 +15,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="newColumnName" class="form-label required"><h5>Mã cột</h5></label>
+                        <label for="newColumnName" class="form-label required"><h5>Tên cột</h5></label>
                         <input class="form-control" required type="text" id="newColumnName" name="newColumnName" placeholder="Tên cột" [(ngModel)]="newColumn['name']" />
                         <div class="ui pointing red basic label" *ngIf="addColumnForm?.controls?.['newColumnName']?.errors?.['required']">Không được để trống</div>
                     </div>

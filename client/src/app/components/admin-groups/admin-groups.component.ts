@@ -93,7 +93,6 @@ export class AdminGroupsComponent implements OnInit {
     this.groupsService.query().subscribe({
       next: (groups:any) => {
         groups.forEach((group:any)=>{
-          console.log(this.currentUsers);
           group.users = group.users.map((guser:any)=>{
             var fuser = {};
             this.users.some((user:any)=>{

@@ -306,7 +306,6 @@ export class CamerasCreateComponent implements OnInit {
           })
 
           this.newCamera.tmpLocation = camera.loc.coordinates[1].toFixed(4) + ' , ' + camera.loc.coordinates[0].toFixed(4);
-          console.log(this.newCamera);
           
           this.sideMap.flyTo([camera.loc.coordinates[1], camera.loc.coordinates[0]], 15, {
             paddingBottomRight: [408, 0]

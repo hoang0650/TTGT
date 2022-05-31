@@ -185,10 +185,6 @@
                                                 <th class="center aligned static-column" *ngFor="let column of newStatic['properties']">
                                                     <span>{{column.name}}</span>
                                                     <button (click)="editColumn(column)" class="ui mini circular compact icon button" title="Sửa thông tin cột"><i class="edit icon"></i></button>
-                                                    <div class="ui fluid icon input">
-                                                        <input class="searchInput" type="text" placeholder="Tìm kiếm" ng-model="newstaticmap.filter.properties[$index]">
-                                                        <i class="icon" ng-click="newstaticmap.filter.properties[$index] = newstaticmap.removeFilter(newstaticmap.filter.properties[$index])" ng-class="{'filter': !newstaticmap.filter.properties[$index], 'remove link': newstaticmap.filter.properties[$index]}"></i>
-                                                    </div>
                                                 </th>
                                             </tr>
                                         </thead>

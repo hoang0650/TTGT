@@ -74,8 +74,8 @@
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
                                                 
                                                 <li><a class="dropdown-item" (click)="exportCSV()"><i class="file outline icon"></i> CSV</a></li>
-                                                <li><a class="dropdown-item" (click)="exportCSV()"><i class="file excel outline icon"></i> Excel</a></li>
-                                                <li><a class="dropdown-item" (click)="exportCSV()"><i class="file code outline icon"></i> JSON</a></li>
+                                                <!-- <li><a class="dropdown-item" (click)="exportCSV()"><i class="file excel outline icon"></i> Excel</a></li>
+                                                <li><a class="dropdown-item" (click)="exportCSV()"><i class="file code outline icon"></i> JSON</a></li> -->
                                             </ul>
    
                                             <a class="btn btn-secondary" [href]="objectUrl | safe: 'url'" download="ttgt_camera-giao-thong.csv" [ngClass]="{'loading': !objectUrl, 'disabled': !objectUrl}">
@@ -111,31 +111,31 @@
                                             <span accordion-heading>{{parking.name}} <span *ngIf="parking.name && parking.addr">-</span> {{parking.addr}}</span>
                                       
                                             <div class="container">
-                                                <div class="row mb-3" *ngIf="parking['vehicle_type']['car'] || parking['vehicle_type']['bike']">
+                                                <div class="row" >
                                                     <div class="col-md-8">
-                                                        <h5 class="m-0">Mức giá</h5>
-                                                        <div *ngIf="parking['vehicle_type']['car']">
-                                                            <i class="fa-solid fa-car"></i> Giá từ {{parking['price']['car']['min']}} đến {{parking['price']['car']['max']}}
+                                                        <div class="mb-3" *ngIf="parking['vehicle_type']?.['car'] || parking['vehicle_type']?.['bike']">
+                                                            <h5 class="m-0">Mức giá</h5>
+                                                            <div *ngIf="parking['vehicle_type']['car']">
+                                                                <i class="fa-solid fa-car"></i> Giá từ {{parking['price']['car']['min']}} đến {{parking['price']['car']['max']}}
+                                                            </div>
+                                                            <div *ngIf="parking['vehicle_type']['bike']">
+                                                                <i class="fa-solid fa-motorcycle"></i> Giá từ {{parking['price']['bike']['min']}} đến {{parking['price']['bike']['max']}}
+                                                            </div>
                                                         </div>
-                                                        <div *ngIf="parking['vehicle_type']['bike']">
-                                                            <i class="fa-solid fa-motorcycle"></i> Giá từ {{parking['price']['bike']['min']}} đến {{parking['price']['bike']['max']}}
+
+                                                        <div class="mb-3">
+                                                            <h5 class="m-0">Thời gian làm việc</h5>
+                                                            <div  *ngIf="parking?.worktime">
+                                                                <i class="fa-solid fa-clock"></i> Từ {{parking.worktime['startWorking']}} đến {{parking.worktime['endWorking']}} giờ
+                                                            </div>
+                                                            <div *ngIf="parking?.worktime_details">
+                                                                <i class="fa-solid fa-calendar-days"></i> {{parking.worktime_details}}
+                                                            </div>
                                                         </div>
                                                     </div>
 
                                                     <div class="col-md-4">
                                                         <button class="btn btn-primary" [routerLink]="['.', parking._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
-                                                    </div>
-                                                </div>
-
-                                                <div class="row mb-3">
-                                                    <div class="col-md-12">
-                                                        <h5 class="m-0">Thời gian làm việc</h5>
-                                                        <div  *ngIf="parking?.worktime">
-                                                            <i class="fa-solid fa-clock"></i> Từ {{parking.worktime['startWorking']}} đến {{parking.worktime['endWorking']}} giờ
-                                                        </div>
-                                                        <div *ngIf="parking?.worktime_details">
-                                                            <i class="fa-solid fa-calendar-days"></i> {{parking.worktime_details}}
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

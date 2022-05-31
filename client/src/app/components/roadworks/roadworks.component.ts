@@ -112,8 +112,8 @@ export class RoadworksComponent implements OnInit {
         this.id = this.route.snapshot.queryParamMap.get('id') || ""
       }
       
-      this.nzMessage.success(this.messageService.getMessageObj().NOTICE(this.route.snapshot.queryParamMap.get('result'), 'phân luồng giao thông'))
-      this.location.replaceState("./parkings")
+      this.nzMessage.success(this.messageService.getMessageObj().NOTICE(this.route.snapshot.queryParamMap.get('result'), 'công trình giao thông'))
+      this.location.replaceState("./roadworks")
     }
   }
 

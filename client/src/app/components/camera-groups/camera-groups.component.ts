@@ -15,6 +15,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { AdminConfigConfirmComponent } from '../admin-config-confirm/admin-config-confirm.component';
 import { AppComponent } from 'src/app/app.component';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 declare var $: any;
 
@@ -80,7 +81,7 @@ export class CameraGroupsComponent implements OnInit {
   options: any;
   filter:string;
 
-  constructor(private messageService:MessageService, public configure:ConfigureService, private cameraService:CameraService, private markerModify:MarkerService, private cameraGroupService:CameraGroupService, private viewportScroller: ViewportScroller, private modalService:NzModalService, private cdRef:ChangeDetectorRef) {
+  constructor(private messageService:MessageService, public configure:ConfigureService, private nzMessage:NzMessageService, private cameraService:CameraService, private markerModify:MarkerService, private cameraGroupService:CameraGroupService, private viewportScroller: ViewportScroller, private modalService:NzModalService, private cdRef:ChangeDetectorRef) {
     this.button = messageService.getMessageObj().BUTTON;
     this.filter = ""
     this.inputChange = false;
@@ -121,11 +122,13 @@ export class CameraGroupsComponent implements OnInit {
   }
 
   openModal(type:string) {
-    // return this.modalService.show(AdminConfigConfirmComponent, {
-    //   initialState: {
-    //     type:type
-    //   }
-    // })
+    var form = this.messageService.getMessageObj().POPUP(type,'');
+    return this.modalService.create({
+      nzContent: AdminConfigConfirmComponent,
+      nzComponentParams: {
+        form: form
+      }
+    })
   }
 
 
@@ -261,7 +264,7 @@ export class CameraGroupsComponent implements OnInit {
       this.selectedGroup = group;
       this.selectedGroup.isSelected = true;
       var cameras = this.cameraGroupCounts[group._id];
-      console.log(cameras);
+
       if (cameras) {
         cameras.forEach((camera:any) => {
           this.selectCameraById(camera);
@@ -359,7 +362,7 @@ export class CameraGroupsComponent implements OnInit {
 
         this.closeEditor('update');
         this.inputChange = false;
-        // this.noti.showNotification('top','center')
+        
       },
       error: (err) => {
         // this.noti.dangerNotification('top','center');
@@ -369,26 +372,20 @@ export class CameraGroupsComponent implements OnInit {
       }
     })
 
-
-    // newCameraGroup.$save(function () {
-    //     getData();
-
-    //     closeEditor('update');
-    //     inputChange = false;
-    // });
   }
 
   cancel() {
     if (this.inputChange) {
       var modalInstance = this.openModal('back');
-      // modalInstance.onHidden?.subscribe({
-      //   next: (reponse:any) => {
-      //     if (reponse === 'yes') {
-      //       this.lastResult = null;
-      //       this.group = null;
-      //     }
-      //   }
-      // })
+      modalInstance.afterClose.subscribe({
+        next: (reponse:any) => {
+          if (reponse === 'yes') {
+            this.lastResult = null;
+            this.group = null;
+          }
+        }
+      })
+
       this.inputChange = false;
     } else {
       this.lastResult = null;
@@ -410,7 +407,7 @@ export class CameraGroupsComponent implements OnInit {
         this.getData();
 
         this.closeEditor('remove');
-        // this.noti.showNotification('top','center');
+        this.nzMessage.success(this.messageService.getMessageObj().NOTICE('remove', 'phân luồng giao thông'))
       },
       error: (err)=>{
         // this.noti.dangerNotification('top','center');

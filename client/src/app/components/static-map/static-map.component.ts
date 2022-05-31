@@ -103,7 +103,6 @@ export class StaticMapComponent implements OnInit {
                 staticMapData: staticMap,
                 listGeo: listGeo
             };
-            console.log(staticMapObject);
             
             this.listData.push(staticMapObject);
             // if (staticMapObject.staticMapData._id === $location.search().id) {

@@ -85,8 +85,7 @@ export class AuthorizationService {
     // access token's expiry time
     const access_token:any = localStorage.getItem('expires_at');
     const expiresAt = JSON.parse(access_token);
-    console.log(expiresAt);
-    console.log(new Date().getTime() < expiresAt);
+
     // this.getProfile(() => { });
     return new Date().getTime() < expiresAt;
     

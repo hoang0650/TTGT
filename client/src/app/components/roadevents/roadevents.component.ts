@@ -1,7 +1,9 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { ConfigureService } from 'src/app/services/configure.service';
 import { MarkerService } from 'src/app/services/marker.service';
 import { MessageService } from 'src/app/services/message.service';
@@ -47,7 +49,6 @@ import { RoadEventsService } from 'src/app/services/road-events.service';
   ]
 })
 export class RoadeventsComponent implements OnInit {
-  notice: any;
   objectUrl: any;
   exported: boolean;
   choosedRoadevent: any;
@@ -55,26 +56,30 @@ export class RoadeventsComponent implements OnInit {
   center: any;
   filter: any;
   sideMap: any;
-  id: string;
-  type: string
+  id?: string;
   showLength: any;
   geoLayer: L.GeoJSON<any>;
   isLoading: boolean;
 
-  constructor(private messageService:MessageService, private roadeventsService:RoadEventsService, public configure:ConfigureService, private route:ActivatedRoute, private markerService:MarkerService, private cdRef:ChangeDetectorRef) {
+  constructor(private messageService:MessageService, private roadeventsService:RoadEventsService, public configure:ConfigureService, private route:ActivatedRoute, private markerService:MarkerService, private cdRef:ChangeDetectorRef, private location:Location, private nzMessage:NzMessageService) {
     this.exported = false
     this.isLoading = true;
     this.showLength = {}
-    this.type = route.snapshot.queryParamMap.get("state") || ""
-    this.id = route.snapshot.queryParamMap.get("id") || ""
     this.roadevents = []
     this.geoLayer = L.geoJSON()
+
+    if (this.route.snapshot.queryParamMap.get('state')) {
+      if (this.route.snapshot.queryParamMap.get('id')) {
+        this.id = this.route.snapshot.queryParamMap.get('id') || ""
+      }
+      
+      this.nzMessage.success(this.messageService.getMessageObj().NOTICE(this.route.snapshot.queryParamMap.get('state'), 'phân luồng giao thông'))
+      this.location.replaceState("./roadevents")
+    }
   }
 
   ngOnInit(): void {
-    if (this.type) {
-      this.notice = this.messageService.getMessageObj().NOTICE(this.type, "phân luồng")
-    }
+
   }
   
   initMap(map:any) {
@@ -89,6 +94,7 @@ export class RoadeventsComponent implements OnInit {
           }
         })
         this.reDrawGeo()
+        this.isLoading = false
       }
     })
   }

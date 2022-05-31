@@ -129,6 +129,7 @@
                 <div class="ui secondary segment no-padding" *ngIf="!group">
                     <nz-affix [nzTarget]="mapLayoutInfo">
                         <div  class="affix-header">
+                            
                             <div class="container">
                                 <div class="row">
                                     <div class="col-6 p-0">
@@ -138,7 +139,12 @@
                                                 Thêm
                                             </button>
                                         </div>
-                                    </div> 
+                                    </div>
+                                    <div class="col-6 p-0">
+                                        <button class="btn btn-secondary float-end" type="button"  [routerLink]="['/cameras']">
+                                            Camera
+                                        </button>                           
+                                    </div>   
                                 </div>
                                 <br>
                                 <div class="row">
@@ -218,26 +224,26 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row mb-3">
                             <div class="col-md-12">
-                                <div class="ui clearing segment" *ngIf="isRemoving">
-                                    <div class="ui negative icon message">
-                                        <i class="warning icon"></i>
-                                        <div class="header">
-                                            Bạn đang xóa nhóm camera
-                                        </div>
-                                        <div class="container">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <button class="ui negative button" type="button" (click)="confirmRemove(group)">Xóa nhóm</button>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <button class="ui button" type="button" (click)="abortRemove()">Không xóa</button>
-                                                </div>
-                                            </div>                                     
-                                        </div>                                      
+                            
+                                <div class="ui negative icon message"  *ngIf="isRemoving">
+                                    <i class="warning icon"></i>
+                                    <div class="header">
+                                        Bạn đang xóa nhóm camera
                                     </div>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <button class="btn btn-danger" type="button" (click)="confirmRemove(group)">Xóa</button>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <button class="btn btn-secondary" type="button" (click)="abortRemove()">Hủy</button>
+                                            </div>
+                                        </div>                                     
+                                    </div>                                      
                                 </div>
+
                             </div>
                         </div>
 

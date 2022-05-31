@@ -204,7 +204,6 @@ export class MapComponent implements OnInit {
         default:
       }
     });
-    console.log(this.listFavoriteCamera);
     
     this.cdRef.detectChanges()
   }
@@ -223,7 +222,6 @@ export class MapComponent implements OnInit {
       if (camera._id == camid) {
         this.sideMap?.flyTo([camera.loc.coordinates[1], camera.loc.coordinates[0]], 15)
         this.chosenMarkers['camera'] = camera
-        console.log(camera);
         
       }
     })
@@ -236,7 +234,6 @@ export class MapComponent implements OnInit {
       fType: 'camera',
     }).subscribe({
       next:(res) => {
-        console.log(res);
         if (res) {
           this.resetList(res);
         }
@@ -251,7 +248,6 @@ export class MapComponent implements OnInit {
       fType: 'parking',
     }).subscribe({
       next:(res) => {
-        console.log(res);
         if (res) {
           this.resetList(res);
         }
@@ -288,7 +284,6 @@ export class MapComponent implements OnInit {
       var layer = L.tileLayer(this.mapurl + 'traffic/{z}/{x}/{y}/fpt.png')
       this.sideMap?.addLayer(layer)
       this.markers['traffic'] = layer
-      console.log(layer);
     } else {
       this.sideMap?.removeLayer(this.markers['traffic'])
       delete this.markers['traffic']
@@ -430,7 +425,6 @@ export class MapComponent implements OnInit {
 
   toggleIncidentActive() {
     if (!this.trafficChildren['incidents']) {
-      console.log(this.listEvent.length);
       this.cancelEvent();
     } else {
       if (this.listEvent.length > 0) {
@@ -468,7 +462,6 @@ export class MapComponent implements OnInit {
         }
       })
     })
-    console.log(tempParkings);
     return tempParkings
   }
 
@@ -783,6 +776,7 @@ export class MapComponent implements OnInit {
               };
             }
             this.chosenMarkers['camera'] = camera;
+            this.setCurrentMode('cameras')
             this.cdRef.detectChanges()
           }
         })
@@ -791,6 +785,7 @@ export class MapComponent implements OnInit {
           if (parking._id == this.paramMap.id) {
             this.sideMap?.flyTo([parking.loc.coordinates[1], parking.loc.coordinates[0]])
             this.chosenMarkers['parking'] = parking;
+            this.setCurrentMode('parkings')
             this.cdRef.detectChanges()
           }
         })
@@ -798,7 +793,10 @@ export class MapComponent implements OnInit {
         this.listEvent.forEach((event:any) => {
           if (event._id == this.paramMap.id) {
             this.sideMap?.flyTo([event.loc.coordinates[1], event.loc.coordinates[0]])
+            this.chooseIncident(event)
             this.chosenMarkers['incident'] = event;
+            
+            this.setCurrentMode('incidents')
             this.cdRef.detectChanges()
           }
         })

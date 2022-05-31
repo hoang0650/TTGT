@@ -76,7 +76,6 @@ export class MainComponent implements OnInit {
             this.favoriteList.push(item)
           }
         })
-        console.log(this.favoriteList)
       }
     });
   }

@@ -163,7 +163,7 @@ export class RoadeventsCreateComponent implements OnInit {
   onDrawCreated(e: any) {
     
     var layer = (e as L.DrawEvents.Created).layer.toGeoJSON();
-    console.log(layer);
+
     layer.properties = {
       color: "red",
       type: this.currentType,
@@ -180,7 +180,7 @@ export class RoadeventsCreateComponent implements OnInit {
     this.currentType = ""
     // this.drawnItems.addLayer((e as L.DrawEvents.Created).layer);
     this.geoObject.featureCollection.features.push(layer)
-    console.log(this.geoObject);
+
     this.updateGeoLayer()
   }
 
@@ -216,7 +216,7 @@ export class RoadeventsCreateComponent implements OnInit {
         })
       }
     })
-    console.log(bound)
+
     return bound
   }
 

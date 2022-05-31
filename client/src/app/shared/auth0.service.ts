@@ -41,7 +41,6 @@ export class Auth0Service {
    
     // check if it was decoded successfully, if not the token is not valid, deny access
     if (!decodeToken) {
-      console.log('Invalid token');
       return false;
     }
 

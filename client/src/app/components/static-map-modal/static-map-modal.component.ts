@@ -49,10 +49,8 @@ export class StaticMapModalComponent implements OnInit {
 
   idChange(id: string) {
       delete this.errorIdMessage;
-      console.log(this.listColumn);
       
       this.listColumn.forEach((column:any) => {
-        console.log(column);
         
           if (id === column.id) {
             this.errorIdMessage = 'Mã cột bị trùng';
