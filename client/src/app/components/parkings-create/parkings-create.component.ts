@@ -3,6 +3,7 @@ import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import L from 'leaflet';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { ConfigureService } from 'src/app/services/configure.service';
 import { MessageService } from 'src/app/services/message.service';
 import { ParkingService } from 'src/app/services/parking.service';
@@ -62,7 +63,7 @@ export class ParkingsCreateComponent implements OnInit {
   validateParking: any;
   districtList: any;
 
-  constructor(public configure:ConfigureService, private messageService:MessageService, private router:Router, private staticData:StaticService, private parkingService:ParkingService, private route:ActivatedRoute, private location:Location, private cdRef:ChangeDetectorRef) { 
+  constructor(public configure:ConfigureService, private messageService:MessageService, private router:Router, private staticData:StaticService, private parkingService:ParkingService, private route:ActivatedRoute, private location:Location, private cdRef:ChangeDetectorRef, private nzModalService:NzModalService) { 
     this.isCreate = !this.route.snapshot.paramMap.get('id')
     this.inputChange = false;
     this.button = this.messageService.getMessageObj().BUTTON;
@@ -103,61 +104,16 @@ export class ParkingsCreateComponent implements OnInit {
 
     if (!this.isCreate) {
       this.loadParkingByID(this.route.snapshot.paramMap.get('id'));
-      this.location.replaceState("./update")
+      this.location.replaceState("./parkings/update")
     }
   }
-
-
-
-  
-  // var backend = configure.backend;
-  // $scope.markers = {};
-  // $scope.layers = {
-  //     baselayers: configure.baselayers,
-  //     overlays: {
-  //         parking: {
-  //             visible: true,
-  //             name: 'Parking',
-  //             url: backend + 'api/parking/{z}/{x}/{y}/geojson',
-  //             type: 'geoJSON',
-  //             layerOptions: {
-  //                 zIndex: -1,
-  //                 pointToLayer: function (feature, latlng) {
-  //                     return L.marker(latlng, {
-  //                         icon: new L.DivIcon({
-  //                             type: 'div',
-  //                             className: 'marker-parking',
-  //                             iconSize: [33.5, 40],
-  //                             iconAnchor: [16.5, 36.5]
-  //                         })
-  //                     });
-  //                 }
-  //             }
-  //         }
-  //     }
-  // };
-
-  // var formdata = new FormData();
-  // var stopSendFile = false;
-  // $scope.getTheFiles = function ($files) {
-  //     if (!stopSendFile) {
-  //         stopSendFile = true;
-  //         angular.forEach($files, function (value) {
-  //             formdata.append('images', value);
-  //         });
-  //     }
-  // };
-
-  
 
   loadParkingByID(id:string | null) {
     if (id) {
       this.parkingService.get(id).subscribe({
         next: (parking:any) => {
           this.newParking = parking
-          console.log(parking);
           
-
           if (!this.newParking['vehicle_type']) {
             this.newParking['vehicle_type'] = {}
           }
@@ -182,26 +138,6 @@ export class ParkingsCreateComponent implements OnInit {
     }
   };
 
-  // $scope.init = function () {
-
-  //     $scope.$on('leafletDirectiveMap.map.click', function (event, arg) {
-  //         var latlng = arg.leafletEvent.latlng;
-  //         if (!$scope.markers.newMarker) {
-  //             $scope.markers.newMarker = {
-  //                 lat: latlng.lat,
-  //                 lng: latlng.lng,
-  //                 focus: true,
-  //                 draggable: true,
-  //                 icon: markerParkingIconSelected
-  //             };
-  //         } else {
-  //             $scope.markers.newMarker.lat = latlng.lat;
-  //             $scope.markers.newMarker.lng = latlng.lng;
-  //         }
-  //         $scope.newParking.tmpLocation = latlng.lat.toFixed(4) + ' - ' + latlng.lng.toFixed(4);
-  //     });
-  // };
-
   selectPosition(event:any) {
     this.updateNewParking(event.latlng)
     this.inputChange = true;
@@ -216,12 +152,13 @@ export class ParkingsCreateComponent implements OnInit {
   }
 
   modal(type:string) {
-    // return this.modalService.show(AdminConfigConfirmComponent, {
-    //   initialState: {
-    //     type:type
-    //   },
-    //   backdrop: true
-    // })
+    var form = this.messageService.getMessageObj().POPUP(type,'');
+    return this.nzModalService.create({
+      nzContent: AdminConfigConfirmComponent,
+      nzComponentParams: {
+        form: form
+      }
+    })
   }
 
    validateError (prk:any) {
@@ -290,9 +227,6 @@ export class ParkingsCreateComponent implements OnInit {
       return;
     }
 
-    console.log(this.newParking);
-    
-
     var loc = {
         type: 'Point',
         coordinates:
@@ -310,7 +244,8 @@ export class ParkingsCreateComponent implements OnInit {
           next: (res) => {
             this.router.navigate(['/parkings'], {
               queryParams: {
-                result: "create"
+                result: "create",
+                id: parking._id
               }
             });
             // this.noti.showNotification('top','center');
@@ -322,9 +257,10 @@ export class ParkingsCreateComponent implements OnInit {
     } else {
       this.parkingService.update(parking._id, parking).subscribe({
         next: (res) => {
-          this.router.navigate(['/parkings', parking._id], {
+          this.router.navigate(['/parkings'], {
             queryParams: {
-              result: "update"
+              result: "update",
+              id: parking._id
             }
           });
           // this.noti.showNotification('top','center');
@@ -338,24 +274,24 @@ export class ParkingsCreateComponent implements OnInit {
 
   deleteParking(parking:any) {
     var modalInstance = this.modal('remove');
-    // modalInstance.onHidden?.subscribe({
-    //   next: (value:string) => {
-    //     if (value === 'yes') {
-    //       this.parkingService.delete(parking._id).subscribe({
-    //         next: (res) => {
-    //           this.router.navigate(['/parkings'], {
-    //             queryParams: {
-    //               result:"remove"
-    //             }
-    //           });
-    //           this.noti.showNotification('top','center');
-    //         }, error: (err)=>{
-    //           this.noti.dangerNotification('top','center');
-    //         }
-    //       })
-    //     }
-    //   }
-    // });
+    modalInstance.afterClose.subscribe({
+      next: (res) => {
+        if (res === 'yes') {
+          this.parkingService.delete(parking._id).subscribe({
+            next: (res) => {
+              this.router.navigate(['/parkings'], {
+                queryParams: {
+                  result:"remove"
+                }
+              });
+              // this.noti.showNotification('top','center');
+            }, error: (err)=>{
+              // this.noti.dangerNotification('top','center');
+            }
+          })
+        }
+      }
+    })
   };
 
   back() {

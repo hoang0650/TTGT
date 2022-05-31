@@ -160,7 +160,7 @@
                                                     </div>
                                                     
                                                     <div class="ui fluid left labeled action input image-choice" *ngIf="feature.properties.type == 'image'">
-                                                        <div class="ui simple dropdown label color-picker notice-board dropup">
+                                                        <div class="ui simple dropdown dropup label color-picker notice-board">
                                                             <img src="{{feature.properties.image.url}}" onerror="">
                                                             <div class="menu">
                                                                 <div class="ui icon input">
@@ -172,15 +172,13 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="row no-margin full-width">
-                                                            <div class="col-4 no-padding">
-                                                                <div class="ui left icon input" title="Độ rộng">
-                                                                    <input type="number" min="20" max="100" name="featureRadius{{i}}" [(ngModel)]="feature.properties['radius']" (change)="reDrawGeo()" placeholder="50">
-                                                                    <i class="resize horizontal icon"></i>
-                                                                </div>
+                                                        <div class="row m-0">
+                                                            <div class="col-5 ui left icon input p-0">
+                                                                <input class="no-radius" type="number" min="20" max="100" name="featureRadius{{i}}" [(ngModel)]="feature.properties['radius']" (change)="reDrawGeo()" placeholder="50">
+                                                                <i class="resize horizontal icon"></i>
                                                             </div>
-                                                            <div class="col-8 no-padding">
-                                                                <input type="text" placeholder="Chú thích" name="featureTitle{{i}}" [(ngModel)]="feature.properties['title']" (change)="reDrawGeo()">
+                                                            <div class="col-7 ui input p-0">
+                                                                <input class="ui input no-radius" type="text" placeholder="Chú thích" name="featureTitle{{i}}" [(ngModel)]="feature.properties['title']" (change)="reDrawGeo()">
                                                             </div>
                                                         </div>
                                                         <div class="ui icon button" (click)="removeFeature(feature)"><i class="remove icon"></i></div>

@@ -79,6 +79,9 @@ import { RoadworksCreateComponent } from './components/roadworks-create/roadwork
 import { ParkingsCreateComponent } from './components/parkings-create/parkings-create.component';
 import { RoadeventsCreateComponent } from './components/roadevents-create/roadevents-create.component';
 import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
+import { StaticMapCreateComponent } from './components/static-map-create/static-map-create.component';
+import { StaticMapModalComponent } from './components/static-map-modal/static-map-modal.component';
+import { CameraGroupsComponent } from './components/camera-groups/camera-groups.component';
 
 
 registerLocaleData(vi);
@@ -124,6 +127,9 @@ export function tokenGetters() {
     RoadworksCreateComponent,
     ParkingsCreateComponent,
     RoadeventsCreateComponent,
+    StaticMapCreateComponent,
+    StaticMapModalComponent,
+    CameraGroupsComponent,
  
   ],
   imports: [

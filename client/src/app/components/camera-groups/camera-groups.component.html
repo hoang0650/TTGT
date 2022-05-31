@@ -1,0 +1,260 @@
+<!-- <div class="ui stackable grid full-height management-with-map">
+    <div class="sixteen wide mobile sixteen wide tablet eight wide computer column no-spacing left-side-map">
+        <div class="map" 
+            leaflet 
+            [leafletOptions]="options"
+            (leafletMapReady)="this.sideMap = $event">
+            
+        </div>
+        
+    </div>
+    <div class="sixteen wide mobile sixteen wide tablet eight wide computer column full-height-with-scroll right-side ">
+        <div class="ui segments" *ngIf="!group">
+            <div class="ui segment">
+                <h2 class="ui teal center aligned icon header">
+                    <div class="content">
+                        Quản lý nhóm camera
+                        <div class="sub header">Quản lý các nhóm camera giao thông trên địa bàn thành phố</div>
+                    </div>
+                </h2>
+                <div class="ui positive icon message" *ngIf="lastResult">
+                    <i class="check icon"></i>
+                    <div class="header">
+                        Nhóm đã được {{lastResult.action==='remove'?'xóa':'cập nhật'}} thành công!
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui right aligned clearing secondary segment">
+                <button class="ui compact labeled icon button" data-tooltip="Thêm nhóm camera mới" data-position="top right" (click)="createGroup();">
+                    <i class="add icon"></i> Thêm
+                </button>
+                <a class="ui compact button" data-tooltip="Quản lý camera" data-position="top right" [routerLink]="['/cameras']"> Camera</a>
+            </div>
+
+            <div class="ui segment">
+                <div class="ui fluid left icon input">
+                    <input id="filter" type="text" placeholder="Tìm nhanh" class="form-control">
+                    <i class="filter icon "></i>
+                </div>
+            </div>
+
+            <div class="ui segment" [ngClass]="{loading: isLoading}">
+                <div class="ui middle aligned selection divided list">
+                    <div class="item" [ngClass]="{active: cameraGroup.isSelected}" *ngFor="let cameraGroup of cameraGroups" ng-repeat=" | filter: cameraGroupsMgmt.filter"
+                        (click)="clickGroup(cameraGroup)">
+                        <div class="left floated content ">
+                            <button class="ui icon button" (click)="editGroup(cameraGroup)"><i class="ui write icon"></i></button>
+                        </div>
+                        <div class="right floated content ">
+                            <span class="ui horizontal label"> {{cameraGroupCounts[cameraGroup._id]?.length || 0}} </span>
+                        </div>
+                        <div class="content">
+                            <span class="header">{{cameraGroup.name}}</span>
+                            <span>{{cameraGroup.description}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui right aligned clearing secondary segment">
+                <button class="ui compact labeled icon button" data-tooltip="Thêm nhóm camera mới" data-position="top right" (click)="createGroup();">
+                    <i class="add icon"></i> Thêm
+                </button>
+                <a class="ui compact button" data-tooltip="Quản lý camera" data-position="top right" [routerLink]="['/cameras']"> Camera</a>
+            </div>
+        </div>
+
+        
+        
+    </div>
+</div> -->
+
+<div class="map-layout">
+    <div class="map-leaflet"
+        leaflet
+        [leafletOptions]="configure.options"
+        (leafletMapReady)="initMap($event)">
+    </div>
+
+    <div class="map-search">
+        <div class="map-search-bar">
+            <nz-input-group [nzSuffix]="searchQuery.length > 0 ? suffixIconClose : suffixIconSearch" [nzSize]="'large'">
+                <input type="text" nz-input placeholder="Tìm vị trí" [(ngModel)]="searchQuery" appSearchRoads [appSearchRoadsText]="searchQuery" (newListRoads)="searchResults = $event" (isSearch)="isSearch = $event"/>
+            </nz-input-group>
+            <ng-template #suffixIconSearch>
+            <i nz-icon nzType="search"></i>
+            </ng-template>
+            <ng-template #suffixIconClose>
+                <i nz-icon nzType="close" (click)="searchIconClick()"></i>
+            </ng-template>
+    
+            <div class="results transition visible" *ngIf="searchResults?.length > 0 && isSearch">
+                <ul nz-menu>
+                    <li class="map-search-result" nz-menu-item *ngFor="let result of searchResults; index as i" (click)="searchSelect(result)">
+                        <b>{{result.properties.name}}</b>
+                        <br>
+                        {{result.properties.city}}
+                    </li>
+                </ul>
+            </div>
+            <div class="results transition visible" *ngIf="searchResults?.length <= 0 && isSearch" style="background-color: white;">
+                <a class="result">
+                    <div class="content">
+                        <div class="title">Không tìm thấy</div>
+                        <div class="description">Hãy thử lại</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <button class="map-layout-info-button" nz-button nzType="primary" [@mapLayoutInfoButton]="isOpen ? 'open' : 'closed'" (click)="toggleLayoutInfo()">
+        <i nz-icon nzType="{{isOpen ? 'right' : 'left'}}"></i>
+    </button>
+
+    <div [@mapLayoutInfo]="isOpen ? 'open' : 'closed'" class="map-layout-info-right">
+        <div class="map-layout-info-content" #mapLayoutInfo>
+            <div class="ui segments">
+                <div class="ui segment">
+                    <h2 class="ui center aligned header">
+                        <div class="content"  *ngIf="!group">
+                            Quản lý nhóm camera
+                        </div>
+                        <div class="content"  *ngIf="group">
+                            Thêm mới / Chỉnh sửa nhóm camera
+                        </div>
+                    </h2>
+                </div>
+                <div class="ui secondary segment no-padding" *ngIf="!group">
+                    <nz-affix [nzTarget]="mapLayoutInfo">
+                        <div  class="affix-header">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-6 p-0">
+                                        <div class="btn-group">
+                                            <button class="btn btn-success" type="button" (click)="createGroup()">
+                                                <i class="fa-solid fa-plus"></i>
+                                                Thêm
+                                            </button>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <nz-input-group [nzSuffix]="suffixIconFilter">
+                                        <input type="text" nz-input placeholder="Tìm nhanh" [(ngModel)]="filter"/>
+                                    </nz-input-group>
+                                    <ng-template #suffixIconFilter>
+                                        <i nz-icon><i class="filter icon"></i></i>
+                                    </ng-template>                                   
+                                </div>     
+                            </div>
+                        </div>
+                    </nz-affix>
+                </div>
+            </div>
+            
+            <div class="ui segment" *ngIf="!group">
+                <div class="ui middle aligned selection divided list">
+                    <div class="item" [ngClass]="{active: cameraGroup.isSelected}" *ngFor="let cameraGroup of cameraGroups" ng-repeat=" | filter: cameraGroupsMgmt.filter"
+                        (click)="clickGroup(cameraGroup)">
+                        <div class="left floated content ">
+                            <button class="ui icon button" (click)="editGroup(cameraGroup)"><i class="ui write icon"></i></button>
+                        </div>
+                        <div class="right floated content ">
+                            <span class="ui horizontal label"> {{cameraGroupCounts[cameraGroup._id]?.length || 0}} </span>
+                        </div>
+                        <div class="content">
+                            <span class="header">{{cameraGroup.name}}</span>
+                            <span>{{cameraGroup.description}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui segment"  *ngIf="group">
+                <form name="cameraGroupForm" #cameraGroupForm="ngForm">
+                    <div class="container">
+                        <h3>Thông tin nhóm</h3>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="groupName" class="form-label required"><h5>Tên nhóm</h5></label>
+                                    <input class="form-control" id="groupName" name="groupName" placeholder="Tên nhóm camera" (change)="inputChangeMethod()" [(ngModel)]="group['name']">
+                                    <div class="ui pointing red basic label" *ngIf="error['name']"> {{error.name}} </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="groupDesc" class="form-label"><h5>Mô tả</h5></label>
+                                    <textarea class="form-control" type="text" id="groupDesc" name="groupDesc" rows="5" (change)="inputChangeMethod()" [(ngModel)]="group['description']"  placeholder="Nhóm camera này..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3>Danh sách camera trong nhóm</h3>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="ui fluid search selection dropdown">
+                                    <i class="dropdown icon"></i>
+                                    <div class="default text">Chọn camera để thêm. Gõ để tìm kiếm</div>
+                                    <div class="menu">
+                                        <div class="item" (click)="addCamera(camera)" *ngFor="let camera of availableCameras | orderBy:['id'];trackBy:trackByFn">
+                                            <i class="large lock middle aligned icon " [ngClass]="(camera.publish)? 'unlock': 'lock'"></i>
+                                            <span class="content"> {{[camera.id, camera.name].join(' - ')}} </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ui middle aligned selection divided list">
+                                    <div class="item" *ngFor="let camera of group.cameras; index as i" (click)="clickCamera(camera)">
+                                        <div class="right floated content ">
+                                            <button class="ui mini icon button" (click)="removeCameraByIndex(i)"><i class="minus icon"></i></button>
+                                        </div>
+
+                                        <i class="large lock middle aligned icon " [ngClass]="(camera.publish)? 'unlock': 'lock'"></i>
+                                        <div class="content"> {{[camera.id, camera.name].join(' - ')}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="ui clearing segment" *ngIf="isRemoving">
+                                    <div class="ui negative icon message">
+                                        <i class="warning icon"></i>
+                                        <div class="content">
+                                            <div class="header">
+                                                Bạn đang xóa nhóm camera
+                                            </div>
+                                            <p>Một khi bạn xóa nhóm, tất cả các thiết đặt liên quan đến nhóm sẽ bị xóa.</p>
+                                            <p>Việc này có ảnh hưởng lớn và không thể phục hồi.</p>
+                                            <p>Bạn có chắc chắn muốn xóa?</p>
+                                        </div>
+                                        <button class="ui negative button" type="button" (click)="confirmRemove(group)">Xóa nhóm</button>
+                                        <button class="ui button" type="button" (click)="abortRemove()">Không xóa</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-3">
+                                <button class="btn btn-success" type="button" *ngIf="isCreate" [disabled]="!cameraGroupForm.valid" (click)="submit(group)">{{button.CREATE}}</button>
+                                <button class="btn btn-success" type="button" *ngIf="!isCreate" [disabled]="!cameraGroupForm.valid" (click)="submit(group)">{{button.UPDATE}}</button>
+                            </div>
+                            <div class="col-3 text-end">
+                                <button *ngIf="!isCreate" class="btn btn-danger" type="button" [disabled]="isRemoving" (click)="remove()">{{button.REMOVE}}</button>
+                            </div>
+
+                            <div class="col-6 text-end">
+                                <button class="btn btn-secondary" (click)="cancel()" type="button">{{button.BACK}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -58,8 +58,6 @@ export class RoadworksComponent implements OnInit {
   styleGeojson: any;
   statusFilterValues: any[];
   markers: any;
-  searchText: string;
-  listRoads: any;
   notice: any;
   exported: boolean;
   objectUrl: any;
@@ -76,7 +74,6 @@ export class RoadworksComponent implements OnInit {
     this.currentDate = new Date();
     this.statusFilterValues = []
     this.markers = {}
-    this.searchText =""
     this.exported = false
     this.listRoadwork = []
     
@@ -208,8 +205,10 @@ export class RoadworksComponent implements OnInit {
 
     if (this.updateRoadwork != rw) {
       this.updateRoadwork = rw;
-      if (!this.sideMap.getBounds().contains(this.markers[rw._id].getLatLng())) {
-        this.sideMap.flyTo([rw.featureCollection.features[0].geometry.coordinates[1], rw.featureCollection.features[0].geometry.coordinates[0]], 15)
+      if (!this.sideMap.getBounds().pad(-0.5).contains(this.markers[rw._id].getLatLng())) {
+        this.sideMap.flyTo([rw.featureCollection.features[0].geometry.coordinates[1], rw.featureCollection.features[0].geometry.coordinates[0]], 15, {
+          paddingBottomRight: [408, 0]
+        })
       }
     }
 
@@ -264,11 +263,6 @@ export class RoadworksComponent implements OnInit {
         this.objectUrl = URL.createObjectURL(new Blob([res], { type: 'text/csv' }));
       }
     });
-  }
-
-  searchRoad(geo:any) {
-    this.sideMap.flyTo([geo.geometry.coordinates[1], geo.geometry.coordinates[0]], 15)
-    this.searchText = geo.properties.name;
   }
 
   trackByFn(item:any) {

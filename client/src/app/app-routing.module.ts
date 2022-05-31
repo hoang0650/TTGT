@@ -24,6 +24,8 @@ import { AuthGuard } from './shared/auth.guard';
 import { RoadworksCreateComponent } from './components/roadworks-create/roadworks-create.component';
 import { ParkingsCreateComponent } from './components/parkings-create/parkings-create.component';
 import { RoadeventsCreateComponent } from './components/roadevents-create/roadevents-create.component';
+import { StaticMapCreateComponent } from './components/static-map-create/static-map-create.component';
+import { CameraGroupsComponent } from './components/camera-groups/camera-groups.component';
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
   { path: 'home', component:MainComponent},
@@ -53,6 +55,7 @@ const routes: Routes = [
     children: [
       { path: '', component:CamerasComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
       { path: 'create', component: CamerasCreateComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+      { path: 'groups', component: CameraGroupsComponent },
       { path: ':id/update', component: CamerasCreateComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
       { path: '**', redirectTo:'' }
     ]
@@ -73,8 +76,18 @@ const routes: Routes = [
       { path: '**', redirectTo:'' }
     ]
   },
-  { path: 'staticmaps', component:StaticMapComponent , canActivate:[AuthGuard], data:{allowedRoles:['admin']}},
-  { path: 'roadevents', canActivate:[AuthGuard], data:{allowedRoles:['admin']},
+  
+  // { path: 'staticmaps', component:StaticMapComponent , canActivate:[AuthGuard], data:{allowedRoles:['admin']}},
+  { path: 'staticmaps',
+    children: [
+      { path: '', component:StaticMapComponent },
+      { path: 'create', component: StaticMapCreateComponent },
+      { path: ':id/update', component: StaticMapCreateComponent },
+      { path: '**', redirectTo:'' }
+    ]
+  },
+  // { path: 'roadevents', canActivate:[AuthGuard], data:{allowedRoles:['admin']}},
+  { path: 'roadevents',
     children: [
       { path: '', component:RoadeventsComponent, canActivateChild:[AuthGuard],data:{allowedRoles:['admin']} },
       { path: 'create', component: RoadeventsCreateComponent, canActivateChild:[AuthGuard],data:{allowedRoles:['admin']}},

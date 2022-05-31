@@ -85,88 +85,44 @@
                                         
                                     </div>                        
                                 </div>
+                                <br>
+                                <div class="row">
+                                    <nz-input-group [nzSuffix]="suffixIconFilter">
+                                        <input type="text" nz-input placeholder="Tìm nhanh" [(ngModel)]="filter"/>
+                                    </nz-input-group>
+                                    <ng-template #suffixIconFilter>
+                                        <i nz-icon><i class="filter icon"></i></i>
+                                    </ng-template>                                   
+                                </div>     
                             </div>
                         </div>
                     </nz-affix>
                 </div>
             </div>
-                <!-- <div class="ui clearing secondary segment">
-                    <div class="ui floated simple compact dropdown labeled icon button">
-                        <i class="cloud download icon"></i>
-                        <span class="text">Xuất dữ liệu</span>
-                        <div class="menu">
-                            <div class="item" (click)="exportCSV()">
-                                <i class="file outline icon"></i> CSV
+            <div class="ui segments no-border" *ngFor="let roadwork of listRoadwork | orderBy: ['name'] | searchFilter: filter:['name'] | filter: statusFilter: statusFilterValues" (click)="openRoadworkDetail(roadwork)">
+                <div class="ui secondary segment roadwork-header">
+                    <h4>{{roadwork.name}}</h4>
+                </div>
+
+                <div class="ui segment">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <p><i class="fa-solid fa-hourglass-start"></i><strong> Bắt đầu: </strong><span>{{roadwork.startAt | date :'dd/MM/yyyy'}}</span></p>
+                                <p><i class="fa-solid fa-hourglass-end"></i><strong> Kết thúc dự kiến: </strong><span>{{roadwork.finishPlan | date :'dd/MM/yyyy'}}</span></p>
+                                <p><i class="fa-solid fa-flag-checkered"></i><strong> Kết thúc thực tế: </strong><span>{{roadwork.finishAt | date :'dd/MM/yyyy'}}</span>
+                                    <span *ngIf="!roadwork.finishAt">Chưa xác định</span>
+                                </p>
+                                <p><i class="fa-solid fa-bars-progress"></i> <strong> Tình trạng: </strong><span>{{roadwork.status}}</span></p>
                             </div>
-                            <div class="item disabled">
-                                <i class="file excel outline icon"></i>Excel
+
+                            <div class="col-md-4">
+                                <button class="btn btn-primary" [routerLink]="['.', roadwork._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
                             </div>
-                            <div class="item disabled">
-                                <i class="file code outline icon"></i>JSON
-                            </div>
-                        </div>
-                    </div>
-                    <a [href]="objectUrl | safe: 'url'" *ngIf="exported" download="ttgt_cong-trinh-thi-cong.csv" [ngClass]="{'loading': !objectUrl, 'disabled': !objectUrl}" class="ui floated compact icon button">
-                        <i class="download icon"></i>
-                    </a>
-                    <a class="ui right floated compact labeled icon button" id="btnAddTop" data-tooltip="Thêm công việc mới" data-position="top right" [routerLink]="['./create']">
-                        <i class="add icon"></i> Thêm
-                    </a>
-                </div> -->
-    
-                <!-- <div class="ui attached blue menu">
-                    <div class="item icon-pointer no-animate" [ngClass]="{ 'active': hadFilter('RW_WORKING')}" (click)="selectFilter('RW_WORKING')">
-                        <i class="blue play circle icon" title="Đang thực hiện"></i>
-                    </div>
-                    <div class="item icon-pointer no-animate" [ngClass]="{ 'active': hadFilter('RW_FINISHED')}" (click)="selectFilter('RW_FINISHED')">
-                        <i class="green check circle icon" title="Đã hoàn thành"></i>
-                    </div>
-                    <div class="item icon-pointer no-animate" [ngClass]="{ 'active': hadFilter('RW_PLANNING')}" (click)="selectFilter('RW_PLANNING')">
-                        <i class="yellow alarm icon" title="Kế hoạch"></i>
-                    </div>
-                    <div class="item icon-pointer no-animate" [ngClass]="{ 'active': hadFilter('RW_EXPIRING')}" (click)="selectFilter('RW_EXPIRING')">
-                        <i class="orange flag icon" title="Sắp hết hạn"></i>
-                    </div>
-                    <div class="item icon-pointer no-animate" [ngClass]="{ 'active': hadFilter('RW_EXPIRED')}" (click)="selectFilter('RW_EXPIRED')">
-                        <i class="red warning circle icon" title="Quá hạn"></i>
-                    </div>
-    
-    
-                    <div class="right menu">
-                        <div class="ui right aligned  search item">
-                            <div class="ui transparent icon input">
-                                <input type="text" placeholder="Tìm kiếm nhanh" [(ngModel)]="filter">
-                            </div>
-                            <div class="results"></div>
                         </div>
                     </div>
                 </div>
-                <div class="ui attached segment fullheight overflow-scroll">
-                    <div class="ui divided selection very relaxed list">
-                        
-                    </div>
-                </div> -->
-
-                <accordion [closeOthers]="true" [isAnimated]="true">
-                    <div class="item" *ngFor="let roadwork of listRoadwork | orderBy: ['name'] | searchFilter: filter:['name'] | filter: statusFilter: statusFilterValues ">
-                        <accordion-group (isOpenChange)="openRoadworkDetail(roadwork)"> 
-                            <span accordion-heading>{{roadwork.name}}</span>
-                            <div class="list-group">
-                                <div class="row">
-                                    <p class="col-md-6"><img src="../../../assets/images/start_16.png" /> <strong>Bắt đầu: </strong><span>{{roadwork.startAt | date :'dd/MM/yyyy'}}</span></p>
-                                    <p class="col-md-6"><img src="../../../assets/images/finish_16.png" /> <strong>Kết thúc thực tế: </strong><span>{{roadwork.finishAt | date :'dd/MM/yyyy'}}</span>
-                                        <span *ngIf="!roadwork.finishAt">Chưa xác định</span>
-                                    </p>
-                                </div>
-                                <div class="row">
-                                    <p class="col-md-6"><img src="../../../assets/images/finishplan_16.png" /> <strong>Kết thúc dự kiến: </strong><span>{{roadwork.finishPlan | date :'dd/MM/yyyy'}}</span></p>
-                                    <p class="col-md-6"><img src="../../../assets/images/status_16.png" /> <strong>Tình trạng: </strong><span>{{roadwork.status}}</span></p>
-                                </div>
-                                <a [routerLink]="['.', roadwork._id,'update']" class="ui primary button">Chỉnh sửa</a>
-                            </div>
-                        </accordion-group>
-                    </div>
-                </accordion>
+            </div>
         </div>
     </div>
 </div>

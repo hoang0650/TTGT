@@ -1,0 +1,228 @@
+<!-- <div class="ui stackable grid full-height management-with-map">
+    <div class="sixteen wide mobile sixteen wide tablet eight wide computer column right-side">
+        <form name="staticMapForm" #staticMapForm="ngForm" class="ui form full-height">
+            <div id="stick-parent" class="ui segments full-height-with-scroll">
+                <div class="ui segment">
+                    <h2 class="ui teal center aligned icon header">
+                        <div class="content">
+                            Lớp thông tin tĩnh
+                        </div>
+                    </h2>
+                </div>
+                <div class="ui secondary segment">
+                    
+
+                </div>
+
+                
+            </div>
+        </form>
+
+    </div>
+
+    <div class="sixteen wide mobile sixteen wide tablet eight wide computer column no-spacing left-side-map">
+        <div class="map" 
+            leaflet 
+            leafletDraw
+            [leafletOptions]="options"
+            [leafletDrawOptions]="drawOptions"
+            (leafletMapReady)="initMap($event)"
+            (leafletDrawCreated)="onDrawCreated($event)"
+            (leafletDrawReady)="onDrawReady($event)"
+            [ngClass]="{'draw-mouse': drawMarker, 'wait-mouse': isSnaping}">
+            <div [leafletLayer]="geolayer" *ngFor="let geolayer of listGeoLayers"></div>
+
+            <div class="contain-guide-line" *ngIf="choosedFeature">
+                <div class="ui large message">
+                    <div class="header">
+                        Bạn có thể
+                    </div>
+                    <ul class="list">
+                        <li *ngIf="newStatic['type'] == 'marker'">Click vào map để tạo điểm</li>
+                        <li *ngIf="newStatic['type'] == 'geo'">Click vào map để vẽ đường</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <div class="search-road ui form">
+            <div class="ui fluid left icon input">
+                <input type="text" [(ngModel)]="searchText" placeholder="Tìm vị trí" appSearchRoads [appSearchRoadsText]="searchText" (newListRoads)="listRoads = $event">
+                <i class="search icon"></i>
+            </div>
+            <div id="searchRoadResult" *ngIf="listRoads.features?.length > 0" class="ui fluid search search-list" ng-model="newstaticmap.listRoads">
+                <div class="results transition visible">
+                    <a class="result" *ngFor="let road of listRoads.features" (click)="searchRoad(road)">
+                        <div class="content">
+                            <div class="title">{{road.properties.name}}</div>
+                            <div class="description">{{road.properties.city}}</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<div class="map-layout">
+    <div class="map-leaflet"
+        leaflet
+        leafletDraw
+        [leafletDrawOptions]="drawOptions"
+        [leafletOptions]="configure.options"
+        (leafletMapReady)="initMap($event)"
+        (leafletDrawCreated)="onDrawCreated($event)"
+        (leafletDrawReady)="onDrawReady($event)">
+        <div [leafletLayer]="geolayer" *ngFor="let geolayer of listGeoLayers"></div>
+    </div>
+
+    <div class="map-search">
+        <div class="map-search-bar">
+            <nz-input-group [nzSuffix]="searchQuery.length > 0 ? suffixIconClose : suffixIconSearch" [nzSize]="'large'">
+                <input type="text" nz-input placeholder="Tìm vị trí" [(ngModel)]="searchQuery" appSearchRoads [appSearchRoadsText]="searchQuery" (newListRoads)="searchResults = $event" (isSearch)="isSearch = $event"/>
+            </nz-input-group>
+            <ng-template #suffixIconSearch>
+            <i nz-icon nzType="search"></i>
+            </ng-template>
+            <ng-template #suffixIconClose>
+                <i nz-icon nzType="close" (click)="searchIconClick()"></i>
+            </ng-template>
+    
+            <div class="results transition visible" *ngIf="searchResults?.length > 0 && isSearch">
+                <ul nz-menu>
+                    <li class="map-search-result" nz-menu-item *ngFor="let result of searchResults; index as i" (click)="searchSelect(result)">
+                        <b>{{result.properties.name}}</b>
+                        <br>
+                        {{result.properties.city}}
+                    </li>
+                </ul>
+            </div>
+            <div class="results transition visible" *ngIf="searchResults?.length <= 0 && isSearch" style="background-color: white;">
+                <a class="result">
+                    <div class="content">
+                        <div class="title">Không tìm thấy</div>
+                        <div class="description">Hãy thử lại</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <button class="map-layout-info-button" nz-button nzType="primary" [@mapLayoutInfoButton]="isOpen ? 'open' : 'closed'" (click)="toggleLayoutInfo()">
+        <i nz-icon nzType="{{isOpen ? 'right' : 'left'}}"></i>
+    </button>
+
+    <div [@mapLayoutInfo]="isOpen ? 'open' : 'closed'" class="map-layout-info-right">
+        <div class="map-layout-info-content" #mapLayoutInfo>
+            <div class="ui segments">
+                <div class="ui segment">
+                    <h2 class="ui center aligned header">
+                        <div class="content">
+                            {{(!id)?'Thêm công trình thi công':'Chỉnh sửa công trình thi công'}}
+                        </div>
+                    </h2>
+                </div>
+            </div>
+
+            <div class="ui segment">
+                <form #staticMapForm="ngForm">
+                    <div class="container">
+                        <h3>Thông tin chung</h3>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="newStaticName" class="form-label required"><h5>Tên lớp</h5></label>
+                                    <input class="form-control" required type="text" id="newStaticName" name="newStaticName" placeholder="Tên lớp thông tin" [(ngModel)]="newStatic['name']" />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="newStaticDesc" class="form-label required"><h5>Mô tả</h5></label>
+                                    <input class="form-control" required type="text" id="newStaticDesc" name="newStaticDesc" placeholder="Tên lớp thông tin" [(ngModel)]="newStatic['description']" />
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="newStaticPublish" name="newStaticPublish" [(ngModel)]="newStatic['publish']">
+                                        <label class="form-check-label" for="newStaticPublish">Công bố</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3>Thông tin tĩnh</h3>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="markerType" class="form-label"><h5>Biểu tượng cho một điểm</h5></label>
+                                    <div class="ui fluid search selection dropdown">
+                                        <input type="hidden" id="markerType" name="markerType">
+                                        <i class="dropdown icon"></i>
+                                        <div class="default text">Chọn biểu tượng</div>
+                                        <div class="menu">
+                                            <div class="item" *ngFor="let icon of listIcons" [attr.data-value]="icon._id" (click)="chooseIcon(icon)"><img class="ui avatar image" src="{{icon.data.iconUrl}}"> {{icon.name}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="btn-group d-flex mb-3">
+                                    <button type="button" class="btn btn-secondary" *ngIf="!newStatic['type']" (click)="chooseType('marker')"><i class="marker icon"></i>Vẽ lớp điểm</button>
+                                    <button type="button" class="btn btn-secondary" *ngIf="!newStatic['type']" (click)="chooseType('geo')"><i class="road icon"></i>Vẽ lớp đường</button>
+                                    <button type="button" class="btn btn-secondary" *ngIf="newStatic['type']" (click)="addNewColumn()"><i class="plus icon"></i>Vẽ lớp đường</button>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <div class="table-responsive" *ngIf="newStatic['type'] && newStatic['properties'].length > 0">
+                                    <table id="staticDataTable" *ngIf="newStatic['type']" class="ui unstackable celled very compact table">
+                                        <thead>
+                                            <tr>
+                                                <th class="center aligned collapsing">
+                                                    <button class="ui icon button" type="button" title="Thêm dòng" (click)="addNewRow()"><i class="plus icon"></i>
+                                                </button>
+                                                </th>
+                                                <th class="center aligned static-column" *ngFor="let column of newStatic['properties']">
+                                                    <span>{{column.name}}</span>
+                                                    <button (click)="editColumn(column)" class="ui mini circular compact icon button" title="Sửa thông tin cột"><i class="edit icon"></i></button>
+                                                    <div class="ui fluid icon input">
+                                                        <input class="searchInput" type="text" placeholder="Tìm kiếm" ng-model="newstaticmap.filter.properties[$index]">
+                                                        <i class="icon" ng-click="newstaticmap.filter.properties[$index] = newstaticmap.removeFilter(newstaticmap.filter.properties[$index])" ng-class="{'filter': !newstaticmap.filter.properties[$index], 'remove link': newstaticmap.filter.properties[$index]}"></i>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr id="{{'row-'+i}}" [ngClass]="{'staticmap-focus-table': choosedFeature === mapdata}" *ngFor="let mapdata of newStatic.mapdatas; index as i" ng-repeat="| filter: newstaticmap.filterMapdata(newstaticmap.filter)" (click)="chooseFeatureOnList(mapdata)">
+                                                <td ng-class="{'static-map-blank': mapdata.features.length === 0}" class="center aligned collapsing">
+                                                    <i  (click)="removeFeature(mapdata)" title="Xóa hàng" class="trash icon icon-pointer"></i>
+                                                </td>
+                                                <td *ngFor="let property of newStatic.properties; index as j">
+                                                    <div class="ui transparent input management-full-width-div-input static-map-input">
+                                                        <input class="mainInput" type="text" (change)="updateGeoLayer()" [(ngModel)]="mapdata.properties[j]" [ngModelOptions]="{standalone: true}"/>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-3">
+                                <button [disabled]="!staticMapForm.valid" (click)="createStatic(newStatic)" class="btn btn-success" type="button">{{id ? button.UPDATE : button.CREATE}}</button>
+                            </div>
+                            <div class="col-3 text-end">
+                                <button *ngIf="id" class="btn btn-danger" type="button" (click)="removeStatic(newStatic)">{{button.REMOVE}}</button>                            </div>
+
+                            <div class="col-6 text-end">
+                                <button class="btn btn-secondary" (click)="back(newStatic)" type="button">{{button.BACK}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

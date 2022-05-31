@@ -112,7 +112,9 @@ export class RoadeventsComponent implements OnInit {
         this.geoLayer.addData(roadevent.featureCollection)
         features = features.concat(roadevent.featureCollection.features)
       })
-      this.sideMap.flyToBounds(this.getBounds(features))
+      this.sideMap.flyToBounds(this.getBounds(features), {
+        paddingBottomRight: [408, 0]
+      })
     }
   }
 
@@ -182,7 +184,9 @@ export class RoadeventsComponent implements OnInit {
   selectRoadevent(roadevent:any) {
     if (roadevent != this.choosedRoadevent) {
       this.choosedRoadevent = roadevent;
-      this.sideMap.flyToBounds(this.getBounds(roadevent.featureCollection.features))
+      this.sideMap.flyToBounds(this.getBounds(roadevent.featureCollection.features), {
+        paddingBottomRight: [408, 0]
+      })
     }
     else {
       this.choosedRoadevent = null

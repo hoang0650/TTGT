@@ -273,45 +273,42 @@
                                 <span>{{district.district}}</span>
                             </div>
 
-                            <div class="list-group">
-                                <div class="ui middle aligned selection divided list ">
-                                    <div id="{{camera._id}}" class="item " *ngFor="let camera of district.camera | orderBy: ['id']" (click)="selectCamera(camera) ">
-                                        <div class="right floated content ">
-                                            <span class="ui horizontal label "> {{camera.type || "Chưa cấu hình"}}</span>
-                                        </div>
-
-                                        <i class="large lock middle aligned icon " [ngClass]="(camera.publish)? 'unlock':'lock' "></i>
-                                        <div class="content ">
-                                            {{[camera.id, camera.name].join(" - ")}}
-                                        </div>
-                                        <div class="ui items " *ngIf="selectedCamera?._id === camera._id">
-                                            <div class="item ">
-                                                <div class="ui small image ">
-                                                    <img *ngIf="camera.liveviewUrl" (error)="imageError($event)"
-                                                        class="ui image " src="{{camera.liveviewUrl}}"/>
-                                                    <img *ngIf="!camera.liveviewUrl" class="ui image " src="//dummyimage.com/600x400/000/fff%26text%3DCh%C6%B0a%20c%C3%B3%20th%C3%B4ng%20tin%20c%E1%BA%A5u%20h%C3%ACnh"/>
+                            <accordion [isAnimated]="true" [closeOthers]="true">
+                                <div id="{{camera._id}}" *ngFor="let camera of district.camera">
+                                    <accordion-group [isOpen]="selectedCamera?._id === camera._id" (click)="selectCamera(camera)" panelClass="customClass">
+                                        <span accordion-heading><i class="large lock middle aligned icon " [ngClass]="(camera.publish)? 'unlock':'lock' "></i> {{[camera.id, camera.name].join(" - ")}} <span class="badge badge-secondary bg-secondary float-right pull-right">{{camera.type || "Chưa cấu hình"}}</span></span>
+                                  
+                                        <div class="container">
+                                            <div class="row mb-3">
+                                                <div class="col-md-8 align-self-center">
+                                                    <h5>Mã: {{camera.id}}</h5>
                                                 </div>
-                                                <div class="content">
-                                                    <div class="header">{{camera.id}}</div>
-                                                    <div class="description ">
-                                                        <p *ngIf="camera?.name "><strong>Tên: </strong> {{camera.name}}</p>
-                                                        <p *ngIf="camera?.type "><strong>Loại: </strong> {{camera.type}}</p>
-                                                        <p *ngIf="camera?.values?.server "><strong>Server: </strong> {{camera.values.server}}</p>
-                                                        <p *ngIf="camera?.values?.camid "><strong>CamID: </strong> {{camera.values.camid}}</p>
-                                                        <p *ngIf="camera?.values?.ip "><strong>IP: </strong> {{camera.values.ip}}</p>
-                                                        <p *ngIf="camera?.values?.channel "><strong>Channel: </strong> {{camera.values.channel}}</p>
-                                                    </div>
-                                                    <div class="extra ">
-                                                        <a class="ui right floated small primary basic button " [routerLink]="['.', camera._id, 'update']">
-                                                            <i class="write icon "></i> Chỉnh sửa
-                                                        </a>
-                                                    </div>
+
+                                                <div class="col-md-4">
+                                                    <button class="btn btn-primary" [routerLink]="['.', camera._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <p *ngIf="camera?.name "><strong>Tên: </strong> {{camera.name}}</p>
+                                                    <p *ngIf="camera?.type "><strong>Loại: </strong> {{camera.type}}</p>
+                                                    <p *ngIf="camera?.values?.server "><strong>Server: </strong> {{camera.values.server}}</p>
+                                                    <p *ngIf="camera?.values?.camid "><strong>CamID: </strong> {{camera.values.camid}}</p>
+                                                    <p *ngIf="camera?.values?.ip "><strong>IP: </strong> {{camera.values.ip}}</p>
+                                                    <p *ngIf="camera?.values?.channel "><strong>Channel: </strong> {{camera.values.channel}}</p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    
+                                                    <img *ngIf="camera.liveviewUrl" (error)="imageError($event)"
+                                                    class="ui image " src="{{camera.liveviewUrl}}"/>
+                                                    <img *ngIf="!camera.liveviewUrl" class="ui image " src="//dummyimage.com/600x400/000/fff%26text%3DCh%C6%B0a%20c%C3%B3%20th%C3%B4ng%20tin%20c%E1%BA%A5u%20h%C3%ACnh"/>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </accordion-group>
                                 </div>
-                            </div>
+                            </accordion>
                         </accordion-group>
                     </div>
                 </div>

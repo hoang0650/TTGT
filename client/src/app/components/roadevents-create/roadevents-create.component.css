@@ -1,0 +1,24 @@
+.color-picker {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+}
+
+.ui.simple.dropdown.dropup:hover>.menu {
+    bottom: 100% !important; 
+    top: inherit !important;
+}
+
+.ui.labeled.input>.label:not(.corner).notice-board {
+    padding: 4px;
+}
+
+.no-radius {
+    border-radius: 0px !important;
+}
+
+.image-choice.ui.labeled .ui.simple.dropdown:hover>.menu {
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
