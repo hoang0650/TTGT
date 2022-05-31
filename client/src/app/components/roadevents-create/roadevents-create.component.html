@@ -129,7 +129,7 @@
                                     <button class="btn btn-secondary" [ngClass]="{'active': currentType == 'marker'}" (click)="createFeature('marker')" type="button" nz-tooltip nzTooltipTitle="Tạo điểm"><i class="marker icon"></i></button>
                                     <button class="btn btn-secondary" [ngClass]="{'active': currentType == 'image'}" (click)="createFeature('image')" type="button" nz-tooltip nzTooltipTitle="Tạo biển báo"><i class="warning circle icon"></i></button>
                                     <button class="btn btn-secondary" [ngClass]="{'active': currentType == 'geo'}" (click)="createFeature('geo')" type="button" nz-tooltip nzTooltipTitle="Tạo đường (tối đa 5 đường)"><i class="road icon"></i></button>
-                                    <button class="btn btn-secondary" [ngClass]="{'active': currentType == 'custom'}" (click)="createFeature('label')" type="custom" nz-tooltip nzTooltipTitle="Tạo lớp hình học (tối đa 5 lớp)"><i class="write icon"></i></button>
+                                    <button class="btn btn-secondary" [ngClass]="{'active': currentType == 'custom'}" (click)="createFeature('custom')" type="button" nz-tooltip nzTooltipTitle="Tạo lớp hình học (tối đa 5 lớp)"><i class="write icon"></i></button>
                                 </div>
 
                                 <div *ngIf="!validateGeo(geoObject.featureCollection)" class="ui negative message">

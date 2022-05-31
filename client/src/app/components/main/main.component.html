@@ -19,18 +19,21 @@
 	</div>
 	<div class="container">
 		<div class="row align-items-center">
-			<div class="col-md-6 order-2 order-md-1 text-center text-md-left">
+			<div class="col-md-3" *ngIf="appCom?.profile">
+
+			</div>
+			<div class="col-md-6 order-2 order-md-1 text-center">
 				<img class="img-fluid" src="assets/images/localize/overlay-logo.png" alt="screenshot">
 			</div>
 				
-			<div class="col-md-6 text-center order-1 order-md-2">
+			<div class="col-md-6 text-center order-1 order-md-2" *ngIf="!appCom?.profile">
 				<h1 class="text-white font-weight-bold mb-4">Các tính năng </h1>
 				<p class="text-white mb-5">Quan sát, điều chỉnh camera.
 					<br>Kiểm tra tình trạng giao thông.<br>
 					Phân luồng, cảnh báo giao thông.
 				</p>
 				
-				<a href="FAQ.html" class="btn btn-main-md">Đăng ký ngay</a>
+				<a (click)="login()" class="btn btn-main-md" style="color: white;">Đăng ký ngay</a>
 			</div>
 		</div>
 	</div>
@@ -192,9 +195,10 @@
 					<!-- <p>Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur arcu erat, accumsan id imperdiet et,
 						porttitor at sem. Vivamus </p> -->
 					<!-- Popup Video -->
-					<a data-fancybox href="https://www.youtube.com/watch?v=jrkvirglgaQ">
+					<!-- <a data-fancybox href="https://www.youtube.com/watch?v=ZNtxPUZhKCQ">
 						<i class="ti-control-play video"></i>
-					</a>
+					</a> -->
+					<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/ZNtxPUZhKCQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 				</div>
 			</div>
 		</div>

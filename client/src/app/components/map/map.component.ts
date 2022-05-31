@@ -456,6 +456,22 @@ export class MapComponent implements OnInit {
     })
   }
 
+  getParkingFromFavorList() {
+    var tempParkings:any = []
+    
+    
+    this.listFavoriteParking.forEach((favPark:any) => {
+      this.listParking.forEach((parking:any) => {
+        
+        if (parking._id == favPark.fId) {
+          tempParkings.push(parking)
+        }
+      })
+    })
+    console.log(tempParkings);
+    return tempParkings
+  }
+
   searchIconClick() {
     this.isSearch = false;
     this.searchQuery = '';
@@ -635,10 +651,12 @@ export class MapComponent implements OnInit {
   }
 
   chooseIncident(event:any) {
+    this.setCurrentMode('incidents')
     this.sideMap?.flyTo([event.loc.coordinates[1], event.loc.coordinates[0]]);
     this.chosenMarkers['incident'] = event._id
     
     this.markers['incidents'][event._id].openPopup()
+    this.cdRef.detectChanges()
   }
 
   createMarker(feature:any, latLng:any, color:any, icon:any) {
@@ -933,7 +951,6 @@ export class MapComponent implements OnInit {
   isOpen = false;
 
   toggle(onoff?:boolean) {
-    this.searchQuery = this.isOpen ? "Mở":"Đóng"
     this.isOpen = onoff || !this.isOpen;
     this.cdRef.detectChanges()
   }
@@ -949,6 +966,12 @@ export class MapComponent implements OnInit {
       this.dividerText = "Camera"
     } else if (mode == "parkings") {
       this.dividerText = "Bãi đỗ xe"
+    } else if (mode == "roadevents") {
+      this.dividerText = "Phân luồng"
+    } else if (mode == "staticmaps") {
+      this.dividerText = "Thông tin tĩnh"
+    } else if (mode == "incidents") {
+      this.dividerText = "Cảnh báo giao thông"
     } else {
       this.dividerText = ""
     }

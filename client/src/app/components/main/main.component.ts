@@ -5,6 +5,7 @@ import { AppComponent } from 'src/app/app.component';
 import { NewService } from 'src/app/services/new.service';
 import { Content } from 'src/app/interfaces/contents';
 import * as AOS from 'aos';
+import { AuthorizationService } from 'src/app/services/authorization.service';
 declare var $: any;
 @Component({
   selector: 'app-main',
@@ -43,7 +44,7 @@ export class MainComponent implements OnInit {
   listEventType:any;
   listEvent: any;
 
-  constructor(public appCom: AppComponent,private configure:ConfigureService, private mapService:MapService, private newService:NewService) { }
+  constructor(public appCom: AppComponent,private configure:ConfigureService, private mapService:MapService, private newService:NewService, private auth:AuthorizationService) { }
 
   ngOnInit(): void {
     AOS.init();
@@ -120,6 +121,8 @@ export class MainComponent implements OnInit {
     })
   }
 
-  
 
+  login() {
+    this.auth.login()
+  }
 }

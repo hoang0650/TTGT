@@ -1,0 +1,18 @@
+.parking-header {
+    background-color: #1890ff;
+    margin: -24px -24px 0px -24px;
+    padding: 12px;
+}
+
+.parking-header > h3 {
+    font-weight: bold;
+    color: white;
+}
+
+.divider-blue {
+    color: #1890ff;
+}
+
+.ui.feed > .event.active-event {
+    background-color: rgba(37, 37, 37, 0.38);
+}

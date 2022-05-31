@@ -1,0 +1,36 @@
+::ng-deep .contain-image-event {
+    position: relative;
+    display: inline-block;
+    left: 50%;
+    transform: translate(-50%);
+    -webkit-transform: translate(-50%);
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+::ng-deep .contain-image-event img {
+    max-width: 300px !important;
+    max-height: 300px;
+    width: auto;
+    height: auto;
+}
+
+::ng-deep .stis-create-incident-popup {
+    border-radius: 0;   
+}
+
+::ng-deep .stis-create-incident-popup .leaflet-popup-content-wrapper {
+    border-radius: 0;
+    padding: 16px;
+    min-width: 332px;
+    width: auto;
+}
+
+::ng-deep .stis-create-incident-popup .leaflet-popup-content {
+    margin: 0;  
+    width: auto;  
+}
+
+::ng-deep .stis-create-incident-popup .ui.card {
+    border-radius: 0;
+}
