@@ -14,11 +14,6 @@ export class AdminService {
     return this.http.get(`${this.Root_url}/${id}`);
   }
 
-  // getblockuser
-  getBlockUser(id:string){
-    return this.http.get(`${this.Root_url}/${id}/getblockuser`);
-  }
-
 
   blockUser(id: string, action:string, payload: Object){
     return this.http.post(`${this.Root_url}/${id}/${action}`,payload={'blocked':true});
@@ -39,4 +34,5 @@ export class AdminService {
   changeToAdmin(id: string, action:string, payload: Object){
     return this.http.post(`${this.Root_url}/${id}/${action}`,payload={'app_metadata':{'roles':'admin'}});
   }
+
 }

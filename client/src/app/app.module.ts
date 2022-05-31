@@ -200,6 +200,7 @@ export function tokenGetters() {
             uri: 'http://localhost:3000/api/*',
             allowAnonymous:true
           },
+          'http://localhost:3000/api/permission',
           'http://localhost:3000/api/admin',
           'http://localhost:3000/api/admin/*',
           'http://localhost:3000/api/setting',

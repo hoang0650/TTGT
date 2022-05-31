@@ -60,24 +60,6 @@ function getUser(req, res) {
 
 }
 
-function getUserBlocked(req,res){
-  const id = req.params.id;
-  const params = {
-    search_engine: "v3",
-    q: `id:${id} and "blocked":true`,
-    // connection: clientConfig.connection
-  };
-  management
-    .getUsers(params)
-    .then((user) => {
-      res.status(200).json({user})
-    })
-    .catch((err) => {
-      console.log("error", err);
-      res.status(500).json({ msg: err.message });
-    });
-}
-
 function blockUser(req, res) {
   const id = req.params.id;
   if (!id) return res.status(500).end();
@@ -147,10 +129,10 @@ function changeToAdmin(req, res) {
     .catch((err) => res.status(500).end(err.message));
 }
 
+
 module.exports = {
   getUsers,
   getUser,
-  getUserBlocked,
   blockUser,
   unblockUser,
   changeToUser,

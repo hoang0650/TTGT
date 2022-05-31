@@ -1,7 +1,7 @@
 const UserGroup = require('../models/userGroup');
 const config = require("../config/configure");
 const _ = require('lodash');
-// const { result } = require('lodash');
+
 
 function getPermissions(req,res,next){
     if(!req.notNeedAuth){
