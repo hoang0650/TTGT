@@ -1,0 +1,13 @@
+.table-responsive {
+    border-radius: 0.28571429rem;
+}
+
+tbody, td, tfoot, th, thead, tr {
+    border-color: inherit;
+    border-style: none;
+    border-width: 0;
+}
+
+#staticDataTable>* .staticmap-focus-table td {
+    background-color: rgba(33, 133, 208, 0.2);
+}

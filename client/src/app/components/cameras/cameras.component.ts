@@ -113,7 +113,10 @@ export class CamerasComponent implements OnInit {
 
     if (this.selectedCamera != cam) {
       this.selectedCamera = cam;
-      // this.sideMap.flyTo([cam.loc.coordinates[1],cam.loc.coordinates[0]], 18, {duration: 1.5})
+      this.sideMap.flyTo([cam.loc.coordinates[1],cam.loc.coordinates[0]], 15, {
+        paddingBottomRight: [408, 0],
+        duration: 1.5
+      })
     }
 
   }

@@ -1,0 +1,12 @@
+.ui.secondary.segment.roadwork-header {
+    background-color: #1890ff;
+    color: #fff;
+}
+
+.ui.secondary.segment > h4 {
+    color: #fff;
+}
+
+.no-border {
+    border: none;
+}

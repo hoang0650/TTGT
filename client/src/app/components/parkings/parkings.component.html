@@ -102,38 +102,46 @@
             <div *ngIf="!filter">
                 <accordion [isAnimated]="true" [closeOthers]="true">
                     <div *ngFor="let district of listdistrict">
-                        <accordion-group  [isOpen]="district['expand']" (click)="selectDistrict(district)">
+                        <accordion-group  [isOpen]="district['expand']" (click)="selectDistrict(district)" panelClass="customClass">
                             <span accordion-heading>{{district[0].dist}}</span>
                         
-                            <div class="list-group">
                                 <accordion [isAnimated]="true" [closeOthers]="true">
                                     <div id="{{parking._id}}" *ngFor="let parking of district">
-                                        <accordion-group [isOpen]="parking['expand']" (click)="focusToParking(parking)">
+                                        <accordion-group [isOpen]="parking['expand']" (click)="focusToParking(parking)" panelClass="customClass">
                                             <span accordion-heading>{{parking.name}} <span *ngIf="parking.name && parking.addr">-</span> {{parking.addr}}</span>
                                       
-                                            <div class="list-group">
-                                                <div>
-                                                    <p *ngIf="parking.worktime_details"><img src="../../../assets/images/worktime_16.png" />
-                                                        <span>{{parking.worktime_details}}</span>
-                                                    </p>
+                                            <div class="container">
+                                                <div class="row mb-3" *ngIf="parking['vehicle_type']['car'] || parking['vehicle_type']['bike']">
+                                                    <div class="col-md-8">
+                                                        <h5 class="m-0">Mức giá</h5>
+                                                        <div *ngIf="parking['vehicle_type']['car']">
+                                                            <i class="fa-solid fa-car"></i> Giá từ {{parking['price']['car']['min']}} đến {{parking['price']['car']['max']}}
+                                                        </div>
+                                                        <div *ngIf="parking['vehicle_type']['bike']">
+                                                            <i class="fa-solid fa-motorcycle"></i> Giá từ {{parking['price']['bike']['min']}} đến {{parking['price']['bike']['max']}}
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-4">
+                                                        <button class="btn btn-primary" [routerLink]="['.', parking._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
+                                                    </div>
                                                 </div>
-                                                <br/>
-                                                <div>
-                                                    <p *ngIf="parking?.worktime"><i class="calendar icon"></i> <span>Từ {{parking.worktime['startWorking']}} đến
-                                                        {{parking.worktime['endWorking']}} giờ </span>
-                                                    </p>
-                                                    <p *ngIf="parking?.price_details"><img src="../../../assets/images/price_16.png" /> <span>{{parking.price_details}}</span></p>
-                                                    <p *ngIf="parking?.cap"><i class="grid layout icon"></i> {{parking.cap}} chỗ</p>
-                                                    <p *ngIf="parking?.avl"><strong>Số chỗ trống: </strong> {{parking.avl}}</p>
-                                                    <p *ngIf="parking?.note"><img src="../../../assets/images/note_16.png" /> <span class="parking-detail">{{parking.note}}</span></p>
+
+                                                <div class="row mb-3">
+                                                    <div class="col-md-12">
+                                                        <h5 class="m-0">Thời gian làm việc</h5>
+                                                        <div  *ngIf="parking?.worktime">
+                                                            <i class="fa-solid fa-clock"></i> Từ {{parking.worktime['startWorking']}} đến {{parking.worktime['endWorking']}} giờ
+                                                        </div>
+                                                        <div *ngIf="parking?.worktime_details">
+                                                            <i class="fa-solid fa-calendar-days"></i> {{parking.worktime_details}}
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <br/>
-                                                <a class="ui primary button" [routerLink]="['.', parking._id, 'update']">Chỉnh sửa</a>
                                             </div>
                                         </accordion-group>
                                     </div>
                                 </accordion>
-                            </div>
                         </accordion-group>
                     </div>
                 </accordion>
@@ -152,26 +160,39 @@
             </div>
 
             <div *ngIf="filter">
-                <accordion close-others="true">
+                <accordion [isAnimated]="true" [closeOthers]="true">
                     <div *ngFor="let parking of listParking | filter:filterCustome:filter">
-                        <accordion-group (click)="focusToParking(parking)">
+                        <accordion-group (click)="focusToParking(parking)" panelClass="customClass">
                             <span accordion-heading>{{parking.name}} <span *ngIf="parking.name && parking.addr">-</span>{{parking.addr}}</span>
 
-                            <div class="list-group">
-                                <div>
-                                    <p *ngIf="parking.worktime_details"><img src="../../../assets/images/worktime_16.png" /> <span>{{parking.worktime_details}}</span></p>
+                            <div class="container">
+                                <div class="row mb-3" *ngIf="parking['vehicle_type']['car'] || parking['vehicle_type']['bike']">
+                                    <div class="col-md-8">
+                                        <h5 class="m-0">Mức giá</h5>
+                                        <div *ngIf="parking['vehicle_type']['car']">
+                                            <i class="fa-solid fa-car"></i> Giá từ {{parking['price']['car']['min']}} đến {{parking['price']['car']['max']}}
+                                        </div>
+                                        <div *ngIf="parking['vehicle_type']['bike']">
+                                            <i class="fa-solid fa-motorcycle"></i> Giá từ {{parking['price']['bike']['min']}} đến {{parking['price']['bike']['max']}}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <button class="btn btn-primary" [routerLink]="['.', parking._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
+                                    </div>
                                 </div>
-                                <br/>
-                                <div>
-                                    <p *ngIf="parking?.worktime"><i class="calendar icon"></i> <span>Từ {{parking.worktime[0][0]}} đến {{parking.worktime[0][1]}} giờ </span>
-                                    </p>
-                                    <p *ngIf="parking?.price_details"><img src="../../../assets/images/price_16.png" /> <span>{{parking.price_details}}</span></p>
-                                    <p *ngIf="parking?.cap"><i class="grid layout icon"></i> {{parking.cap}} chỗ</p>
-                                    <p *ngIf="parking?.avl"><strong>Số chỗ trống: </strong> {{parking.avl}}</p>
-                                    <p *ngIf="parking?.note"><img src="../../../assets/images/note_16.png" /> <span>{{parking.note}}</span></p>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <h5 class="m-0">Thời gian làm việc</h5>
+                                        <div  *ngIf="parking?.worktime">
+                                            <i class="fa-solid fa-clock"></i> Từ {{parking.worktime['startWorking']}} đến {{parking.worktime['endWorking']}} giờ
+                                        </div>
+                                        <div *ngIf="parking?.worktime_details">
+                                            <i class="fa-solid fa-calendar-days"></i> {{parking.price_details}}
+                                        </div>
+                                    </div>
                                 </div>
-                                <br/>
-                                <a class="ui primary button" href="/#/parkings/{{parking._id}}/update">Chỉnh sửa</a>
                             </div>
                         </accordion-group>
                     </div>

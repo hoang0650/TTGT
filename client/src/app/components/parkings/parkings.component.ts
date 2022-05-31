@@ -3,6 +3,7 @@ import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { ConfigureService } from 'src/app/services/configure.service';
 import { MessageService } from 'src/app/services/message.service';
 import { ParkingService } from 'src/app/services/parking.service';
@@ -61,15 +62,25 @@ export class ParkingsComponent implements OnInit {
   normalIcon: any;
   selectedIcon:any;
   currentMarker: any;
-  previousId: string;
+  id?: string;
   isLoading = true;
 
-  constructor(private messageService:MessageService, private parkingService:ParkingService, public configure:ConfigureService, private route:ActivatedRoute, private location:Location, private cdRef:ChangeDetectorRef) {
+  constructor(private messageService:MessageService, private nzMessage:NzMessageService, private parkingService:ParkingService, public configure:ConfigureService, private route:ActivatedRoute, private location:Location, private cdRef:ChangeDetectorRef) {
     this.exported = false
     this.filter = ""
     this.markers = {};
-    this.previousId =""
     this.listParking = []
+
+    if (this.route.snapshot.queryParamMap.get('result')) {
+      if (this.route.snapshot.queryParamMap.get('id')) {
+        this.id = this.route.snapshot.queryParamMap.get('id') || ""
+      }
+      
+      this.nzMessage.success(this.messageService.getMessageObj().NOTICE(this.route.snapshot.queryParamMap.get('result'), 'bãi đỗ xe'))
+      this.location.replaceState("./parkings")
+    }
+
+    
 
     this.normalIcon = L.divIcon({
       className: 'marker-parking',
@@ -85,10 +96,7 @@ export class ParkingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.route.snapshot.paramMap.get('result')) {
-      this.notice = this.messageService.getMessageObj().NOTICE(this.route.snapshot.paramMap.get('result'), 'bãi đỗ xe');
-      this.location.replaceState("./")
-    }
+    
   }
 
   initMap(map:L.Map) {
@@ -96,6 +104,7 @@ export class ParkingsComponent implements OnInit {
 
     this.parkingService.query().subscribe({
       next: (parkings: any) => {
+
         parkings.sort(this.distCompare)
         parkings.forEach((element:any) => {
           this.markers[element._id] = L.marker([element.loc.coordinates[1], element.loc.coordinates[0]], {
@@ -123,12 +132,11 @@ export class ParkingsComponent implements OnInit {
           this.listParking = parkings;
           this.listdistrict = result;
 
-          this.isLoading = false;
-          
-          if (this.route.snapshot.paramMap.get('id')) {
-            // focusAndExpandParking(this.route.snapshot.paramMap.get('id'));
+          if (this.id) {
+            this.focusAndExpandParking(this.id);
           }
         })
+        this.isLoading = false;
       }
     })
   }
@@ -173,7 +181,9 @@ export class ParkingsComponent implements OnInit {
       this.currentMarker.setIcon(this.normalIcon);
     }
     this.currentMarker = this.markers[prk._id];
-    this.sideMap.flyTo([prk.loc.coordinates[1], prk.loc.coordinates[0]], 15)
+    this.sideMap.flyTo([prk.loc.coordinates[1], prk.loc.coordinates[0]], 15, {
+      paddingBottomRight: [408, 0]
+    })
 
     this.markers[prk._id].setIcon(this.selectedIcon);
   };

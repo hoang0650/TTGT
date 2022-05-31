@@ -194,7 +194,9 @@ export class RoadeventsCreateComponent implements OnInit {
 
   getAutoPosition() {
     var bounds = L.latLngBounds(this.getBounds(this.geoLayer.getLayers()))
-    this.sideMap.flyToBounds(bounds)
+    this.sideMap.flyToBounds(bounds, {
+      paddingBottomRight: [408, 0]
+    })
     this.tmpLocation = [bounds.getCenter().lat.toFixed(4), bounds.getCenter().lng.toFixed(4)].join(",")
   }
 
@@ -238,7 +240,9 @@ export class RoadeventsCreateComponent implements OnInit {
       if (feature) {
         this.chooseFeature(feature);
         
-        this.sideMap.flyToBounds(this.getBounds([{feature:feature}]))
+        this.sideMap.flyToBounds(this.getBounds([{feature:feature}]), {
+          paddingBottomRight: [408, 0]
+        })
       }
     }
   }

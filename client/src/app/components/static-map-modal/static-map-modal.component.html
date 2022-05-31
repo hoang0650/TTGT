@@ -1,0 +1,61 @@
+<div *ngIf="!deleteMode">
+    <div class="modal-header">
+        <div class="custom-txt"> <h3 class="modal-title">{{(type === 'update') ? 'Chỉnh sửa cột' : 'Thêm cột'}}</h3></div>
+        <div> <button type="button" aria-hidden="true" class = "close" data-notify="dismiss" (click)="cancel()"> </button></div>
+    </div>
+
+    <form id="addColumnForm" name="addColumnForm" #addColumnForm="ngForm">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mb-3 mt-3">
+                        <label for="newColumnId" class="form-label required"><h5>Mã cột</h5></label>
+                        <input class="form-control" required type="text" id="newColumnId" name="newColumnId" placeholder="Mã cột" [disabled]="type == 'update'" [(ngModel)]="newColumn['id']" (change)="idChange(newColumn['id'])"/>
+                        <div *ngIf="type != 'update'" class="ui pointing red basic label">{{addColumnForm?.controls?.['newColumnId']?.errors?.['required'] ? 'Không được để trống' : (errorIdMessage ? errorIdMessage : 'Mã cột sẽ không được chỉnh sửa sau khi tạo')}}</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="newColumnName" class="form-label required"><h5>Mã cột</h5></label>
+                        <input class="form-control" required type="text" id="newColumnName" name="newColumnName" placeholder="Tên cột" [(ngModel)]="newColumn['name']" />
+                        <div class="ui pointing red basic label" *ngIf="addColumnForm?.controls?.['newColumnName']?.errors?.['required']">Không được để trống</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="newColumnType" class="form-label required"><h5>Loại dữ liệu</h5></label>
+                        <select place class="form-select" id="newColumnType" name="newColumnType"  [(ngModel)]="newColumn['type']">
+                            <option value="" selected disabled hidden>Hãy chọn loại</option>
+                            <option *ngFor="let type of listColumnType" value="{{type.type}}">{{type.name}}</option>
+                        </select>    
+                        <div class="ui pointing red basic label" *ngIf="addColumnForm?.controls?.['newColumnType']?.errors?.['required']">Phải chọn loại</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="newColumnIsHide" name="newColumnIsHide" [(ngModel)]="newColumn['isHide']">
+                            <label class="form-check-label" for="newColumnIsHide">Ẩn cột</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div *nzModalFooter>
+        <button [disabled]="addColumnForm.invalid" class="ui blue button" type="button" (click)="ok()">Lưu</button>
+        <button *ngIf="type === 'update'" class="ui left floated red button" type="button" (click)="changeMode()">Xóa</button>
+        <button class="ui button" type="button" (click)="cancel()">Quay lại</button>
+    </div>
+</div>
+
+<div *ngIf="deleteMode">
+    <div class="modal-header">
+        <h3 class="modal-title">Xóa cột</h3>
+    </div>
+    <div class="modal-body">
+        Bạn có chắc muốn xóa cột này
+    </div>
+    <div *nzModalFooter>
+        <button class="ui blue button" (click)="deleteColumn()">Có</button>
+        <button class="ui button" (click)="changeMode()">Quay lại</button>
+    </div>
+</div>

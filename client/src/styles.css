@@ -360,6 +360,10 @@ nz-layout {
     border-color: #975b33 !important;
 }
 
+.marker-road-event {
+    border-radius: 50%; 
+}
+
 .image-marker {
     height: inherit;
     width: auto;
@@ -465,4 +469,8 @@ nz-layout {
 
 .form-label.required :after {
     content:" *";color:red;
+}
+
+.ant-message .anticon {
+    top: -2px !important;
 }
