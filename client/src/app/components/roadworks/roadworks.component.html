@@ -100,17 +100,16 @@
                 </div>
             </div>
 
-            <div class="ui segment"  *ngIf="listRoadwork.length <= 0">
-                <h4 class="ui center aligned header">
-                    <div class="content">
+            <div class="ui segment">
+                <h4 class="ui center aligned header" *ngIf="listRoadwork.length == 0">
+                    <div class="content" *ngIf="isLoading">
+                        <nz-spin nzSimple></nz-spin>
+                        Đang tải...
+                    </div>
+                    <div class="content" *ngIf="!isLoading && listRoadwork.length == 0">
                         Không có công trình nào
                     </div>
-                </h4>
-            </div>
-
-            <div class="ui segment"  *ngIf="(listRoadwork | orderBy: ['name'] | searchFilter: filter:['name'] | filter: statusFilter: statusFilterValues).length <= 0">
-                <h4 class="ui center aligned header">
-                    <div class="content">
+                    <div class="content" *ngIf="listRoadwork.length > 0 && (listRoadwork | orderBy: ['name'] | searchFilter: filter:['name'] | filter: statusFilter: statusFilterValues).length <= 0">
                         Không tìm thấy công trình nào
                     </div>
                 </h4>

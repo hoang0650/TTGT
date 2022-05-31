@@ -69,6 +69,7 @@ export class RoadworksComponent implements OnInit {
   currentMarker:any;
   geojson: any;
   id?:string
+  isLoading = true;
 
   constructor(public configure:ConfigureService, private route:ActivatedRoute, private messageService:MessageService, private roadworkService:RoadworkService, private location:Location, private cdRef:ChangeDetectorRef, private markerService:MarkerService, private nzMessage:NzMessageService) { 
     this.searchParams = (new URL(window.location.href)).searchParams
@@ -264,6 +265,8 @@ export class RoadworksComponent implements OnInit {
             } 
           })
         }
+
+        this.isLoading = false
       }
     })
   }
