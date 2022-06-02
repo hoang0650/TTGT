@@ -7,7 +7,8 @@ import { tileLayer } from 'leaflet';
 export class ConfigureService {
 
   constructor() { }
-  
+  fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+  fileExtension = '.xlsx';
   backend = 'http://localhost:3000/'
   livemap = '//map.thongtingiaothong.vn/'
   mapapi = '//api.thongtingiaothong.vn/'

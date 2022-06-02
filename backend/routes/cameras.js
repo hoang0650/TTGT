@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {Camera} = require('../models/camera');
 
-const {getByBbox,getByTile,all,getDefaultCamera,
+const {exportCameraData,getByBbox,getByTile,all,getDefaultCamera,
     getCameraType,getCameraConfig,exportToCsv,
     create,deleteCamera,update,findAll,findById,
     sortByLocation,findOneByCamId} = require('../controllers/cameras');
@@ -25,6 +25,11 @@ getCameraConfig);
 router.get('/csv', 
 checkPermissions(['cameras:manage']), 
 exportToCsv);
+
+router.get('/xls',
+checkPermissions(['cameras:manage']), 
+exportCameraData);
+
 router.post('/', 
 checkPermissions(['cameras:update', 'cameras:manage']), 
 create);

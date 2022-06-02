@@ -112,9 +112,9 @@
             <li>
               <a class="dropdown-item" *ngIf="roles.indexOf('superadmin')>-1" [ngClass]="{'active': isActive('/users')}" [routerLink]="['/users']">Người dùng</a>
             </li>
-            <!-- <li>
+            <li>
               <a class="dropdown-item" *ngIf="roles.indexOf('superadmin')>-1" [ngClass]="{'active': isActive('/groups')}" [routerLink]="['/groups']">Nhóm người dùng</a>
-            </li> -->
+            </li>
           </ul>
         </li>
         

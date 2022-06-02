@@ -13,9 +13,8 @@ export class AuthorizationService {
   idToken ='';
   private isLoggIn = new ReplaySubject<boolean>(1);
   isLogged = this.isLoggIn.asObservable();
-
   constructor(public auth:AuthService, public admin:AdminService,private jwtHelper:JwtHelperService,private route: ActivatedRoute, private message:NzMessageService) { }
-
+  
   get userProfile(): any {
     if (this.isAuthenticated()) {
       const accessToken:any = localStorage.getItem('profile');
@@ -55,11 +54,11 @@ export class AuthorizationService {
   }
  
 
-
   login() {
-      this.auth.loginWithRedirect();
-      localStorage.getItem('id_token');  
+    this.auth.loginWithRedirect({fragment:'home'})
+    localStorage.getItem('id_token'); 
   }
+ 
 
   logout() {
     localStorage.removeItem('access_token');

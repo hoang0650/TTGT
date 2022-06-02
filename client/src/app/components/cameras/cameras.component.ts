@@ -1,6 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Location, ViewportScroller } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
 import { CameraService } from 'src/app/services/camera.service';
@@ -49,7 +50,9 @@ import { StaticService } from 'src/app/services/static.service';
   ]
 })
 export class CamerasComponent implements OnInit {
+ 
   mess:any;
+  filename = "";
   sideMap:any;
   markers:any = {};
   districts:any = [];
@@ -64,7 +67,7 @@ export class CamerasComponent implements OnInit {
   isLoading: boolean;
 
 
-  constructor(private messageService:MessageService, public configure:ConfigureService, private staticData:StaticService, private cameraService:CameraService, private markerModify:MarkerService, private route:ActivatedRoute, private viewportScroller: ViewportScroller, private location:Location, private cdRef:ChangeDetectorRef) {
+  constructor(private messageService:MessageService, public configure:ConfigureService, private staticData:StaticService, private cameraService:CameraService, private markerModify:MarkerService, private route:ActivatedRoute, private viewportScroller: ViewportScroller, private location:Location, private cdRef:ChangeDetectorRef,private sanitizer: DomSanitizer) {
     this.mess = this.messageService.getMessageObj();
     this.filterText = ""
     this.isLoading = true;
@@ -242,9 +245,22 @@ export class CamerasComponent implements OnInit {
     this.cameraService.getCameraCSV().subscribe({
       next: (data:any) => {
         this.objectUrl = URL.createObjectURL(new Blob([data],{type:'text/csv'}));
+        this.filename = "ttgt-cameras.csv"
       }
     });
   }
+
+  exportXLS(){
+    delete this.objectUrl;
+    this.exported = true;
+    this.cameraService.exportExcel(this.cameras,'cameras');
+  }
+
+  exportJSON() {
+    var theJSON = JSON.stringify(this.cameras);
+    var uri = this.sanitizer.bypassSecurityTrustUrl("data:text/json;charset=UTF-8," + encodeURIComponent(theJSON));
+    this.objectUrl =uri;
+}
 
   trackByFn(item:any) {
     return item;

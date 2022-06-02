@@ -32,20 +32,26 @@
                 </ng-template>
            
                 <ng-template #actionUnblock>                  
-                    <i (click)="unblockUsers()" class="ui unlock icon"></i>
+                    <i nz-tooltip="Mở khóa" (click)="unblockUsers()" class="ui unlock icon"></i>
                 </ng-template>
 
                 <ng-template #actionBlock >
-                    <i (click)="blockUsers()" class="ui lock icon"></i>
+                    <i nz-tooltip="Khóa" (click)="blockUsers()" class="ui lock icon"></i>
                 </ng-template>
 
                 <ng-template #actionEllipsis>
                     <i nz-dropdown [nzDropdownMenu]="menu" nz-icon nzType="ellipsis"></i>
                     <nz-dropdown-menu #menu>
                         <ul nz-menu>
+                            <nz-divider class="ant-divider-inner-text" nzPlain nzText="Đổi loại tài khoản"></nz-divider>
                             <li nz-menu-item (click)="changeUserToGuest()">Khách</li>
                             <li nz-menu-item (click)="changeUserToUser()">Người dùng</li>
                             <li nz-menu-item (click)="changeUserToAdmin()">Quản lý</li>
+                            <nz-divider class="ant-divider-inner-text" nzPlain nzText="Liên lạc"></nz-divider>
+                            <!-- <li nz-menu-item><i class="mail icon"></i> Liên lạc</li> -->
+                            <li nz-menu-item>Gửi email xác thực</li>
+                            <nz-divider class="ant-divider-inner-text" nzPlain nzText="Chú ý"></nz-divider>
+                            <li nz-menu-item>Xóa tài khoản</li>
                         </ul>
                     </nz-dropdown-menu>
                 </ng-template>
@@ -97,10 +103,10 @@
                             </div>
 
                         </div>
+                </ng-template>
                 
 
                     
-                </ng-template>
 
                 <nz-affix>
                     <nz-card class="user-card"  style="width: 100%;" *ngIf="selectedUsers.length === 0" nzTitle="Thống kê tài khoản">

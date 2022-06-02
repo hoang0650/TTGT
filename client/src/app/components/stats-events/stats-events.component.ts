@@ -227,4 +227,6 @@ export class StatsEventsComponent implements OnInit {
     this.isOpen = onoff || !this.isOpen;
     this.cdRef.detectChanges()
   }
+
+ 
 }

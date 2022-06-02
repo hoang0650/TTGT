@@ -1,5 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectorRef, Component, ComponentFactoryResolver, Injector, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
 import { ConfigureService } from 'src/app/services/configure.service';
@@ -60,7 +61,7 @@ export class StaticMapComponent implements OnInit {
   geojsons: any;
   isLoading: boolean;
 
-  constructor(private messageService:MessageService, private route:ActivatedRoute, public configure:ConfigureService, private markerService:MarkerService, private staticMap:StaticMapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cdRef:ChangeDetectorRef) {
+  constructor(private messageService:MessageService, private route:ActivatedRoute, public configure:ConfigureService, private markerService:MarkerService, private staticMap:StaticMapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cdRef:ChangeDetectorRef,private sanitizer: DomSanitizer) {
     this.params = route.snapshot.paramMap
     this.listData = [];
     this.geojsons = {}
@@ -199,6 +200,18 @@ export class StaticMapComponent implements OnInit {
         this.objectUrl = URL.createObjectURL(new Blob([data],{type:'text/csv'}));
       }
     });
+  }
+
+  exportXLS(){
+    delete this.objectUrl;
+    this.exported = true;
+    this.staticMap.exportExcel(this.listData,'static-maps');
+  }
+
+  exportJSON() {
+    var theJSON = JSON.stringify(this.listData);
+    var uri = this.sanitizer.bypassSecurityTrustUrl("data:text/json;charset=UTF-8," + encodeURIComponent(theJSON));
+    this.objectUrl =uri;
   }
 
   trackByFn(item:any) {

@@ -51,12 +51,10 @@ export class MainComponent implements OnInit {
     this.pullDown();
     this.getAllType()
     this.getInfoOfUser()
-    this.newService.getNew().subscribe({
-      next: (res:any) => {
-
-        
-      }
-    })
+    // this.newService.getNew().subscribe({
+    //   next: (res:any) => {
+    // }
+    // })
   }
 
   imageError(event:any) {
