@@ -4,6 +4,8 @@ import 'leaflet-rotatedmarker';
 import { AuthorizationService } from './services/authorization.service';
 import {AuthService} from '@auth0/auth0-angular';
 import { AdminService } from './services/admin.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NzMessageService } from 'ng-zorro-antd/message';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -17,10 +19,17 @@ export class AppComponent {
   loginInterval?:any
   loginTry = 0;
 
-  constructor(public auth:AuthorizationService, public authservice:AuthService, public admin:AdminService){
+  constructor(public auth:AuthorizationService, public authservice:AuthService, public admin:AdminService, private router:Router, private nzMessage:NzMessageService){
     
   }
+  
   ngOnInit():void{
+    this.authservice.error$.subscribe((error) => {
+      if (error.message == "user is blocked") {
+        this.nzMessage.error("Tài khoản bạn đã bị khóa!")
+      }
+    });
+
     this.loginInterval = setInterval(()=>{
       this.getLogin();
     }, 1000)

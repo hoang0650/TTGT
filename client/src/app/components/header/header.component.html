@@ -1,63 +1,3 @@
-<!-- <nz-header nzTheme="dark">
-    <ul nz-menu nzMode="horizontal" > -->
-        <!-- <li nz-menu>
-          <img nz-image nzSrc="assets/images/localize/logo.png" height="40px" width="50px">
-        </li> -->
-        <!-- <li  nz-submenu nzTitle="Giới thiệu"></li>
-        <li  nz-submenu nzTitle="Bản đồ" [routerLink]="['/map']"></li>
-        <li nz-submenu nzTitle="Quản lý" >
-          <ul>
-            <li nz-menu-item nzMatchRouter>
-              <a [routerLink]="['/events']">Cảnh báo giao thông</a>
-            </li>
-            <li nz-menu-item nzMatchRouter>
-              <a [routerLink]="['/cameras']">Camera giao thông</a>
-            </li>
-            <li nz-menu-item nzMatchRouter>
-              <a [routerLink]="['/roadworks']">Công trình thi công</a>
-            </li>
-            <li nz-menu-item nzMatchRouter>
-              <a [routerLink]="['/parkings']">Bãi đỗ xe</a>
-            </li>
-            <nz-divider class="ant-divider-inner-text" nzPlain nzText="Thông tin"></nz-divider>
-            <li nz-menu-item nzMatchRouter>
-              <a [routerLink]="['/roadevents']">Phân luồng giao thông</a>
-            </li>
-            <li nz-menu-item nzMatchRouter>
-              <a [routerLink]="['/staticmaps']">Lớp thông tin tĩnh</a>
-            </li>
-          </ul>
-        </li>
-        <li nz-submenu nzTitle="Quản trị">
-          <ul>
-            <li nz-menu-item nzMatchRouter>
-              <a [routerLink]="['/admin']">Cấu hình</a>
-            </li>
-            <li nz-menu-item nzMatchRouter>
-              <a>Tài khoản</a>
-            </li>
-            <li nz-menu-item nzMatchRouter>
-              <a>Nhóm tài khoản</a>
-            </li>
-          </ul>
-        </li>
-        <li  nz-submenu nzTitle ="Cảnh báo giao thông" [routerLink]="['/events/stats']">
-        </li>
-        <li nz-menu-item  style="float: right;">
-          <img *ngIf="appCom.profile" height="32px" width="32px" style="border-radius: 20px;" nz-image [nzSrc]="appCom.profile['picture']">
-          <a nz-dropdown [nzDropdownMenu]="menu">{{!appCom.profile ? 'Đăng nhập' : appCom.profile['nickname']}}</a>
-        </li>
-        <nz-dropdown-menu #menu="nzDropdownMenu">
-          <ul nz-menu>
-            <li nz-menu-item *ngIf="!appCom.profile" (click)="login()">Đăng nhập</li>
-
-            <li nz-menu-item *ngIf="appCom.profile" (click)="logout()">Thoát</li>
-          </ul>
-        </nz-dropdown-menu> -->
-        
-    <!-- </ul>
-</nz-header> -->
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-light">
   <div class="container-fluid">
     
@@ -112,9 +52,9 @@
             <li>
               <a class="dropdown-item" *ngIf="roles.indexOf('superadmin')>-1" [ngClass]="{'active': isActive('/users')}" [routerLink]="['/users']">Người dùng</a>
             </li>
-            <li>
+            <!-- <li>
               <a class="dropdown-item" *ngIf="roles.indexOf('superadmin')>-1" [ngClass]="{'active': isActive('/groups')}" [routerLink]="['/groups']">Nhóm người dùng</a>
-            </li>
+            </li> -->
           </ul>
         </li>
         
