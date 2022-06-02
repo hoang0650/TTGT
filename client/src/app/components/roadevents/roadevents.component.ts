@@ -1,6 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -61,7 +62,7 @@ export class RoadeventsComponent implements OnInit {
   geoLayer: L.GeoJSON<any>;
   isLoading: boolean;
 
-  constructor(private messageService:MessageService, private roadeventsService:RoadEventsService, public configure:ConfigureService, private route:ActivatedRoute, private markerService:MarkerService, private cdRef:ChangeDetectorRef, private location:Location, private nzMessage:NzMessageService) {
+  constructor(private messageService:MessageService, private roadeventsService:RoadEventsService, public configure:ConfigureService, private route:ActivatedRoute, private markerService:MarkerService, private cdRef:ChangeDetectorRef, private location:Location, private nzMessage:NzMessageService,private sanitizer: DomSanitizer) {
     this.exported = false
     this.isLoading = true;
     this.showLength = {}
@@ -228,6 +229,18 @@ export class RoadeventsComponent implements OnInit {
         this.objectUrl = URL.createObjectURL(new Blob([res], { type: 'text/csv' }));
       }
     })
+  }
+
+  exportXLS(){
+    delete this.objectUrl;
+    this.exported = true;
+    this.roadeventsService.exportExcel(this.roadevents,'roadevents');
+  }
+
+  exportJSON() {
+    var theJSON = JSON.stringify(this.roadevents);
+    var uri = this.sanitizer.bypassSecurityTrustUrl("data:text/json;charset=UTF-8," + encodeURIComponent(theJSON));
+    this.objectUrl =uri;
   }
 
   isSearch = false;

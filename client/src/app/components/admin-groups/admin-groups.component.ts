@@ -51,7 +51,7 @@ export class AdminGroupsComponent implements OnInit {
     }
 ];
 
-  permissionToText:any = {
+  permissionToText:any= {
     cameras: 'Camera giao thông',
     staticmaps: 'Bản đồ tĩnh',
     parkings: 'Bãi đỗ xe',
@@ -59,6 +59,7 @@ export class AdminGroupsComponent implements OnInit {
     trafficevents: 'Cảnh báo',
     roadevents: 'Thông tin phân luồng',
     settings: 'Cấu hình'
+
   };
 
   roleToText:any = {
@@ -68,7 +69,19 @@ export class AdminGroupsComponent implements OnInit {
     manage: 'Quản lý'
   };
 
-  constructor(public admin:AdminService, public modalService:NzModalService, private groupsService:GroupService, private nzMessage:NzMessageService) { }
+  // key:string[] = Object.keys(this.permissionToText.forEach((data: any)=>{
+  //   console.log(data);
+  // }))
+
+  // value:string[] = Object.keys(this.roleToText.forEach((data:any)=>{
+  //   console.log(data);
+  // }))
+  // setPermission = {key:this.value}
+  // setLocalPermission = localStorage.setItem('permissions',JSON.stringify(this.setPermission));
+
+  constructor(public admin:AdminService, public modalService:NzModalService, private groupsService:GroupService, private nzMessage:NzMessageService) {
+
+   }
 
   ngOnInit(): void {
     this.isUsersLoading = true;
@@ -80,6 +93,8 @@ export class AdminGroupsComponent implements OnInit {
         this.lastUsersUpdated = new Date();
         this.isUsersLoading = false;
         this.getGroup();
+        // this.setLocalPermission
+        // console.log(this.setLocalPermission);
       },
       error: err => {
         console.log(err)

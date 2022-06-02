@@ -1,6 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -65,7 +66,7 @@ export class ParkingsComponent implements OnInit {
   id?: string;
   isLoading = true;
 
-  constructor(private messageService:MessageService, private nzMessage:NzMessageService, private parkingService:ParkingService, public configure:ConfigureService, private route:ActivatedRoute, private location:Location, private cdRef:ChangeDetectorRef) {
+  constructor(private messageService:MessageService, private nzMessage:NzMessageService, private parkingService:ParkingService, public configure:ConfigureService, private route:ActivatedRoute, private location:Location, private cdRef:ChangeDetectorRef,private sanitizer: DomSanitizer) {
     this.exported = false
     this.filter = ""
     this.markers = {};
@@ -242,6 +243,18 @@ export class ParkingsComponent implements OnInit {
       }
     })
   };
+
+  exportXLS(){
+    delete this.objectUrl;
+    this.exported = true;
+    this.parkingService.exportExcel(this.listParking,'parkings');
+  }
+
+  exportJSON() {
+    var theJSON = JSON.stringify(this.listParking);
+    var uri = this.sanitizer.bypassSecurityTrustUrl("data:text/json;charset=UTF-8," + encodeURIComponent(theJSON));
+    this.objectUrl =uri;
+  }
 
   trackByFn(item:any) {
     return item;

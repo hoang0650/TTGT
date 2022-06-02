@@ -110,3 +110,9 @@ table {
     font-weight: bold;
     font-size: 19.5px;
 }
+
+.ant-divider-inner-text {
+    color: blue !important;
+    font-weight: bold !important;
+    opacity: 0.5 !important;
+}

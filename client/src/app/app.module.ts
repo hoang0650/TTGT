@@ -185,8 +185,7 @@ export function tokenGetters() {
       allowedList:[
           {
             uri: '/api',
-            allowAnonymous:true,
-            
+            allowAnonymous:true,          
           },
           {
             uri: '/api/*',
@@ -200,7 +199,6 @@ export function tokenGetters() {
             uri: 'http://localhost:3000/api/*',
             allowAnonymous:true
           },
-          'http://localhost:3000/api/permission',
           'http://localhost:3000/api/admin',
           'http://localhost:3000/api/admin/*',
           'http://localhost:3000/api/setting',
@@ -233,8 +231,6 @@ export function tokenGetters() {
           'http://localhost:3000/api/news/*',
           'http://localhost:3000/api/user',
           'http://localhost:3000/api/user/*',
-          'https://play.google.com/log?format=json&hasfast=true&authuser=0',
-          'https://www.youtube-nocookie.com',
           {
             uri: 'https://dev-0gy0vn9g.us.auth0.com/api/v2/*',
             tokenOptions:{
@@ -249,7 +245,7 @@ export function tokenGetters() {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetters,
-        allowedDomains: ["localhost:3000/api/admin","localhost:3000/api/admin/*"],    
+        // allowedDomains: ["localhost:3000/api/admin","localhost:3000/api/admin/*"],    
       },
     }),
   ],

@@ -2,8 +2,9 @@ const {Camera, CameraLink} = require('../models/camera');
 const _ = require('lodash');
 const {getBbox} = require('./util');
 const config = require('../config/configure');
-// const XLSX = require('xlsx');
-// const q = require('q');
+const FileSaver = require('file-saver');
+const XLSX = require('xlsx');
+const q = require('q');
 const ManagementClient = require("auth0").ManagementClient;
 const clientConfig = config.auth0ManagementClient;
 const management = new ManagementClient({
@@ -78,18 +79,7 @@ function update(req, res) {
 }
 
 function findAll(req, res) {
-    // const isRoleCanView = true;
-    // config.roleCanViewUnpublish.forEach(function (viewRole) {
-    //     if (req.user.app_metadata.roles.indexOf(viewRole) < 0) {
-    //         isRoleCanView = false;
-    //     }
-    // });
     const isRoleCanView = true;
-    // params = {
-    //     search_engine: "v3",
-    //     q: 'app_metadata.roles:"admin"'
-    // }
-    
     config.roleCanViewUnpublish.forEach(()=>{
         if(req.user['https://hoang0650.com/app_metadata']<0){
             return isRoleCanView = false;
@@ -108,6 +98,8 @@ function exportToCsv(req, res) {
     res.setHeader('content-type', 'text/csv');
     Camera.findAndStreamCsv(query).pipe(res);    
 };
+
+
 
 function getAllCameraByType(req, res) {
     Camera.find({ type: req.params.type, status: { $ne: 'deleted' } })
@@ -211,73 +203,84 @@ function getByBbox(req, res) {
     getCamerasByBbox(bbox).then(cameras => res.json(processCameras(cameras)), () => res.status(404).end());
 }
 
-// function convertCameras() {
-//     const defer = q.defer();
-//     const camerasConverted = [];
-//     Camera.find({}).sort('id').exec((err, cameras) => {
-//         if (err) {
-//             defer.reject();
-//         } else {
-//             cameras.forEach(function (camera) {
-//                 const cameraConverted = {
-//                     id: camera.id,
-//                     name: camera.name,
-//                     district: camera.dist,
-//                     description: camera.description,
-//                     lat: camera.loc.coordinates[1],
-//                     lng: camera.loc.coordinates[0],
-//                     type: camera.type
-//                 };
-//                 if (camera.publish) {
-//                     cameraConverted.publish = 'Được công bố';
-//                 } else {
-//                     cameraConverted.publish = 'Không được công bố';
-//                 }
-//                 if (camera.values) {
-//                     cameraConverted.ip = camera.values.ip;
-//                     cameraConverted.channel = camera.values.channel;
-//                     cameraConverted.server = camera.values.server;
-//                     cameraConverted.camid = camera.values.camid;
-//                 }
-//                 for (const name in camera.values) {
-//                     cameraConverted[name] = camera.values[name];
-//                 }
-//                 camerasConverted.push(cameraConverted);
-//             }, this);
-//             defer.resolve(camerasConverted);
-//         }
-//     });
-//     return defer.promise;
-// }
+function convertCameras() {
+    const defer = q.defer();
+    const camerasConverted = [];
+    Camera.find({}).sort('id').exec((err, cameras) => {
+        if (err) {
+            defer.reject();
+        } else {
+            cameras.forEach(function (camera) {
+                const cameraConverted = {
+                    id: camera.id,
+                    name: camera.name,
+                    district: camera.dist,
+                    description: camera.description,
+                    lat: camera.loc.coordinates[1],
+                    lng: camera.loc.coordinates[0],
+                    type: camera.type
+                };
+                if (camera.publish) {
+                    cameraConverted.publish = 'Được công bố';
+                } else {
+                    cameraConverted.publish = 'Không được công bố';
+                }
+                if (camera.values) {
+                    cameraConverted.ip = camera.values.ip;
+                    cameraConverted.channel = camera.values.channel;
+                    cameraConverted.server = camera.values.server;
+                    cameraConverted.camid = camera.values.camid;
+                }
+                for (const name in camera.values) {
+                    cameraConverted[name] = camera.values[name];
+                }
+                camerasConverted.push(cameraConverted);
+            }, this);
+            defer.resolve(camerasConverted);
+        }
+    });
+    return defer.promise;
+}
 
 // const json2xls = require('json2xls');
 // const fs = require('fs');
 
-// function exportCameraData(req, res) {
+function exportCameraData(req, res) {
 
-//     convertCameras().then((cameras) => {
+    convertCameras().then((cameras) => {
 
-//         const xls = json2xls(cameras);
-//         fs.writeFileSync('cameraexport.xlsx', xls, 'binary');
+        // const xls = json2xls(cameras);
+        // fs.writeFileSync('cameraexport.xlsx', xls, 'binary');
 
-//         // res.writeHead(200, { 'Content-Type': response.headers['content-type'] });
-//         res.status(200).end(xls);
+        // res.writeHead(200, { 'Content-Type': response.headers['content-type'] });
+        // res.status(200).end(xls);
 
-//         // const workbook = XLSX.readFile('camera.xlsx');
-//         // const firstSheet = workbook.SheetNames[0];
-//         // const worksheet = workbook.Sheets[firstSheet];
-//         // const cellStart = 'A1';
-//         // for (const cell in worksheet) {
-//         //     if (worksheet[cell].v === 'insert here') {
-//         //         cellStart = cell;
-//         //     }
-//         // }
+        // const workbook = XLSX.readFile('camera.xlsx');
+        // const firstSheet = workbook.SheetNames[0];
+        // const worksheet = workbook.Sheets[firstSheet];
+        // const cellStart = 'A1';
+        // for (const cell in worksheet) {
+        //     if (worksheet[cell].v === 'insert here') {
+        //         cellStart = cell;
+        //     }
+        // }
+        // const ws = XLSX.utils.json_to_sheet(cameras);
+        // const wb = { Sheets:{'cameras': ws}, SheetNames:['cameras']};
+        // const excelBuffer = XLSX.write(wb, {bookType:'xlsx',type:'array'});
+        // saveExcelFile(excelBuffer,'cameras');
+        res.status(200).end(ws);    
 
+    }, () => res.status(500).end());
 
-//     }, () => res.status(500).end());
+}
 
+function saveExcelFile(buffer, fileName) {
+    const data = new Blob([buffer], {type: this.fileType});
+    fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    fileExtension = '.xlsx';
+    FileSaver.saveAs(data, fileName + this.fileExtension);
+  }
 
-// }
 
 
 function getCameraType (req, res) {res.status(200).json(config.cameraTypeList);}
@@ -292,7 +295,7 @@ function all(req, res) {
 
 
 module.exports = {
-    getByBbox,getByTile,all,getDefaultCamera,
+    getByBbox,getByTile,all,getDefaultCamera,exportCameraData,
     getCameraType,getCameraConfig,exportToCsv,
     create,deleteCamera,update,findAll,findById,
     sortByLocation,findOneByCamId,getAllCameraByType

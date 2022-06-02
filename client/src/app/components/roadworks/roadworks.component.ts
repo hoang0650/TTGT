@@ -1,6 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
 import _ from 'lodash';
@@ -71,7 +72,7 @@ export class RoadworksComponent implements OnInit {
   id?:string
   isLoading = true;
 
-  constructor(public configure:ConfigureService, private route:ActivatedRoute, private messageService:MessageService, private roadworkService:RoadworkService, private location:Location, private cdRef:ChangeDetectorRef, private markerService:MarkerService, private nzMessage:NzMessageService) { 
+  constructor(public configure:ConfigureService, private route:ActivatedRoute, private messageService:MessageService, private roadworkService:RoadworkService, private location:Location, private cdRef:ChangeDetectorRef, private markerService:MarkerService, private nzMessage:NzMessageService,private sanitizer: DomSanitizer) { 
     this.searchParams = (new URL(window.location.href)).searchParams
     this.mess = messageService.getMessageObj();
     this.oneDay = 24 * 60 * 60 * 1000;
@@ -282,6 +283,18 @@ export class RoadworksComponent implements OnInit {
       }
     });
   }
+
+  exportXLS(){
+    delete this.objectUrl;
+    this.exported = true;
+    this.roadworkService.exportExcel(this.listRoadwork,'roadworks');
+  }
+
+  exportJSON() {
+    var theJSON = JSON.stringify(this.listRoadwork);
+    var uri = this.sanitizer.bypassSecurityTrustUrl("data:text/json;charset=UTF-8," + encodeURIComponent(theJSON));
+    this.objectUrl =uri;
+}
 
   trackByFn(item:any) {
     return item;
