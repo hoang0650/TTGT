@@ -87,9 +87,6 @@
 					<h3 class="mt-4 text-capitalize h5 ">Camera quan tâm</h3>
 					<div class="regular text-muted" [ngClass]="{'scroll-contain': isScrolled, 'default-contain': !isScrolled}">
 						<div class="regular text-muted" *ngIf="!!appCom.profile">
-							<div *ngIf="favoriteList?.length <= 0">
-								Hiện tại chưa có cảnh báo nào
-							</div>
 							<div *ngIf="!appCom.profile">
 								Đăng nhập để xem các camera mà bạn quan tâm
 							</div>
