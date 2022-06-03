@@ -6,6 +6,7 @@ var jwt = require('jsonwebtoken');
 var sessionExpireTime = 30 * 60; // 30 minutes
 var secretKey = config.secretKey;
 var sessionKey = null;
+var sessionUsername = "";
 var frontendCamera = ['imageError', 'cameraType', 'refreshTime'];
 var frontendSituation = ['mapUrl', 'refreshTime', 'configVelocity'];
 var frontendTrafficevent = ['refreshTime', 'voiceType', 'sourceConfig'];
@@ -95,11 +96,12 @@ var makeKey = function () {
 
 function getSession(req, res) 
 {
-
-    if(req.user['https://hoang0650.com/roles'].indexOf('admin') < 0 || req.user['https://hoang0650.com/roles'].indexOf('superadmin') < 0){
+    
+    if(req.user['https://hoang0650.com/roles'].indexOf('admin') < 0 && req.user['https://hoang0650.com/roles'].indexOf('superadmin') < 0){
+        console.log(2)
         return res.status(500).json({ message: 'NOT_PERMISSION' });
     }
-    // console.log('req.user', req.user['https://hoang0650.com/roles']);
+
     var keyObject = {
         userInfo: makeKey(),
         name: req.user['https://hoang0650.com/name']
@@ -113,23 +115,46 @@ function getSession(req, res)
         expiredAt: new Date(new Date().getTime() + sessionExpireTime * 1000)
     };
 
+    console.log(userSession);
+
     if (!sessionKey) {
+        sessionUsername = req.user['https://hoang0650.com/name'];
         sessionKey = userSession;
         
         res.status(200).json(responseObject);
     } else {
 
-         jwt.verify(sessionKey, Buffer.from(secretKey, 'base64'), function(err, decoded) {
-            // if (err) {
-            //     sessionKey = userSession;
-            // } else {
-                delete responseObject.token;
-                decoded = req.user;
-                responseObject.message = 'SESSION_HAD_USED';
-                responseObject.name = decoded['https://hoang0650.com/name'];
-            // }
+        if(sessionKey != userSession){
+            jwt.verify(sessionKey, Buffer.from(secretKey,'base64'), function(err,decoded){
+                if(!err){
+                    sessionKey = userSession;
+                    res.status(500).end();
+                } else{
+                    delete responseObject.token;
+                    responseObject.message = 'SESSION_HAD_USED';
+                    responseObject.name = sessionUsername;
+                    res.status(200).json(responseObject);
+                }
+            })
+        } else {
             res.status(200).json(responseObject);
-        });
+        }
+        //  jwt.verify(sessionKey, Buffer.from(secretKey, 'base64'), function(err, decoded) {
+        //      console.log(1)
+        //      if (sessionKey) {
+        //      console.log('sessionkey:',sessionKey);
+        //         console.log(2)
+        //         sessionKey = userSession;
+        //         res.status(200).json(responseObject);
+        //     } else {
+        //         console.log(3)
+        //         delete responseObject.token;
+        //         responseObject.message = 'SESSION_HAD_USED';
+        //         responseObject.name = sessionUsername;
+        //        res.status(500).end();
+        //     }
+            // res.status(200).json(responseObject);
+        // });
     }
 };
 
@@ -274,7 +299,7 @@ function getLastSetting (req, res) {
 
 function cancelSession (req, res) {
    
-    if (req.user['https://hoang0650.com/roles'].indexOf('admin') < 0) {
+    if (req.user['https://hoang0650.com/roles'].indexOf('admin') < 0 && req.user['https://hoang0650.com/roles'].indexOf('superadmin')) {
         return res.status(500).json({ message: 'NOT_PERMISSION' });
     }
     var userSession = req.body.sessionKey;

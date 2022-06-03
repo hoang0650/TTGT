@@ -18,15 +18,16 @@
                         <nz-avatar  [nzSrc]="user.picture">
                         </nz-avatar>
                         
-                        <span>{{user.nickname}}</span>
-                        <i class="ui {{appMetadataToStar(user.app_metadata)}} icon" title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
+                        <span style="padding-left: 10px;">{{user.nickname}}</span>
+                        <i style="padding-left: 10px;" class="ui {{appMetadataToStar(user.app_metadata)}} icon" title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
                         <span *ngIf="user.blocked" class="ui red tiny label"> <i class="ui lock icon"></i> BỊ KHÓA</span>
                         <a class="sub header">
                             <span>{{user.email}}</span>
-                            <i class="ui green checkmark icon" *ngIf="user.email_verified" title="Email đã được xác nhận"></i>
-                            <i class="ui red remove icon" *ngIf="!user.email_verified" title="Email chưa được xác nhận"></i>
+                            <i style="padding-left: 10px;" class="ui green checkmark icon" *ngIf="user.email_verified" title="Email đã được xác nhận"></i>
+                            <i style="padding-left: 10px;" class="ui red remove icon" *ngIf="!user.email_verified" title="Email chưa được xác nhận"></i>
                         </a>
-                        <button nz-button (click)="toggleUser(user, $event)" nz-tooltip="Bỏ chọn" style="flex:right"><i class="ui remove icon"></i></button>
+                        <span style="padding-left: 10px;"></span>
+                        <button  nz-button (click)="toggleUser(user, $event)" nz-tooltip="Bỏ chọn" ><i class="ui remove icon"></i></button>
                     </p>
 
                 </ng-template>
@@ -70,11 +71,11 @@
                         <h4 class="ui header">
                             <nz-avatar  [nzSrc]="selectedUsers[0].picture">
                             </nz-avatar>
-                            <span>{{selectedUsers[0].nickname}}</span> <span *ngIf="selectedUsers[0].blocked" class="ui red tiny label"> <i class="ui lock icon"></i> BỊ KHÓA</span>
+                            <span style="padding-left: 10px;">{{selectedUsers[0].nickname}}</span> <span *ngIf="selectedUsers[0].blocked" class="ui red tiny label"> <i class="ui lock icon"></i> BỊ KHÓA</span>
                                 <div class="sub header">
                                     <span>{{selectedUsers[0].email}}</span>
-                                    <i class="{{selectedUsers[0]}} green checkmark icon" *ngIf="selectedUsers[0].email_verified" title="Email đã được xác nhận"></i>
-                                    <i class="ui red remove icon" *ngIf="!selectedUsers[0].email_verified" title="Email chưa được xác nhận"></i>
+                                    <i style="padding-left: 10px;" class="{{selectedUsers[0]}} green checkmark icon" *ngIf="selectedUsers[0].email_verified" title="Email đã được xác nhận"></i>
+                                    <i style="padding-left: 10px;" class="ui red remove icon" *ngIf="!selectedUsers[0].email_verified" title="Email chưa được xác nhận"></i>
                                 </div>
                             
                         </h4>
@@ -83,7 +84,7 @@
                                 <div class="ui horizontal label"><i class="wait icon"></i> Khởi tạo</div>
                                 <span>
                                     <span>{{selectedUsers[0].created_at | amLocale:'vi' | amTimeAgo}}</span>
-                                    <i class="ui grey info circle icon" title="{{selectedUsers[0].created_at | amLocale:'vi' | amDateFormat:'DD/MM/YYYY HH:mm:ss'}}"></i>
+                                    <i style="padding-left: 10px;" class="ui grey info circle icon" title="{{selectedUsers[0].created_at | amLocale:'vi' | amDateFormat:'DD/MM/YYYY HH:mm:ss'}}"></i>
                                 </span>
                             </div>
                             <div class="item">
@@ -94,7 +95,7 @@
                                 <div class="ui horizontal label"><i class="wait icon"></i> Đăng nhập lần cuối</div>
                                 <span>
                                     <span>{{selectedUsers[0].last_login | amLocale:'vi' | amTimeAgo }}</span>
-                                    <i class="ui grey info circle icon" title="{{selectedUsers[0].created_at | amDateFormat:'DD/MM/YYYY HH:mm:ss'}}"></i>
+                                    <!-- <i class="ui grey info circle icon" title="{{selectedUsers[0].created_at | amDateFormat:'DD/MM/YYYY HH:mm:ss'}}"></i> -->
                                 </span>
                             </div>
                             <div class="item">
@@ -221,8 +222,8 @@
                                               <span>{{user.nickname}}</span> <span *ngIf="user.blocked" class="ui red tiny label"> <i class="ui lock icon"></i> BỊ KHÓA</span>
                                               <div class="sub header">
                                                   <span>{{user.email}}</span>
-                                                  <i class="ui green checkmark icon" *ngIf="user.email_verified" title="Email đã được xác nhận"></i>
-                                                  <i class="ui red remove icon" *ngIf="!user.email_verified" title="Email chưa được xác nhận"></i>
+                                                  <i style="padding-left: 10px;" class="ui green checkmark icon" *ngIf="user.email_verified" title="Email đã được xác nhận"></i>
+                                                  <i style="padding-left: 10px;" class="ui red remove icon" *ngIf="!user.email_verified" title="Email chưa được xác nhận"></i>
                                               </div>
                                           </div>
                                       </h4>
@@ -244,7 +245,7 @@
                                           title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
                                   </td>
                                   <td>
-                                      <i *ngIf="user.app_metadata && user.app_metadata.roles.indexOf('user') >-1 " class="ui big {{appMetadataToStar(user.app_metadata)}} icon"
+                                      <i style="padding-left: 20px;" *ngIf="user.app_metadata && user.app_metadata.roles.indexOf('user') >-1 " class="ui big {{appMetadataToStar(user.app_metadata)}} icon"
                                           title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
                                   </td>
                                   <td class="collapsing center aligned">

@@ -22,7 +22,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     if (!isAuthorized) {
 
         this.router.navigate(['unauthorized']);
-        // this.message.create('warning', 'Quyền truy cập bị giới hạn');
+        
       }
     
     return isAuthorized;

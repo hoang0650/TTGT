@@ -28,7 +28,7 @@ export class AppComponent {
       if (error.message == "user is blocked") {
         this.nzMessage.error("Tài khoản bạn đã bị khóa!")
       }
-    });
+    }); 
 
     this.loginInterval = setInterval(()=>{
       this.getLogin();
