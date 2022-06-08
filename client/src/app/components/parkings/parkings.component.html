@@ -14,7 +14,7 @@
                         <div class="row">
                             <div class="col-6 p-0">
                                 <div class="btn-group">
-                                    <button class="btn btn-success" type="button" [routerLink]="['./create']">
+                                    <button [disabled]="!mapCom.permissions.indexOf('parkings:manage')|| !appCom.roles.indexOf('superadmin')" class="btn btn-success" type="button" [routerLink]="['./create']">
                                         <i class="fa-solid fa-plus"></i>
                                         Thêm
                                     </button>
@@ -23,7 +23,7 @@
                             <div class="col-6 p-0">
                                 <div class="btn-group float-end">
             
-                                    <button class="btn btn-secondary dropdown" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button [disabled]="!mapCom.permissions.indexOf('parkings:update')|| !mapCom.permissions.indexOf('parkings:manage')|| !appCom.roles.indexOf('superadmin')" class="btn btn-secondary dropdown" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="cloud download icon"></i>
                                         Xuất dữ liệu
                                     </button>
@@ -88,7 +88,7 @@
                                             </div>
 
                                             <div class="col-md-4">
-                                                <button class="btn btn-primary" [routerLink]="['.', parking._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
+                                                <button [disabled]="!mapCom.permissions.indexOf('parkings:update')|| !mapCom.permissions.indexOf('parkings:manage')|| !appCom.roles.indexOf('superadmin')" class="btn btn-primary" [routerLink]="['.', parking._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
                                             </div>
                                         </div>
                                     </div>
@@ -131,7 +131,7 @@
                             </div>
 
                             <div class="col-md-4">
-                                <button class="btn btn-primary" [routerLink]="['.', parking._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
+                                <button [disabled]="!mapCom.permissions.indexOf('parkings:update')|| !mapCom.permissions.indexOf('parkings:manage')|| !appCom.roles.indexOf('superadmin')" class="btn btn-primary" [routerLink]="['.', parking._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
                             </div>
                         </div>
 

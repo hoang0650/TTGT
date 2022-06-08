@@ -103,7 +103,7 @@
 									<form nz-form scroll-only-this="scroll-only-this"  class="ui relaxed divided list" *ngFor="let camera of favoriteList" [routerLink]="['/map']" [queryParams]="{type:'camera', id: camera.fId}">
 										<!-- <nz-form-item> -->
 											<p>{{camera.fName}}</p>
-											<!-- <img nz-image width="90%" nzSrc="{{backend}}api/snapshot/{{camera.fId}}" (error)="imageError($event)"> -->
+											<img nz-image width="90%" nzSrc="{{backend}}api/snapshot/{{camera.fId}}" (error)="imageError($event)">
 											<nz-divider></nz-divider>
 
 										<!-- </nz-form-item> -->

@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import L from 'leaflet';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { AppComponent } from 'src/app/app.component';
 import { ConfigureService } from 'src/app/services/configure.service';
 import { MessageService } from 'src/app/services/message.service';
 import { ParkingService } from 'src/app/services/parking.service';
@@ -31,7 +32,7 @@ export class ParkingsCreateComponent implements OnInit {
   validateParking: any;
   districtList: any;
 
-  constructor(public mapCom:MapComponent, public configure:ConfigureService, private messageService:MessageService, private router:Router, private staticData:StaticService, private parkingService:ParkingService, private route:ActivatedRoute, private location:Location, private cdRef:ChangeDetectorRef, private nzModalService:NzModalService) { 
+  constructor(public appCom:AppComponent,public mapCom:MapComponent, public configure:ConfigureService, private messageService:MessageService, private router:Router, private staticData:StaticService, private parkingService:ParkingService, private route:ActivatedRoute, private location:Location, private cdRef:ChangeDetectorRef, private nzModalService:NzModalService) { 
     this.isCreate = !this.route.snapshot.paramMap.get('id')
     this.inputChange = false;
     this.button = this.messageService.getMessageObj().BUTTON;

@@ -67,9 +67,6 @@ export class AppComponent {
         this.roles = data.users.app_metadata.roles
         const accessToken:any = localStorage.getItem('profile');        
         const profile = JSON.parse(accessToken);
-        
-        // const uRoles = profile['roles'] || [];
-        // this.roles.forEach((r)=>uRoles.include(r))
       }
     })
   }
@@ -83,10 +80,6 @@ export class AppComponent {
     })
   }
 
-  // handleGroupEvent(event:object){
-  //   this.group = event;
-  //   localStorage.setItem('group', JSON.stringify(this.group));
-  // }
 
 
 }
