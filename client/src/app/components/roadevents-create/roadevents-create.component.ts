@@ -1,6 +1,6 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
+
 import { Location } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import L from 'leaflet';
 import _ from 'lodash';
@@ -10,47 +10,17 @@ import { MarkerService } from 'src/app/services/marker.service';
 import { MessageService } from 'src/app/services/message.service';
 import { RoadEventsService } from 'src/app/services/road-events.service';
 import { AdminConfigConfirmComponent } from '../admin-config-confirm/admin-config-confirm.component';
+import { MapComponent } from '../map/map.component';
 
 @Component({
   selector: 'app-roadevents-create',
+  host: {
+    class: 'map-layout-info-container'
+  },
   templateUrl: './roadevents-create.component.html',
   styleUrls: ['./roadevents-create.component.css'],
-  animations: [
-    trigger('mapLayoutInfo', [
-      state('open', style({
-        position: 'absolute',
-        right: '0%',
-      })),
-      state('closed', style({
-        position: 'absolute',
-        right: '-408px',
-      })),
-      transition('open => closed', [
-        animate('0.3s')
-      ]),
-      transition('closed => open', [
-        animate('0.3s')
-      ]),
-    ]),
-    trigger('mapLayoutInfoButton', [
-    state('open', style({
-      position: 'absolute',
-      right: '408px',
-    })),
-    state('closed', style({
-      position: 'absolute',
-      right: '0px',
-    })),
-    transition('open => closed', [
-      animate('0.3s')
-    ]),
-    transition('closed => open', [
-      animate('0.3s')
-    ]),
-    ]),
-  ]
 })
-export class RoadeventsCreateComponent implements OnInit {
+export class RoadeventsCreateComponent implements OnInit, OnDestroy {
   currentType: any
   currentDrawer: any;
   listColorCanUse: any;
@@ -58,65 +28,34 @@ export class RoadeventsCreateComponent implements OnInit {
   geoObject: any;
   temporaryGeo: any;
   choosedFeature: any;
-  searchText: string;
   listRoads: any;
-  isLoading: boolean;
-  geoLayer:any;
+
   sideMap: any;
   layers: any;
   noticeBoard: any;
   searchImage: string;
-  drawnItems: any;
   showButton: any;
-  options: any;
-  drawOptions: any;
-  drawControl: any;
   tmpLocation: string;
   id: string;
 
-  constructor(private messageService:MessageService, public configure:ConfigureService, private modalService:NzModalService, private router:Router, private markerService:MarkerService, private roadeventService:RoadEventsService, private route:ActivatedRoute, private location:Location, private cdRef: ChangeDetectorRef) {
+  constructor(public mapCom:MapComponent, private messageService:MessageService, public configure:ConfigureService, private modalService:NzModalService, private router:Router, private markerService:MarkerService, private roadeventService:RoadEventsService, private route:ActivatedRoute, private location:Location, private cdRef: ChangeDetectorRef) {
     this.button = messageService.getMessageObj().BUTTON;
     this.listColorCanUse = configure.roadEventColor;
     this.id = route.snapshot.paramMap.get("id") || "";
     if (this.id) {
       location.replaceState("./roadevents/update")
     }
-    this.searchText = ""
     this.searchImage = ""
     this.listRoads = ""
     this.tmpLocation = ""
-    this.isLoading = false
+   
     this.noticeBoard = configure.noticeBoard;
-    this.drawnItems = L.featureGroup();
-    
-
-    this.options = {
-      layers: [
-        this.configure.baselayer.tiles,
-      ],
-
-      worldCopyJump: true,
-      center: [  10.762622, 106.660172 ],
-      zoom: 14
-    }
-
-    this.geoLayer = L.geoJSON()
-
-    this.drawOptions = {
-      position: 'topleft',
-      draw: false,
-      edit: {
-        featureGroup: this.drawnItems, //REQUIRED!!
-        edit: false,
-        remove: false
-      }
-    }
 
     this.geoObject = {
       featureCollection: {
         'type': 'FeatureCollection',
         'properties': {
-          'center': L.latLng(this.options.center),
+          'center': L.latLng(this.configure.options.center),
           'url':'',
           'title':'',
         },
@@ -124,21 +63,26 @@ export class RoadeventsCreateComponent implements OnInit {
       },
       publish: false
     };
+
+    this.sideMap = mapCom.sideMap
   }
 
   ngOnInit(): void {
+    if (this.id) {
+      this.getGeoById(this.id)
+    }
+    this.mapCom.toggleLayout(true)
   }
 
-  ngOnDestroy(): void { 
-
+  ngOnDestroy(): void {
+    this.mapCom.removeLayers()
+    this.mapCom.toggleLayout(false)
   }
 
   updateGeoLayer() {
-    this.geoLayer = L.geoJSON(this.geoObject.featureCollection, {
+    this.mapCom.geoLayer = L.geoJSON(this.geoObject.featureCollection, {
       onEachFeature: (feature, layer) => {
-        // console.log(feature);
-        // console.log(layer);
-        
+
       },
       style: (feature:any) => {
         return this.markerService.getPathStyle(feature.properties.type, feature.properties.color);
@@ -146,15 +90,6 @@ export class RoadeventsCreateComponent implements OnInit {
       pointToLayer: (feature, latLng) => {
         return this.createMarker(feature, latLng);
       },
-      // onEachFeature: function (feature, layer) {
-      //   var type = feature.properties.type;
-      //   listEvent[type](feature, layer);
-      //   layer.on('click', function () {
-      //     if (_this.choosedFeature !== feature) {
-      //       chooseFeature(feature);
-      //     }
-      //   });
-      // }
     });
 
     this.getAutoPosition()
@@ -173,19 +108,10 @@ export class RoadeventsCreateComponent implements OnInit {
       layer.properties['image'] = this.noticeBoard[0]
     }
 
-  
-    
-    
-
     this.currentType = ""
-    // this.drawnItems.addLayer((e as L.DrawEvents.Created).layer);
     this.geoObject.featureCollection.features.push(layer)
 
     this.updateGeoLayer()
-  }
-
-  onDrawReady(control:any) {
-    this.drawControl = control
   }
 
   receiveListRoads(data:any) {
@@ -193,10 +119,7 @@ export class RoadeventsCreateComponent implements OnInit {
   }
 
   getAutoPosition() {
-    var bounds = L.latLngBounds(this.getBounds(this.geoLayer.getLayers()))
-    this.sideMap.flyToBounds(bounds, {
-      paddingBottomRight: [408, 0]
-    })
+    var bounds = L.latLngBounds(this.getBounds(this.mapCom.geoLayer.getLayers()))
     this.tmpLocation = [bounds.getCenter().lat.toFixed(4), bounds.getCenter().lng.toFixed(4)].join(",")
   }
 
@@ -221,16 +144,7 @@ export class RoadeventsCreateComponent implements OnInit {
   }
 
   chooseFeature(feature:any) {
-
     this.choosedFeature = feature;
-    // if (feature) {
-    //   this.geoLayer.eachLayer((layer:any) => {
-    //     if (layer.feature === feature) {
-    //       var type = feature.properties.type;
-    //       this.listChooseFeature[type](feature, layer);
-    //     }
-    // });
-    // }
   }
 
   chooseFeatureFromList(feature:any) {
@@ -239,22 +153,11 @@ export class RoadeventsCreateComponent implements OnInit {
     } else {
       if (feature) {
         this.chooseFeature(feature);
-        
-        this.sideMap.flyToBounds(this.getBounds([{feature:feature}]), {
-          paddingBottomRight: [408, 0]
-        })
       }
     }
   }
 
-  reDrawGeo() {
-    this.updateGeoLayer()
-  }
-
-  // var geoObject;
-
   getGeoById(id:string) {
-    this.isLoading = true;
     this.roadeventService.get(id).subscribe({
       next: (res:any) => {
         this.geoObject = res
@@ -263,7 +166,6 @@ export class RoadeventsCreateComponent implements OnInit {
 
         this.updateGeoLayer()
         this.getAutoPosition()
-        this.isLoading = false
       }}
     )
   }
@@ -299,7 +201,7 @@ export class RoadeventsCreateComponent implements OnInit {
     }).on({
       dragend: (event:any) => {
         feature.geometry.coordinates = [event.target._latlng.lng, event.target._latlng.lat]
-        this.reDrawGeo()
+        this.updateGeoLayer()
       }
     })
   }
@@ -343,17 +245,17 @@ export class RoadeventsCreateComponent implements OnInit {
     }
     var index = this.geoObject.featureCollection.features.indexOf(feature);
     this.geoObject.featureCollection.features.splice(index, 1);
-    this.reDrawGeo();
+    this.updateGeoLayer();
   }
 
   changeFeatureColor(feature:any, color:any) {
     feature.properties.color = color;
-    this.reDrawGeo();
+    this.updateGeoLayer();
   }
 
   chooseImage(feature:any, image:any) {
     feature.properties.image = image;
-    this.reDrawGeo();
+    this.updateGeoLayer();
   }
 
   goBack(id?:string, state?:string) {
@@ -361,7 +263,7 @@ export class RoadeventsCreateComponent implements OnInit {
     query['state'] = state
     query['id'] = id
 
-    this.router.navigate(['/roadevents'], {queryParams:query})
+    this.router.navigate(['/map/roadevents'], {queryParams:query})
   }
 
 
@@ -426,22 +328,8 @@ export class RoadeventsCreateComponent implements OnInit {
     return have;
   }
 
-  initMap(map:any) {
-    this.sideMap = map;
-
-    if (this.id) {
-      this.getGeoById(this.id)
-    }
-  }
-
-
 
   openPopupConfig(type:any) {
-    var backdrop:any = true;
-    if (type === 'back' || type === 'remove') {
-      backdrop = 'static';
-    }
-
     var form = this.messageService.getMessageObj().POPUP(type,'');
 
     var popupConfirm = this.modalService.create({
@@ -473,45 +361,11 @@ export class RoadeventsCreateComponent implements OnInit {
     this.goBack(this.id);
   }
 
-  searchRoad(geo:any) {
-    this.sideMap.flyTo([geo.geometry.coordinates[1], geo.geometry.coordinates[0]], 15, {duration:1})
-    this.searchText = geo.properties.name;
-  }
-
   removeGeo() {
     this.roadeventService.delete(this.id).subscribe({
       next: (res:any) => {
         this.goBack('', 'remove')
       }
     })
-  }
-
-
-  isSearch = false;
-  searchQuery = '';
-  searchResults:any = [];
-
-  searchIconClick() {
-    this.isSearch = false;
-    this.searchQuery = '';
-    this.searchResults = [];
-    this.cdRef.detectChanges()
-  }
-
-  searchSelect(result:any) {
-    if (result) {
-      if (result.geometry) {
-        this.searchQuery = result.properties.name
-        this.isSearch = false
-        this.sideMap?.flyTo([result.geometry.coordinates[1], result.geometry.coordinates[0]], 15);
-      }
-    }
-  }
-
-  isOpen = true;
-
-  toggleLayoutInfo(onoff?:boolean) {
-    this.isOpen = onoff || !this.isOpen;
-    this.cdRef.detectChanges()
   }
 }

@@ -44,14 +44,9 @@ export class StaticMapComponent implements OnInit {
     if (this.params.get('state')) {
       this.notice = this.messageService.getMessageObj().NOTICE(this.params.get('state'), 'lớp thông tin tĩnh');
     }
-
-    setInterval(() => {
-      console.log(this.markers);
-      
-    }, 1000)
    }
 
-   ngOnInit(): void {
+  ngOnInit(): void {
     this.getGeo()
     this.mapCom.toggleLayout(true)
   }
@@ -85,6 +80,8 @@ export class StaticMapComponent implements OnInit {
         });
 
         this.isLoading = false
+        this.mapCom.detectChanges()
+        this.cdRef.detectChanges()
       }
     })
   }
@@ -120,6 +117,7 @@ export class StaticMapComponent implements OnInit {
 
       onEachFeature: (feature, layer) => {
         var popup = L.popup({
+          offset: [3, 35],
           closeButton:false,
           className:'stis-create-incident-popup'
         }).setContent(this.createStaticMapPopup(staticmap.properties, featureData.properties))
@@ -151,6 +149,8 @@ export class StaticMapComponent implements OnInit {
         delete this.markers[staticMap.id+"_"+idx]
       }
     });
+    this.mapCom.detectChanges()
+    this.cdRef.detectChanges()
   }
 
   changeColorStaticMap(staticMap:any, color:any) {
@@ -188,10 +188,6 @@ export class StaticMapComponent implements OnInit {
     this.objectUrl =uri;
   }
 
-  trackByFn(item:any) {
-    return item;
-  }
-
   createStaticMapPopup(properties?:any, popupData?:any) { 
     const factory = this.componentFactoryResolver.resolveComponentFactory(StaticMapPopupComponent);
     const component:any = factory.create(this.injector);
@@ -202,33 +198,5 @@ export class StaticMapComponent implements OnInit {
     component.changeDetectorRef.detectChanges();
 
     return component.location.nativeElement;
-  }
-
-  isSearch = false;
-  searchQuery = '';
-  searchResults:any = [];
-
-  searchIconClick() {
-    this.isSearch = false;
-    this.searchQuery = '';
-    this.searchResults = [];
-    this.cdRef.detectChanges()
-  }
-
-  searchSelect(result:any) {
-    if (result) {
-      if (result.geometry) {
-        this.searchQuery = result.properties.name
-        this.isSearch = false
-        this.sideMap?.flyTo([result.geometry.coordinates[1], result.geometry.coordinates[0]], 15);
-      }
-    }
-  }
-
-  isOpen = true;
-
-  toggleLayoutInfo(onoff?:boolean) {
-    this.isOpen = onoff || !this.isOpen;
-    this.cdRef.detectChanges()
   }
 }

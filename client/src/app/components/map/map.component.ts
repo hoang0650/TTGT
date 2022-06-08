@@ -3,6 +3,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, ComponentFactoryResolver, 
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
 import _ from 'lodash';
+import 'leaflet-draw'
 import 'leaflet.markercluster';
 import { CameraService } from 'src/app/services/camera.service';
 import { ConfigureService } from 'src/app/services/configure.service';
@@ -30,7 +31,7 @@ declare var $: any
   ]
 })
 export class MapComponent implements OnInit {
-  sideMap?: L.Map;
+  sideMap?: L.DrawMap;
   isSearch: boolean = false;
   searchQuery: string = '';
   searchResults?: any
@@ -38,21 +39,44 @@ export class MapComponent implements OnInit {
   isShare: boolean = false;
   isOpen = false;
   curWidth = window.innerWidth;
-  markers = {};
-  geoLayer = L.geoJSON();
+  markers:any = {};
+  geoLayer:any = L.geoJSON();
   
   permissions = localStorage.getItem('permissions')||'{}';
+
+  drawnItems = L.featureGroup();
+  drawOptions:any = {
+    position: 'topleft',
+    draw: false,
+    edit: {
+      featureGroup: this.drawnItems, //REQUIRED!!
+      edit: false,
+      remove: false
+    }
+  }
+
+  componentRef:any
   constructor(public configure:ConfigureService, private staticMapService:StaticMapService, private markerService:MarkerService, private roadEventService:RoadEventsService, private route:ActivatedRoute, private location:Location, private mapService:MapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private geocoding:GeocodingService, private cameraService:CameraService, private parkingService:ParkingService, private cdRef:ChangeDetectorRef, private nzMessage:NzMessageService) {
-  
+    
   }
 
   ngOnInit(): void {
- 
+  
   }
 
   initMap(event:L.Map) {
-    this.sideMap = event
+    this.sideMap = event as L.DrawMap
     // L.control.zoom({ position: 'bottomright' }).addTo(this.sideMap);
+  }
+
+  onRouteOutletReady(componentRef:any) {
+    this.componentRef = componentRef
+  }
+
+  onDrawCreated(e:any) {
+    if (this.componentRef) {
+      this.componentRef.onDrawCreated(e)
+    }
   }
 
   searchIconClick() {
@@ -118,6 +142,7 @@ export class MapComponent implements OnInit {
   removeLayers() {
     this.markers = {}
     this.geoLayer = L.geoJSON()
+    this.componentRef = null
   }
 
   trackByFn(item:any) {

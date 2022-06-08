@@ -2,7 +2,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MessageService } from 'src/app/services/message.service';
 import * as L from 'leaflet';
-import _ from 'lodash';
+import _, { map } from 'lodash';
 import 'leaflet-rotatedmarker';
 import 'leaflet.markercluster'
 import { ConfigureService } from 'src/app/services/configure.service';
@@ -11,52 +11,20 @@ import { MarkerService } from 'src/app/services/marker.service';
 import { forkJoin, Observable } from 'rxjs';
 import { CameraGroupService } from 'src/app/services/camera-group.service';
 import { ViewportScroller } from '@angular/common';
-import { BsModalService } from 'ngx-bootstrap/modal';
 import { AdminConfigConfirmComponent } from '../admin-config-confirm/admin-config-confirm.component';
-import { AppComponent } from 'src/app/app.component';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { MapComponent } from '../map/map.component';
 
 declare var $: any;
 
 @Component({
   selector: 'app-cameras-groups',
+  host: {
+    class: 'map-layout-info-container'
+  },
   templateUrl: './camera-groups.component.html',
   styleUrls: ['./camera-groups.component.css'],
-  animations: [
-    trigger('mapLayoutInfo', [
-      state('open', style({
-        position: 'absolute',
-        right: '0%',
-      })),
-      state('closed', style({
-        position: 'absolute',
-        right: '-408px',
-      })),
-      transition('open => closed', [
-        animate('0.3s')
-      ]),
-      transition('closed => open', [
-        animate('0.3s')
-      ]),
-    ]),
-    trigger('mapLayoutInfoButton', [
-    state('open', style({
-      position: 'absolute',
-      right: '408px',
-    })),
-    state('closed', style({
-      position: 'absolute',
-      right: '0px',
-    })),
-    transition('open => closed', [
-      animate('0.3s')
-    ]),
-    transition('closed => open', [
-      animate('0.3s')
-    ]),
-    ]),
-  ]
 })
 export class CameraGroupsComponent implements OnInit {
   button: any;
@@ -81,7 +49,7 @@ export class CameraGroupsComponent implements OnInit {
   options: any;
   filter:string;
 
-  constructor(private messageService:MessageService, public configure:ConfigureService, private nzMessage:NzMessageService, private cameraService:CameraService, private markerModify:MarkerService, private cameraGroupService:CameraGroupService, private viewportScroller: ViewportScroller, private modalService:NzModalService, private cdRef:ChangeDetectorRef) {
+  constructor(public mapCom:MapComponent, private messageService:MessageService, public configure:ConfigureService, private nzMessage:NzMessageService, private cameraService:CameraService, private markerModify:MarkerService, private cameraGroupService:CameraGroupService, private viewportScroller: ViewportScroller, private modalService:NzModalService, private cdRef:ChangeDetectorRef) {
     this.button = messageService.getMessageObj().BUTTON;
     this.filter = ""
     this.inputChange = false;
@@ -92,6 +60,7 @@ export class CameraGroupsComponent implements OnInit {
     this.validateCameraGroup = ['name'];
     this.error = {}
 
+    
     this.cameraClusterLayer = L.markerClusterGroup({
       disableClusteringAtZoom: 16,
       maxClusterRadius: 64,
@@ -99,11 +68,19 @@ export class CameraGroupsComponent implements OnInit {
       animateAddingMarkers: true,
       animate: true
     })
+
+    this.mapCom.geoLayer = this.cameraClusterLayer
+    this.sideMap = mapCom.sideMap
   }
 
   ngOnInit(): void {
+    this.getData()
+    this.mapCom.toggleLayout(true)
+  }
 
-    
+  ngOnDestroy(): void {
+    this.mapCom.removeLayers()
+    this.mapCom.toggleLayout(false)
   }
 
 
@@ -137,14 +114,31 @@ export class CameraGroupsComponent implements OnInit {
     this.markers[camera._id].setIcon(newIcon);
 
     this.cameraClusterLayer.removeLayer(this.markers[camera._id]);
-    this.sideMap.addLayer(this.markers[camera._id]);
+    this.mapCom.markers[camera._id] = this.markers[camera._id]
+
+    this.mapCom.detectChanges()
+    this.cdRef.detectChanges()
   }
 
   deselectCameraById(camera:any) {
     var newIcon = L.divIcon(this.markerModify.deSelectedMarker(this.markers[camera._id].options.icon.options));
     this.markers[camera._id].setIcon(newIcon);
-    this.cameraClusterLayer.addLayer(this.markers[camera._id]);
-    this.sideMap.removeLayer(this.markers[camera._id]);
+    this.refreshCluster()
+    delete this.mapCom.markers[camera._id]
+
+    this.mapCom.detectChanges()
+    this.cdRef.detectChanges()
+  }
+
+  refreshCluster() {
+    this.cameraClusterLayer.clearLayers();
+    var markers:any = {}
+    this.cameras.forEach((camera:any) => {
+      markers[camera._id] = this.setMarkerForCamera(camera);
+      this.cameraClusterLayer.addLayer(markers[camera._id]);
+    });
+    this.sideMap.addLayer(this.cameraClusterLayer);
+    this.markers = markers;
   }
 
   focusGroup(group:any) {
@@ -153,7 +147,7 @@ export class CameraGroupsComponent implements OnInit {
       group.cameras.forEach((camera:any) => {
         latLngs.push(L.latLng(camera.loc.coordinates[1], camera.loc.coordinates[0]));
       });
-      this.sideMap.fitBounds(L.latLngBounds(latLngs));
+      this.mapCom.flyToBounds(L.latLngBounds(latLngs));
     }
   }
 
@@ -162,7 +156,7 @@ export class CameraGroupsComponent implements OnInit {
       this.deselectCameraById(this.lastCamera);
     }
     this.selectCameraById(camera);
-    this.sideMap.setView(L.latLng(camera.loc.coordinates[1], camera.loc.coordinates[0]), 16);
+    this.mapCom.flyToBounds([[camera.loc.coordinates[1], camera.loc.coordinates[0]]])
     this.lastCamera = camera;
   }
 
@@ -187,31 +181,30 @@ export class CameraGroupsComponent implements OnInit {
       }
     );
 
+    marker.on("click", () => {
+      if (this.group) {
+        if (this.group.cameras.includes(camera)) {
+          this.group.cameras = this.group.cameras.filter((item:any) => {
+            return item !== camera
+          })
+          this.deselectCameraById(camera)
+        } else {
+          this.addCamera(camera)
+          this.selectCameraById(camera)
+        }
+      }
+    })
+
     return marker;
-  }
-
-  getCameraGroups() {
-    return this.cameraGroupService.query()
-  }
-
-  getCameras() {
-    return this.cameraService.query()
   }
 
   getData() {
     this.isLoading = true;
     var tmpCameraGroups:any = {};
-    forkJoin([this.getCameraGroups(), this.getCameras()]).subscribe({
+    forkJoin([this.cameraGroupService.query(), this.cameraService.query()]).subscribe({
       next: (response:any) => {
-        this.cameraClusterLayer.clearLayers();
         this.cameras = response[1];
-        var markers:any = {}
-        response[1].forEach((camera:any) => {
-          markers[camera._id] = this.setMarkerForCamera(camera);
-          this.cameraClusterLayer.addLayer(markers[camera._id]);
-        });
-        this.sideMap.addLayer(this.cameraClusterLayer);
-        this.markers = markers;
+        this.refreshCluster()
 
         
 
@@ -237,11 +230,6 @@ export class CameraGroupsComponent implements OnInit {
         this.isLoading = false;
       }
     });
-  }
-
-  initMap(event:any) {
-    this.sideMap = event
-    this.getData();
   }
 
   deselectGroup(group:any) {
@@ -288,13 +276,15 @@ export class CameraGroupsComponent implements OnInit {
     this.group.cameras.forEach((currentCamera:any) => {
         this.availableCameras.forEach((camera:any, index:number, cameras:any) =>{
             if (camera._id === currentCamera._id) {
-                cameras.splice(index, 1);
+              this.selectCameraById(currentCamera)
+              cameras.splice(index, 1);
             }
         });
     });
   }
 
   createGroup() {
+    this.refreshCluster()
     this.isCreate = true;
     this.initEditor();
   }
@@ -307,10 +297,12 @@ export class CameraGroupsComponent implements OnInit {
   }
 
   clickGroup(group:any) {
-    this.deselectGroup(this.selectedGroup);
+    
     if (this.selectedGroup != group) {
       this.selectGroup(group);
       this.focusGroup(group);
+    } else {
+      this.deselectGroup(this.selectedGroup);
     }
   }
 
@@ -326,6 +318,8 @@ export class CameraGroupsComponent implements OnInit {
   removeCameraByIndex(index:number) {
     if (this.group.cameras[index]) {
       this.availableCameras.push(this.group.cameras[index]);
+      this.deselectCameraById(this.group.cameras[index])
+      
       this.availableCameras = _.cloneDeep(this.availableCameras)
       this.group.cameras.splice(index, 1);
     }
@@ -391,6 +385,8 @@ export class CameraGroupsComponent implements OnInit {
       this.lastResult = null;
       this.group = null;
     }
+    this.refreshCluster()
+    this.mapCom.markers = {}
   }
 
   remove() {
@@ -425,34 +421,6 @@ export class CameraGroupsComponent implements OnInit {
 
   trackByFn(item:any) {
     return item;
-  }
-
-  isSearch = false;
-  searchQuery = '';
-  searchResults:any = [];
-
-  searchIconClick() {
-    this.isSearch = false;
-    this.searchQuery = '';
-    this.searchResults = [];
-    this.cdRef.detectChanges()
-  }
-
-  searchSelect(result:any) {
-    if (result) {
-      if (result.geometry) {
-        this.searchQuery = result.properties.name
-        this.isSearch = false
-        this.sideMap?.flyTo([result.geometry.coordinates[1], result.geometry.coordinates[0]], 15);
-      }
-    }
-  }
-
-  isOpen = true;
-
-  toggleLayoutInfo(onoff?:boolean) {
-    this.isOpen = onoff || !this.isOpen;
-    this.cdRef.detectChanges()
   }
 }
 
