@@ -2,6 +2,7 @@ const config = require('../config/configure');
 const {User} = require('../models/user');
 const {Camera} = require('../models/camera');
 const Parking = require('../models/parking');
+const UserGroup = require('../models/userGroup');
 const _ = require('lodash');
 const q = require('q');
 const consul = require('consul')({ host: config.consulHost });
@@ -225,6 +226,7 @@ function addFavorite(req, res) {
         });
     }, () => res.status(500).end());
 };
+
 
 module.exports = {
     findOneByUserId,addHistory,addFavorite

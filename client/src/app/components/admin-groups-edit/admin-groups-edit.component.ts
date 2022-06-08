@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit,Output,EventEmitter } from '@angular/core';
 import _ from 'lodash';
 import { NzModalRef } from 'ng-zorro-antd/modal';
+import { AdminService } from 'src/app/services/admin.service';
 import { GroupService } from 'src/app/services/group.service';
 
 @Component({
@@ -12,13 +13,13 @@ export class AdminGroupsEditComponent implements OnInit {
 
   @Input() users: any;
   @Input() editGroup: any;
-
+  // @Output() currentGroup: EventEmitter<object> = new EventEmitter<object>();
   group:any = {
     permissions: {
     },
     users: []
   }
-
+  payload: object ={};
   isRemoving:boolean = false;
   isCreate: boolean = true;
   permissions:any = [
@@ -52,7 +53,7 @@ export class AdminGroupsEditComponent implements OnInit {
     }
   ];
 
-  constructor(private modalRef:NzModalRef, private groupService:GroupService) { 
+  constructor(private modalRef:NzModalRef, private groupService:GroupService, private admin:AdminService) { 
     this.permissions.forEach((permission:any) => {
       this.group.permissions[permission.id] = "none"
     })
@@ -62,8 +63,10 @@ export class AdminGroupsEditComponent implements OnInit {
   ngOnInit(): void {
     if (this.editGroup) {
       this.group = _.cloneDeep(this.editGroup)
+      
       this.isCreate = false
     }
+    // this.currentGroup.emit(this.group);
   }
 
   filterUsers(users:any){
@@ -75,8 +78,7 @@ export class AdminGroupsEditComponent implements OnInit {
     })
   }
 
-  addUser(currentUser:any) {
- 
+  addUser(currentUser:any) { 
     this.users = this.users.filter((user:any) => {
       return user.user_id != currentUser.user_id
     })
@@ -84,6 +86,8 @@ export class AdminGroupsEditComponent implements OnInit {
 
 
   }
+
+
 
 
 
@@ -97,7 +101,7 @@ export class AdminGroupsEditComponent implements OnInit {
 
   submit(){
     this.groupService.save(this.group).subscribe({
-      next: (res) => {
+      next: (res) => {     
         this.modalRef.close("created")
       }
     })
@@ -116,10 +120,79 @@ export class AdminGroupsEditComponent implements OnInit {
   update(){
     this.groupService.update(this.group._id,this.group).subscribe({
       next: (res) => {
+        // console.log('group',this.group);
+        const permissions:any = localStorage.getItem('permissions');
+        this.admin.changePermissions(this.group._id,permissions).subscribe({
+          next: (user:any) => {
+            console.log(user)
+          },
+          error: (err) => {
+            console.log(err)
+          }
+        })
         this.modalRef.close("updated")
+
       }
     })
   }
+
+  // change user role
+
+// changeUsersRole(action:string,data:object) {
+		
+//   this.selectedUsers.forEach((selected:any, index:number) => {
+//     if (action == 'guest') {
+//       this.selectedUsers[index].loading = true;
+//       this.payload = data
+//       this.admin.changeToGuest(selected.user_id, action, data={'app_metadata':{"roles":"guest"}}).subscribe({
+//         next: (user:any) => {
+//           this.selectedUsers[index].app_metadata = user.app_metadata;
+//           this.selectedUsers[index].loading = false;
+//           this.lastUsersUpdated = new Date();
+//         },
+//         error: (err:any) => {
+//           console.log(err);
+//           this.selectedUsers[index].loading = false;
+//           this.lastUsersUpdated = new Date();
+//         }
+//       })
+//     } else if (action == 'user'){
+//       this.selectedUsers[index].loading = true;
+//       this.payload = data
+//       this.admin.unblockUser(selected.user_id, action, data={'app_metadata':{"roles":"user"}}).subscribe({
+//         next: (user:any) => {
+//           this.selectedUsers[index].app_metadata = user.app_metadata
+//           this.selectedUsers[index].loading = false;
+//           this.lastUsersUpdated = new Date();
+//         },
+//         error: (err) => {
+//           console.log(err)
+//           this.selectedUsers[index].loading = false;
+//           this.lastUsersUpdated = new Date();
+//         }
+//       })
+//     } else if (action =='admin'){
+//       this.selectedUsers[index].loading = true;
+//       this.payload = data
+//       this.admin.unblockUser(selected.user_id, action, data={'app_metadata':{"roles":"admin"}}).subscribe({
+//         next: (user:any) => {
+//           this.selectedUsers[index].app_metadata = user.app_metadata
+//           this.selectedUsers[index].loading = false;
+//           this.lastUsersUpdated = new Date();
+//         },
+//         error: (err) => {
+//           console.log(err)
+//           this.selectedUsers[index].loading = false;
+//           this.lastUsersUpdated = new Date();
+//         }
+//       })
+//     }
+
+   
+//   });
+
+// }
+
 
   remove() {
     this.isRemoving = true;

@@ -1,6 +1,5 @@
 const ManagementClient = require("auth0").ManagementClient;
-const OAuthAuthenticator = require('auth0').OAuthAuthenticator;
-const { tokenExpireTime } = require("../config/configure");
+const UserGroup = require('../models/userGroup');
 const config = require("../config/configure");
 const clientConfig = config.auth0ManagementClient;
 
@@ -129,28 +128,30 @@ function changeToAdmin(req, res) {
     .catch((err) => res.status(500).end(err.message));
 }
 
-function getLogs(req,res){
-  const id = req.params.id;
-  if (!id) return res.status(500).end();
-  const params = {
-    id: id,
-    q: `description:"user is blocked"`,
-  };
+// function getLogs(req,res){
+//   const id = req.params.id;
+//   if (!id) return res.status(500).end();
+//   const params = {
+//     id: id,
+//     q: `description:"user is blocked"`,
+//   };
 
-  management
-  .getLog(params)
-  .then((user)=>{
-    res.status(200).json({user})
-  }).catch((err)=>{
-    res.status(500).json({err})
-  })
+//   management
+//   .getLog(params)
+//   .then((user)=>{
+//     res.status(200).json({user})
+//   }).catch((err)=>{
+//     res.status(500).json({err})
+//   })
 
-}
+// }
+
 
 module.exports = {
   getUsers,
   getUser,
-  getLogs,
+  // getLogs,
+
   blockUser,
   unblockUser,
   changeToUser,

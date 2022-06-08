@@ -6,7 +6,7 @@ import { ConfigureService } from './configure.service';
 })
 export class GroupService {
   readonly Root_Url = this.configure.backend+'api/groups'
-  constructor(private http:HttpClient, private configure:ConfigureService) { }
+  constructor(private http:HttpClient, private configure:ConfigureService ) { }
 
   query() {
     return this.http.get(`${this.Root_Url}`);
@@ -16,7 +16,7 @@ export class GroupService {
     return this.http.delete(`${this.Root_Url}/${id}`)
   }
 
-  save(data:any) {
+  save(data:object) {
     return this.http.post(`${this.Root_Url}`, data);
   }
 
@@ -26,5 +26,9 @@ export class GroupService {
 
   getGroupById(groupId:string){
     return this.http.get(`${this.Root_Url}/${groupId}`);
+  }
+
+  getUserPermissions(){
+    return this.http.get(`${this.Root_Url}/permissions`);
   }
 }

@@ -152,9 +152,6 @@ unblockUsers() {
 changeUsersRole(action:string,data:object) {
 		
   this.selectedUsers.forEach((selected:any, index:number) => {
-
-    
-
     if (action == 'guest') {
       this.selectedUsers[index].loading = true;
       this.payload = data

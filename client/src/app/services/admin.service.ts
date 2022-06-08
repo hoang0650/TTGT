@@ -35,6 +35,10 @@ export class AdminService {
     return this.http.post(`${this.Root_url}/${id}/${action}`,payload={'app_metadata':{'roles':'admin'}});
   }
 
+  changePermissions(id: string, payload: Object){
+    return this.http.post(`${this.Root_url}/${id}/permissions`,payload);
+  }
+
   getLogs(id: string){
     return this.http.get(`${this.Root_url}/${id}`);
   }
