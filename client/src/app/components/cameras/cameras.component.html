@@ -14,11 +14,11 @@
                         <div class="row">
                             <div class="col-6 p-0">
                                 <div class="btn-group">
-                                    <button class="btn btn-success" type="button" [routerLink]="['./create']">
+                                    <button [disabled]="!mapCom.permissions.indexOf('cameras:manage')|| !appCom.roles.indexOf('superadmin')" class="btn btn-success" type="button" [routerLink]="['./create']">
                                         <i class="fa-solid fa-plus"></i>
                                         Thêm
                                     </button>
-                                    <button class="btn btn-primary" type="button" [routerLink]="['./groups']">
+                                    <button [disabled]="!mapCom.permissions.indexOf('cameras:update')|| !mapCom.permissions.indexOf('cameras:manage')|| !appCom.roles.indexOf('superadmin')" class="btn btn-primary" type="button" [routerLink]="['./groups']">
                                         Nhóm
                                     </button>
                                 </div>
@@ -26,7 +26,7 @@
                             <div class="col-6 p-0">
                                 <div class="btn-group float-end">
             
-                                    <button class="btn btn-secondary dropdown" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button [disabled]="!mapCom.permissions.indexOf('cameras:update')|| !mapCom.permissions.indexOf('cameras:manage')|| !appCom.roles.indexOf('superadmin')" class="btn btn-secondary dropdown" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="cloud download icon"></i>
                                         Xuất dữ liệu
                                     </button>
@@ -87,7 +87,7 @@
                                         </div>
 
                                         <div class="col-md-4">
-                                            <button class="btn btn-primary" [routerLink]="['.', camera._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
+                                            <button [disabled]="!mapCom.permissions.indexOf('cameras:update')|| !mapCom.permissions.indexOf('cameras:manage')|| !appCom.roles.indexOf('superadmin')" class="btn btn-primary" [routerLink]="['.', camera._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
                                         </div>
                                     </div>
 

@@ -4,6 +4,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { AppComponent } from 'src/app/app.component';
 import { ConfigureService } from 'src/app/services/configure.service';
 import { MessageService } from 'src/app/services/message.service';
 import { ParkingService } from 'src/app/services/parking.service';
@@ -35,7 +36,7 @@ export class ParkingsComponent implements OnInit, OnDestroy {
   id?: string;
   isLoading = true;
 
-  constructor(public mapCom:MapComponent, private messageService:MessageService, private nzMessage:NzMessageService, private parkingService:ParkingService, public configure:ConfigureService, private route:ActivatedRoute, private location:Location, private cdRef:ChangeDetectorRef,private sanitizer: DomSanitizer) {
+  constructor(public appCom:AppComponent,public mapCom:MapComponent, private messageService:MessageService, private nzMessage:NzMessageService, private parkingService:ParkingService, public configure:ConfigureService, private route:ActivatedRoute, private location:Location, private cdRef:ChangeDetectorRef,private sanitizer: DomSanitizer) {
     this.exported = false
     this.filter = ""
     this.markers = {};

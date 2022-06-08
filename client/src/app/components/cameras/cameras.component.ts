@@ -4,6 +4,7 @@ import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { AppComponent } from 'src/app/app.component';
 import { CameraService } from 'src/app/services/camera.service';
 import { ConfigureService } from 'src/app/services/configure.service';
 import { MarkerService } from 'src/app/services/marker.service';
@@ -41,7 +42,7 @@ export class CamerasComponent implements OnInit, OnDestroy {
   result: string | null;
 
 
-  constructor(public mapCom:MapComponent, private messageService:MessageService, public configure:ConfigureService, private staticData:StaticService, private cameraService:CameraService, private markerModify:MarkerService, private route:ActivatedRoute, private viewportScroller: ViewportScroller, private location:Location, private cdRef:ChangeDetectorRef,private nzMessage: NzMessageService) {
+  constructor(public appCom:AppComponent,public mapCom:MapComponent, private messageService:MessageService, public configure:ConfigureService, private staticData:StaticService, private cameraService:CameraService, private markerModify:MarkerService, private route:ActivatedRoute, private viewportScroller: ViewportScroller, private location:Location, private cdRef:ChangeDetectorRef,private nzMessage: NzMessageService) {
     this.mess = this.messageService.getMessageObj();
     this.filterText = ""
     this.isLoading = true;
