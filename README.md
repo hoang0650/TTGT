@@ -13,8 +13,8 @@
  Kiểm tra xem người dùng có bị khóa hay không, nếu có thì sẽ hiển thị thông báo cho người dùng biết tài khoản đã bị khóa.
  Bản đồ: xem tổng quan các thông tin về cảnh báo giao thông, camera giao thông, công trình thi công, bãi đỗ xe, phân luồng giao thông và thông tin tĩnh. 
 - Quản lý:
- ` Cảnh báo giao thông:` tạo cảnh báo, hiển thị các cảnh báo mới
- ` Camera giao thông:` hiển thị danh sách các camera theo khu vực, thêm - xóa - sửa camera và nhóm camera theo quyền `admin` hoặc `superadmin`, xuất dữ liệu: csv, excel, json theo quyền `admin` hoặc `superadmin`
+-- ` Cảnh báo giao thông:` tạo cảnh báo, hiển thị các cảnh báo mới
+-- ` Camera giao thông:` hiển thị danh sách các camera theo khu vực, thêm - xóa - sửa camera và nhóm camera theo quyền `admin` hoặc `superadmin`, xuất dữ liệu: csv, excel, json theo quyền `admin` hoặc `superadmin`
  ` Công trình thi công:` hiển thị danh sách các công trình thi công, thêm - xóa - sửa dữ liệu công trình theo quyền `admin` hoặc `superadmin`, xuất dữ liệu: csv, excel, json theo quyền `admin` hoặc `superadmin`
  ` Bãi đỗ xe:` hiển thị danh sách các bãi đỗ xe, thêm - xóa - sửa dữ liệu bãi đỗ xe theo quyền `admin` hoặc `superadmin`, xuất dữ liệu: csv, excel, json theo quyền `admin` hoặc `superadmin`
  ` Phân luồng giao thông:` hiển thị danh sách phân luồng giao thông, thêm - xóa - sửa dữ liệu phân luồng giao thông theo quyền `admin` hoặc `superadmin`, xuất dữ liệu: csv, excel, json theo quyền `admin` hoặc `superadmin`
