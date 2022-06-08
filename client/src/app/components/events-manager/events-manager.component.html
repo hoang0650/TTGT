@@ -1,208 +1,83 @@
-<!-- <div class="event-main-contain">
-    <div class="row">
-        <div class="col-lg-5">
-            <div class="event-header">
-                <h2 class="ui header">
-                    Quản lý cảnh báo
-                </h2>
-            </div>
-            <div class="ui top attached blue menu">
-                <div class="ui simple dropdown icon item">
-                    <span>{{status}} <i class="chevron down icon"></i></span>
-                    <div class="menu">
-                        <div class="item" *ngFor="let status of statusList | keyvalue" (click)="filterListEvent($any(status.value))">{{$any(status.value).name}}
-                        </div>
-                    </div>
-                </div>
-                <div class="right menu">
-                    <div title="Thông Thoáng" class=" item link no-animate" [ngClass]="{'active': filter['color'] == 'green'}" (click)="filterListEvent(null , 'green')"><i class="green circle icon"></i> {{(listEvents | filter: {color:'green', status: filter['status']}).length}}
-                    </div>
-                    <div title="Đông xe và ngập nước" class=" item link no-animate" [ngClass]="{'active': filter['color'] == 'yellow'}" (click)="filterListEvent(null , 'yellow')"><i class="yellow circle icon"></i> {{(listEvents | filter: (!filter['status'] ? {color:'yellow'} :{color:'yellow', status: filter['status']})).length}}
-                    </div>
-                    <div title="Ùn tắc" class=" item link no-animate" [ngClass]="{'active': filter['color'] == 'orange'}" (click)="filterListEvent(null , 'orange')"><i class="orange circle icon"></i> {{(listEvents | filter: {color:'orange', status: filter['status']}).length}}
-                    </div>
-                    <div title="Tai nạn" class=" item link no-animate" [ngClass]="{'active': filter['color'] == 'red'}" (click)="filterListEvent(null , 'red')"><i class="red circle icon"></i> {{(listEvents | filter: {color:'red', status: filter['status']}).length}}
-                    </div>
-                    <div title="Tải lại danh sách" class="item link" disabled="isLoadingStatus" (click)="refresh()">
-                        <i class="refresh icon"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="ui bottom attached segment contain-list-event">
-                <div class="ui divided selection very relaxed list contain-event">
-                    <div class="ui large feed">
-                        <div class="event" [ngClass]="{'active-event': event._id == chooseEventId}" *ngFor="let event of listEvents | orderBy:['createdAt'] | filter:filter" ng-repeat=" | orderBy:event.createdAt:false | filter: eventManager.filter"
-                            (click)="chooseEvent(event)">
-                            <div class="label event-icon">
-                                <i class="circle icon {{event.color}}"></i>
-                            </div>
-                            <div class="content">
-                                <div class="summary">
-                                    <a class="user">{{event.desc[0]}}</a>
-                                    <div class="date">
-                                        <span>{{event.createdAt | amLocale:'vi' | amTimeAgo}}</span>
-                                    </div>
-                                </div>
-                                <div class="extra text">
-                                    {{event.desc[1]}}
-                                </div>
-                                <div class="extra text">
-                                    <div class="ui label">
-                                        <i class="user icon"></i> Người đăng: {{event.creator.name}}
-                                    </div>
-                                    <div class="ui label float right {{statusList[event.status].color}}">
-                                        <i class="{{statusList[event.status].icon}} icon"></i>{{statusList[event.status].name}}
-                                    </div>
-                                </div>
-                                <div class="extra text" *ngIf="event._id == chooseEventId && event.status != 'rejected'">
-                                    <div class="ui tiny icon buttons">
-                                        <button *ngIf="event.status == 'created'" data-tooltip="Duyệt" data-position="top center" (click)="approveEvent(event);$event.stopPropagation()"
-                                            class="ui button"><i class="checkmark icon"></i></button>
-                                        <button *ngIf="event.status == 'created'" data-tooltip="Không duyệt" data-position="top center" (click)="rejectEvent(event);$event.stopPropagation()"
-                                            class="ui button"><i class="remove icon"></i></button>
-                                        <button *ngIf="event.status == 'approved'" data-tooltip="Dừng cảnh báo" data-position="top center" (click)="expireEvent(event);$event.stopPropagation()"
-                                            class="ui button"><i class="times icon"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-7">
-            <div class="map" 
-                leaflet 
-                [leafletOptions]="options"
-                (leafletMapReady)="initMap($event)">
-            </div>
-        </div>
-    </div> 
-</div> -->
-<div class="map-layout">
-    <div class="map-leaflet"
-        leaflet
-        [leafletOptions]="options"
-        (leafletMapReady)="initMap($event)">
-    </div>
-
-    <div class="map-search">
-        <div class="map-search-bar">
-            <nz-input-group [nzSuffix]="searchQuery.length > 0 ? suffixIconClose : suffixIconSearch" [nzSize]="'large'">
-                <input type="text" nz-input placeholder="Tìm vị trí" [(ngModel)]="searchQuery" appSearchRoads [appSearchRoadsText]="searchQuery" (newListRoads)="searchResults = $event" (isSearch)="isSearch = $event"/>
-            </nz-input-group>
-            <ng-template #suffixIconSearch>
-            <i nz-icon nzType="search"></i>
-            </ng-template>
-            <ng-template #suffixIconClose>
-                <i nz-icon nzType="close" (click)="searchIconClick()"></i>
-            </ng-template>
-    
-            <div class="results transition visible" *ngIf="searchResults?.length > 0 && isSearch">
-                <ul nz-menu>
-                    <li class="map-search-result" nz-menu-item *ngFor="let result of searchResults; index as i" (click)="searchSelect(result)">
-                        <b>{{result.properties.name}}</b>
-                        <br>
-                        {{result.properties.city}}
-                    </li>
-                </ul>
-            </div>
-            <div class="results transition visible" *ngIf="searchResults?.length <= 0 && isSearch" style="background-color: white;">
-                <a class="result">
-                    <div class="content">
-                        <div class="title">Không tìm thấy</div>
-                        <div class="description">Hãy thử lại</div>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <button class="map-layout-info-button" nz-button nzType="primary" [@mapLayoutInfoButton]="isOpen ? 'open' : 'closed'" (click)="toggleLayoutInfo()">
-        <i nz-icon nzType="{{isOpen ? 'right' : 'left'}}"></i>
-    </button>
-
-    <div [@mapLayoutInfo]="isOpen ? 'open' : 'closed'" class="map-layout-info-right">
-        
-        <div class="map-layout-info-content" #mapLayoutInfo>
-            <div class="ui segments">
-                <div class="ui segment">
-                    <h2 class="ui center aligned header">
-                        <div class="content">
-                            Cảnh báo giao thông
-                        </div>
-                    </h2>
-                </div>
-
-                <div class="ui secondary segment no-padding">
-                    <nz-affix [nzTarget]="mapLayoutInfo">
-                        <div  class="affix-header">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-8">
-                                        <select class="form-select" aria-label="Example select with button addon" [(ngModel)]="status" (change)="filterListEvent()">
-                                            <option *ngFor="let statusData of statusListArray" value="{{statusData.id}}">{{statusData.name}} </option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="col-4">
-                                        <button nz-button nzType="primary" [nzLoading]="isLoadingStatus" type="button" nz-tooltip nzTooltipTitle="Làm mới" (click)="refresh()">
-                                            <i nz-icon><i class="refresh icon"></i></i>
-                                            Làm mới
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </nz-affix>
-                </div>
-            </div>
-
-            <div class="ui segment"  *ngIf="listEventsForFilter.length == 0">
-                <h4 class="ui center aligned header">
-                    <div class="content">
-                        Không có cảnh báo {{statusList[status].name.toLowerCase() == 'tất cả' ? 'nào' : statusList[status].name.toLowerCase()}}
-                    </div>
-                </h4>
-            </div>
-
-            <div class="ui segment"  *ngFor="let event of listEvents | filter:filter | orderBy:['createdAt']">
+<div class="map-layout-info-content" #mapLayoutInfo>
+    <div class="ui segments">
+        <div class="ui segment">
+            <h2 class="ui center aligned header">
                 <div class="content">
-                    <div class="ui large feed">
-                        <div class="event" [ngClass]="{'active-event': event._id == chooseEventId}"
-                            (click)="chooseEvent(event)">
-                            <div class="label event-icon">
-                                <i class="circle icon {{event.color}}"></i>
+                    Cảnh báo giao thông
+                </div>
+            </h2>
+        </div>
+
+        <div class="ui secondary segment no-padding">
+            <nz-affix [nzTarget]="mapLayoutInfo">
+                <div  class="affix-header">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <select class="form-select" aria-label="Example select with button addon" [(ngModel)]="status" (change)="filterListEvent()">
+                                    <option *ngFor="let statusData of statusListArray" value="{{statusData.id}}">{{statusData.name}} </option>
+                                </select>
                             </div>
-                            <div class="content">
-                                <div class="summary">
-                                    <a class="user">{{event.desc[0]}}</a>
-                                    <div class="date">
-                                        <span>{{event.createdAt | amLocale:'vi' | amTimeAgo}}</span>
-                                    </div>
-                                </div>
-                                <div class="extra text">
-                                    {{event.desc[1]}}
-                                </div>
-                                <div class="extra text">
-                                    <div class="ui label">
-                                        <i class="user icon"></i> Người đăng: {{event.creator.name}}
-                                    </div>
-                                    <div class="ui label float right {{statusList[event.status].color}}">
-                                        <i class="{{statusList[event.status].icon}} icon"></i>{{statusList[event.status].name}}
-                                    </div>
-                                </div>
-                                <div class="extra text" *ngIf="event._id == chooseEventId && event.status != 'rejected'">
-                                    <div class="ui tiny icon buttons">
-                                        <button *ngIf="event.status == 'created'" data-tooltip="Duyệt" data-position="top center" (click)="approveEvent(event);$event.stopPropagation()"
-                                            class="ui button"><i class="checkmark icon"></i></button>
-                                        <button *ngIf="event.status == 'created'" data-tooltip="Không duyệt" data-position="top center" (click)="rejectEvent(event);$event.stopPropagation()"
-                                            class="ui button"><i class="remove icon"></i></button>
-                                        <button *ngIf="event.status == 'approved'" data-tooltip="Dừng cảnh báo" data-position="top center" (click)="expireEvent(event);$event.stopPropagation()"
-                                            class="ui button"><i class="times icon"></i></button>
-                                    </div>
-                                </div>
+                            
+                            <div class="col-md-4 mb-3">
+                                <button class="btn btn-primary" [disabled]="isLoadingStatus" (click)="refresh()">
+                                    <i nz-icon><i class="refresh icon"></i></i>
+                                    Làm mới
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nz-affix>
+        </div>
+    </div>
+
+    <div class="ui segment" *ngIf="listEventsForFilter.length == 0">
+        <h4 class="ui center aligned header">
+            <div class="content" *ngIf="isLoadingStatus">
+                <nz-spin nzSimple></nz-spin>
+                Đang tải...
+            </div>
+            <div class="content" *ngIf="!isLoadingStatus && listEventsForFilter.length == 0">
+                Không có cảnh báo {{statusList[status].name.toLowerCase() == 'tất cả' ? 'nào' : statusList[status].name.toLowerCase()}}
+            </div>
+        </h4>
+    </div>
+
+    <div class="ui segment"  *ngFor="let event of listEvents | filter:filter | orderBy:['createdAt']">
+        <div class="content">
+            <div class="ui large feed">
+                <div class="event" [ngClass]="{'active-event': event._id == chooseEventId}"
+                    (click)="chooseEvent(event)">
+                    <div class="label event-icon">
+                        <i class="circle icon {{event.color}}"></i>
+                    </div>
+                    <div class="content">
+                        <div class="summary">
+                            <a class="user">{{event.desc[0]}}</a>
+                            <div class="date">
+                                <span>{{event.createdAt | amLocale:'vi' | amTimeAgo}}</span>
+                            </div>
+                        </div>
+                        <div class="extra text">
+                            {{event.desc[1]}}
+                        </div>
+                        <div class="extra text">
+                            <div class="ui label">
+                                <i class="user icon"></i> Người đăng: {{event.creator.name}}
+                            </div>
+                            <div class="ui label float right {{statusList[event.status].color}}">
+                                <i class="{{statusList[event.status].icon}} icon"></i>{{statusList[event.status].name}}
+                            </div>
+                        </div>
+                        <div class="extra text" *ngIf="event._id == chooseEventId && event.status != 'rejected'">
+                            <div class="ui tiny icon buttons">
+                                <button *ngIf="event.status == 'created'" data-tooltip="Duyệt" data-position="top center" (click)="approveEvent(event);$event.stopPropagation()"
+                                    class="ui button"><i class="checkmark icon"></i></button>
+                                <button *ngIf="event.status == 'created'" data-tooltip="Không duyệt" data-position="top center" (click)="rejectEvent(event);$event.stopPropagation()"
+                                    class="ui button"><i class="remove icon"></i></button>
+                                <button *ngIf="event.status == 'approved'" data-tooltip="Dừng cảnh báo" data-position="top center" (click)="expireEvent(event);$event.stopPropagation()"
+                                    class="ui button"><i class="times icon"></i></button>
                             </div>
                         </div>
                     </div>

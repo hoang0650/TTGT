@@ -1,59 +1,30 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
+
 import { Location, ViewportScroller } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { CameraService } from 'src/app/services/camera.service';
 import { ConfigureService } from 'src/app/services/configure.service';
 import { MarkerService } from 'src/app/services/marker.service';
 import { MessageService } from 'src/app/services/message.service';
 import { StaticService } from 'src/app/services/static.service';
+import { MapComponent } from '../map/map.component';
 
 @Component({
   selector: 'app-cameras',
+  host: {
+    class: 'map-layout-info-container'
+  },
   templateUrl: './cameras.component.html',
   styleUrls: ['./cameras.component.css'],
-  animations: [
-    trigger('mapLayoutInfo', [
-      state('open', style({
-        position: 'absolute',
-        right: '0%',
-      })),
-      state('closed', style({
-        position: 'absolute',
-        right: '-408px',
-      })),
-      transition('open => closed', [
-        animate('0.3s')
-      ]),
-      transition('closed => open', [
-        animate('0.3s')
-      ]),
-    ]),
-    trigger('mapLayoutInfoButton', [
-    state('open', style({
-      position: 'absolute',
-      right: '408px',
-    })),
-    state('closed', style({
-      position: 'absolute',
-      right: '0px',
-    })),
-    transition('open => closed', [
-      animate('0.3s')
-    ]),
-    transition('closed => open', [
-      animate('0.3s')
-    ]),
-    ]),
-  ]
 })
-export class CamerasComponent implements OnInit {
- 
+export class CamerasComponent implements OnInit, OnDestroy {
+  @Input() layoutContent?:Element;
+
+  sideMap?: L.Map;
   mess:any;
   filename = "";
-  sideMap:any;
   markers:any = {};
   districts:any = [];
   cameras: any = [];
@@ -65,21 +36,35 @@ export class CamerasComponent implements OnInit {
   filterText: string;
   notice: any;
   isLoading: boolean;
+  filter: string | null;
+  cameraId: string | null;
+  result: string | null;
 
 
-  constructor(private messageService:MessageService, public configure:ConfigureService, private staticData:StaticService, private cameraService:CameraService, private markerModify:MarkerService, private route:ActivatedRoute, private viewportScroller: ViewportScroller, private location:Location, private cdRef:ChangeDetectorRef,private sanitizer: DomSanitizer) {
+  constructor(public mapCom:MapComponent, private messageService:MessageService, public configure:ConfigureService, private staticData:StaticService, private cameraService:CameraService, private markerModify:MarkerService, private route:ActivatedRoute, private viewportScroller: ViewportScroller, private location:Location, private cdRef:ChangeDetectorRef,private nzMessage: NzMessageService) {
     this.mess = this.messageService.getMessageObj();
     this.filterText = ""
     this.isLoading = true;
+
+    var queryParams = this.route.snapshot.queryParamMap
+    this.filter = queryParams.get("filter");
+    this.cameraId = queryParams.get("camid");
+    this.result = queryParams.get("result")
+    this.location.replaceState("./map/cameras")
+
+    this.sideMap = this.mapCom.sideMap
+    this.markers = mapCom.markers
   }
+  
 
   ngOnInit(): void {
-
+    this.getMarkers()
+    this.mapCom.toggleLayout(true)
   }
 
-  initMap(map:any): void {
-    this.sideMap = map
-    this.getMarkers()
+  ngOnDestroy(): void {
+    this.mapCom.removeLayers()
+    this.mapCom.toggleLayout(false)
   }
 
   getMarkers() {
@@ -99,6 +84,10 @@ export class CamerasComponent implements OnInit {
             this.districts = hcmDistricts;
 
             this.readDataFromSearchQuery()
+
+            
+            this.mapCom.detectChanges()
+            this.cdRef.detectChanges()
           }
         })
       }
@@ -106,6 +95,8 @@ export class CamerasComponent implements OnInit {
   }
 
   focusToCamera(cam:any) {
+    this.mapCom.toggleLayout(true)
+
     if (this.selectedCamera) {
       this.markers[this.selectedCamera._id]._icon = this.markerModify.deSelectedMarker(this.markers[this.selectedCamera._id]._icon);
     }
@@ -116,18 +107,31 @@ export class CamerasComponent implements OnInit {
 
     if (this.selectedCamera != cam) {
       this.selectedCamera = cam;
-      this.sideMap.flyTo([cam.loc.coordinates[1],cam.loc.coordinates[0]], 15, {
-        paddingBottomRight: [408, 0],
-        duration: 1.5
-      })
+      
+      this.mapCom.flyToBounds([[cam.loc.coordinates[1],cam.loc.coordinates[0]]])
     }
 
   }
 
+  previousDistrict:any;
+  selectDistrict(isOpen:boolean, district:any) {
+    if (isOpen) {
+      if (this.previousDistrict != district) {
+        var bound:any = [];
+        district.camera.forEach((element:any) => {
+          bound.push([element.loc.coordinates[1], element.loc.coordinates[0]]);
+        });
+        this.mapCom.flyToBounds(bound)
+        this.previousDistrict = district
+        this.mapCom.detectChanges()
+        this.cdRef.detectChanges()
+      }
+    }
+  };
+
   selectCamera(camera:any) {
     this.focusToCamera(camera);
     this.expandDistrict(camera._id)
-    this.isOpen = true
   }
 
   expandDistrict(id:string) {
@@ -150,8 +154,9 @@ export class CamerasComponent implements OnInit {
     this.selectedDist = choosenDist
     this.selectedDist.expand = true
     
+    
+    this.mapCom.detectChanges()
     this.cdRef.detectChanges()
-    this.focusToCamera(choosenCamera);
   }
 
   imageError(event:any) {
@@ -190,7 +195,6 @@ export class CamerasComponent implements OnInit {
       }
     })
 
-    this.sideMap.addLayer(marker)
     return marker;
   }
 
@@ -205,25 +209,22 @@ export class CamerasComponent implements OnInit {
   }
 
   readDataFromSearchQuery() {
-    var queryParams = this.route.snapshot.queryParamMap
-    var filter = queryParams.get("filter");
-    var cameraId = queryParams.get("camid");
-    var result = queryParams.get("result")
 
-    if (result) {
-      this.notice = this.mess.NOTICE(result, 'camera');
-      this.location.replaceState("./cameras")
+    if (this.result) {
+      this.notice = this.mess.NOTICE(this.result, 'camera');
+
+      this.nzMessage.success(this.messageService.getMessageObj().NOTICE(this.route.snapshot.queryParamMap.get('result'), 'camera'))
     }
     
-    if (cameraId) {
-      this.expandDistrict(cameraId);
+    if (this.cameraId) {
+      this.expandDistrict(this.cameraId);
 
       setTimeout((cameraId:string) => {
         this.viewportScroller.scrollToAnchor(cameraId)
       }, 100);
     }
-    if (filter) {
-      this.filterText = filter;
+    if (this.filter) {
+      this.filterText = this.filter;
     }
   }
 
@@ -240,58 +241,21 @@ export class CamerasComponent implements OnInit {
   }
 
   exportCSV() {
-    delete this.objectUrl;
     this.exported = true;
     this.cameraService.getCameraCSV().subscribe({
-      next: (data:any) => {
-        this.objectUrl = URL.createObjectURL(new Blob([data],{type:'text/csv'}));
-        this.filename = "ttgt-cameras.csv"
+      next:(res:any) => {
+        this.mapCom.download(URL.createObjectURL(new Blob([res],{type:'text/csv'})),"ttgt-cameras.csv")
       }
-    });
-  }
+    })
+  };
 
   exportXLS(){
-    delete this.objectUrl;
     this.exported = true;
-    this.cameraService.exportExcel(this.cameras,'cameras');
+    this.cameraService.exportExcel(this.cameras,'ttgt-cameras');
   }
 
   exportJSON() {
     var theJSON = JSON.stringify(this.cameras);
-    var uri = this.sanitizer.bypassSecurityTrustUrl("data:text/json;charset=UTF-8," + encodeURIComponent(theJSON));
-    this.objectUrl =uri;
-}
-
-  trackByFn(item:any) {
-    return item;
-  }
-
-
-  isSearch = false;
-  searchQuery = '';
-  searchResults:any = [];
-
-  searchIconClick() {
-    this.isSearch = false;
-    this.searchQuery = '';
-    this.searchResults = [];
-    this.cdRef.detectChanges()
-  }
-
-  searchSelect(result:any) {
-    if (result) {
-      if (result.geometry) {
-        this.searchQuery = result.properties.name
-        this.isSearch = false
-        this.sideMap?.flyTo([result.geometry.coordinates[1], result.geometry.coordinates[0]], 15);
-      }
-    }
-  }
-
-  isOpen = true;
-
-  toggleLayoutInfo(onoff?:boolean) {
-    this.isOpen = onoff || !this.isOpen;
-    this.cdRef.detectChanges()
+    this.mapCom.download(URL.createObjectURL(new Blob([theJSON],{type:'text/csv'})),"ttgt-cameras.json")
   }
 }

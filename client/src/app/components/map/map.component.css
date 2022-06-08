@@ -16,3 +16,74 @@
 .ui.feed > .event.active-event {
     background-color: rgba(37, 37, 37, 0.38);
 }
+
+.map-search {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    padding: 10px 10px;
+    z-index: 999;
+    width: 100%;
+    text-align: -webkit-right;
+}
+
+.map-search-button {
+    margin: 0px 10px;
+}
+
+.map-search-result {
+    height: auto !important
+}
+
+.map-layout {
+    position: relative;
+    height: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+@media (min-width:992px) {
+    .map-layout-info {
+        top: 0px;
+        width: 33%;
+        height: 100%;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        background-color: rgba(245, 245, 245, 0.9);
+        padding: 0 0 5px 0;
+    }
+
+    .map-search-bar {
+        width: 33%;
+        margin-right: 10px;
+    }
+}
+
+@media (max-width:992px) {
+    .map-layout-info {
+        top: 0px;
+        width: 340px;
+        height: 100%;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        background-color: rgba(245, 245, 245, 0.9);
+        padding: 0 0 5px 0;
+    }
+    
+    .map-search-bar {
+        width: 330px;
+        margin-right: 10px;
+    }
+}
+
+.map-layout-info-button {
+    top:50%;
+    position:absolute;
+    z-index: 999;
+}
+
+.map-leaflet {
+    height: 100%;
+}

@@ -96,17 +96,19 @@ var makeKey = function () {
 function getSession(req, res) 
 {
 
-    if(req.user['https://hoang0650.com/roles'].indexOf('admin') < 0 || req.user['https://hoang0650.com/roles'].indexOf('superadmin') < 0){
-        return res.status(500).json({ message: 'NOT_PERMISSION' });
-    }
+    // if(req.user['https://hoang0650.com/roles'].indexOf('admin') < 0 && req.user['https://hoang0650.com/roles'].indexOf('superadmin') < 0){
+    //     return res.status(500).json({ message: 'NOT_PERMISSION' });
+    // }
     // console.log('req.user', req.user['https://hoang0650.com/roles']);
     var keyObject = {
         userInfo: makeKey(),
+        sub: req.user.sub,
         name: req.user['https://hoang0650.com/name']
     };
     var userSession = jwt.sign(keyObject,
-        Buffer.from(secretKey, 'base64'),
+        'secret',
         { expiresIn: sessionExpireTime});
+
     var responseObject = {
         token: userSession,
         createdAt: new Date(),
@@ -119,16 +121,17 @@ function getSession(req, res)
         res.status(200).json(responseObject);
     } else {
 
-         jwt.verify(sessionKey, Buffer.from(secretKey, 'base64'), function(err, decoded) {
-            // if (err) {
-            //     sessionKey = userSession;
-            // } else {
-                delete responseObject.token;
-                decoded = req.user;
-                responseObject.message = 'SESSION_HAD_USED';
-                responseObject.name = decoded['https://hoang0650.com/name'];
-            // }
-            res.status(200).json(responseObject);
+         jwt.verify(sessionKey, 'secret', function(err, decoded) {
+            if (err) {
+                res.status(200).json(responseObject);
+            } else {
+                if (decoded.sub != req.user.sub) {
+                    delete responseObject.token;
+                    responseObject.message = 'SESSION_HAD_USED';
+                    responseObject.name = decoded.name;
+                }
+                res.status(200).json(responseObject);
+            }
         });
     }
 };
@@ -149,7 +152,7 @@ function create(req, res)
         }
     } else 
     {
-         jwt.verify(userSession, Buffer.from(secretKey, 'base64'), {algorithms:['HS256','RS256','sha1']},function(err) {
+         jwt.verify(userSession, "secret",function(err) {
             if (!err) {
                 if (req.body._id) {
                     delete req.body._id;

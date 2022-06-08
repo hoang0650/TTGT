@@ -226,7 +226,13 @@ export class RoadeventsComponent implements OnInit {
     this.exported = true;
     this.roadeventsService.getRoadEventCSV().subscribe({
       next:(res:any) => {
-        this.objectUrl = URL.createObjectURL(new Blob([res], { type: 'text/csv' }));
+        const url = URL.createObjectURL(new Blob([res],{type:'text/csv'}));
+        const e = document.createElement('a');
+        e.href = url;
+        e.download = "ttgt-roadevents.csv";
+        document.body.appendChild(e);
+        e.click();
+        document.body.removeChild(e);
       }
     })
   }
@@ -234,13 +240,18 @@ export class RoadeventsComponent implements OnInit {
   exportXLS(){
     delete this.objectUrl;
     this.exported = true;
-    this.roadeventsService.exportExcel(this.roadevents,'roadevents');
+    this.roadeventsService.exportExcel(this.roadevents,'ttgt-roadevents');
   }
 
   exportJSON() {
     var theJSON = JSON.stringify(this.roadevents);
-    var uri = this.sanitizer.bypassSecurityTrustUrl("data:text/json;charset=UTF-8," + encodeURIComponent(theJSON));
-    this.objectUrl =uri;
+    const url = URL.createObjectURL(new Blob([theJSON],{type:'text/csv'}));
+    const e = document.createElement('a');
+    e.href = url;
+    e.download = "ttgt-roadevents.json";
+    document.body.appendChild(e);
+    e.click();
+    document.body.removeChild(e);
   }
 
   isSearch = false;

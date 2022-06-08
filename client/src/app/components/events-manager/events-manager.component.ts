@@ -1,57 +1,25 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectorRef, Component, ComponentFactoryResolver, Injector, OnInit } from '@angular/core';
 import L from 'leaflet';
 import _ from 'lodash';
 import { ConfigureService } from 'src/app/services/configure.service';
 import { EventService } from 'src/app/services/event.service';
 import { EventsManagerPopupComponent } from '../events-manager-popup/events-manager-popup.component';
+import { MapComponent } from '../map/map.component';
 
 declare var $:any;
 
 @Component({
   selector: 'app-events-manager',
+  host: {
+    class: 'map-layout-info-container'
+  },
   templateUrl: './events-manager.component.html',
   styleUrls: ['./events-manager.component.css'],
-  animations: [
-    trigger('mapLayoutInfo', [
-      state('open', style({
-        position: 'absolute',
-        right: '0%',
-      })),
-      state('closed', style({
-        position: 'absolute',
-        right: '-408px',
-      })),
-      transition('open => closed', [
-        animate('0.3s')
-      ]),
-      transition('closed => open', [
-        animate('0.3s')
-      ]),
-    ]),
-    trigger('mapLayoutInfoButton', [
-    state('open', style({
-      position: 'absolute',
-      right: '408px',
-    })),
-    state('closed', style({
-      position: 'absolute',
-      right: '0px',
-    })),
-    transition('open => closed', [
-      animate('0.3s')
-    ]),
-    transition('closed => open', [
-      animate('0.3s')
-    ]),
-    ]),
-  ]
 })
 export class EventsManagerComponent implements OnInit {
   statusList: any;
   statusListArray: any;
   status: string;
-  options: any;
   sideMap: any;
   listEventType: any;
   listEvents: any;
@@ -65,31 +33,15 @@ export class EventsManagerComponent implements OnInit {
   selectedEvent: any;
   sidebar: any;
   component: any;
-  isSearch: boolean;
-  searchQuery: string;
-  searchResults:any;
 
-  constructor(private configure:ConfigureService, private eventService:EventService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cdRef:ChangeDetectorRef) {
+
+  constructor(public mapCom:MapComponent, private configure:ConfigureService, private eventService:EventService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cdRef:ChangeDetectorRef) {
     this.status = "created"
     this.filter = {status:this.status}
     this.markers = {}
     this.isLoadingStatus = false;
-    this.isSearch = false;
-    this.searchQuery = '';
-    this.searchResults = [];
     this.listEvents = []
     this.listEventsForFilter = []
-  
-    this.options = {
-      layers: [
-        this.configure.baselayer.tiles,
-      ],
-      attributionControl:false,
-      worldCopyJump: true,
-      center: [  10.762622, 106.660172 ],
-      zoom: 14,
-      zoomControl: false
-    }
 
     this.statusList = {
       all: {
@@ -168,17 +120,24 @@ export class EventsManagerComponent implements OnInit {
         popupAnchor: [0, -52.5]
       }
     };
+
+    this.sideMap = mapCom.sideMap
+    this.markers = mapCom.markers
+    this.mapCom.detectChanges()
+    // this.cdRef.detectChanges()
   }
+
 
   ngOnInit(): void {
     $(".ui.dropdown").dropdown()
     this.getAllType()
+    this.mapCom.toggleLayout(true)
   }
 
-  initMap(map:any) {
-    this.sideMap = map
+  ngOnDestroy(): void {
+    this.mapCom.removeLayers()
+    this.mapCom.toggleLayout(false)
   }
-
   
 
   createMarkerEvent(event:any) {
@@ -208,7 +167,6 @@ export class EventsManagerComponent implements OnInit {
 
 
       this.markers[event._id].bindPopup(popup)
-      this.sideMap?.addLayer(this.markers[event._id])
     });
   };
 
@@ -368,29 +326,5 @@ export class EventsManagerComponent implements OnInit {
       this.component.changeDetectorRef.detectChanges();
       return this.component.location.nativeElement
     }
-  }
-
-  searchIconClick() {
-    this.isSearch = false;
-    this.searchQuery = '';
-    this.searchResults = [];
-    this.cdRef.detectChanges()
-  }
-
-  searchSelect(result:any) {
-    if (result) {
-      if (result.geometry) {
-        this.searchQuery = result.properties.name
-        this.isSearch = false
-        this.sideMap?.flyTo([result.geometry.coordinates[1], result.geometry.coordinates[0]], 15);
-      }
-    }
-  }
-
-  isOpen = true;
-
-  toggleLayoutInfo(onoff?:boolean) {
-    this.isOpen = onoff || !this.isOpen;
-    this.cdRef.detectChanges()
   }
 }

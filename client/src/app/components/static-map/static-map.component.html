@@ -75,12 +75,8 @@
                                                 
                                                 <li><a class="dropdown-item" (click)="exportCSV()"><i class="file outline icon"></i> CSV</a></li>
                                                 <li><a class="dropdown-item" (click)="exportXLS()"><i class="file excel outline icon"></i> Excel</a></li>
-                                                <li><a class="dropdown-item" (click)="exportJSON()" [href]="objectUrl" download="staticmaps.json"><i class="file code outline icon"></i> JSON</a></li>
+                                                <li><a class="dropdown-item" (click)="exportJSON()"><i class="file code outline icon"></i> JSON</a></li>
                                             </ul>
-   
-                                            <a class="btn btn-secondary" [href]="objectUrl | safe: 'url'" download="ttgt_camera-giao-thong.csv" [ngClass]="{'loading': !objectUrl, 'disabled': !objectUrl}">
-                                                <i class="download icon"></i>
-                                            </a>
                                         </div>
                                         
                                     </div>                        

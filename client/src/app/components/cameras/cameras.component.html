@@ -1,208 +1,158 @@
-<div class="map-layout">
-    <div class="map-leaflet"
-        leaflet
-        [leafletOptions]="configure.options"
-        (leafletMapReady)="initMap($event)">
-    </div>
-
-    <div class="map-search">
-        <div class="map-search-bar">
-            <nz-input-group [nzSuffix]="searchQuery.length > 0 ? suffixIconClose : suffixIconSearch" [nzSize]="'large'">
-                <input type="text" nz-input placeholder="Tìm vị trí" [(ngModel)]="searchQuery" appSearchRoads [appSearchRoadsText]="searchQuery" (newListRoads)="searchResults = $event" (isSearch)="isSearch = $event"/>
-            </nz-input-group>
-            <ng-template #suffixIconSearch>
-            <i nz-icon nzType="search"></i>
-            </ng-template>
-            <ng-template #suffixIconClose>
-                <i nz-icon nzType="close" (click)="searchIconClick()"></i>
-            </ng-template>
-    
-            <div class="results transition visible" *ngIf="searchResults?.length > 0 && isSearch">
-                <ul nz-menu>
-                    <li class="map-search-result" nz-menu-item *ngFor="let result of searchResults; index as i" (click)="searchSelect(result)">
-                        <b>{{result.properties.name}}</b>
+<div class="map-layout-info-content" #mapLayoutInfo>
+    <div class="ui segments">
+        <div class="ui segment">
+            <h2 class="ui center aligned header">
+                <div class="content">
+                    Camera Giao Thông
+                </div>
+            </h2>
+        </div>
+        <div class="ui secondary segment no-padding">
+            <nz-affix [nzTarget]="mapLayoutInfo">
+                <div  class="affix-header">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-6 p-0">
+                                <div class="btn-group">
+                                    <button class="btn btn-success" type="button" [routerLink]="['./create']">
+                                        <i class="fa-solid fa-plus"></i>
+                                        Thêm
+                                    </button>
+                                    <button class="btn btn-primary" type="button" [routerLink]="['./groups']">
+                                        Nhóm
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-6 p-0">
+                                <div class="btn-group float-end">
+            
+                                    <button class="btn btn-secondary dropdown" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="cloud download icon"></i>
+                                        Xuất dữ liệu
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                                        
+                                        <li><a class="dropdown-item" (click)="exportCSV()"><i class="file outline icon"></i> CSV</a></li>
+                                        <li><a class="dropdown-item" (click)="exportXLS()"><i class="file excel outline icon"></i> Excel</a></li>
+                                        <li><a class="dropdown-item" (click)="exportJSON()"><i class="file code outline icon"></i> JSON</a></li>
+                                    </ul>
+                                </div>
+                                
+                            </div>                        
+                        </div>
                         <br>
-                        {{result.properties.city}}
-                    </li>
-                </ul>
-            </div>
-            <div class="results transition visible" *ngIf="searchResults?.length <= 0 && isSearch" style="background-color: white;">
-                <a class="result">
-                    <div class="content">
-                        <div class="title">Không tìm thấy</div>
-                        <div class="description">Hãy thử lại</div>
+                        <div class="row">
+                            <nz-input-group [nzSuffix]="suffixIconFilter">
+                                <input type="text" nz-input placeholder="Tìm nhanh" (keyup)="filterChange()" [(ngModel)]="filterText"/>
+                            </nz-input-group>
+                            <ng-template #suffixIconFilter>
+                                <i nz-icon><i class="filter icon"></i></i>
+                            </ng-template>                                   
+                        </div>     
                     </div>
-                </a>
-            </div>
+                </div>
+            </nz-affix>
         </div>
     </div>
 
-    <button class="map-layout-info-button" nz-button nzType="primary" [@mapLayoutInfoButton]="isOpen ? 'open' : 'closed'" (click)="toggleLayoutInfo()">
-        <i nz-icon nzType="{{isOpen ? 'right' : 'left'}}"></i>
-    </button>
+    <div class="ui segment" *ngIf="cameras.length == 0">
+        <h4 class="ui center aligned header">
+            <div class="content" *ngIf="isLoading">
+                <nz-spin nzSimple></nz-spin>
+                Đang tải...
+            </div>
+            <div class="content" *ngIf="!isLoading && cameras.length == 0">
+                Không có camera nào
+            </div>
+        </h4>
+    </div>
 
-    <div [@mapLayoutInfo]="isOpen ? 'open' : 'closed'" class="map-layout-info-right">
-        <div class="map-layout-info-content" #mapLayoutInfo>
-            <div class="ui segments">
-                <div class="ui segment">
-                    <h2 class="ui center aligned header">
-                        <div class="content">
-                            Camera Giao Thông
-                        </div>
-                    </h2>
-                </div>
-                <div class="ui secondary segment no-padding">
-                    <nz-affix [nzTarget]="mapLayoutInfo">
-                        <div  class="affix-header">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-6 p-0">
-                                        <div class="btn-group">
-                                            <button class="btn btn-success" type="button" [routerLink]="['./create']">
-                                                <i class="fa-solid fa-plus"></i>
-                                                Thêm
-                                            </button>
-                                            <button class="btn btn-primary" type="button" [routerLink]="['./groups']">
-                                                Nhóm
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 p-0">
-                                        <div class="btn-group float-end">
-                    
-                                            <button class="btn btn-secondary dropdown" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="cloud download icon"></i>
-                                                Xuất dữ liệu
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
-                                                
-                                                <li><a class="dropdown-item" (click)="exportCSV()"><i class="file outline icon"></i> CSV</a></li>
-                                                <li><a class="dropdown-item" (click)="exportXLS()"><i class="file excel outline icon"></i> Excel</a></li>
-                                                <li><a class="dropdown-item" (click)="exportJSON()" [href]="objectUrl" download="cameras.json"><i class="file code outline icon"></i> JSON</a></li>
-                                            </ul>
+    <accordion [isAnimated]="true" [closeOthers]="true">
+        <div *ngIf="!filterText "> 
+            <div *ngFor="let district of districts">
+                <accordion-group [isOpen]="district['expand']" (isOpenChange)="selectDistrict($event, district)" *ngIf="district.camera" panelClass="customClass">
+                    <div accordion-heading>
+                        <span>{{district.district}}</span>
+                    </div>
+
+                    <accordion [isAnimated]="true" [closeOthers]="true">
+                        <div id="{{camera._id}}" *ngFor="let camera of district.camera">
+                            <accordion-group [isOpen]="selectedCamera?._id === camera._id" (click)="selectCamera(camera)" panelClass="customClass">
+                                <span accordion-heading><i class="large lock middle aligned icon " [ngClass]="(camera.publish)? 'unlock':'lock' "></i> {{[camera.id, camera.name].join(" - ")}} <span class="badge badge-secondary bg-secondary float-right pull-right">{{camera.type || "Chưa cấu hình"}}</span></span>
                         
-                                            <a class="btn btn-secondary" [href]="objectUrl | safe: 'url'" download="{{filename}}" [ngClass]="{'loading': !objectUrl, 'disabled': !objectUrl}">
-                                                <i class="download icon"></i>
-                                            </a>
+                                <div class="container">
+                                    <div class="row mb-3">
+                                        <div class="col-md-8 align-self-center">
+                                            <h5>Mã: {{camera.id}}</h5>
                                         </div>
-                                        
-                                    </div>                        
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <nz-input-group [nzSuffix]="suffixIconFilter">
-                                        <input type="text" nz-input placeholder="Tìm nhanh" (keyup)="filterChange()" [(ngModel)]="filterText"/>
-                                    </nz-input-group>
-                                    <ng-template #suffixIconFilter>
-                                        <i nz-icon><i class="filter icon"></i></i>
-                                    </ng-template>                                   
-                                </div>     
-                            </div>
-                        </div>
-                    </nz-affix>
-                </div>
-            </div>
 
-            <div class="ui segment" *ngIf="cameras.length == 0">
-                <h4 class="ui center aligned header">
-                    <div class="content" *ngIf="isLoading">
-                        <nz-spin nzSimple></nz-spin>
-                        Đang tải...
-                    </div>
-                    <div class="content" *ngIf="!isLoading && cameras.length == 0">
-                        Không có camera nào
-                    </div>
-                </h4>
-            </div>
-
-            <accordion [isAnimated]="true" [closeOthers]="true">
-                <div *ngIf="!filterText "> 
-                    <div *ngFor="let district of districts">
-                        <accordion-group [isOpen]="district['expand'] " *ngIf="district.camera" panelClass="customClass">
-                            <div accordion-heading>
-                                <span>{{district.district}}</span>
-                            </div>
-
-                            <accordion [isAnimated]="true" [closeOthers]="true">
-                                <div id="{{camera._id}}" *ngFor="let camera of district.camera">
-                                    <accordion-group [isOpen]="selectedCamera?._id === camera._id" (click)="selectCamera(camera)" panelClass="customClass">
-                                        <span accordion-heading><i class="large lock middle aligned icon " [ngClass]="(camera.publish)? 'unlock':'lock' "></i> {{[camera.id, camera.name].join(" - ")}} <span class="badge badge-secondary bg-secondary float-right pull-right">{{camera.type || "Chưa cấu hình"}}</span></span>
-                                  
-                                        <div class="container">
-                                            <div class="row mb-3">
-                                                <div class="col-md-8 align-self-center">
-                                                    <h5>Mã: {{camera.id}}</h5>
-                                                </div>
-
-                                                <div class="col-md-4">
-                                                    <button class="btn btn-primary" [routerLink]="['.', camera._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
-                                                </div>
-                                            </div>
-
-                                            <div class="row mb-3">
-                                                <div class="col-md-6">
-                                                    <p *ngIf="camera?.name "><strong>Tên: </strong> {{camera.name}}</p>
-                                                    <p *ngIf="camera?.type "><strong>Loại: </strong> {{camera.type}}</p>
-                                                    <p *ngIf="camera?.values?.server "><strong>Server: </strong> {{camera.values.server}}</p>
-                                                    <p *ngIf="camera?.values?.camid "><strong>CamID: </strong> {{camera.values.camid}}</p>
-                                                    <p *ngIf="camera?.values?.ip "><strong>IP: </strong> {{camera.values.ip}}</p>
-                                                    <p *ngIf="camera?.values?.channel "><strong>Channel: </strong> {{camera.values.channel}}</p>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    
-                                                    <img *ngIf="camera.liveviewUrl" (error)="imageError($event)"
-                                                    class="ui image " src="{{camera.liveviewUrl}}"/>
-                                                    <img *ngIf="!camera.liveviewUrl" class="ui image " src="//dummyimage.com/600x400/000/fff%26text%3DCh%C6%B0a%20c%C3%B3%20th%C3%B4ng%20tin%20c%E1%BA%A5u%20h%C3%ACnh"/>
-                                                </div>
-                                            </div>
+                                        <div class="col-md-4">
+                                            <button class="btn btn-primary" [routerLink]="['.', camera._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
                                         </div>
-                                    </accordion-group>
-                                </div>
-                            </accordion>
-                        </accordion-group>
-                    </div>
-                </div>
-                <div *ngIf="filterText ">
-                    <div class="ui middle aligned selection divided list ">
-                        <div id="{{camera._id}}" class="item" *ngFor="let camera of (cameras | orderBy:['id'] | filter:filterCustome:filterText)" (click)="selectCamera(camera)">                       
-                            <div class="right floated content ">
-                                <span class="ui horizontal label ">{{camera.type || "Chưa cấu hình"}}</span>
-                            </div>
-
-                            <i class="large lock middle aligned icon " [ngClass]="(camera.publish)? 'unlock': 'lock' "></i>
-                            <div class="content ">
-                                {{[camera.id, camera.name].join(" - ")}}
-                            </div>
-                            <div class="ui items " *ngIf="selectedCamera?._id === camera._id">
-                                <div class="item ">
-                                    <div class="ui small image ">
-                                        <img *ngIf="camera.liveviewUrl" onerror="this.src = '//dummyimage.com/600x400/000/fff&text=Kh%C3%B4ng%20c%C3%B3%20k%E1%BA%BFt%20n%E1%BB%91i'"
-                                            class="ui image " src="{{camera.liveviewUrl}}"/>
-                                        <img *ngIf="!camera.liveviewUrl" class="ui image " src="//dummyimage.com/600x400/000/fff%26text%3DCh%C6%B0a%20c%C3%B3%20th%C3%B4ng%20tin%20c%E1%BA%A5u%20h%C3%ACnh "
-                                        />
                                     </div>
-                                    <div class="content ">
-                                        <div class="header" >{{camera.id}}</div>
-                                        <div class="description ">
-                                            <p *ngIf="camera.name "><strong>Tên: </strong> {{camera.name}}</p>
-                                            <p *ngIf="camera.type "><strong>Loại: </strong> {{camera.type}}</p>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <p *ngIf="camera?.name "><strong>Tên: </strong> {{camera.name}}</p>
+                                            <p *ngIf="camera?.type "><strong>Loại: </strong> {{camera.type}}</p>
                                             <p *ngIf="camera?.values?.server "><strong>Server: </strong> {{camera.values.server}}</p>
                                             <p *ngIf="camera?.values?.camid "><strong>CamID: </strong> {{camera.values.camid}}</p>
                                             <p *ngIf="camera?.values?.ip "><strong>IP: </strong> {{camera.values.ip}}</p>
                                             <p *ngIf="camera?.values?.channel "><strong>Channel: </strong> {{camera.values.channel}}</p>
                                         </div>
-                                        <div class="extra ">
-                                            <a class="ui right floated small primary basic button " [routerLink]="['.', camera._id, 'update']">
-                                                <i class="write icon "></i> Chỉnh sửa
-                                            </a>
+                                        <div class="col-md-6">
+                                            
+                                            <img *ngIf="camera.liveviewUrl" (error)="imageError($event)"
+                                            class="ui image " src="{{camera.liveviewUrl}}"/>
+                                            <img *ngIf="!camera.liveviewUrl" class="ui image " src="//dummyimage.com/600x400/000/fff%26text%3DCh%C6%B0a%20c%C3%B3%20th%C3%B4ng%20tin%20c%E1%BA%A5u%20h%C3%ACnh"/>
                                         </div>
                                     </div>
+                                </div>
+                            </accordion-group>
+                        </div>
+                    </accordion>
+                </accordion-group>
+            </div>
+        </div>
+        <div *ngIf="filterText ">
+            <div class="ui middle aligned selection divided list ">
+                <div id="{{camera._id}}" class="item" *ngFor="let camera of (cameras | orderBy:['id'] | filter:filterCustome:filterText)" (click)="selectCamera(camera)">                       
+                    <div class="right floated content ">
+                        <span class="ui horizontal label ">{{camera.type || "Chưa cấu hình"}}</span>
+                    </div>
+
+                    <i class="large lock middle aligned icon " [ngClass]="(camera.publish)? 'unlock': 'lock' "></i>
+                    <div class="content ">
+                        {{[camera.id, camera.name].join(" - ")}}
+                    </div>
+                    <div class="ui items " *ngIf="selectedCamera?._id === camera._id">
+                        <div class="item ">
+                            <div class="ui small image ">
+                                <img *ngIf="camera.liveviewUrl" onerror="this.src = '//dummyimage.com/600x400/000/fff&text=Kh%C3%B4ng%20c%C3%B3%20k%E1%BA%BFt%20n%E1%BB%91i'"
+                                    class="ui image " src="{{camera.liveviewUrl}}"/>
+                                <img *ngIf="!camera.liveviewUrl" class="ui image " src="//dummyimage.com/600x400/000/fff%26text%3DCh%C6%B0a%20c%C3%B3%20th%C3%B4ng%20tin%20c%E1%BA%A5u%20h%C3%ACnh "
+                                />
+                            </div>
+                            <div class="content ">
+                                <div class="header" >{{camera.id}}</div>
+                                <div class="description ">
+                                    <p *ngIf="camera.name "><strong>Tên: </strong> {{camera.name}}</p>
+                                    <p *ngIf="camera.type "><strong>Loại: </strong> {{camera.type}}</p>
+                                    <p *ngIf="camera?.values?.server "><strong>Server: </strong> {{camera.values.server}}</p>
+                                    <p *ngIf="camera?.values?.camid "><strong>CamID: </strong> {{camera.values.camid}}</p>
+                                    <p *ngIf="camera?.values?.ip "><strong>IP: </strong> {{camera.values.ip}}</p>
+                                    <p *ngIf="camera?.values?.channel "><strong>Channel: </strong> {{camera.values.channel}}</p>
+                                </div>
+                                <div class="extra ">
+                                    <a class="ui right floated small primary basic button " [routerLink]="['.', camera._id, 'update']">
+                                        <i class="write icon "></i> Chỉnh sửa
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </accordion>
+            </div>
         </div>
-    </div>
+    </accordion>
 </div>

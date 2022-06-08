@@ -1,4 +1,3 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,47 +13,17 @@ import { MarkerService } from 'src/app/services/marker.service';
 import { MessageService } from 'src/app/services/message.service';
 import { StaticService } from 'src/app/services/static.service';
 import { AdminConfigConfirmComponent } from '../admin-config-confirm/admin-config-confirm.component';
+import { MapComponent } from '../map/map.component';
 
 declare var $: any;
 
 @Component({
   selector: 'app-cameras-create',
+  host: {
+    class: 'map-layout-info-container'
+  },
   templateUrl: './cameras-create.component.html',
   styleUrls: ['./cameras-create.component.css'],
-  animations: [
-    trigger('mapLayoutInfo', [
-      state('open', style({
-        position: 'absolute',
-        right: '0%',
-      })),
-      state('closed', style({
-        position: 'absolute',
-        right: '-408px',
-      })),
-      transition('open => closed', [
-        animate('0.3s')
-      ]),
-      transition('closed => open', [
-        animate('0.3s')
-      ]),
-    ]),
-    trigger('mapLayoutInfoButton', [
-    state('open', style({
-      position: 'absolute',
-      right: '408px',
-    })),
-    state('closed', style({
-      position: 'absolute',
-      right: '0px',
-    })),
-    transition('open => closed', [
-      animate('0.3s')
-    ]),
-    transition('closed => open', [
-      animate('0.3s')
-    ]),
-    ]),
-  ]
 })
 export class CamerasCreateComponent implements OnInit {
   validateCamera: string[];
@@ -79,12 +48,12 @@ export class CamerasCreateComponent implements OnInit {
   connectStatus: any;
   listType: any;
   disableClick: boolean;
-  sideMap: any;
+  sideMap?: L.Map;
   cameraTypeUrl: string;
   geojson: any;
   options:any
   
-  constructor(private messageService:MessageService, private cdRef:ChangeDetectorRef, public configure:ConfigureService, private staticData:StaticService, private cameraGroupService:CameraGroupService, private cameraService:CameraService, private router: Router, private modalService:NzModalService, private route:ActivatedRoute, public nzMessage:NzMessageService,public appCom:AppComponent, private markerService:MarkerService, private location:Location) {
+  constructor(public mapCom: MapComponent, private messageService:MessageService, private cdRef:ChangeDetectorRef, public configure:ConfigureService, private staticData:StaticService, private cameraGroupService:CameraGroupService, private cameraService:CameraService, private router: Router, private modalService:NzModalService, private route:ActivatedRoute, public nzMessage:NzMessageService,public appCom:AppComponent, private markerService:MarkerService, private location:Location) {
     this.button = this.messageService.getMessageObj().BUTTON;
     this.validateCamera = ['id', 'name', 'dist', 'tmpLocation'];
     this.inputChange = false;
@@ -136,29 +105,53 @@ export class CamerasCreateComponent implements OnInit {
         this.newCamera['angle'] = 0
       }
     })
+
+    this.sideMap = this.mapCom.sideMap
+    this.markers = mapCom.markers
   }
 
   ngOnInit(): void {
     setTimeout(() => {
       $(".ui.dropdown").dropdown()
     }, 100)
+    this.sideMap?.on('click', (event) => {
+      console.log(event);
+      
+      this.selectPosition(event)
+    })
+    this.getMarkers()
+    this.mapCom.toggleLayout(true)
   }
 
   ngOnDestroy(): void {
-    // this.sideMap.off();
-    // this.sideMap.remove();
+    this.mapCom.removeOnClick()
+    this.mapCom.removeLayers()
+    this.mapCom.toggleLayout(false)
   }
 
-  receiveListRoads(data:any) {
-    this.listRoads = data
-  }
+  getMarkers() {
+    this.staticData.loadDistrictAPI().subscribe({
+      next: (hcmDistricts:any) => {
+        this.districtList = hcmDistricts;
+      }
+    });
 
-  onMapReady(map:L.Map) {
-   this.sideMap = map
-  }
+    this.cameraService.query().subscribe({
+      next: (cameras:any) => {
+        cameras.forEach((camera:any) => {
+          if (camera._id != this.route.snapshot.paramMap.get("id")) {
+            this.markers[camera._id] = this.createCameraMarker(camera)
+          }
+        });
 
-  trackByFn(item:any) {
-    return item;
+        if (!this.isCreate) {
+          this.loadCameraByID(this.route.snapshot.paramMap.get("id"))
+          this.location.replaceState("./cameras/update")
+        }
+
+        this.mapCom.detectChanges()
+      }
+    })
   }
 
   createCameraMarker(camera:any) {
@@ -168,13 +161,15 @@ export class CamerasCreateComponent implements OnInit {
       zIndexOffset: 10000,
       rotationAngle: camera.ptz ? 0 : camera.angle
     })
-    this.sideMap.addLayer(marker)
+    
     return marker
   }
 
   updateNewCamera(latlng?:any) {
     
+    
     if (this.markers['newMarker']?._latlng || latlng) {
+      console.log("Hello");
       this.markers['newMarker'] = L.marker(latlng || this.markers['newMarker']._latlng, {
         draggable: true,
         icon: this.newCamera.ptz ? this.markerService.getIcon('new', 'ptz') : this.markerService.getIcon('new', 'normal'),
@@ -190,7 +185,7 @@ export class CamerasCreateComponent implements OnInit {
         this.newCamera['tmpLocation'] = latlng.lat.toFixed(4) + ' , ' + latlng.lng.toFixed(4);
       }
     }
-    this.cdRef.detectChanges()
+    this.mapCom.detectChanges()
   }
 
   selectPosition(event:any) {
@@ -199,35 +194,6 @@ export class CamerasCreateComponent implements OnInit {
       this.inputChange = true;
     }
   }
-
-  initMap(map:any): void {
-    this.sideMap = map
-
-    this.staticData.loadDistrictAPI().subscribe({
-      next: (hcmDistricts:any) => {
-        this.districtList = hcmDistricts;
-      }
-    });
-
-    
-
-    this.cameraService.query().subscribe({
-      next: (cameras:any) => {
-        cameras.forEach((camera:any) => {
-          if (camera._id != this.route.snapshot.paramMap.get("id")) {
-            this.markers[camera._id] = this.createCameraMarker(camera)
-          }
-        });
-
-        if (!this.isCreate) {
-          this.loadCameraByID(this.route.snapshot.paramMap.get("id"))
-          this.location.replaceState("./cameras/update")
-        }
-      }
-    })
-  }
-  
-  
 
   validateError(camera:any) {    
     if (camera.configStatus) {
@@ -307,9 +273,7 @@ export class CamerasCreateComponent implements OnInit {
 
           this.newCamera.tmpLocation = camera.loc.coordinates[1].toFixed(4) + ' , ' + camera.loc.coordinates[0].toFixed(4);
           
-          this.sideMap.flyTo([camera.loc.coordinates[1], camera.loc.coordinates[0]], 15, {
-            paddingBottomRight: [408, 0]
-          })
+          this.mapCom.flyToBounds([[camera.loc.coordinates[1], camera.loc.coordinates[0]]])
         }
       })
     }
@@ -515,9 +479,7 @@ export class CamerasCreateComponent implements OnInit {
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
-          this.sideMap.flyTo([position.coords.latitude, position.coords.longitude], 15, {
-            paddingBottomRight: [408, 0]
-          })
+          this.mapCom.flyToBounds([[position.coords.latitude, position.coords.longitude]])
 
           this.updateNewCamera(L.latLng([position.coords.latitude, position.coords.longitude]))
         }, (err) => {
@@ -528,32 +490,4 @@ export class CamerasCreateComponent implements OnInit {
     }
     this.disableClick = false;
   };
-
-  isSearch = false;
-  searchQuery = '';
-  searchResults:any = [];
-
-  searchIconClick() {
-    this.isSearch = false;
-    this.searchQuery = '';
-    this.searchResults = [];
-    this.cdRef.detectChanges()
-  }
-
-  searchSelect(result:any) {
-    if (result) {
-      if (result.geometry) {
-        this.searchQuery = result.properties.name
-        this.isSearch = false
-        this.sideMap?.flyTo([result.geometry.coordinates[1], result.geometry.coordinates[0]], 15);
-      }
-    }
-  }
-
-  isOpen = true;
-
-  toggleLayoutInfo(onoff?:boolean) {
-    this.isOpen = onoff || !this.isOpen;
-    this.cdRef.detectChanges()
-  }
 }

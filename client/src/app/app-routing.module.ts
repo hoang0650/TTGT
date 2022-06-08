@@ -29,7 +29,24 @@ import { CameraGroupsComponent } from './components/camera-groups/camera-groups.
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
   { path: 'home', component:MainComponent},
-  { path: 'map', component: MapComponent , canActivate:[AuthGuard], data:{allowedRoles:['superadmin']}},
+  // { path: 'map', component: MapComponent , canActivate:[AuthGuard], data:{allowedRoles:['superadmin']}},
+  { path: 'map', component: MapComponent,
+    children: [
+      { path: 'events', component:EventsManagerComponent },
+      { path: 'events/stats', component:StatsEventsComponent },
+
+      { path: 'cameras', component: CamerasComponent },
+      { path: 'cameras/create', component: CamerasCreateComponent },
+      { path: 'cameras/groups', component: CameraGroupsComponent },
+      { path: 'cameras/:id/update', component: CamerasCreateComponent },
+      { path: 'cameras/**', redirectTo:'cameras' },
+
+      { path: 'parkings', component: ParkingsComponent },
+      { path: 'parkings/create', component: ParkingsCreateComponent },
+      { path: 'parkings/:id/update', component: ParkingsCreateComponent },
+      { path: 'parkings/**', redirectTo:'' }
+    ]
+  },
   { path: 'config', component:AdminComponent, canActivate:[AuthGuard], data:{allowedRoles:['admin','superadmin']},
     children:[
       { path: '', redirectTo: 'camera', pathMatch: 'full'},

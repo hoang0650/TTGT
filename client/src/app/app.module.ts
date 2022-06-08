@@ -82,6 +82,7 @@ import { LeafletDrawModule } from '@asymmetrik/ngx-leaflet-draw';
 import { StaticMapCreateComponent } from './components/static-map-create/static-map-create.component';
 import { StaticMapModalComponent } from './components/static-map-modal/static-map-modal.component';
 import { CameraGroupsComponent } from './components/camera-groups/camera-groups.component';
+import { MapInformationComponent } from './components/map-information/map-information.component';
 
 
 registerLocaleData(vi);
@@ -130,6 +131,7 @@ export function tokenGetters() {
     StaticMapCreateComponent,
     StaticMapModalComponent,
     CameraGroupsComponent,
+    MapInformationComponent,
  
   ],
   imports: [

@@ -1,4 +1,3 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,50 +8,19 @@ import { MessageService } from 'src/app/services/message.service';
 import { ParkingService } from 'src/app/services/parking.service';
 import { StaticService } from 'src/app/services/static.service';
 import { AdminConfigConfirmComponent } from '../admin-config-confirm/admin-config-confirm.component';
+import { MapComponent } from '../map/map.component';
 
 @Component({
   selector: 'app-parkings-create',
+  host: {
+    class: 'map-layout-info-container'
+  },
   templateUrl: './parkings-create.component.html',
   styleUrls: ['./parkings-create.component.css'],
-  animations: [
-    trigger('mapLayoutInfo', [
-      state('open', style({
-        position: 'absolute',
-        right: '0%',
-      })),
-      state('closed', style({
-        position: 'absolute',
-        right: '-408px',
-      })),
-      transition('open => closed', [
-        animate('0.3s')
-      ]),
-      transition('closed => open', [
-        animate('0.3s')
-      ]),
-    ]),
-    trigger('mapLayoutInfoButton', [
-    state('open', style({
-      position: 'absolute',
-      right: '408px',
-    })),
-    state('closed', style({
-      position: 'absolute',
-      right: '0px',
-    })),
-    transition('open => closed', [
-      animate('0.3s')
-    ]),
-    transition('closed => open', [
-      animate('0.3s')
-    ]),
-    ]),
-  ]
 })
 export class ParkingsCreateComponent implements OnInit {
   searchText = "";
-  listRoads: any;
-  sideMap: any;
+  sideMap?: L.Map;
   markers: any;
   isCreate: boolean;
   button: any;
@@ -63,12 +31,11 @@ export class ParkingsCreateComponent implements OnInit {
   validateParking: any;
   districtList: any;
 
-  constructor(public configure:ConfigureService, private messageService:MessageService, private router:Router, private staticData:StaticService, private parkingService:ParkingService, private route:ActivatedRoute, private location:Location, private cdRef:ChangeDetectorRef, private nzModalService:NzModalService) { 
+  constructor(public mapCom:MapComponent, public configure:ConfigureService, private messageService:MessageService, private router:Router, private staticData:StaticService, private parkingService:ParkingService, private route:ActivatedRoute, private location:Location, private cdRef:ChangeDetectorRef, private nzModalService:NzModalService) { 
     this.isCreate = !this.route.snapshot.paramMap.get('id')
     this.inputChange = false;
     this.button = this.messageService.getMessageObj().BUTTON;
     this.error = {}
-    this.markers = {}
 
     this.validateParking = ['name', 'addr', 'dist', 'tmpLocation', 'cap', 'price_details', 'worktime_details']
 
@@ -87,20 +54,50 @@ export class ParkingsCreateComponent implements OnInit {
       iconSize: [33.5, 40],
       iconAnchor: [16.5, 36.5]
     })
+
+    this.sideMap = mapCom.sideMap
+    this.markers = mapCom.markers
   }
 
   ngOnInit(): void {
-  
+    this.sideMap?.on('click', (event) => {
+      this.selectPosition(event)
+    })
+    this.getMarkers()
+    this.mapCom.toggleLayout(true)
   }
 
-  initMap(map:any) {
-    this.sideMap = map
+  ngOnDestroy(): void {
+    this.mapCom.removeOnClick()
+    this.mapCom.removeLayers()
+    this.mapCom.toggleLayout(false)
+  }
 
+  getMarkers() {
     this.staticData.loadDistrictAPI().subscribe({
       next: (hcmDistricts) => {
         this.districtList = hcmDistricts;
       }
     });
+
+    this.parkingService.query().subscribe({
+      next: (parkings: any) => {
+        parkings.forEach((element:any) => {
+          this.markers[element._id] = L.marker([element.loc.coordinates[1], element.loc.coordinates[0]], {
+            draggable: false,
+            icon: L.divIcon({
+              className: 'marker-parking',
+              iconSize: [33.5, 40],
+              iconAnchor: [16.5, 36.5]
+            }),
+            zIndexOffset: 10000,
+          })
+        })
+      
+        this.mapCom.detectChanges()
+        this.cdRef.detectChanges()
+      }
+    })
 
     if (!this.isCreate) {
       this.loadParkingByID(this.route.snapshot.paramMap.get('id'));
@@ -132,7 +129,7 @@ export class ParkingsCreateComponent implements OnInit {
           var latlng = L.latLng([this.newParking.loc.coordinates[1], this.newParking.loc.coordinates[0]])
           this.updateNewParking(latlng)
 
-          this.sideMap.flyTo(latlng, 15)
+          this.mapCom.flyToBounds([[this.newParking.loc.coordinates[1], this.newParking.loc.coordinates[0]]])
         }
       })
     }
@@ -297,15 +294,15 @@ export class ParkingsCreateComponent implements OnInit {
   back() {
     if (this.inputChange) {
       var modalInstance = this.modal('back');
-      // modalInstance.onHidden?.subscribe({
-      //   next: (reponse:string) => {
-      //     if (reponse === 'yes') {
-      //       this.router.navigateByUrl('/parkings')
-      //     }
-      //   }
-      // })
+      modalInstance.afterClose?.subscribe({
+        next: (reponse) => {
+          if (reponse === 'yes') {
+            this.router.navigateByUrl('/map/parkings')
+          }
+        }
+      })
     } else {
-      this.router.navigateByUrl('/parkings')
+      this.router.navigateByUrl('/map/parkings')
     }
   }
 
@@ -332,6 +329,9 @@ export class ParkingsCreateComponent implements OnInit {
         this.newParking['tmpLocation'] = latlng.lat.toFixed(4) + ' , ' + latlng.lng.toFixed(4);
       }
     }
+
+    this.mapCom.detectChanges()
+    this.cdRef.detectChanges()
   }
 
   getPosition() {
@@ -342,7 +342,7 @@ export class ParkingsCreateComponent implements OnInit {
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
-        this.sideMap.flyTo([position.coords.latitude, position.coords.longitude])
+        this.mapCom?.flyToBounds([[position.coords.latitude, position.coords.longitude]])
 
         this.updateNewParking({lat:position.coords.latitude, lng:position.coords.longitude})
       }, (err) => {
@@ -351,42 +351,5 @@ export class ParkingsCreateComponent implements OnInit {
     } else {
       window.alert('Browser is not support getting location!!!');
     }
-  }
-
-  searchRoad(geo:any) {
-    this.sideMap.flyTo([geo.geometry.coordinates[1], geo.geometry.coordinates[0]], 15)
-    this.searchText = geo.properties.name;
-  }
-
-  trackByFn(item:any) {
-    return item;
-  }
-
-  isSearch = false;
-  searchQuery = '';
-  searchResults:any = [];
-
-  searchIconClick() {
-    this.isSearch = false;
-    this.searchQuery = '';
-    this.searchResults = [];
-    this.cdRef.detectChanges()
-  }
-
-  searchSelect(result:any) {
-    if (result) {
-      if (result.geometry) {
-        this.searchQuery = result.properties.name
-        this.isSearch = false
-        this.sideMap?.flyTo([result.geometry.coordinates[1], result.geometry.coordinates[0]], 15);
-      }
-    }
-  }
-
-  isOpen = true;
-
-  toggleLayoutInfo(onoff?:boolean) {
-    this.isOpen = onoff || !this.isOpen;
-    this.cdRef.detectChanges()
   }
 }

@@ -1,248 +1,162 @@
-<div class="map-layout">
-    <div class="map-leaflet"
-        leaflet
-        [leafletOptions]="configure.options"
-        (leafletMapReady)="initMap($event)">
-    </div>
+<div class="map-layout-info-content" #mapLayoutInfo>
+    <div class="ui segments">
+        <div class="ui segment">
+            <h2 class="ui center aligned header">
+                <div class="content">
+                    Bãi đỗ xe
+                </div>
+            </h2>
+        </div>
+        <div class="ui secondary segment no-padding">
+            <nz-affix [nzTarget]="mapLayoutInfo">
+                <div  class="affix-header">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-6 p-0">
+                                <div class="btn-group">
+                                    <button class="btn btn-success" type="button" [routerLink]="['./create']">
+                                        <i class="fa-solid fa-plus"></i>
+                                        Thêm
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-6 p-0">
+                                <div class="btn-group float-end">
+            
+                                    <button class="btn btn-secondary dropdown" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="cloud download icon"></i>
+                                        Xuất dữ liệu
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                                        
+                                        <li><a class="dropdown-item" (click)="exportCSV()"><i class="file outline icon"></i> CSV</a></li>
+                                        <li><a class="dropdown-item" (click)="exportXLS()"><i class="file excel outline icon"></i> Excel</a></li>
+                                        <li><a class="dropdown-item" (click)="exportJSON()"><i class="file code outline icon"></i> JSON</a></li>
+                                    </ul>
 
-    <div class="map-search">
-        <div class="map-search-bar">
-            <nz-input-group [nzSuffix]="searchQuery.length > 0 ? suffixIconClose : suffixIconSearch" [nzSize]="'large'">
-                <input type="text" nz-input placeholder="Tìm vị trí" [(ngModel)]="searchQuery" appSearchRoads [appSearchRoadsText]="searchQuery" (newListRoads)="searchResults = $event" (isSearch)="isSearch = $event"/>
-            </nz-input-group>
-            <ng-template #suffixIconSearch>
-            <i nz-icon nzType="search"></i>
-            </ng-template>
-            <ng-template #suffixIconClose>
-                <i nz-icon nzType="close" (click)="searchIconClick()"></i>
-            </ng-template>
-    
-            <div class="results transition visible" *ngIf="searchResults?.length > 0 && isSearch">
-                <ul nz-menu>
-                    <li class="map-search-result" nz-menu-item *ngFor="let result of searchResults; index as i" (click)="searchSelect(result)">
-                        <b>{{result.properties.name}}</b>
+                                </div>                                
+                            </div>                        
+                        </div>
                         <br>
-                        {{result.properties.city}}
-                    </li>
-                </ul>
-            </div>
-            <div class="results transition visible" *ngIf="searchResults?.length <= 0 && isSearch" style="background-color: white;">
-                <a class="result">
-                    <div class="content">
-                        <div class="title">Không tìm thấy</div>
-                        <div class="description">Hãy thử lại</div>
+                        <div class="row">
+                            <nz-input-group [nzSuffix]="suffixIconFilter">
+                                <input type="text" nz-input placeholder="Tìm nhanh" [(ngModel)]="filter"/>
+                            </nz-input-group>
+                            <ng-template #suffixIconFilter>
+                                <i nz-icon><i class="filter icon"></i></i>
+                            </ng-template>                                   
+                        </div>     
                     </div>
-                </a>
-            </div>
+                </div>
+            </nz-affix>
         </div>
     </div>
 
-    <button class="map-layout-info-button" nz-button nzType="primary" [@mapLayoutInfoButton]="isOpen ? 'open' : 'closed'" (click)="toggleLayoutInfo()">
-        <i nz-icon nzType="{{isOpen ? 'right' : 'left'}}"></i>
-    </button>
-
-    <div [@mapLayoutInfo]="isOpen ? 'open' : 'closed'" class="map-layout-info-right">
-        <div class="map-layout-info-content" #mapLayoutInfo>
-            <div class="ui segments">
-                <div class="ui segment">
-                    <h2 class="ui center aligned header">
-                        <div class="content">
-                            Bãi đỗ xe
-                        </div>
-                    </h2>
-                </div>
-                <div class="ui secondary segment no-padding">
-                    <nz-affix [nzTarget]="mapLayoutInfo">
-                        <div  class="affix-header">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-6 p-0">
-                                        <div class="btn-group">
-                                            <button class="btn btn-success" type="button" [routerLink]="['./create']">
-                                                <i class="fa-solid fa-plus"></i>
-                                                Thêm
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 p-0">
-                                        <div class="btn-group float-end">
-                    
-                                            <button class="btn btn-secondary dropdown" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="cloud download icon"></i>
-                                                Xuất dữ liệu
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
-                                                
-                                                <li><a class="dropdown-item" (click)="exportCSV()"><i class="file outline icon"></i> CSV</a></li>
-                                                <li><a class="dropdown-item" (click)="exportXLS()"><i class="file excel outline icon"></i> Excel</a></li>
-                                                <li><a class="dropdown-item" (click)="exportJSON()" [href]="objectUrl" download="parkings.json"><i class="file code outline icon"></i> JSON</a></li>
-                                            </ul>
-   
-                                            <a class="btn btn-secondary" [href]="objectUrl | safe: 'url'" download="ttgt_camera-giao-thong.csv" [ngClass]="{'loading': !objectUrl, 'disabled': !objectUrl}">
-                                                <i class="download icon"></i>
-                                            </a>
-                                        </div>                                
-                                    </div>                        
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <nz-input-group [nzSuffix]="suffixIconFilter">
-                                        <input type="text" nz-input placeholder="Tìm nhanh" [(ngModel)]="filter"/>
-                                    </nz-input-group>
-                                    <ng-template #suffixIconFilter>
-                                        <i nz-icon><i class="filter icon"></i></i>
-                                    </ng-template>                                   
-                                </div>     
-                            </div>
-                        </div>
-                    </nz-affix>
-                </div>
-            </div>
-
-            <div *ngIf="!filter">
-                <accordion [isAnimated]="true" [closeOthers]="true">
-                    <div *ngFor="let district of listdistrict">
-                        <accordion-group  [isOpen]="district['expand']" (click)="selectDistrict(district)" panelClass="customClass">
-                            <span accordion-heading>{{district[0].dist}}</span>
-                        
-                                <accordion [isAnimated]="true" [closeOthers]="true">
-                                    <div id="{{parking._id}}" *ngFor="let parking of district">
-                                        <accordion-group [isOpen]="parking['expand']" (click)="focusToParking(parking)" panelClass="customClass">
-                                            <span accordion-heading>{{parking.name}} <span *ngIf="parking.name && parking.addr">-</span> {{parking.addr}}</span>
-                                      
-                                            <div class="container">
-                                                <div class="row" >
-                                                    <div class="col-md-8">
-                                                        <div class="mb-3" *ngIf="parking['vehicle_type']?.['car'] || parking['vehicle_type']?.['bike']">
-                                                            <h5 class="m-0">Mức giá</h5>
-                                                            <div *ngIf="parking['vehicle_type']['car']">
-                                                                <i class="fa-solid fa-car"></i> Giá từ {{parking['price']['car']['min']}} đến {{parking['price']['car']['max']}}
-                                                            </div>
-                                                            <div *ngIf="parking['vehicle_type']['bike']">
-                                                                <i class="fa-solid fa-motorcycle"></i> Giá từ {{parking['price']['bike']['min']}} đến {{parking['price']['bike']['max']}}
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="mb-3">
-                                                            <h5 class="m-0">Thời gian làm việc</h5>
-                                                            <div  *ngIf="parking?.worktime">
-                                                                <i class="fa-solid fa-clock"></i> Từ {{parking.worktime['startWorking']}} đến {{parking.worktime['endWorking']}} giờ
-                                                            </div>
-                                                            <div *ngIf="parking?.worktime_details">
-                                                                <i class="fa-solid fa-calendar-days"></i> {{parking.worktime_details}}
-                                                            </div>
-                                                        </div>
+    <div *ngIf="!filter">
+        <accordion [isAnimated]="true" [closeOthers]="true">
+            <div *ngFor="let district of listdistrict">
+                <accordion-group  [isOpen]="district['expand']" (isOpenChange)="selectDistrict($event, district)" panelClass="customClass">
+                    <span accordion-heading>{{district[0].dist}}</span>
+                
+                        <accordion [isAnimated]="true" [closeOthers]="true">
+                            <div id="{{parking._id}}" *ngFor="let parking of district">
+                                <accordion-group [isOpen]="parking['expand']" (click)="focusToParking(parking)" panelClass="customClass">
+                                    <span accordion-heading>{{parking.name}} <span *ngIf="parking.name && parking.addr">-</span> {{parking.addr}}</span>
+                              
+                                    <div class="container">
+                                        <div class="row" >
+                                            <div class="col-md-8">
+                                                <div class="mb-3" *ngIf="parking['vehicle_type']?.['car'] || parking['vehicle_type']?.['bike']">
+                                                    <h5 class="m-0">Mức giá</h5>
+                                                    <div *ngIf="parking['vehicle_type']['car']">
+                                                        <i class="fa-solid fa-car"></i> Giá từ {{parking['price']['car']['min']}} đến {{parking['price']['car']['max']}}
                                                     </div>
+                                                    <div *ngIf="parking['vehicle_type']['bike']">
+                                                        <i class="fa-solid fa-motorcycle"></i> Giá từ {{parking['price']['bike']['min']}} đến {{parking['price']['bike']['max']}}
+                                                    </div>
+                                                </div>
 
-                                                    <div class="col-md-4">
-                                                        <button class="btn btn-primary" [routerLink]="['.', parking._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
+                                                <div class="mb-3">
+                                                    <h5 class="m-0">Thời gian làm việc</h5>
+                                                    <div  *ngIf="parking?.worktime">
+                                                        <i class="fa-solid fa-clock"></i> Từ {{parking.worktime['startWorking']}} đến {{parking.worktime['endWorking']}} giờ
+                                                    </div>
+                                                    <div *ngIf="parking?.worktime_details">
+                                                        <i class="fa-solid fa-calendar-days"></i> {{parking.worktime_details}}
                                                     </div>
                                                 </div>
                                             </div>
-                                        </accordion-group>
-                                    </div>
-                                </accordion>
-                        </accordion-group>
-                    </div>
-                </accordion>
-            </div>
 
-            <div class="ui segment" *ngIf="listParking.length == 0">
-                <h4 class="ui center aligned header">
-                    <div class="content" *ngIf="isLoading">
-                        <nz-spin nzSimple></nz-spin>
-                        Đang tải...
-                    </div>
-                    <div class="content" *ngIf="!isLoading && listParking.length == 0">
-                        Không có bãi đỗ xe nào nào
-                    </div>
-                </h4>
-            </div>
-
-            <div *ngIf="filter">
-                <accordion [isAnimated]="true" [closeOthers]="true">
-                    <div *ngFor="let parking of listParking | filter:filterCustome:filter">
-                        <accordion-group (click)="focusToParking(parking)" panelClass="customClass">
-                            <span accordion-heading>{{parking.name}} <span *ngIf="parking.name && parking.addr">-</span>{{parking.addr}}</span>
-
-                            <div class="container">
-                                <div class="row mb-3" *ngIf="parking['vehicle_type']['car'] || parking['vehicle_type']['bike']">
-                                    <div class="col-md-8">
-                                        <h5 class="m-0">Mức giá</h5>
-                                        <div *ngIf="parking['vehicle_type']['car']">
-                                            <i class="fa-solid fa-car"></i> Giá từ {{parking['price']['car']['min']}} đến {{parking['price']['car']['max']}}
-                                        </div>
-                                        <div *ngIf="parking['vehicle_type']['bike']">
-                                            <i class="fa-solid fa-motorcycle"></i> Giá từ {{parking['price']['bike']['min']}} đến {{parking['price']['bike']['max']}}
+                                            <div class="col-md-4">
+                                                <button class="btn btn-primary" [routerLink]="['.', parking._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
+                                            </div>
                                         </div>
                                     </div>
+                                </accordion-group>
+                            </div>
+                        </accordion>
+                </accordion-group>
+            </div>
+        </accordion>
+    </div>
 
-                                    <div class="col-md-4">
-                                        <button class="btn btn-primary" [routerLink]="['.', parking._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
-                                    </div>
+    <div class="ui segment" *ngIf="listParking.length == 0">
+        <h4 class="ui center aligned header">
+            <div class="content" *ngIf="isLoading">
+                <nz-spin nzSimple></nz-spin>
+                Đang tải...
+            </div>
+            <div class="content" *ngIf="!isLoading && listParking.length == 0">
+                Không có bãi đỗ xe nào
+            </div>
+        </h4>
+    </div>
+
+    <div *ngIf="filter">
+        <accordion [isAnimated]="true" [closeOthers]="true">
+            <div *ngFor="let parking of listParking | filter:filterCustome:filter">
+                <accordion-group (click)="focusToParking(parking)" panelClass="customClass">
+                    <span accordion-heading>{{parking.name}} <span *ngIf="parking.name && parking.addr">-</span>{{parking.addr}}</span>
+
+                    <div class="container">
+                        <div class="row mb-3" *ngIf="parking['vehicle_type']['car'] || parking['vehicle_type']['bike']">
+                            <div class="col-md-8">
+                                <h5 class="m-0">Mức giá</h5>
+                                <div *ngIf="parking['vehicle_type']['car']">
+                                    <i class="fa-solid fa-car"></i> Giá từ {{parking['price']['car']['min']}} đến {{parking['price']['car']['max']}}
                                 </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-md-12">
-                                        <h5 class="m-0">Thời gian làm việc</h5>
-                                        <div  *ngIf="parking?.worktime">
-                                            <i class="fa-solid fa-clock"></i> Từ {{parking.worktime['startWorking']}} đến {{parking.worktime['endWorking']}} giờ
-                                        </div>
-                                        <div *ngIf="parking?.worktime_details">
-                                            <i class="fa-solid fa-calendar-days"></i> {{parking.price_details}}
-                                        </div>
-                                    </div>
+                                <div *ngIf="parking['vehicle_type']['bike']">
+                                    <i class="fa-solid fa-motorcycle"></i> Giá từ {{parking['price']['bike']['min']}} đến {{parking['price']['bike']['max']}}
                                 </div>
                             </div>
-                        </accordion-group>
-                    </div>
-                </accordion>
 
-                <div class="ui segment"  *ngIf="(listParking | filter:filterCustome:filter).length == 0">
-                    <h4 class="ui center aligned header">
-                        <div class="content">
-                            Không có tìm thấy bãi đỗ xe nào
+                            <div class="col-md-4">
+                                <button class="btn btn-primary" [routerLink]="['.', parking._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
+                            </div>
                         </div>
-                    </h4>
-                </div>
-            </div>
-            <!-- <accordion [isAnimated]="true" [closeOthers]="true">
-                <div *ngFor="let district of listdistrict">
-                    <accordion-group  [isOpen]="district['expand']" (click)="selectDistrict(district)">
-                        <span accordion-heading>{{district[0].dist}}</span>
-                    
-                        <div class="list-group">
-                            <accordion [isAnimated]="true" [closeOthers]="true">
-                                <div id="{{parking._id}}" *ngFor="let parking of district">
-                                    <accordion-group [isOpen]="parking['expand']" (click)="focusToParking(parking)">
-                                        <span accordion-heading>{{parking.name}} <span *ngIf="parking.name && parking.addr">-</span> {{parking.addr}}</span>
-                                  
-                                        <div class="list-group">
-                                            <div>
-                                                <p *ngIf="parking.worktime_details"><img src="../../../assets/images/worktime_16.png" />
-                                                    <span>{{parking.worktime_details}}</span>
-                                                </p>
-                                            </div>
-                                            <br/>
-                                            <div>
-                                                <p *ngIf="parking?.worktime"><i class="calendar icon"></i> <span>Từ {{parking.worktime[0][0]}} đến
-                                                    {{parking.worktime[0][1]}} giờ </span>
-                                                </p>
-                                                <p *ngIf="parking?.price_details"><img src="../../../assets/images/price_16.png" /> <span>{{parking.price_details}}</span></p>
-                                                <p *ngIf="parking?.cap"><i class="grid layout icon"></i> {{parking.cap}} chỗ</p>
-                                                <p *ngIf="parking?.avl"><strong>Số chỗ trống: </strong> {{parking.avl}}</p>
-                                                <p *ngIf="parking?.note"><img src="../../../assets/images/note_16.png" /> <span class="parking-detail">{{parking.note}}</span></p>
-                                            </div>
-                                            <br/>
-                                            <a class="ui primary button" [routerLink]="['.', parking._id, 'update']">Chỉnh sửa</a>
-                                        </div>
-                                    </accordion-group>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <h5 class="m-0">Thời gian làm việc</h5>
+                                <div  *ngIf="parking?.worktime">
+                                    <i class="fa-solid fa-clock"></i> Từ {{parking.worktime['startWorking']}} đến {{parking.worktime['endWorking']}} giờ
                                 </div>
-                            </accordion>
+                                <div *ngIf="parking?.worktime_details">
+                                    <i class="fa-solid fa-calendar-days"></i> {{parking.price_details}}
+                                </div>
+                            </div>
                         </div>
-                    </accordion-group>
+                    </div>
+                </accordion-group>
+            </div>
+        </accordion>
+
+        <div class="ui segment"  *ngIf="(listParking | filter:filterCustome:filter).length == 0">
+            <h4 class="ui center aligned header">
+                <div class="content">
+                    Không có tìm thấy bãi đỗ xe trên
                 </div>
-            </accordion> -->
+            </h4>
         </div>
     </div>
 </div>

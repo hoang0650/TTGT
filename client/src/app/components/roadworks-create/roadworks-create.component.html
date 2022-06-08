@@ -5,7 +5,7 @@
         (leafletMapReady)="initMap($event)"
         (leafletClick)="selectPosition($event)">
         
-        <div [leafletLayer]="this.markers['newMarker']"></div>
+        <div *ngFor="let marker of markers | keyvalue; trackBy:trackByFn" [leafletLayer]="$any(marker).value"></div>
     </div>
 
     <div class="map-search">

@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MapInformationComponent } from '../map-information/map-information.component';
 import { MapComponent } from '../map/map.component';
 
 declare var $: any;
@@ -11,7 +12,7 @@ declare var $: any;
 export class MapPopupCreateEventComponent implements OnInit {
   event: any;
   
-  constructor(public map:MapComponent, public cdRef:ChangeDetectorRef) {
+  constructor(public map:MapInformationComponent, public cdRef:ChangeDetectorRef) {
 
   }
 

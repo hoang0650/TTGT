@@ -279,7 +279,13 @@ export class RoadworksComponent implements OnInit {
     this.exported = true;
     this.roadworkService.getRoadWorkCSV().subscribe({ 
       next:(res:any) => {
-        this.objectUrl = URL.createObjectURL(new Blob([res], { type: 'text/csv' }));
+        const url = URL.createObjectURL(new Blob([res],{type:'text/csv'}));
+        const e = document.createElement('a');
+        e.href = url;
+        e.download = "ttgt-roadworks.csv";
+        document.body.appendChild(e);
+        e.click();
+        document.body.removeChild(e);
       }
     });
   }
@@ -287,14 +293,20 @@ export class RoadworksComponent implements OnInit {
   exportXLS(){
     delete this.objectUrl;
     this.exported = true;
-    this.roadworkService.exportExcel(this.listRoadwork,'roadworks');
+    this.roadworkService.exportExcel(this.listRoadwork,'ttgt-roadworks');
   }
 
   exportJSON() {
     var theJSON = JSON.stringify(this.listRoadwork);
-    var uri = this.sanitizer.bypassSecurityTrustUrl("data:text/json;charset=UTF-8," + encodeURIComponent(theJSON));
-    this.objectUrl =uri;
-}
+
+    const url = URL.createObjectURL(new Blob([theJSON],{type:'text/csv'}));
+    const e = document.createElement('a');
+    e.href = url;
+    e.download = "ttgt-roadworks.json";
+    document.body.appendChild(e);
+    e.click();
+    document.body.removeChild(e);
+  }
 
   trackByFn(item:any) {
     return item;

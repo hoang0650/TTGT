@@ -92,7 +92,7 @@ export class ParkingsComponent implements OnInit, OnDestroy {
           
           this.markers[element._id].on("click", (event:any) => {
             this.focusAndExpandParking(element._id);
-            this.
+            this.mapCom.toggleLayout(true)
           //         // setTimeout(function () {
           //         //     $anchorScroll(element._id);
           //         // }, 1000);
