@@ -1,131 +1,85 @@
-<div class="map-layout">
-    <div class="map-leaflet"
-        leaflet
-        [leafletOptions]="configure.options"
-        (leafletMapReady)="initMap($event)">
-    </div>
-
-    <div class="map-search">
-        <div class="map-search-bar">
-            <nz-input-group [nzSuffix]="searchQuery.length > 0 ? suffixIconClose : suffixIconSearch" [nzSize]="'large'">
-                <input type="text" nz-input placeholder="Tìm vị trí" [(ngModel)]="searchQuery" appSearchRoads [appSearchRoadsText]="searchQuery" (newListRoads)="searchResults = $event" (isSearch)="isSearch = $event"/>
-            </nz-input-group>
-            <ng-template #suffixIconSearch>
-            <i nz-icon nzType="search"></i>
-            </ng-template>
-            <ng-template #suffixIconClose>
-                <i nz-icon nzType="close" (click)="searchIconClick()"></i>
-            </ng-template>
-    
-            <div class="results transition visible" *ngIf="searchResults?.length > 0 && isSearch">
-                <ul nz-menu>
-                    <li class="map-search-result" nz-menu-item *ngFor="let result of searchResults; index as i" (click)="searchSelect(result)">
-                        <b>{{result.properties.name}}</b>
+<div class="map-layout-info-content" #mapLayoutInfo>
+    <div class="ui segments">
+        <div class="ui segment">
+            <h2 class="ui center aligned header">
+                <div class="content">
+                    Lớp thông tin tĩnh
+                </div>
+            </h2>
+        </div>
+        <div class="ui secondary segment no-padding">
+            <nz-affix [nzTarget]="mapLayoutInfo">
+                <div  class="affix-header">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-6 p-0">
+                                <div class="btn-group">
+                                    <button class="btn btn-success" type="button" [routerLink]="['./create']">
+                                        <i class="fa-solid fa-plus"></i>
+                                        Thêm
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-6 p-0">
+                                <div class="btn-group float-end">
+            
+                                    <button class="btn btn-secondary dropdown" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="cloud download icon"></i>
+                                        Xuất dữ liệu
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                                        
+                                        <li><a class="dropdown-item" (click)="exportCSV()"><i class="file outline icon"></i> CSV</a></li>
+                                        <li><a class="dropdown-item" (click)="exportXLS()"><i class="file excel outline icon"></i> Excel</a></li>
+                                        <li><a class="dropdown-item" (click)="exportJSON()"><i class="file code outline icon"></i> JSON</a></li>
+                                    </ul>
+                                </div>
+                                
+                            </div>                        
+                        </div>
                         <br>
-                        {{result.properties.city}}
-                    </li>
-                </ul>
-            </div>
-            <div class="results transition visible" *ngIf="searchResults?.length <= 0 && isSearch" style="background-color: white;">
-                <a class="result">
-                    <div class="content">
-                        <div class="title">Không tìm thấy</div>
-                        <div class="description">Hãy thử lại</div>
+                        <div class="row">
+                            <nz-input-group [nzSuffix]="suffixIconFilter">
+                                <input type="text" nz-input placeholder="Tìm nhanh" [(ngModel)]="searchText"/>
+                            </nz-input-group>
+                            <ng-template #suffixIconFilter>
+                                <i nz-icon><i class="filter icon"></i></i>
+                            </ng-template>                                   
+                        </div>     
                     </div>
-                </a>
-            </div>
+                </div>
+            </nz-affix>
         </div>
     </div>
 
-    <button class="map-layout-info-button" nz-button nzType="primary" [@mapLayoutInfoButton]="isOpen ? 'open' : 'closed'" (click)="toggleLayoutInfo()">
-        <i nz-icon nzType="{{isOpen ? 'right' : 'left'}}"></i>
-    </button>
-
-    <div [@mapLayoutInfo]="isOpen ? 'open' : 'closed'" class="map-layout-info-right">
-        <div class="map-layout-info-content" #mapLayoutInfo>
-            <div class="ui segments">
-                <div class="ui segment">
-                    <h2 class="ui center aligned header">
-                        <div class="content">
-                            Lớp thông tin tĩnh
-                        </div>
-                    </h2>
-                </div>
-                <div class="ui secondary segment no-padding">
-                    <nz-affix [nzTarget]="mapLayoutInfo">
-                        <div  class="affix-header">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-6 p-0">
-                                        <div class="btn-group">
-                                            <button class="btn btn-success" type="button" [routerLink]="['./create']">
-                                                <i class="fa-solid fa-plus"></i>
-                                                Thêm
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 p-0">
-                                        <div class="btn-group float-end">
-                    
-                                            <button class="btn btn-secondary dropdown" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="cloud download icon"></i>
-                                                Xuất dữ liệu
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
-                                                
-                                                <li><a class="dropdown-item" (click)="exportCSV()"><i class="file outline icon"></i> CSV</a></li>
-                                                <li><a class="dropdown-item" (click)="exportXLS()"><i class="file excel outline icon"></i> Excel</a></li>
-                                                <li><a class="dropdown-item" (click)="exportJSON()"><i class="file code outline icon"></i> JSON</a></li>
-                                            </ul>
-                                        </div>
-                                        
-                                    </div>                        
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <nz-input-group [nzSuffix]="suffixIconFilter">
-                                        <input type="text" nz-input placeholder="Tìm nhanh" [(ngModel)]="searchText"/>
-                                    </nz-input-group>
-                                    <ng-template #suffixIconFilter>
-                                        <i nz-icon><i class="filter icon"></i></i>
-                                    </ng-template>                                   
-                                </div>     
-                            </div>
-                        </div>
-                    </nz-affix>
-                </div>
+    <div class="ui segment">
+        <h4 class="ui center aligned header" *ngIf="listData.length == 0">
+            <div class="content" *ngIf="isLoading">
+                <nz-spin nzSimple></nz-spin>
+                Đang tải...
             </div>
+            <div class="content" *ngIf="!isLoading && listData.length == 0">
+                <nz-spin nzSimple></nz-spin>
+                Không có lớp thông tin tĩnh nào
+            </div>
+        </h4>
 
-            <div class="ui segment">
-                <h4 class="ui center aligned header" *ngIf="listData.length == 0">
-                    <div class="content" *ngIf="isLoading">
-                        <nz-spin nzSimple></nz-spin>
-                        Đang tải...
-                    </div>
-                    <div class="content" *ngIf="!isLoading && listData.length == 0">
-                        <nz-spin nzSimple></nz-spin>
-                        Không có lớp thông tin tĩnh nào
-                    </div>
-                </h4>
-
-                <div class="ui middle aligned selection divided list">
-                    <div [ngClass]="{'active': staticMap['selected']}" class="item" (click)="selectStaticMap(staticMap)" *ngFor="let staticMap of listData | searchFilter: searchText:['staticMapData', 'name']">
-                        <div class="left floated content ">
-                            <div *ngIf="!staticMap?.staticMapData?.icon" class="ui simple dropdown label color-picker {{staticMap.color ? staticMap.color : 'black'}}">
-                                <div class="menu ui grid">
-                                    <div class="item {{item.key}} four wide column item-color-hover" (click)="changeColorStaticMap(staticMap, item.key);$event.stopPropagation()" *ngFor="let item of listColors | keyvalue"></div>
-                                </div>
-                            </div>
-                            <img *ngIf="staticMap?.staticMapData?.icon" class="ui avatar image" src="{{staticMap.staticMapData.icon.data.iconUrl}}">
-                        </div>
-                        <div class="right floated content ">
-                            <a class="ui icon button" [routerLink]="['.', staticMap.staticMapData._id, 'update']" data-tooltip="Chỉnh sửa lớp thông tin" data-position="top right"><i class="ui write icon"></i></a>
-                        </div>
-                        <div class="content">
-                            <span class="header"> {{staticMap.staticMapData.name}} </span>
-                            <span> {{staticMap.staticMapData.description}} </span>
+        <div class="ui middle aligned selection divided list">
+            <div [ngClass]="{'active': staticMap['selected']}" class="item" (click)="selectStaticMap(staticMap)" *ngFor="let staticMap of listData | searchFilter: searchText:['staticMapData', 'name']">
+                <div class="left floated content ">
+                    <div *ngIf="!staticMap?.staticMapData?.icon" class="ui simple dropdown label color-picker {{staticMap.color ? staticMap.color : 'black'}}">
+                        <div class="menu ui grid">
+                            <div class="item {{item.key}} four wide column item-color-hover" (click)="changeColorStaticMap(staticMap, item.key);$event.stopPropagation()" *ngFor="let item of listColors | keyvalue"></div>
                         </div>
                     </div>
+                    <img *ngIf="staticMap?.staticMapData?.icon" class="ui avatar image" src="{{staticMap.staticMapData.icon.data.iconUrl}}">
+                </div>
+                <div class="right floated content ">
+                    <a class="ui icon button" [routerLink]="['.', staticMap.staticMapData._id, 'update']" data-tooltip="Chỉnh sửa lớp thông tin" data-position="top right"><i class="ui write icon"></i></a>
+                </div>
+                <div class="content">
+                    <span class="header"> {{staticMap.staticMapData.name}} </span>
+                    <span> {{staticMap.staticMapData.description}} </span>
                 </div>
             </div>
         </div>

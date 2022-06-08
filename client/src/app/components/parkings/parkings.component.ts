@@ -65,6 +65,7 @@ export class ParkingsComponent implements OnInit, OnDestroy {
     });
 
     this.sideMap = this.mapCom.sideMap
+    this.markers = this.mapCom.markers
   }
 
   ngOnInit(): void {
@@ -73,7 +74,7 @@ export class ParkingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.removeMarkers()
+    this.mapCom.removeLayers()
     this.mapCom.toggleLayout(false)
   }
 
@@ -88,7 +89,6 @@ export class ParkingsComponent implements OnInit, OnDestroy {
             icon: this.normalIcon,
             zIndexOffset: 10000,
           })
-          this.sideMap?.addLayer(this.markers[element._id])
           
           this.markers[element._id].on("click", (event:any) => {
             this.focusAndExpandParking(element._id);
@@ -119,12 +119,6 @@ export class ParkingsComponent implements OnInit, OnDestroy {
         this.mapCom.detectChanges()
         this.cdRef.detectChanges()
       }
-    })
-  }
-
-  removeMarkers() {
-    Object.keys(this.markers).forEach(key => {
-      this.sideMap?.removeLayer(this.markers[key])
     })
   }
 

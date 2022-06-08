@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import L from 'leaflet';
 import _ from 'lodash';
@@ -25,7 +25,7 @@ declare var $: any;
   templateUrl: './cameras-create.component.html',
   styleUrls: ['./cameras-create.component.css'],
 })
-export class CamerasCreateComponent implements OnInit {
+export class CamerasCreateComponent implements OnInit, OnDestroy {
   validateCamera: string[];
   inputChange: boolean;
   countGeo: number;

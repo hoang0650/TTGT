@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ComponentFactoryResolver, Injector, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ComponentFactoryResolver, Injector, OnDestroy, OnInit } from '@angular/core';
 import L from 'leaflet';
 import _ from 'lodash';
 import { ConfigureService } from 'src/app/services/configure.service';
@@ -16,7 +16,7 @@ declare var $:any;
   templateUrl: './events-manager.component.html',
   styleUrls: ['./events-manager.component.css'],
 })
-export class EventsManagerComponent implements OnInit {
+export class EventsManagerComponent implements OnInit, OnDestroy {
   statusList: any;
   statusListArray: any;
   status: string;

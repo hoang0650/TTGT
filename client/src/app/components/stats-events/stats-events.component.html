@@ -1,146 +1,48 @@
-<!-- <div class="ui stackable grid full-height management-with-map">
-
-  
-    <div class="sixteen wide mobile  sixteen wide tablet eight wide computer column full-height-with-scroll right-side ">
-      <div class="ui segments">
-        <div class="ui segment">
-          <h2 class="ui teal center aligned icon header">
-            <div class="content">
-              Thống kê cảnh báo
-            </div>
+<div class="map-layout-info-content" #mapLayoutInfo>
+  <div class="ui segments">
+      <div class="ui segment">
+          <h2 class="ui center aligned header">
+              <div class="content">
+                  Thống kê cảnh báo
+              </div>
           </h2>
-        </div>
-        <div class="ui secondary segment">
-        </div>
-        <div class="ui segment">
-          <div class="ui form">
-            <div class="fields">
-              <div class="five wide field required">
-                <label>Ngày bắt đầu</label>
-                <input id="startDate" [(ngModel)]="startDate" type="date">
-              </div>
-              <div class="five wide field required">
-                <label>Ngày kết thúc</label>
-                <input id="endDate" [(ngModel)]="endDate" type="date">
-              </div>
-              <div class="four wide field">
-                <label>&nbsp;</label>
-                <a class="ui fluid button" (click)="refresh()">Xem</a>
-              </div>
-              <div class="two wide field">
-                <label>&nbsp;</label>
-                <a class="ui fluid icon button" [ngClass]="{'loading': !exported, 'disabled': !exportUrl}" [href]="exportUrl | safe: 'url'" download="ttgt_events.csv">
-                  <i class="cloud download icon" ></i>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="ui segment" [ngClass]="{'loading':isWeeklyLoading}">
-          <canvas baseChart [data]="weekly" [type]="chartType">
-          </canvas>
-        </div>
-        <div class="ui segment" [ngClass]="{'loading':isMonthlyLoading}">
-          <canvas baseChart [data]="monthly" [type]="chartType">
-          </canvas>
-        </div>
       </div>
-    </div>
-  </div> -->
-  
+      <div class="ui secondary segment no-padding">
+          <nz-affix [nzTarget]="mapLayoutInfo">
+              <div  class="affix-header">
+                  <div class="container">
+                      <div class="row">
+                          <div class="col-6">
+                              <label>Ngày bắt đầu</label>
+                              <input nz-input id="startDate" [(ngModel)]="startDate" type="date">
+                          </div>
+                          <div class="col-6">
+                              <label>Ngày kết thúc</label>
+                              <input nz-input id="endDate" [(ngModel)]="endDate" type="date">
+                          </div>
+                      </div>
+                      <br>
+                      <div class="row">
+                          <div class="btn-group">
+                              <button type="button" class="btn btn-primary" (click)="refresh()">Xem</button>
+                              <a class="btn btn-secondary" [ngClass]="{'loading': !exported, 'disabled': !exportUrl}" [href]="exportUrl | safe: 'url'" download="ttgt_events.csv">
+                                  <i class="cloud download icon" ></i>
+                                  Xuất CSV
+                              </a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </nz-affix>
+      </div>
+  </div>
 
-<div class="map-layout">
-    <div class="map-leaflet"
-        leaflet
-        [leafletOptions]="configure.options"
-        (leafletMapReady)="initMap($event)">
-    </div>
-
-    <div class="map-search">
-        <div class="map-search-bar">
-            <nz-input-group [nzSuffix]="searchQuery.length > 0 ? suffixIconClose : suffixIconSearch" [nzSize]="'large'">
-                <input type="text" nz-input placeholder="Tìm vị trí" [(ngModel)]="searchQuery" appSearchRoads [appSearchRoadsText]="searchQuery" (newListRoads)="searchResults = $event" (isSearch)="isSearch = $event"/>
-            </nz-input-group>
-            <ng-template #suffixIconSearch>
-            <i nz-icon nzType="search"></i>
-            </ng-template>
-            <ng-template #suffixIconClose>
-                <i nz-icon nzType="close" (click)="searchIconClick()"></i>
-            </ng-template>
-    
-            <div class="results transition visible" *ngIf="searchResults?.length > 0 && isSearch">
-                <ul nz-menu>
-                    <li class="map-search-result" nz-menu-item *ngFor="let result of searchResults; index as i" (click)="searchSelect(result)">
-                        <b>{{result.properties.name}}</b>
-                        <br>
-                        {{result.properties.city}}
-                    </li>
-                </ul>
-            </div>
-            <div class="results transition visible" *ngIf="searchResults?.length <= 0 && isSearch" style="background-color: white;">
-                <a class="result">
-                    <div class="content">
-                        <div class="title">Không tìm thấy</div>
-                        <div class="description">Hãy thử lại</div>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <button class="map-layout-info-button" nz-button nzType="primary" [@mapLayoutInfoButton]="isOpen ? 'open' : 'closed'" (click)="toggleLayoutInfo()">
-        <i nz-icon nzType="{{isOpen ? 'right' : 'left'}}"></i>
-    </button>
-
-    <div [@mapLayoutInfo]="isOpen ? 'open' : 'closed'" class="map-layout-info-right">
-            
-            <div class="map-layout-info-content" #mapLayoutInfo>
-                <div class="ui segments">
-                    <div class="ui segment">
-                        <h2 class="ui center aligned header">
-                            <div class="content">
-                                Thống kê cảnh báo
-                            </div>
-                        </h2>
-                    </div>
-                    <div class="ui secondary segment no-padding">
-                        <nz-affix [nzTarget]="mapLayoutInfo">
-                            <div  class="affix-header">
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <label>Ngày bắt đầu</label>
-                                            <input nz-input id="startDate" [(ngModel)]="startDate" type="date">
-                                        </div>
-                                        <div class="col-6">
-                                            <label>Ngày kết thúc</label>
-                                            <input nz-input id="endDate" [(ngModel)]="endDate" type="date">
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="row">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-primary" (click)="refresh()">Xem</button>
-                                            <a class="btn btn-secondary" [ngClass]="{'loading': !exported, 'disabled': !exportUrl}" [href]="exportUrl | safe: 'url'" download="ttgt_events.csv">
-                                                <i class="cloud download icon" ></i>
-                                                Xuất CSV
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </nz-affix>
-                    </div>
-                </div>
-
-            <div class="ui segment" [ngClass]="{'loading':isWeeklyLoading}">
-                <canvas baseChart [data]="weekly" [type]="chartType">
-                </canvas>
-            </div>
-            <div class="ui segment" [ngClass]="{'loading':isMonthlyLoading}">
-                <canvas baseChart [data]="monthly" [type]="chartType">
-                </canvas>
-            </div>
-        </div>
-    </div>
+<div class="ui segment" [ngClass]="{'loading':isWeeklyLoading}">
+  <canvas baseChart [data]="weekly" [type]="chartType">
+  </canvas>
+</div>
+<div class="ui segment" [ngClass]="{'loading':isMonthlyLoading}">
+  <canvas baseChart [data]="monthly" [type]="chartType">
+  </canvas>
+</div>
 </div>

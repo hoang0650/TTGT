@@ -1,53 +1,22 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DatePipe } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import 'heatmap.js';
 import { ConfigureService } from 'src/app/services/configure.service';
 import { StatsService } from 'src/app/services/stats.service';
+import { MapComponent } from '../map/map.component';
 
 declare const HeatmapOverlay: any;
 
 @Component({
   selector: 'app-stats-events',
+  host: {
+    class: 'map-layout-info-container'
+  },
   templateUrl: './stats-events.component.html',
   styleUrls: ['./stats-events.component.css'],
-  animations: [
-    trigger('mapLayoutInfo', [
-      state('open', style({
-        position: 'absolute',
-        right: '0%',
-      })),
-      state('closed', style({
-        position: 'absolute',
-        right: '-408px',
-      })),
-      transition('open => closed', [
-        animate('0.3s')
-      ]),
-      transition('closed => open', [
-        animate('0.3s')
-      ]),
-    ]),
-    trigger('mapLayoutInfoButton', [
-    state('open', style({
-      position: 'absolute',
-      right: '408px',
-    })),
-    state('closed', style({
-      position: 'absolute',
-      right: '0px',
-    })),
-    transition('open => closed', [
-      animate('0.3s')
-    ]),
-    transition('closed => open', [
-      animate('0.3s')
-    ]),
-    ]),
-  ]
 })
-export class StatsEventsComponent implements OnInit {
+export class StatsEventsComponent implements OnInit, OnDestroy {
   isWeeklyLoading = false;
   isHeatmapLoading = false;
   isMonthlyLoading = false;
@@ -59,8 +28,7 @@ export class StatsEventsComponent implements OnInit {
   startDate:any;
   endDate:any;
   chartType: ChartType = 'bar';
-  sideMap: any;
-  options: any;
+  sideMap?: L.Map;
 
   heatData: any = {
     data: [
@@ -68,28 +36,24 @@ export class StatsEventsComponent implements OnInit {
   }
   heatmapLayer: any;
 
-  constructor(public configure:ConfigureService, private statsService:StatsService, private datePipe:DatePipe, private cdRef:ChangeDetectorRef) {
+  constructor(public mapCom:MapComponent, public configure:ConfigureService, private statsService:StatsService, private datePipe:DatePipe, private cdRef:ChangeDetectorRef) {
     this.startDate = this.datePipe.transform(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), 'yyyy-MM-dd');
     this.endDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
 
-    this.options = {
-      layers: [
-        this.configure.baselayer.tiles,
-      ],
-
-      worldCopyJump: true,
-      center: [  10.762622, 106.660172 ],
-      zoom: 14
-    }
+    this.sideMap = mapCom.sideMap
   }
 
   ngOnInit(): void {
-    
+    this.getHeatMap()
+    this.mapCom.toggleLayout(true)
   }
 
-  initMap(map:any) {
-    this.sideMap = map
+  ngOnDestroy(): void {
+    this.mapCom.removeLayers()
+    this.mapCom.toggleLayout(false)
+  }
 
+  getHeatMap() {
     const heatLayerConfig = {
       "radius": 0.001,
       "maxOpacity": .5,
@@ -106,7 +70,7 @@ export class StatsEventsComponent implements OnInit {
 
     this.refresh()
     setTimeout(() => {
-      this.sideMap.invalidateSize()
+      this.sideMap?.invalidateSize()
     })
   }
 
@@ -198,35 +162,8 @@ export class StatsEventsComponent implements OnInit {
     this.loadMonthlyChart();
 
     this.refreshExport();
+    
+    this.mapCom.detectChanges()
+    this.cdRef.detectChanges()
   };
-
-  isSearch = false;
-  searchQuery = '';
-  searchResults:any = [];
-
-  searchIconClick() {
-    this.isSearch = false;
-    this.searchQuery = '';
-    this.searchResults = [];
-    this.cdRef.detectChanges()
-  }
-
-  searchSelect(result:any) {
-    if (result) {
-      if (result.geometry) {
-        this.searchQuery = result.properties.name
-        this.isSearch = false
-        this.sideMap?.flyTo([result.geometry.coordinates[1], result.geometry.coordinates[0]], 15);
-      }
-    }
-  }
-
-  isOpen = true;
-
-  toggleLayoutInfo(onoff?:boolean) {
-    this.isOpen = onoff || !this.isOpen;
-    this.cdRef.detectChanges()
-  }
-
- 
 }
