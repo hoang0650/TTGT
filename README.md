@@ -27,15 +27,15 @@
 + `Thống kê cảnh báo:` hiển thị biểu đồ các cảnh báo theo `ngày`, `hàng tuần`, `hàng tháng`.
 
 ## 💻 Công nghệ sử dụng
-- [Angular] (https://angular.io/)
-- [NodeJS] (https://nodejs.org/en/)
-- [MongoDB] (https://www.mongodb.com/)
+- [Angular](https://angular.io/)
+- [NodeJS](https://nodejs.org/en/)
+- [MongoDB](https://www.mongodb.com/)
 - [Auth0](https://auth0.com/)
 - và các công nghệ khác
 
 ## 👤 Phía người dùng
 
-Dự án được tạo với [Angular CLI] (https://github.com/angular/angular-cli)  v13.2.5.
+Dự án được tạo với [Angular CLI](https://github.com/angular/angular-cli)  v13.2.5.
 Để chạy dự án bạn cần phải cài đặt các module, bạn cần sử dụng câu lệnh `npm install`, sau đó sử dụng câu lệnh `npm start` để chạy dự án phía người dùng
 
 ### ⚙️ Thiết lập Auth0
@@ -146,7 +146,7 @@ Sau đó nhấn Save change.
 
 ## 🖥 Phía máy chủ
 
-- Dự án được tạo với [NodeJS] (https://nodejs.org/en/)  v14.15.4.
+- Dự án được tạo với [NodeJS](https://nodejs.org/en/)  v14.15.4.
 - Để chạy dự án bạn cần phải cài đặt các module, bạn cần sử dụng câu lệnh `npm install`, sau đó sử dụng câu lệnh `npm start` để chạy dự án phía máy chủ
 
 
