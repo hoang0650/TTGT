@@ -31,4 +31,6 @@ export class GroupService {
   getUserPermissions(){
     return this.http.get(`${this.Root_Url}/permissions`);
   }
+
+  
 }
