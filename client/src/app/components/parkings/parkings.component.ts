@@ -1,6 +1,5 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Location } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
@@ -8,55 +7,25 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { ConfigureService } from 'src/app/services/configure.service';
 import { MessageService } from 'src/app/services/message.service';
 import { ParkingService } from 'src/app/services/parking.service';
+import { MapComponent } from '../map/map.component';
 
 @Component({
   selector: 'app-parkings',
+  host: {
+    class: 'map-layout-info-container'
+  },
   templateUrl: './parkings.component.html',
   styleUrls: ['./parkings.component.css'],
-  animations: [
-    trigger('mapLayoutInfo', [
-      state('open', style({
-        position: 'absolute',
-        right: '0%',
-      })),
-      state('closed', style({
-        position: 'absolute',
-        right: '-408px',
-      })),
-      transition('open => closed', [
-        animate('0.3s')
-      ]),
-      transition('closed => open', [
-        animate('0.3s')
-      ]),
-    ]),
-    trigger('mapLayoutInfoButton', [
-    state('open', style({
-      position: 'absolute',
-      right: '408px',
-    })),
-    state('closed', style({
-      position: 'absolute',
-      right: '0px',
-    })),
-    transition('open => closed', [
-      animate('0.3s')
-    ]),
-    transition('closed => open', [
-      animate('0.3s')
-    ]),
-    ]),
-  ]
 })
-export class ParkingsComponent implements OnInit {
+
+export class ParkingsComponent implements OnInit, OnDestroy {
   center: any;
   notice: any;
   exported: boolean;
-  objectUrl: any;
   filter: string;
   listdistrict: any;
   markers: any;
-  sideMap: any;
+  sideMap?: L.Map;
   listParking: any;
   options: any;
   layers: any;
@@ -66,7 +35,7 @@ export class ParkingsComponent implements OnInit {
   id?: string;
   isLoading = true;
 
-  constructor(private messageService:MessageService, private nzMessage:NzMessageService, private parkingService:ParkingService, public configure:ConfigureService, private route:ActivatedRoute, private location:Location, private cdRef:ChangeDetectorRef,private sanitizer: DomSanitizer) {
+  constructor(public mapCom:MapComponent, private messageService:MessageService, private nzMessage:NzMessageService, private parkingService:ParkingService, public configure:ConfigureService, private route:ActivatedRoute, private location:Location, private cdRef:ChangeDetectorRef,private sanitizer: DomSanitizer) {
     this.exported = false
     this.filter = ""
     this.markers = {};
@@ -94,15 +63,21 @@ export class ParkingsComponent implements OnInit {
       iconSize: [33.5, 40],
       iconAnchor: [16.5, 36.5]
     });
+
+    this.sideMap = this.mapCom.sideMap
   }
 
   ngOnInit(): void {
-    
+    this.getMarkers()
+    this.mapCom.toggleLayout(true)
   }
 
-  initMap(map:L.Map) {
-    this.sideMap = map
+  ngOnDestroy(): void {
+    this.removeMarkers()
+    this.mapCom.toggleLayout(false)
+  }
 
+  getMarkers() {
     this.parkingService.query().subscribe({
       next: (parkings: any) => {
 
@@ -113,10 +88,11 @@ export class ParkingsComponent implements OnInit {
             icon: this.normalIcon,
             zIndexOffset: 10000,
           })
-          this.sideMap.addLayer(this.markers[element._id])
+          this.sideMap?.addLayer(this.markers[element._id])
           
           this.markers[element._id].on("click", (event:any) => {
             this.focusAndExpandParking(element._id);
+            this.
           //         // setTimeout(function () {
           //         //     $anchorScroll(element._id);
           //         // }, 1000);
@@ -136,12 +112,21 @@ export class ParkingsComponent implements OnInit {
           if (this.id) {
             this.focusAndExpandParking(this.id);
           }
+
         })
         this.isLoading = false;
+      
+        this.mapCom.detectChanges()
+        this.cdRef.detectChanges()
       }
     })
   }
 
+  removeMarkers() {
+    Object.keys(this.markers).forEach(key => {
+      this.sideMap?.removeLayer(this.markers[key])
+    })
+  }
 
   groupBy(array:any, f:any) {
     var groups:any = {};
@@ -155,8 +140,6 @@ export class ParkingsComponent implements OnInit {
       return groups[group];
     });
   }
-
-  
 
   distCompare(a:any, b:any, f:any) {
     var ax:any = [], bx:any = [];
@@ -182,11 +165,13 @@ export class ParkingsComponent implements OnInit {
       this.currentMarker.setIcon(this.normalIcon);
     }
     this.currentMarker = this.markers[prk._id];
-    this.sideMap.flyTo([prk.loc.coordinates[1], prk.loc.coordinates[0]], 15, {
-      paddingBottomRight: [408, 0]
-    })
-
+    
+    if (!this.sideMap?.getBounds().contains([prk.loc.coordinates[1], prk.loc.coordinates[0]])) {
+      this.mapCom.flyToBounds([[prk.loc.coordinates[1], prk.loc.coordinates[0]]])
+    }
     this.markers[prk._id].setIcon(this.selectedIcon);
+    this.mapCom.detectChanges()
+    this.cdRef.detectChanges()
   };
 
   focusAndExpandParking(id:string) {
@@ -203,6 +188,7 @@ export class ParkingsComponent implements OnInit {
         }
       });
     });
+    this.mapCom.detectChanges()
     this.cdRef.detectChanges()
   };
 
@@ -223,69 +209,39 @@ export class ParkingsComponent implements OnInit {
     return false;
   }
 
-  selectDistrict(district:any) {
-    //find topleft and bottomright position of list marker
-    var bound:any = [];
-    district.forEach((element:any) => {
-        bound.push([element.loc.coordinates[1], element.loc.coordinates[0]]);
-    });
-    this.sideMap.flyToBounds(L.latLngBounds(bound), {
-      paddingBottomRight: [408, 0]
-    })
+  previousDistrict:any;
+  selectDistrict(isOpen:boolean, district:any) {
+    if (isOpen) {
+      if (this.previousDistrict != district) {
+        var bound:any = [];
+        district.forEach((element:any) => {
+            bound.push([element.loc.coordinates[1], element.loc.coordinates[0]]);
+        });
+        this.mapCom.flyToBounds(bound)
+        this.previousDistrict = district
+        this.mapCom.detectChanges()
+        this.cdRef.detectChanges()
+      }
+    }
   };
 
   exportCSV() {
-    delete this.objectUrl;
     this.exported = true;
     this.parkingService.getParkingCSV().subscribe({
       next:(res:any) => {
-        this.objectUrl = URL.createObjectURL(new Blob([res], { type: 'text/csv' }));
+        this.mapCom.download(URL.createObjectURL(new Blob([res],{type:'text/csv'})),"ttgt-parkings.csv")
       }
     })
   };
 
   exportXLS(){
-    delete this.objectUrl;
     this.exported = true;
-    this.parkingService.exportExcel(this.listParking,'parkings');
+    this.parkingService.exportExcel(this.listParking,'ttgt-parkings');
   }
 
   exportJSON() {
     var theJSON = JSON.stringify(this.listParking);
-    var uri = this.sanitizer.bypassSecurityTrustUrl("data:text/json;charset=UTF-8," + encodeURIComponent(theJSON));
-    this.objectUrl =uri;
-  }
-
-  trackByFn(item:any) {
-    return item;
-  }
-
-  isSearch = false;
-  searchQuery = '';
-  searchResults:any = [];
-
-  searchIconClick() {
-    this.isSearch = false;
-    this.searchQuery = '';
-    this.searchResults = [];
-    this.cdRef.detectChanges()
-  }
-
-  searchSelect(result:any) {
-    if (result) {
-      if (result.geometry) {
-        this.searchQuery = result.properties.name
-        this.isSearch = false
-        this.sideMap?.flyTo([result.geometry.coordinates[1], result.geometry.coordinates[0]], 15);
-      }
-    }
-  }
-
-  isOpen = true;
-
-  toggleLayoutInfo(onoff?:boolean) {
-    this.isOpen = onoff || !this.isOpen;
-    this.cdRef.detectChanges()
+    this.mapCom.download(URL.createObjectURL(new Blob([theJSON],{type:'text/csv'})),"ttgt-parkings.json")
   }
 }
 
