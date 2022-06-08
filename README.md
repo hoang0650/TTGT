@@ -42,7 +42,8 @@
 - Sử dụng câu lệnh để cài đặt module Auth0: `npm install @auth0/auth0-angular`
 - Mở file `app.module.ts` sau đó cấu hình theo dưới đây:
 
-`import { BrowserModule } from '@angular/platform-browser';
+```
+ import { BrowserModule } from '@angular/platform-browser';
  import { NgModule } from '@angular/core';
  import { AuthModule } from '@auth0/auth0-angular';
  import { AppComponent } from './app.component';
@@ -58,7 +59,8 @@
    ],
    bootstrap: [AppComponent],
  })
- export class AppModule {}`
+ export class AppModule {}
+ ```
  
 - Để cấu hình Auth0 quyền người cần làm theo các bước sau đây:
 + Vào trang Auth0: Chọn Auth Pipeline ==> chọn Rule ==> Empty Rule ==> Tạo Name và dán đoạn mã sau đây vào Script:
