@@ -71,9 +71,7 @@ function checkPermissions(permissions)
         }
         
         return next();
-     })
-
-    }
+     })}
 }
 
 function checkPermission(permission){

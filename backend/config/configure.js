@@ -1,5 +1,4 @@
 const fs = require('fs');
-// thay file cert của em. trên autho0 có chỗ lấy.. này luôn
 const cert = fs.readFileSync('ssl/fts-stis-hcm-development.pub');
 
 module.exports = {
@@ -60,8 +59,7 @@ module.exports = {
     camerahost: 'http://localhost:3002',
 
     // secretKey: '_zuUWvu9d5ntORhcuwAksQ4LhKuZTEHxc3_om2svspyBn5FZG5IwKq6COGutnAL5',
-// em config lại trên frontend đi
-// lấy thông tin của thằng mới này
+
     secretKey: cert,
     audience: 'https://dev-0gy0vn9g.us.auth0.com/api/v2/',
     auth0ManagementClient: {

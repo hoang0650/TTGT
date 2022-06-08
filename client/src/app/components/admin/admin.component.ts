@@ -190,6 +190,7 @@ export class AdminComponent implements OnInit {
         if (type == 'save') {
           if (reponse == 'yes') {
             this.saveSetting()
+            this.saveSettingToLocal()
           }
         } else if (type == 'revert') {
           if (reponse == 'yes') {
@@ -223,7 +224,7 @@ export class AdminComponent implements OnInit {
     }) 
   }
 
-  chooseType(mapType:any) {
+  chooseType(mapType:string) {
       this.setting.trafficSituations.mapUrl.name = this.listMapType[mapType].name;
       this.setting.trafficSituations.mapUrl.mapType = this.listMapType[mapType].mapType;
       if (mapType !== 'custom') {
@@ -266,7 +267,7 @@ export class AdminComponent implements OnInit {
 
   getSetting() {
     if (localStorage.getItem('setting')) {
-      // this.openPopupConfig('revert');
+      this.openPopupConfig('revert');
       this.configForm.dirty = true
     } else {
       this.getLastSetting();

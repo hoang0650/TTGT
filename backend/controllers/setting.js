@@ -6,6 +6,7 @@ var jwt = require('jsonwebtoken');
 var sessionExpireTime = 30 * 60; // 30 minutes
 var secretKey = config.secretKey;
 var sessionKey = null;
+var sessionUsername = "";
 var frontendCamera = ['imageError', 'cameraType', 'refreshTime'];
 var frontendSituation = ['mapUrl', 'refreshTime', 'configVelocity'];
 var frontendTrafficevent = ['refreshTime', 'voiceType', 'sourceConfig'];
@@ -115,7 +116,10 @@ function getSession(req, res)
         expiredAt: new Date(new Date().getTime() + sessionExpireTime * 1000)
     };
 
+    console.log(userSession);
+
     if (!sessionKey) {
+        sessionUsername = req.user['https://hoang0650.com/name'];
         sessionKey = userSession;
         
         res.status(200).json(responseObject);
@@ -277,7 +281,7 @@ function getLastSetting (req, res) {
 
 function cancelSession (req, res) {
    
-    if (req.user['https://hoang0650.com/roles'].indexOf('admin') < 0) {
+    if (req.user['https://hoang0650.com/roles'].indexOf('admin') < 0 && req.user['https://hoang0650.com/roles'].indexOf('superadmin')) {
         return res.status(500).json({ message: 'NOT_PERMISSION' });
     }
     var userSession = req.body.sessionKey;

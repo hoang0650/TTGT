@@ -72,7 +72,7 @@ const routes: Routes = [
     children: [
       { path: '', component:CamerasComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
       { path: 'create', component: CamerasCreateComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
-      { path: 'groups', component: CameraGroupsComponent },
+      { path: 'groups', component: CameraGroupsComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
       { path: ':id/update', component: CamerasCreateComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
       { path: '**', redirectTo:'' }
     ]

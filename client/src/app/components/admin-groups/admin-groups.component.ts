@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output,EventEmitter} from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { AdminService } from 'src/app/services/admin.service';
@@ -13,9 +13,10 @@ declare var $:any;
   styleUrls: ['./admin-groups.component.css']
 })
 export class AdminGroupsComponent implements OnInit {
+  // @Output() currentGroup: EventEmitter<object> = new EventEmitter<object>();
   isUsersLoading: boolean =false;
   lastResult:any;
-  groups:any = [];
+  groups:any;
   users = [];
   currentUsers = []
   selectGroups:any = [];
@@ -122,6 +123,8 @@ export class AdminGroupsComponent implements OnInit {
               return curUser.user_id != guser.user_id
             })
           })
+          // localStorage.setItem('permissions',JSON.stringify(group.permissions))
+          
         
           group.permissionsStats = {};
           for(var key in group.permissions){
@@ -132,6 +135,9 @@ export class AdminGroupsComponent implements OnInit {
         });
 
         this.groups = groups
+        
+        // const setGroupToLocal: any = localStorage.setItem('group',JSON.stringify(this.groups));
+        // this.currentGroup.emit(setGroupToLocal)
       }
     })
   }

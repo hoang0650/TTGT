@@ -35,8 +35,13 @@
         </div>
         </nz-content>
         <nz-footer>
+<<<<<<< HEAD
             <button *ngIf="!editMode" nz-button nzType="primary" (click)="startSetting()">Chỉnh sửa</button>
             <button *ngIf="editMode" nz-button nzType="primary" type="submit"  (click)="openPopupConfig('save')" [disabled]="!configForm.dirty">Lưu</button>
+=======
+            <button *ngIf="!editMode" nz-button nzType="primary" type="button" (click)="startSetting()">Chỉnh sửa</button>
+            <button *ngIf="editMode" nz-button nzType="primary" type="submit" [disabled]="!configForm.dirty" (click)="openPopupConfig('save')">Lưu</button>
+>>>>>>> 99f191d72bee11af400d362e7d17846de28008dc
             <button *ngIf="editMode" nz-button nzType="primary" nzDanger type="button" (click)="openPopupConfig('cancel')">Hủy</button>
         </nz-footer>
     </nz-layout>

@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
+// import { GroupService } from '../services/group.service';
 import * as _ from 'lodash';
-import { AuthorizationService } from '../services/authorization.service';
-import { AdminService } from '../services/admin.service';
-import { NzMessageService } from 'ng-zorro-antd/message';
+
+
 // import { profile } from 'console';
 
 // export function returnToken(){
@@ -17,10 +16,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 })
 
 export class Auth0Service {
-  private headers: HttpHeaders = new HttpHeaders();
-  private blocked: boolean|undefined|null;
-  constructor(public router: Router,private jwtHelperService: JwtHelperService, 
-  private auth: AuthorizationService, private message: NzMessageService, private route:ActivatedRoute, private admin:AdminService) {  }
+  constructor(public router: Router,private jwtHelperService: JwtHelperService) {  }
   isAuthorized(allowedRoles: string[]): boolean {
     // console.log('check first');
     // if(!this.auth.isAuthenticated()){
@@ -35,20 +31,27 @@ export class Auth0Service {
     
     // get token from local storage or state management
     const token: string = localStorage.getItem('id_token') || '{}';
+    // const token1: string = localStorage.getItem('group')||'{}';
+ 
+    // token1[0] = currentGroup
+    // console.log('token1',token1)
     // decode token to read the payload details
     const decodeToken = this.jwtHelperService.decodeToken(token);
+    // const decodeToken1 = this.jwtHelperService.decodeToken(token1);
     const checkRole = _.intersection(allowedRoles,decodeToken['https://hoang0650.com/app_metadata']['roles']);
-   
+    // console.log('permissions',decodeToken['group']['permissions'])
+    
     // check if it was decoded successfully, if not the token is not valid, deny access
     if (!decodeToken) {
       return false;
     }
 
-    if(checkRole.includes('superadmin')|| checkRole.includes('admin')){
+    if(checkRole.includes('superadmin') || checkRole.includes('admin')){
       return true;
     }else {
       return false;
     }
+    // return false;
 
   }
 }
