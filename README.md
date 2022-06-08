@@ -63,7 +63,7 @@ Dự án được tạo với [Angular CLI] (https://github.com/angular/angular-
  ```
  
 - Để cấu hình Auth0 quyền người cần làm theo các bước sau đây:
-+ Vào trang Auth0: Chọn Auth Pipeline ==> chọn Rule ==> Empty Rule ==> Tạo Name và dán đoạn mã sau đây vào Script:
++ Vào trang Auth0: Chọn Auth Pipeline ==> chọn Rule ==> Chọn Create ==> Empty Rule ==> Tạo Name và dán đoạn mã sau đây vào Script:
 
 ``` 
 function (user, context, callback) {
