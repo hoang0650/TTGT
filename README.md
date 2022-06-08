@@ -149,4 +149,9 @@ Sau đó nhấn Save change.
 - Dự án được tạo với [NodeJS](https://nodejs.org/en/)  v14.15.4.
 - Để chạy dự án bạn cần phải cài đặt các module, bạn cần sử dụng câu lệnh `npm install`, sau đó sử dụng câu lệnh `npm start` để chạy dự án phía máy chủ
 
+## ✅ Kiểm thử
+- Tài khoản dành cho `khách`: `email` guest@gmail.com `password` Guest123@
+- Tài khoản dành cho `người dùng`: `email` user@gmail.com `password` User123@
+- Tài khoản dành cho `quản lý`: `email` admin@gmail.com `password` Admin123@
+- Tài khoản dành cho `siêu quản lý`: `email` superadmin@gmail.com `password` Superadmin123@  
 
