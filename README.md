@@ -62,7 +62,9 @@
  
 - Để cấu hình Auth0 quyền người cần làm theo các bước sau đây:
 + Vào trang Auth0: Chọn Auth Pipeline ==> chọn Rule ==> Empty Rule ==> Tạo Name và dán đoạn mã sau đây vào Script:
-`function (user, context, callback) {
+
+``` 
+function (user, context, callback) {
   user.app_metadata = user.app_metadata || {};
   // You can add a Role based on what you want
   // In this case I check domain
@@ -90,12 +92,16 @@
         }); 
     }
   });
-}`
+}
+```
+
 Sau đó nhấn Save change.
 
 - Để cấu hình Auth0 trả về `appmetadata` trong `access token` ta làm các bước như cấu hình quyền người dùng với Auth Pipeline ở trên:
 + dán đoạn mã sau đây vào Script:
-`function (user, context, callback) {
+
+```
+function (user, context, callback) {
   const namespace = 'https://hoang0650.com';
   const assignedRoles = (context.authorization || {}).roles;
   let idTokenClaims = context.idToken || {};
@@ -112,13 +118,16 @@ Sau đó nhấn Save change.
   }
 
  return callback(null, user, context);
-}`
+}
+```
 
 Sau đó nhấn Save change.
 
 - Để cấu hình Auth0 trả về name và appmetadata trong `access token`:
 + dán đoạn mã sau đây vào Script:
-`function (user, context, callback) {
+
+```
+function (user, context, callback) {
   var namespace = "https://hoang0650.com";
   user.app_metadata = user.app_metadata || {};
   user.permissions = user.permissions || {};
@@ -128,7 +137,8 @@ Sau đó nhấn Save change.
   context.accessToken[`${namespace}/name`] = user.name;
   context.accessToken[`${namespace}/permission`] = user.permissions;
   callback(null, user, context);
-}`
+}
+```
 
 Sau đó nhấn Save change.
 
