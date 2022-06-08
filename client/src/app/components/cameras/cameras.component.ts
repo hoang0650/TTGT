@@ -55,6 +55,7 @@ export class CamerasComponent implements OnInit, OnDestroy {
 
     this.sideMap = this.mapCom.sideMap
     this.markers = mapCom.markers
+
   }
   
 

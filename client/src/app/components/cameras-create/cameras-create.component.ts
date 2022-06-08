@@ -93,6 +93,7 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
     this.cameraGroupService.query().subscribe({
       next: (res:any) => {
         this.listCamGroup = res.data;
+       
       }
     });
 
@@ -114,9 +115,7 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       $(".ui.dropdown").dropdown()
     }, 100)
-    this.sideMap?.on('click', (event) => {
-      console.log(event);
-      
+    this.sideMap?.on('click', (event) => {      
       this.selectPosition(event)
     })
     this.getMarkers()
@@ -169,7 +168,6 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
     
     
     if (this.markers['newMarker']?._latlng || latlng) {
-      console.log("Hello");
       this.markers['newMarker'] = L.marker(latlng || this.markers['newMarker']._latlng, {
         draggable: true,
         icon: this.newCamera.ptz ? this.markerService.getIcon('new', 'ptz') : this.markerService.getIcon('new', 'normal'),
