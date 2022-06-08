@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import L from 'leaflet';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -19,7 +19,7 @@ import { MapComponent } from '../map/map.component';
   templateUrl: './parkings-create.component.html',
   styleUrls: ['./parkings-create.component.css'],
 })
-export class ParkingsCreateComponent implements OnInit {
+export class ParkingsCreateComponent implements OnInit, OnDestroy {
   searchText = "";
   sideMap?: L.Map;
   markers: any;

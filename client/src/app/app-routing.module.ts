@@ -41,10 +41,25 @@ const routes: Routes = [
       { path: 'cameras/:id/update', component: CamerasCreateComponent },
       { path: 'cameras/**', redirectTo:'cameras' },
 
+      { path: 'roadworks', component: RoadworksComponent },
+      { path: 'roadworks/create', component:RoadworksCreateComponent },
+      { path: 'roadworks/:id/update', component: RoadworksCreateComponent },
+      { path: 'roadworks/**', redirectTo:'roadworks' },
+
       { path: 'parkings', component: ParkingsComponent },
       { path: 'parkings/create', component: ParkingsCreateComponent },
       { path: 'parkings/:id/update', component: ParkingsCreateComponent },
-      { path: 'parkings/**', redirectTo:'' }
+      { path: 'parkings/**', redirectTo:'parkings' },
+
+      { path: 'roadevents', component: RoadeventsComponent },
+      { path: 'roadevents/create', component: RoadeventsCreateComponent },
+      { path: 'roadevents/:id/update', component: RoadeventsCreateComponent },
+      { path: 'roadevents/**', redirectTo:'roadevents' },
+
+      { path: 'staticmaps', component: StaticMapComponent },
+      { path: 'staticmaps/create', component: StaticMapCreateComponent },
+      { path: 'staticmaps/:id/update', component: StaticMapCreateComponent },
+      { path: 'staticmaps/**', redirectTo:'staticmaps' },
     ]
   },
   { path: 'config', component:AdminComponent, canActivate:[AuthGuard], data:{allowedRoles:['admin','superadmin']},

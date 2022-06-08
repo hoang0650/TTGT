@@ -1,6 +1,5 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Location } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
@@ -10,48 +9,18 @@ import { ConfigureService } from 'src/app/services/configure.service';
 import { MarkerService } from 'src/app/services/marker.service';
 import { MessageService } from 'src/app/services/message.service';
 import { RoadworkService } from 'src/app/services/roadwork.service';
+import { MapComponent } from '../map/map.component';
 
 @Component({
   selector: 'app-roadworks',
+  host: {
+    class: 'map-layout-info-container'
+  },
   templateUrl: './roadworks.component.html',
   styleUrls: ['./roadworks.component.css'],
-  animations: [
-    trigger('mapLayoutInfo', [
-      state('open', style({
-        position: 'absolute',
-        right: '0%',
-      })),
-      state('closed', style({
-        position: 'absolute',
-        right: '-408px',
-      })),
-      transition('open => closed', [
-        animate('0.3s')
-      ]),
-      transition('closed => open', [
-        animate('0.3s')
-      ]),
-    ]),
-    trigger('mapLayoutInfoButton', [
-    state('open', style({
-      position: 'absolute',
-      right: '408px',
-    })),
-    state('closed', style({
-      position: 'absolute',
-      right: '0px',
-    })),
-    transition('open => closed', [
-      animate('0.3s')
-    ]),
-    transition('closed => open', [
-      animate('0.3s')
-    ]),
-    ]),
-  ]
 })
-export class RoadworksComponent implements OnInit {
-  searchParams: any;
+
+export class RoadworksComponent implements OnInit, OnDestroy {
   sideMap: any;
   mess: any;
   oneDay: number;
@@ -72,13 +41,11 @@ export class RoadworksComponent implements OnInit {
   id?:string
   isLoading = true;
 
-  constructor(public configure:ConfigureService, private route:ActivatedRoute, private messageService:MessageService, private roadworkService:RoadworkService, private location:Location, private cdRef:ChangeDetectorRef, private markerService:MarkerService, private nzMessage:NzMessageService,private sanitizer: DomSanitizer) { 
-    this.searchParams = (new URL(window.location.href)).searchParams
+  constructor(public mapCom:MapComponent, public configure:ConfigureService, private route:ActivatedRoute, private messageService:MessageService, private roadworkService:RoadworkService, private location:Location, private cdRef:ChangeDetectorRef, private markerService:MarkerService, private nzMessage:NzMessageService,private sanitizer: DomSanitizer) { 
     this.mess = messageService.getMessageObj();
     this.oneDay = 24 * 60 * 60 * 1000;
     this.currentDate = new Date();
     this.statusFilterValues = []
-    this.markers = {}
     this.exported = false
     this.listRoadwork = []
     
@@ -116,15 +83,19 @@ export class RoadworksComponent implements OnInit {
       this.nzMessage.success(this.messageService.getMessageObj().NOTICE(this.route.snapshot.queryParamMap.get('result'), 'công trình giao thông'))
       this.location.replaceState("./roadworks")
     }
+
+    this.sideMap = this.mapCom.sideMap
+    this.markers = this.mapCom.markers
   }
 
   ngOnInit(): void {
-
+    this.loadRoadwork()
+    this.mapCom.toggleLayout(true)
   }
 
-  initMap(map:any): void {
-    this.sideMap = map
-    this.loadRoadwork();
+  ngOnDestroy(): void {
+    this.mapCom.removeLayers()
+    this.mapCom.toggleLayout(false)
   }
 
   typeListToIcon(type:any) {
@@ -215,9 +186,7 @@ export class RoadworksComponent implements OnInit {
     if (this.updateRoadwork != rw) {
       this.updateRoadwork = rw;
       if (!this.sideMap.getBounds().pad(-0.5).contains(this.markers[rw._id].getLatLng())) {
-        this.sideMap.flyTo([rw.featureCollection.features[0].geometry.coordinates[1], rw.featureCollection.features[0].geometry.coordinates[0]], 15, {
-          paddingBottomRight: [408, 0]
-        })
+        this.mapCom.flyToBounds([[rw.featureCollection.features[0].geometry.coordinates[1], rw.featureCollection.features[0].geometry.coordinates[0]]])
       }
     }
 
@@ -254,8 +223,6 @@ export class RoadworksComponent implements OnInit {
                 this.openRoadworkDetail(rw)
               }
             })
-
-            this.sideMap.addLayer(this.markers[rw._id])
           }
         })
 
@@ -268,6 +235,8 @@ export class RoadworksComponent implements OnInit {
         }
 
         this.isLoading = false
+        this.mapCom.detectChanges()
+        this.cdRef.detectChanges()
       }
     })
   }
@@ -328,7 +297,7 @@ export class RoadworksComponent implements OnInit {
       if (result.geometry) {
         this.searchQuery = result.properties.name
         this.isSearch = false
-        this.sideMap?.flyTo([result.geometry.coordinates[1], result.geometry.coordinates[0]], 15);
+        this.mapCom.flyToBounds([[result.geometry.coordinates[1], result.geometry.coordinates[0]]])
       }
     }
   }

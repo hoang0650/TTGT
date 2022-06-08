@@ -1,6 +1,5 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Location } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
@@ -9,47 +8,18 @@ import { ConfigureService } from 'src/app/services/configure.service';
 import { MarkerService } from 'src/app/services/marker.service';
 import { MessageService } from 'src/app/services/message.service';
 import { RoadEventsService } from 'src/app/services/road-events.service';
+import { MapComponent } from '../map/map.component';
 
 @Component({
   selector: 'app-roadevents',
+  host: {
+    class: 'map-layout-info-container'
+  },
   templateUrl: './roadevents.component.html',
   styleUrls: ['./roadevents.component.css'],
-  animations: [
-    trigger('mapLayoutInfo', [
-      state('open', style({
-        position: 'absolute',
-        right: '0%',
-      })),
-      state('closed', style({
-        position: 'absolute',
-        right: '-408px',
-      })),
-      transition('open => closed', [
-        animate('0.3s')
-      ]),
-      transition('closed => open', [
-        animate('0.3s')
-      ]),
-    ]),
-    trigger('mapLayoutInfoButton', [
-    state('open', style({
-      position: 'absolute',
-      right: '408px',
-    })),
-    state('closed', style({
-      position: 'absolute',
-      right: '0px',
-    })),
-    transition('open => closed', [
-      animate('0.3s')
-    ]),
-    transition('closed => open', [
-      animate('0.3s')
-    ]),
-    ]),
-  ]
 })
-export class RoadeventsComponent implements OnInit {
+
+export class RoadeventsComponent implements OnInit, OnDestroy {
   objectUrl: any;
   exported: boolean;
   choosedRoadevent: any;
@@ -59,15 +29,13 @@ export class RoadeventsComponent implements OnInit {
   sideMap: any;
   id?: string;
   showLength: any;
-  geoLayer: L.GeoJSON<any>;
   isLoading: boolean;
 
-  constructor(private messageService:MessageService, private roadeventsService:RoadEventsService, public configure:ConfigureService, private route:ActivatedRoute, private markerService:MarkerService, private cdRef:ChangeDetectorRef, private location:Location, private nzMessage:NzMessageService,private sanitizer: DomSanitizer) {
+  constructor(public mapCom:MapComponent, private messageService:MessageService, private roadeventsService:RoadEventsService, public configure:ConfigureService, private route:ActivatedRoute, private markerService:MarkerService, private cdRef:ChangeDetectorRef, private location:Location, private nzMessage:NzMessageService,private sanitizer: DomSanitizer) {
     this.exported = false
     this.isLoading = true;
     this.showLength = {}
     this.roadevents = []
-    this.geoLayer = L.geoJSON()
 
     if (this.route.snapshot.queryParamMap.get('state')) {
       if (this.route.snapshot.queryParamMap.get('id')) {
@@ -77,15 +45,21 @@ export class RoadeventsComponent implements OnInit {
       this.nzMessage.success(this.messageService.getMessageObj().NOTICE(this.route.snapshot.queryParamMap.get('state'), 'phân luồng giao thông'))
       this.location.replaceState("./roadevents")
     }
+
+    this.sideMap = mapCom.sideMap
   }
 
   ngOnInit(): void {
-
+    this.getGeo()
+    this.mapCom.toggleLayout(true)
   }
-  
-  initMap(map:any) {
-    this.sideMap = map
 
+  ngOnDestroy(): void {
+    this.mapCom.removeLayers()
+    this.mapCom.toggleLayout(false)
+  }
+
+  getGeo() {
     this.roadeventsService.query().subscribe({
       next: (roadevents) => {
         this.roadevents = roadevents
@@ -101,7 +75,7 @@ export class RoadeventsComponent implements OnInit {
   }
 
   reDrawGeo() {
-    this.geoLayer = L.geoJSON(undefined, {
+    this.mapCom.geoLayer = L.geoJSON(undefined, {
       style: (feature:any) => {
         return this.markerService.getPathStyle(feature.properties.type, feature.properties.color);
       },
@@ -111,18 +85,20 @@ export class RoadeventsComponent implements OnInit {
     })
 
     if (this.choosedRoadevent) {
-      this.geoLayer.addData(this.choosedRoadevent.featureCollection)
+      this.mapCom.geoLayer.addData(this.choosedRoadevent.featureCollection)
     }
     else {
       var features:any = []
       this.roadevents.forEach((roadevent:any) => {
-        this.geoLayer.addData(roadevent.featureCollection)
+        this.mapCom.geoLayer.addData(roadevent.featureCollection)
         features = features.concat(roadevent.featureCollection.features)
       })
-      this.sideMap.flyToBounds(this.getBounds(features), {
-        paddingBottomRight: [408, 0]
-      })
+
+      this.mapCom.flyToBounds(this.getBounds(features))
     }
+
+    this.mapCom.detectChanges()
+    this.cdRef.detectChanges()
   }
 
   createMarker(feature:any, latLng:any) {
@@ -191,9 +167,7 @@ export class RoadeventsComponent implements OnInit {
   selectRoadevent(roadevent:any) {
     if (roadevent != this.choosedRoadevent) {
       this.choosedRoadevent = roadevent;
-      this.sideMap.flyToBounds(this.getBounds(roadevent.featureCollection.features), {
-        paddingBottomRight: [408, 0]
-      })
+      this.mapCom.flyToBounds(this.getBounds(roadevent.featureCollection.features))
     }
     else {
       this.choosedRoadevent = null
@@ -221,64 +195,23 @@ export class RoadeventsComponent implements OnInit {
     return bound
   }
 
+
   exportCSV() {
-    delete this.objectUrl;
     this.exported = true;
     this.roadeventsService.getRoadEventCSV().subscribe({
       next:(res:any) => {
-        const url = URL.createObjectURL(new Blob([res],{type:'text/csv'}));
-        const e = document.createElement('a');
-        e.href = url;
-        e.download = "ttgt-roadevents.csv";
-        document.body.appendChild(e);
-        e.click();
-        document.body.removeChild(e);
+        this.mapCom.download(URL.createObjectURL(new Blob([res],{type:'text/csv'})),"ttgt-roadevents.csv")
       }
     })
-  }
+  };
 
   exportXLS(){
-    delete this.objectUrl;
     this.exported = true;
     this.roadeventsService.exportExcel(this.roadevents,'ttgt-roadevents');
   }
 
   exportJSON() {
     var theJSON = JSON.stringify(this.roadevents);
-    const url = URL.createObjectURL(new Blob([theJSON],{type:'text/csv'}));
-    const e = document.createElement('a');
-    e.href = url;
-    e.download = "ttgt-roadevents.json";
-    document.body.appendChild(e);
-    e.click();
-    document.body.removeChild(e);
-  }
-
-  isSearch = false;
-  searchQuery = '';
-  searchResults:any = [];
-
-  searchIconClick() {
-    this.isSearch = false;
-    this.searchQuery = '';
-    this.searchResults = [];
-    this.cdRef.detectChanges()
-  }
-
-  searchSelect(result:any) {
-    if (result) {
-      if (result.geometry) {
-        this.searchQuery = result.properties.name
-        this.isSearch = false
-        this.sideMap?.flyTo([result.geometry.coordinates[1], result.geometry.coordinates[0]], 15);
-      }
-    }
-  }
-
-  isOpen = true;
-
-  toggleLayoutInfo(onoff?:boolean) {
-    this.isOpen = onoff || !this.isOpen;
-    this.cdRef.detectChanges()
+    this.mapCom.download(URL.createObjectURL(new Blob([theJSON],{type:'text/csv'})),"ttgt-roadevents.json")
   }
 }

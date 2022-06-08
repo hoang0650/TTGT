@@ -1,106 +1,79 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectorRef, Component, ComponentFactoryResolver, Injector, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
+import { map } from 'lodash';
 import { ConfigureService } from 'src/app/services/configure.service';
 import { MarkerService } from 'src/app/services/marker.service';
 import { MessageService } from 'src/app/services/message.service';
 import { StaticMapService } from 'src/app/services/static-map.service';
+import { MapComponent } from '../map/map.component';
 import { StaticMapPopupComponent } from '../static-map-popup/static-map-popup.component';
 
 @Component({
   selector: 'app-static-map',
+  host: {
+    class: 'map-layout-info-container'
+  },
   templateUrl: './static-map.component.html',
-  styleUrls: ['./static-map.component.css'],
-  animations: [
-    trigger('mapLayoutInfo', [
-      state('open', style({
-        position: 'absolute',
-        right: '0%',
-      })),
-      state('closed', style({
-        position: 'absolute',
-        right: '-408px',
-      })),
-      transition('open => closed', [
-        animate('0.3s')
-      ]),
-      transition('closed => open', [
-        animate('0.3s')
-      ]),
-    ]),
-    trigger('mapLayoutInfoButton', [
-    state('open', style({
-      position: 'absolute',
-      right: '408px',
-    })),
-    state('closed', style({
-      position: 'absolute',
-      right: '0px',
-    })),
-    transition('open => closed', [
-      animate('0.3s')
-    ]),
-    transition('closed => open', [
-      animate('0.3s')
-    ]),
-    ]),
-  ]
+  styleUrls: ['./static-map.component.css']
 })
 export class StaticMapComponent implements OnInit {
   notice: any;
   params: any;
-  options: any;
   sideMap: any;
   listData: any;
   searchText: string;
   listColors: any;
   exported: boolean;
   objectUrl: any;
-  geojsons: any;
   isLoading: boolean;
+  markers:any;
 
-  constructor(private messageService:MessageService, private route:ActivatedRoute, public configure:ConfigureService, private markerService:MarkerService, private staticMap:StaticMapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cdRef:ChangeDetectorRef,private sanitizer: DomSanitizer) {
+  constructor(public mapCom:MapComponent, private messageService:MessageService, route:ActivatedRoute, public configure:ConfigureService, private markerService:MarkerService, private staticMap:StaticMapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cdRef:ChangeDetectorRef,private sanitizer: DomSanitizer) {
     this.params = route.snapshot.paramMap
     this.listData = [];
-    this.geojsons = {}
     this.searchText = ""
     this.listColors = markerService.getListColors();
     this.exported = false;
     this.isLoading = true
 
-    this.options = {
-      layers: [
-        this.configure.baselayer.tiles,
-      ],
+    this.sideMap = mapCom.sideMap
+    this.markers = mapCom.markers
 
-      worldCopyJump: true,
-      center: [  10.762622, 106.660172 ],
-      zoom: 14
-    }
-   }
-
-  ngOnInit(): void {
     if (this.params.get('state')) {
       this.notice = this.messageService.getMessageObj().NOTICE(this.params.get('state'), 'lớp thông tin tĩnh');
     }
+
+    setInterval(() => {
+      console.log(this.markers);
+      
+    }, 1000)
+   }
+
+   ngOnInit(): void {
+    this.getGeo()
+    this.mapCom.toggleLayout(true)
   }
 
-  initMap(map:any) {
-    this.sideMap = map
+  ngOnDestroy(): void {
+    this.mapCom.removeLayers()
+    this.mapCom.toggleLayout(false)
+  }
 
+  getGeo() {
     this.staticMap.query().subscribe({
       next: (staticMapList:any) => {
         staticMapList.forEach((staticMap:any) => {
             var listGeo:any = [];
-
+            
             staticMap.color = 'black';
             staticMap.mapdatas.forEach((data:any) => {
               listGeo.push(this.drawGeo(data, staticMap, staticMap.color));
             });
 
             var staticMapObject = {
+                id: staticMap._id,
                 staticMapData: staticMap,
                 listGeo: listGeo
             };
@@ -154,7 +127,7 @@ export class StaticMapComponent implements OnInit {
         layer.bindPopup(popup)
 
         layer.on({
-          mouseover: (event) => {
+          mouseover: () => {
             if (popup) {
               layer.openPopup()
             }
@@ -171,25 +144,26 @@ export class StaticMapComponent implements OnInit {
 
   selectStaticMap(staticMap:any) {
     staticMap.selected = !staticMap.selected;
-    staticMap.listGeo.forEach((geo:any) => {
+    staticMap.listGeo.forEach((geo:any, idx:number) => {
       if (staticMap.selected) {
-        this.sideMap.addLayer(geo);
+        this.markers[staticMap.id+"_"+idx] = geo
       } else {
-        this.sideMap.removeLayer(geo);
+        delete this.markers[staticMap.id+"_"+idx]
       }
     });
   }
 
   changeColorStaticMap(staticMap:any, color:any) {
     staticMap.color = color;
-    staticMap.listGeo.forEach((geo:any, index:number) => {
-      this.sideMap.removeLayer(geo);
-      var newGeo = this.drawGeo(staticMap.staticMapData.mapdatas[index], staticMap.staticMapData, staticMap.color);
-      staticMap.listGeo[index] = newGeo;
+    staticMap.listGeo.forEach((geo:any, idx:number) => {
+      delete this.markers[staticMap.id+"_"+idx]
+      var newGeo = this.drawGeo(staticMap.staticMapData.mapdatas[idx], staticMap.staticMapData, staticMap.color);
+      staticMap.listGeo[idx] = newGeo;
       if (staticMap.selected) {
-        this.sideMap.addLayer(staticMap.listGeo[index]);
+        this.markers[staticMap.id+"_"+idx] = staticMap.listGeo[idx]
       }
     });
+    
   }
 
   exportCSV() {

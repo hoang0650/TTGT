@@ -39,6 +39,8 @@ export class MapComponent implements OnInit {
   isOpen = false;
   curWidth = window.innerWidth;
   markers = {};
+  geoLayer = L.geoJSON();
+  
   permissions = localStorage.getItem('permissions')||'{}';
   constructor(public configure:ConfigureService, private staticMapService:StaticMapService, private markerService:MarkerService, private roadEventService:RoadEventsService, private route:ActivatedRoute, private location:Location, private mapService:MapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private geocoding:GeocodingService, private cameraService:CameraService, private parkingService:ParkingService, private cdRef:ChangeDetectorRef, private nzMessage:NzMessageService) {
   
@@ -115,6 +117,7 @@ export class MapComponent implements OnInit {
 
   removeLayers() {
     this.markers = {}
+    this.geoLayer = L.geoJSON()
   }
 
   trackByFn(item:any) {

@@ -25,17 +25,17 @@
               <a class="dropdown-item" [routerLink]="['/map/cameras']" [ngClass]="{'active': isActive('/map/cameras')}">Camera giao thông</a>
             </li>
             <li>
-              <a class="dropdown-item" [routerLink]="['/roadworks']" [ngClass]="{'active': isActive('/roadworks')}">Công trình thi công</a>
+              <a class="dropdown-item" [routerLink]="['/map/roadworks']" [ngClass]="{'active': isActive('/map/roadworks')}">Công trình thi công</a>
             </li>
             <li>
               <a class="dropdown-item" [routerLink]="['/map/parkings']" [ngClass]="{'active': isActive('/map/parkings')}">Bãi đỗ xe</a>
             </li>
             <nz-divider class="ant-divider-inner-text" nzPlain nzText="Thông tin"></nz-divider>
             <li>
-              <a class="dropdown-item" [routerLink]="['/roadevents']" [ngClass]="{'active': isActive('/roadevents')}">Phân luồng giao thông</a>
+              <a class="dropdown-item" [routerLink]="['/map/roadevents']" [ngClass]="{'active': isActive('/map/roadevents')}">Phân luồng giao thông</a>
             </li>
             <li>
-              <a class="dropdown-item" [routerLink]="['/staticmaps']" [ngClass]="{'active': isActive('/staticmaps')}">Lớp thông tin tĩnh</a>
+              <a class="dropdown-item" [routerLink]="['/map/staticmaps']" [ngClass]="{'active': isActive('/map/staticmaps')}">Lớp thông tin tĩnh</a>
             </li>
           </ul>
           
@@ -58,14 +58,14 @@
           </ul>
         </li>
         
-        <li class="nav-item dropdown" *ngIf="roles.indexOf('admin')>-1" [ngClass]="{'active': isActiveList(['/events/stats'])}">
+        <li class="nav-item dropdown" *ngIf="roles.indexOf('admin')>-1" [ngClass]="{'active': isActiveList(['/map/events/stats'])}">
           <a class="nav-link dropdown" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Thống kê
           </a>
           
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li>
-              <a class="dropdown-item" [ngClass]="{'active': isActive('/events/stats')}" [routerLink]="['/events/stats']">Cảnh báo giao thông</a>
+              <a class="dropdown-item" [ngClass]="{'active': isActive('/map/events/stats')}" [routerLink]="['/map/events/stats']">Cảnh báo giao thông</a>
             </li>
           </ul>
         </li>
