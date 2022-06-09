@@ -27,8 +27,14 @@
     text-align: -webkit-right;
 }
 
-.map-search-button {
-    margin: 0px 10px;
+.map-button {
+    position: absolute;
+    top: 0px;
+    padding: 10px 10px;
+    z-index: 1001;
+    width: 100%;
+    height: 100%;
+    text-align: -webkit-right;
 }
 
 .map-search-result {

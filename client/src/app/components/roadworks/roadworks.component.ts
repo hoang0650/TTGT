@@ -9,6 +9,7 @@ import { ConfigureService } from 'src/app/services/configure.service';
 import { MarkerService } from 'src/app/services/marker.service';
 import { MessageService } from 'src/app/services/message.service';
 import { RoadworkService } from 'src/app/services/roadwork.service';
+import { StaticService } from 'src/app/services/static.service';
 import { MapComponent } from '../map/map.component';
 
 @Component({
@@ -41,7 +42,7 @@ export class RoadworksComponent implements OnInit, OnDestroy {
   id?:string
   isLoading = true;
 
-  constructor(public mapCom:MapComponent, public configure:ConfigureService, private route:ActivatedRoute, private messageService:MessageService, private roadworkService:RoadworkService, private location:Location, private cdRef:ChangeDetectorRef, private markerService:MarkerService, private nzMessage:NzMessageService,private sanitizer: DomSanitizer) { 
+  constructor(public mapCom:MapComponent, public configure:ConfigureService, private route:ActivatedRoute, private messageService:MessageService, private roadworkService:RoadworkService, private staticData:StaticService, private location:Location, private cdRef:ChangeDetectorRef, private markerService:MarkerService, private nzMessage:NzMessageService,private sanitizer: DomSanitizer) { 
     this.mess = messageService.getMessageObj();
     this.oneDay = 24 * 60 * 60 * 1000;
     this.currentDate = new Date();
@@ -193,55 +194,68 @@ export class RoadworksComponent implements OnInit, OnDestroy {
     this.mapCom.toggleLayout(true)
   }
 
+  districts:any;
   loadRoadwork() {
-    this.roadworkService.query().subscribe({
-      next: (roadworks) => {
-        this.listRoadwork = roadworks
-        
-        var data:any = {
-          type: 'FeatureCollection',
-          features: []
-        };
-
-        this.listRoadwork.forEach((rw:any) => {
-          this.setStatusForRoadwork(rw);
-
-          var latlng = {
-            lat: rw.featureCollection.features[0].geometry.coordinates[1],
-            lng: rw.featureCollection.features[0].geometry.coordinates[0],
-          }
-
-         
-
-          if (rw.featureCollection) {
-            this.markers[rw._id] = L.marker(latlng, {
-              draggable: false,
-              icon: this.typeListToIcon(rw.type),
-              zIndexOffset: 10000,
-            }).on({
-              click: () => {
-                this.openRoadworkDetail(rw)
+    this.staticData.loadDistrictAPI().subscribe({
+      next: (hcmDistricts) => {
+        this.roadworkService.query().subscribe({
+          next: (roadworks) => {
+            this.listRoadwork = roadworks
+            console.log(this.listRoadwork);
+            
+    
+            this.listRoadwork.forEach((rw:any) => {
+              this.setStatusForRoadwork(rw);
+    
+              var latlng = {
+                lat: rw.featureCollection.features[0].geometry.coordinates[1],
+                lng: rw.featureCollection.features[0].geometry.coordinates[0],
               }
+    
+             
+    
+              if (rw.featureCollection) {
+                this.markers[rw._id] = L.marker(latlng, {
+                  draggable: false,
+                  icon: this.typeListToIcon(rw.type),
+                  zIndexOffset: 10000,
+                }).on({
+                  click: () => {
+                    this.openRoadworkDetail(rw)
+                  }
+                })
+              }
+              this.addRoadworkToDistrict(hcmDistricts, rw)
             })
+
+            this.districts = hcmDistricts;
+    
+            if (this.id) {
+              this.listRoadwork.forEach((rw:any) => {
+                if (rw._id == this.id) {
+                  this.openRoadworkDetail(rw)
+                } 
+              })
+            }
+    
+            this.isLoading = false
+
           }
         })
-
-        if (this.id) {
-          this.listRoadwork.forEach((rw:any) => {
-            if (rw._id == this.id) {
-              this.openRoadworkDetail(rw)
-            } 
-          })
-        }
-
-        this.isLoading = false
-        this.mapCom.detectChanges()
-        this.cdRef.detectChanges()
       }
     })
+   
   }
 
-
+  addRoadworkToDistrict(districts:any, roadwork:any) {
+    districts.forEach((district:any) => {
+      district['expand'] = false
+      if (roadwork.dist === district.district) {
+        district.roadwork = district.roadwork || [];
+        district.roadwork.push(roadwork);
+      }
+    });
+  }
 
   exportCSV() {
     delete this.objectUrl;
@@ -276,4 +290,16 @@ export class RoadworksComponent implements OnInit, OnDestroy {
     e.click();
     document.body.removeChild(e);
   }
+
+  selectDistrict(isOpen:boolean, district:any) {
+    if (isOpen) {
+
+      var bound:any = [];
+      district.roadwork.forEach((element:any) => {
+        bound.push([element.loc.coordinates[1], element.loc.coordinates[0]]);
+      });
+
+      this.mapCom.flyToBounds(bound)
+    }
+  };
 }

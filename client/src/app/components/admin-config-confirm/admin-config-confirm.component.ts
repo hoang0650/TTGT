@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-admin-config-confirm',
@@ -11,11 +11,13 @@ export class AdminConfigConfirmComponent implements OnInit {
   @Input() form?: any;
   @Input() isMessage?: any;
 
-  constructor(private modalRef:NzModalRef) {
-    
+  constructor(private modalRef:NzModalRef, private cdRef:ChangeDetectorRef) {
+
+    cdRef.markForCheck()
   }
 
   ngOnInit(): void {
+    console.log("Hello");
     
   }
 

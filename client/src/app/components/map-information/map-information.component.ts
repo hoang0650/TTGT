@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { ChangeDetectorRef, Component, ComponentFactoryResolver, Injector, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ComponentFactoryResolver, Injector, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -12,55 +12,22 @@ import { ParkingService } from 'src/app/services/parking.service';
 import { RoadEventsService } from 'src/app/services/road-events.service';
 import { StaticMapService } from 'src/app/services/static-map.service';
 import { MapPopupCreateEventComponent } from '../map-popup-create-event/map-popup-create-event.component';
+import { MapComponent } from '../map/map.component';
 import { StaticMapPopupComponent } from '../static-map-popup/static-map-popup.component';
-import { animate, state, style, transition, trigger } from '@angular/animations';
 
 declare var $:any
 
 @Component({
   selector: 'app-map-information',
+  host: {
+    class: 'map-layout-info-container'
+  },
   templateUrl: './map-information.component.html',
   styleUrls: ['./map-information.component.css'],
-  animations: [
-    trigger('mapLayoutInfo', [
-      state('open', style({
-        position: 'absolute',
-        left: '0%',
-      })),
-      state('closed', style({
-        position: 'absolute',
-        left: '-408px',
-      })),
-      transition('open => closed', [
-        animate('0.3s')
-      ]),
-      transition('closed => open', [
-        animate('0.3s')
-      ]),
-    ]),
-    trigger('mapLayoutInfoButton', [
-    state('open', style({
-      position: 'absolute',
-      left: '408px',
-    })),
-    state('closed', style({
-      position: 'absolute',
-      left: '0px',
-    })),
-    transition('open => closed', [
-      animate('0.3s')
-    ]),
-    transition('closed => open', [
-      animate('0.3s')
-    ]),
-    ]),
-  ]
 })
-export class MapInformationComponent implements OnInit {
-  options: L.MapOptions;
+export class MapInformationComponent implements OnInit, OnDestroy {
   sideMap?: L.Map;
   mapurl: string;
-  currentTab: string;
 
   userInfo: any;
   isSubmit: boolean;
@@ -104,8 +71,8 @@ export class MapInformationComponent implements OnInit {
   currentMode?:string;
   dividerText?:string;
   
-  constructor(private configure:ConfigureService, private staticMapService:StaticMapService, private markerService:MarkerService, private roadEventService:RoadEventsService, private route:ActivatedRoute, private location:Location, private mapService:MapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private geocoding:GeocodingService, private cameraService:CameraService, private parkingService:ParkingService, private cdRef:ChangeDetectorRef, private nzMessage:NzMessageService) {
-    this.currentTab = "traffic";
+  constructor(public mapCom:MapComponent, private configure:ConfigureService, private staticMapService:StaticMapService, private markerService:MarkerService, private roadEventService:RoadEventsService, private route:ActivatedRoute, private location:Location, private mapService:MapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private geocoding:GeocodingService, private cameraService:CameraService, private parkingService:ParkingService, private cdRef:ChangeDetectorRef, private nzMessage:NzMessageService) {
+    this.currentMode = "cameras";
     this.limitParking = true
     this.listEvent = []
     this.listCamera = []
@@ -134,32 +101,25 @@ export class MapInformationComponent implements OnInit {
 
     this.isShare = false
 
-    this.options = {
-      layers: [
-        this.configure.baselayer.tiles,
-      ],
-      attributionControl:false,
-      worldCopyJump: true,
-      center: [  10.762622, 106.660172 ],
-      zoom: 14,
-      zoomControl: false
-    }
+    this.sideMap = mapCom.sideMap
+    this.markers = mapCom.markers
   }
 
+ 
   ngOnInit(): void {
-   
+    this.getData()
+    this.mapCom.toggleLayout(true)
   }
 
   ngOnDestroy(): void {
-
+    this.mapCom.removeLayers()
+    this.mapCom.toggleLayout(false)
   }
 
 
-  initMap(event:L.Map) {
-    this.sideMap = event
-    L.control.zoom({ position: 'topright' }).addTo(this.sideMap);
 
-    this.sideMap.on({
+  getData() {
+    this.sideMap?.on({
       contextmenu: (event:any) => {
         if (this.trafficChildren['incidents']) {
           this.createNewEventMarker(event.latlng)
@@ -314,9 +274,6 @@ export class MapInformationComponent implements OnInit {
         this.markers['parkings']?.addLayer(this.createParkingMarker(parking))
       })
 
-      this.sideMap?.addLayer(this.markers['parkings'])
-
-    //     _this._map.removeLayer(cameraClusterLayer);
     } else {
       if (this.markers['parkings']) {
         this.sideMap?.removeLayer(this.markers['parkings']) 
@@ -353,8 +310,6 @@ export class MapInformationComponent implements OnInit {
       this.listCamera.forEach((camera:any) => {
         this.markers['cameras']?.addLayer(this.createCameraMarker(camera))
       })
-
-      this.sideMap?.addLayer(this.markers['cameras'])
 
     //     _this._map.removeLayer(cameraClusterLayer);
     } else {
@@ -429,10 +384,6 @@ export class MapInformationComponent implements OnInit {
         this.toggleIncidentMarkers()
       }
     }
-  }
-
-  toggleTab(tab:string) {
-    this.currentTab = tab;
   }
 
   imageError(event:any) {
@@ -944,13 +895,6 @@ export class MapInformationComponent implements OnInit {
     return component.location.nativeElement;
   }
 
-  isOpen = false;
-
-  toggle(onoff?:boolean) {
-    this.isOpen = onoff || !this.isOpen;
-    this.cdRef.detectChanges()
-  }
-
   closeModal() {
     this.isShare = false
     this.shareLink = ""
@@ -973,9 +917,9 @@ export class MapInformationComponent implements OnInit {
     }
 
     if (mode) {
-      this.toggle(true)
+      this.mapCom.toggleLayout(true)
     } else {
-      this.toggle(false)
+      this.mapCom.toggleLayout(false)
     }
   }
 }

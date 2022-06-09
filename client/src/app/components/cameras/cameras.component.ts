@@ -86,10 +86,6 @@ export class CamerasComponent implements OnInit, OnDestroy {
             this.districts = hcmDistricts;
 
             this.readDataFromSearchQuery()
-
-            
-            this.mapCom.detectChanges()
-            this.cdRef.detectChanges()
           }
         })
       }
@@ -115,19 +111,15 @@ export class CamerasComponent implements OnInit, OnDestroy {
 
   }
 
-  previousDistrict:any;
   selectDistrict(isOpen:boolean, district:any) {
     if (isOpen) {
-      if (this.previousDistrict != district) {
+
         var bound:any = [];
         district.camera.forEach((element:any) => {
           bound.push([element.loc.coordinates[1], element.loc.coordinates[0]]);
         });
+
         this.mapCom.flyToBounds(bound)
-        this.previousDistrict = district
-        this.mapCom.detectChanges()
-        this.cdRef.detectChanges()
-      }
     }
   };
 
@@ -155,10 +147,6 @@ export class CamerasComponent implements OnInit, OnDestroy {
     }
     this.selectedDist = choosenDist
     this.selectedDist.expand = true
-    
-    
-    this.mapCom.detectChanges()
-    this.cdRef.detectChanges()
   }
 
   imageError(event:any) {

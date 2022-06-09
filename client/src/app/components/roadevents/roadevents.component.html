@@ -21,21 +21,17 @@
                                 </div>
                             </div>
                             <div class="col-6 p-0">
-                                <div class="btn-group float-end">
-            
-                                    <button class="btn btn-secondary dropdown" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="cloud download icon"></i>
-                                        Xuất dữ liệu
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
-                                        
-                                        <li><a class="dropdown-item" (click)="exportCSV()"><i class="file outline icon"></i> CSV</a></li>
-                                        <li><a class="dropdown-item" (click)="exportXLS()"><i class="file excel outline icon"></i> Excel</a></li>
-                                        <li><a class="dropdown-item" (click)="exportJSON()"><i class="file code outline icon"></i> JSON</a></li>
-                                    </ul>
-                                </div>
-                                
-                            </div>                        
+                                <button class="btn btn-secondary dropdown float-end" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="cloud download icon"></i>
+                                    Xuất dữ liệu
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                                    
+                                    <li><a class="dropdown-item" (click)="exportCSV()"><i class="file outline icon"></i> CSV</a></li>
+                                    <li><a class="dropdown-item" (click)="exportXLS()"><i class="file excel outline icon"></i> Excel</a></li>
+                                    <li><a class="dropdown-item" (click)="exportJSON()"><i class="file code outline icon"></i> JSON</a></li>
+                                </ul>
+                            </div>                              
                         </div>
                         <br>
                         <div class="row">
@@ -69,12 +65,12 @@
         <div class="ui middle aligned selection divided list">
             <div class="item" id="{{roadevent._id}}" [ngClass]="{'active': roadevent._id === choosedRoadevent?._id}" *ngFor="let roadevent of (roadevents | searchFilter: filter: ['featureCollection', 'properties', 'name'])"
                 (click)="selectRoadevent(roadevent)">
-                <div class="left floated content ">
-                    <a class="ui icon button" [routerLink]="['.', roadevent._id, 'update']"><i class="ui write icon"></i></a>
-                </div>
-                <div class="content">
+                <div class="left floated content">
                     <span class="header">{{roadevent.featureCollection.properties.name}}</span>
                     <span>{{roadevent.featureCollection.properties.desc}}</span>
+                </div>
+                <div class="right floated content ">
+                    <button class="btn btn-primary" [routerLink]="['.', roadevent._id, 'update']" data-tooltip="Chỉnh sửa phân luồng"><i class="fa-solid fa-pen-to-square"></i> </button>
                 </div>
             </div>
         </div>

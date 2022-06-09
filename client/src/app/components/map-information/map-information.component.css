@@ -1,0 +1,8 @@
+.map-navigate {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+nz-card.map-card {
+    padding: 0px 1px;
+}

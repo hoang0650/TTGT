@@ -21,21 +21,17 @@
                                 </div>
                             </div>
                             <div class="col-6 p-0">
-                                <div class="btn-group float-end">
-            
-                                    <button [disabled]="!mapCom.permissions.indexOf('parkings:update')|| !mapCom.permissions.indexOf('parkings:manage')|| !appCom.roles.indexOf('superadmin')" class="btn btn-secondary dropdown" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="cloud download icon"></i>
-                                        Xuất dữ liệu
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
-                                        
-                                        <li><a class="dropdown-item" (click)="exportCSV()"><i class="file outline icon"></i> CSV</a></li>
-                                        <li><a class="dropdown-item" (click)="exportXLS()"><i class="file excel outline icon"></i> Excel</a></li>
-                                        <li><a class="dropdown-item" (click)="exportJSON()"><i class="file code outline icon"></i> JSON</a></li>
-                                    </ul>
-
-                                </div>                                
-                            </div>                        
+                                <button class="btn btn-secondary dropdown float-end" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="cloud download icon"></i>
+                                    Xuất dữ liệu
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                                    
+                                    <li><a class="dropdown-item" (click)="exportCSV()"><i class="file outline icon"></i> CSV</a></li>
+                                    <li><a class="dropdown-item" (click)="exportXLS()"><i class="file excel outline icon"></i> Excel</a></li>
+                                    <li><a class="dropdown-item" (click)="exportJSON()"><i class="file code outline icon"></i> JSON</a></li>
+                                </ul>
+                            </div>                             
                         </div>
                         <br>
                         <div class="row">
@@ -65,7 +61,7 @@
                               
                                     <div class="container">
                                         <div class="row mb-3" *ngIf="parking['vehicle_type']['car'] || parking['vehicle_type']['bike']">
-                                            <div class="col-sm-8">
+                                            <div class="col-8">
                                                 <h5 class="m-0">Mức giá</h5>
                                                 <div *ngIf="parking['vehicle_type']['car']">
                                                     <i class="fa-solid fa-car"></i> Giá từ {{parking['price']['car']['min']}} đến {{parking['price']['car']['max']}}
@@ -75,8 +71,8 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-sm-4">
-                                                <button [disabled]="!mapCom.permissions.indexOf('parkings:update')|| !mapCom.permissions.indexOf('parkings:manage')|| !appCom.roles.indexOf('superadmin')" class="btn btn-primary" [routerLink]="['.', parking._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
+                                            <div class="col-4 text-end">
+                                                <button [disabled]="!mapCom.permissions.indexOf('parkings:update')|| !mapCom.permissions.indexOf('parkings:manage')|| !appCom.roles.indexOf('superadmin')" class="btn btn-primary" [routerLink]="['.', parking._id, 'update']"><i class="fa-solid fa-pen-to-square"></i></button>
                                             </div>
                                         </div>
                 
@@ -120,7 +116,7 @@
 
                     <div class="container">
                         <div class="row mb-3" *ngIf="parking['vehicle_type']['car'] || parking['vehicle_type']['bike']">
-                            <div class="col-sm-8">
+                            <div class="col-8">
                                 <h5 class="m-0">Mức giá</h5>
                                 <div *ngIf="parking['vehicle_type']['car']">
                                     <i class="fa-solid fa-car"></i> Giá từ {{parking['price']['car']['min']}} đến {{parking['price']['car']['max']}}
@@ -130,8 +126,8 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-4">
-                                <button [disabled]="!mapCom.permissions.indexOf('parkings:update')|| !mapCom.permissions.indexOf('parkings:manage')|| !appCom.roles.indexOf('superadmin')" class="btn btn-primary" [routerLink]="['.', parking._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
+                            <div class="col-4 text-end">
+                                <button [disabled]="!mapCom.permissions.indexOf('parkings:update')|| !mapCom.permissions.indexOf('parkings:manage')|| !appCom.roles.indexOf('superadmin')" class="btn btn-primary" [routerLink]="['.', parking._id, 'update']"><i class="fa-solid fa-pen-to-square"></i></button>
                             </div>
                         </div>
 
