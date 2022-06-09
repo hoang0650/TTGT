@@ -81,7 +81,7 @@ export class RoadworksComponent implements OnInit, OnDestroy {
       }
       
       this.nzMessage.success(this.messageService.getMessageObj().NOTICE(this.route.snapshot.queryParamMap.get('result'), 'công trình giao thông'))
-      this.location.replaceState("./roadworks")
+      this.location.replaceState("./map/roadworks")
     }
 
     this.sideMap = this.mapCom.sideMap

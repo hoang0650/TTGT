@@ -44,7 +44,7 @@ export class StaticMapCreateComponent implements OnInit, OnDestroy {
     this.listRoads = []
     this.id = route.snapshot.paramMap.get('id') || ""
     if (this.id) {
-      location.replaceState("./staticmaps/update")
+      location.replaceState("./map/staticmaps/update")
     }
     this.button = messageService.getMessageObj().BUTTON;
     this.listGeoLayers = []

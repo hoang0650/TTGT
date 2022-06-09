@@ -26,40 +26,65 @@ import { ParkingsCreateComponent } from './components/parkings-create/parkings-c
 import { RoadeventsCreateComponent } from './components/roadevents-create/roadevents-create.component';
 import { StaticMapCreateComponent } from './components/static-map-create/static-map-create.component';
 import { CameraGroupsComponent } from './components/camera-groups/camera-groups.component';
+
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
   { path: 'home', component:MainComponent},
   // { path: 'map', component: MapComponent , canActivate:[AuthGuard], data:{allowedRoles:['superadmin']}},
   { path: 'map', component: MapComponent,
     children: [
-      { path: 'events', component:EventsManagerComponent },
-      { path: 'events/stats', component:StatsEventsComponent },
+      { path: 'events', 
+      children: [
+        { path: '', component: EventsManagerComponent },
+        { path: 'stats', component: StatsEventsComponent },
+      ] 
+    },
 
-      { path: 'cameras', component: CamerasComponent },
-      { path: 'cameras/create', component: CamerasCreateComponent },
-      { path: 'cameras/groups', component: CameraGroupsComponent },
-      { path: 'cameras/:id/update', component: CamerasCreateComponent },
-      { path: 'cameras/**', redirectTo:'cameras' },
+      { path: 'cameras', 
+        children: [
+          { path: '', component: CamerasComponent },
+          { path: 'create', component: CamerasCreateComponent },
+          { path: 'groups', component: CameraGroupsComponent },
+          { path: ':id/update', component: CamerasCreateComponent },
+          { path: '**', redirectTo:'' },
+        ] 
+      },
 
-      { path: 'roadworks', component: RoadworksComponent },
-      { path: 'roadworks/create', component:RoadworksCreateComponent },
-      { path: 'roadworks/:id/update', component: RoadworksCreateComponent },
-      { path: 'roadworks/**', redirectTo:'roadworks' },
+      { path: 'roadworks', 
+        children: [
+          { path: '', component: RoadworksComponent },
+          { path: 'create', component: RoadworksCreateComponent },
+          { path: ':id/update', component: RoadworksCreateComponent },
+          { path: '**', redirectTo:'' },
+        ] 
+      },
 
-      { path: 'parkings', component: ParkingsComponent },
-      { path: 'parkings/create', component: ParkingsCreateComponent },
-      { path: 'parkings/:id/update', component: ParkingsCreateComponent },
-      { path: 'parkings/**', redirectTo:'parkings' },
+      { path: 'parkings', 
+        children: [
+          { path: '', component: ParkingsComponent },
+          { path: 'create', component: ParkingsCreateComponent },
+          { path: ':id/update', component: ParkingsCreateComponent },
+          { path: '**', redirectTo:'' },
+        ] 
+      },
 
-      { path: 'roadevents', component: RoadeventsComponent },
-      { path: 'roadevents/create', component: RoadeventsCreateComponent },
-      { path: 'roadevents/:id/update', component: RoadeventsCreateComponent },
-      { path: 'roadevents/**', redirectTo:'roadevents' },
+      { path: 'roadevents', 
+        children: [
+          { path: '', component: RoadeventsComponent },
+          { path: 'create', component: RoadeventsCreateComponent },
+          { path: ':id/update', component: RoadeventsCreateComponent },
+          { path: '**', redirectTo:'' },
+        ] 
+      },
 
-      { path: 'staticmaps', component: StaticMapComponent },
-      { path: 'staticmaps/create', component: StaticMapCreateComponent },
-      { path: 'staticmaps/:id/update', component: StaticMapCreateComponent },
-      { path: 'staticmaps/**', redirectTo:'staticmaps' },
+      { path: 'staticmaps', 
+        children: [
+          { path: '', component: StaticMapComponent },
+          { path: 'create', component: StaticMapCreateComponent },
+          { path: ':id/update', component: StaticMapCreateComponent },
+          { path: '**', redirectTo:'' },
+        ] 
+      },
     ]
   },
   { path: 'config', component:AdminComponent, canActivate:[AuthGuard], data:{allowedRoles:['admin','superadmin']},

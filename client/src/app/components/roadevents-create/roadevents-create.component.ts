@@ -43,7 +43,7 @@ export class RoadeventsCreateComponent implements OnInit, OnDestroy {
     this.listColorCanUse = configure.roadEventColor;
     this.id = route.snapshot.paramMap.get("id") || "";
     if (this.id) {
-      location.replaceState("./roadevents/update")
+      location.replaceState("./map/roadevents/update")
     }
     this.searchImage = ""
     this.listRoads = ""

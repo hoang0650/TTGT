@@ -85,11 +85,9 @@
 				<div class="col-lg-4 col-md-12 mt-5 mt-lg-0 text-center">
 					<i class="ti-thought text-primary h1"></i>
 					<h3 class="mt-4 text-capitalize h5 ">Camera quan tâm</h3>
+					<div class="regular text-muted" *ngIf="!appCom.profile"><p>Đăng nhập để xem nội dung này</p></div>
 					<div class="regular text-muted" [ngClass]="{'scroll-contain': isScrolled, 'default-contain': !isScrolled}">
 						<div class="regular text-muted" *ngIf="!!appCom.profile">
-							<div *ngIf="!appCom.profile">
-								Đăng nhập để xem các camera mà bạn quan tâm
-							</div>
 							<div  *ngIf="!!appCom.profile">
 								<div *ngIf="favoriteList?.length <= 0">
 									Bạn chưa quan tâm camera nào cả

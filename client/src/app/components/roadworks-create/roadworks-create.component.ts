@@ -116,7 +116,7 @@ export class RoadworksCreateComponent implements OnInit, OnDestroy {
     this.createGeoForAnotherRoadwork();
     if (!this.isCreate) {
       this.loadRoadworkByID(this.route.snapshot.paramMap.get('id'));
-      this.location.replaceState("./roadworks/update")
+      this.location.replaceState("./map/roadworks/update")
     }
     this.mapCom.toggleLayout(true)
   }
