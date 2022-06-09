@@ -15,6 +15,7 @@ import { AdminConfigConfirmComponent } from '../admin-config-confirm/admin-confi
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { MapComponent } from '../map/map.component';
+import { AppComponent } from 'src/app/app.component';
 
 declare var $: any;
 
@@ -49,7 +50,7 @@ export class CameraGroupsComponent implements OnInit {
   options: any;
   filter:string;
 
-  constructor(public mapCom:MapComponent, private messageService:MessageService, public configure:ConfigureService, private nzMessage:NzMessageService, private cameraService:CameraService, private markerModify:MarkerService, private cameraGroupService:CameraGroupService, private viewportScroller: ViewportScroller, private modalService:NzModalService, private cdRef:ChangeDetectorRef) {
+  constructor(public mapCom:MapComponent, private messageService:MessageService, public configure:ConfigureService, private nzMessage:NzMessageService, private cameraService:CameraService, private markerModify:MarkerService, private cameraGroupService:CameraGroupService, private viewportScroller: ViewportScroller, private modalService:NzModalService, private cdRef:ChangeDetectorRef, public appCom:AppComponent) {
     this.button = messageService.getMessageObj().BUTTON;
     this.filter = ""
     this.inputChange = false;

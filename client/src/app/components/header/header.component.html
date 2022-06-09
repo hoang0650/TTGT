@@ -52,20 +52,20 @@
             <li>
               <a class="dropdown-item" *ngIf="roles.indexOf('superadmin')>-1" [ngClass]="{'active': isActive('/users')}" [routerLink]="['/users']">Người dùng</a>
             </li>
-            <li>
+            <!-- <li>
               <a class="dropdown-item" *ngIf="roles.indexOf('superadmin')>-1" [ngClass]="{'active': isActive('/groups')}" [routerLink]="['/groups']">Nhóm người dùng</a>
-            </li>
+            </li> -->
           </ul>
         </li>
         
-        <li class="nav-item dropdown" *ngIf="roles.indexOf('admin')>-1" [ngClass]="{'active': isActiveList(['/map/events/stats'])}">
+        <li class="nav-item dropdown" *ngIf="roles.indexOf('admin')>-1 || roles.indexOf('superadmin')>-1" [ngClass]="{'active': isActiveList(['/map/events/stats'])}">
           <a class="nav-link dropdown" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Thống kê
           </a>
           
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li>
-              <a class="dropdown-item" [ngClass]="{'active': isActive('/map/events/stats')}" [routerLink]="['/map/events/stats']">Cảnh báo giao thông</a>
+              <a class="dropdown-item" [ngClass]="{'active': isActive('/map/events/stats')}" [routerLink]="['/map/events/stats']">Thống kê cảnh báo</a>
             </li>
           </ul>
         </li>

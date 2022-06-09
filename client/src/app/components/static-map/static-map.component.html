@@ -14,7 +14,7 @@
                         <div class="row">
                             <div class="col-6 p-0">
                                 <div class="btn-group">
-                                    <button class="btn btn-success" type="button" [routerLink]="['./create']">
+                                    <button [disabled]="!appCom.checkPermission(['staticmaps:manage'])" class="btn btn-success" type="button" [routerLink]="['./create']">
                                         <i class="fa-solid fa-plus"></i>
                                         Thêm
                                     </button>
@@ -75,7 +75,7 @@
                     <img *ngIf="staticMap?.staticMapData?.icon" class="ui avatar image" src="{{staticMap.staticMapData.icon.data.iconUrl}}">
                 </div>
                 <div class="right floated content ">
-                    <a class="ui icon button" [routerLink]="['.', staticMap.staticMapData._id, 'update']" data-tooltip="Chỉnh sửa lớp thông tin" data-position="top right"><i class="ui write icon"></i></a>
+                    <button type="button" [disabled]="!appCom.checkPermission(['staticmaps:update','staticmaps:manage'])" class="ui icon button" [routerLink]="['.', staticMap.staticMapData._id, 'update']" data-tooltip="Chỉnh sửa lớp thông tin" data-position="top right"><i class="ui write icon"></i></button>
                 </div>
                 <div class="content">
                     <span class="header"> {{staticMap.staticMapData.name}} </span>

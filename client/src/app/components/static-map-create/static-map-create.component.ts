@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import L from 'leaflet';
 import _ from 'lodash';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { AppComponent } from 'src/app/app.component';
 import { ConfigureService } from 'src/app/services/configure.service';
 import { MarkerService } from 'src/app/services/marker.service';
 import { MessageService } from 'src/app/services/message.service';
@@ -40,7 +41,7 @@ export class StaticMapCreateComponent implements OnInit, OnDestroy {
   temporaryStatic: any;
   listRoads: any;
 
-  constructor(public mapCom:MapComponent, public configure:ConfigureService, private messageService:MessageService, private staticMapService:StaticMapService, private modalService:NzModalService, private markerService:MarkerService, private router:Router, private route:ActivatedRoute, private location:Location, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cdRef:ChangeDetectorRef) {
+  constructor(public mapCom:MapComponent, public configure:ConfigureService, private messageService:MessageService, private staticMapService:StaticMapService, private modalService:NzModalService, private markerService:MarkerService, private router:Router, private route:ActivatedRoute, private location:Location, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cdRef:ChangeDetectorRef, public appCom:AppComponent) {
     this.listRoads = []
     this.id = route.snapshot.paramMap.get('id') || ""
     if (this.id) {

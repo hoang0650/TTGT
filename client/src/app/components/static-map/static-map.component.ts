@@ -3,6 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
 import { map } from 'lodash';
+import { AppComponent } from 'src/app/app.component';
 import { ConfigureService } from 'src/app/services/configure.service';
 import { MarkerService } from 'src/app/services/marker.service';
 import { MessageService } from 'src/app/services/message.service';
@@ -30,7 +31,7 @@ export class StaticMapComponent implements OnInit {
   isLoading: boolean;
   markers:any;
 
-  constructor(public mapCom:MapComponent, private messageService:MessageService, route:ActivatedRoute, public configure:ConfigureService, private markerService:MarkerService, private staticMap:StaticMapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cdRef:ChangeDetectorRef,private sanitizer: DomSanitizer) {
+  constructor(public mapCom:MapComponent, private messageService:MessageService, route:ActivatedRoute, public configure:ConfigureService, private markerService:MarkerService, private staticMap:StaticMapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cdRef:ChangeDetectorRef,private sanitizer: DomSanitizer, public appCom:AppComponent) {
     this.params = route.snapshot.paramMap
     this.listData = [];
     this.searchText = ""

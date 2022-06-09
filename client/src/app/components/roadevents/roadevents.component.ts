@@ -4,11 +4,13 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { AppComponent } from 'src/app/app.component';
 import { ConfigureService } from 'src/app/services/configure.service';
 import { MarkerService } from 'src/app/services/marker.service';
 import { MessageService } from 'src/app/services/message.service';
 import { RoadEventsService } from 'src/app/services/road-events.service';
 import { MapComponent } from '../map/map.component';
+
 
 @Component({
   selector: 'app-roadevents',
@@ -31,7 +33,7 @@ export class RoadeventsComponent implements OnInit, OnDestroy {
   showLength: any;
   isLoading: boolean;
 
-  constructor(public mapCom:MapComponent, private messageService:MessageService, private roadeventsService:RoadEventsService, public configure:ConfigureService, private route:ActivatedRoute, private markerService:MarkerService, private cdRef:ChangeDetectorRef, private location:Location, private nzMessage:NzMessageService,private sanitizer: DomSanitizer) {
+  constructor(public mapCom:MapComponent, private messageService:MessageService, private roadeventsService:RoadEventsService, public configure:ConfigureService, private route:ActivatedRoute, private markerService:MarkerService, private cdRef:ChangeDetectorRef, private location:Location, private nzMessage:NzMessageService,private sanitizer: DomSanitizer, public appCom:AppComponent) {
     this.exported = false
     this.isLoading = true;
     this.showLength = {}

@@ -14,7 +14,7 @@
                         <div class="row">
                             <div class="col-6 p-0">
                                 <div class="btn-group">
-                                    <button class="btn btn-success" type="button" [routerLink]="['./create']">
+                                    <button [disabled]="!appCom.checkPermission(['roadevents:manage'])" class="btn btn-success" type="button" [routerLink]="['./create']">
                                         <i class="fa-solid fa-plus"></i>
                                         Thêm
                                     </button>
@@ -70,7 +70,7 @@
             <div class="item" id="{{roadevent._id}}" [ngClass]="{'active': roadevent._id === choosedRoadevent?._id}" *ngFor="let roadevent of (roadevents | searchFilter: filter: ['featureCollection', 'properties', 'name'])"
                 (click)="selectRoadevent(roadevent)">
                 <div class="left floated content ">
-                    <a class="ui icon button" [routerLink]="['.', roadevent._id, 'update']"><i class="ui write icon"></i></a>
+                    <button type="button" [disabled]="!appCom.checkPermission(['roadevents:update', 'roadevents:manage'])" class="ui icon button" [routerLink]="['.', roadevent._id, 'update']"><i class="ui write icon"></i></button>
                 </div>
                 <div class="content">
                     <span class="header">{{roadevent.featureCollection.properties.name}}</span>

@@ -126,11 +126,11 @@
 
                 <div class="row">
                     <div class="col-3">
-                        <button class="btn btn-success" *ngIf="isCreate" type="button" [disabled]="!parkingForm.valid ||!mapCom.permissions.indexOf('parkings:update')|| !mapCom.permissions.indexOf('parkings:manage')|| !appCom.roles.indexOf('superadmin')" (click)="create(newParking)">{{button.CREATE}}</button>
-                        <button class="btn btn-success" *ngIf="!isCreate" type="button" [disabled]="!parkingForm.valid ||!mapCom.permissions.indexOf('parkings:update')|| !mapCom.permissions.indexOf('parkings:manage')|| !appCom.roles.indexOf('superadmin')" (click)="create(newParking)">{{button.UPDATE}}</button>
+                        <button class="btn btn-success" *ngIf="isCreate" type="button" [disabled]="!parkingForm.valid ||!appCom.checkPermission(['parkings:update', 'parkings:manage'])" (click)="create(newParking)">{{button.CREATE}}</button>
+                        <button class="btn btn-success" *ngIf="!isCreate" type="button" [disabled]="!parkingForm.valid ||!appCom.checkPermission(['parkings:update', 'parkings:manage'])" (click)="create(newParking)">{{button.UPDATE}}</button>
                     </div>
                     <div class="col-3 text-end">
-                        <button *ngIf="!isCreate" [disabled]="!mapCom.permissions.indexOf('parkings:manage')|| !appCom.roles.indexOf('superadmin')" class="btn btn-danger" type="button" (click)="deleteParking(newParking)">{{button.REMOVE}}</button>
+                        <button *ngIf="!isCreate" [disabled]="!appCom.checkPermission(['parkings:manage'])" class="btn btn-danger" type="button" (click)="deleteParking(newParking)">{{button.REMOVE}}</button>
                     </div>
 
                     <div class="col-6 text-end">

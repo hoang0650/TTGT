@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
 import _ from 'lodash';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { AppComponent } from 'src/app/app.component';
 import { ConfigureService } from 'src/app/services/configure.service';
 import { MarkerService } from 'src/app/services/marker.service';
 import { MessageService } from 'src/app/services/message.service';
@@ -41,7 +42,7 @@ export class RoadworksComponent implements OnInit, OnDestroy {
   id?:string
   isLoading = true;
 
-  constructor(public mapCom:MapComponent, public configure:ConfigureService, private route:ActivatedRoute, private messageService:MessageService, private roadworkService:RoadworkService, private location:Location, private cdRef:ChangeDetectorRef, private markerService:MarkerService, private nzMessage:NzMessageService,private sanitizer: DomSanitizer) { 
+  constructor(public mapCom:MapComponent, public configure:ConfigureService, private route:ActivatedRoute, private messageService:MessageService, private roadworkService:RoadworkService, private location:Location, private cdRef:ChangeDetectorRef, private markerService:MarkerService, private nzMessage:NzMessageService,private sanitizer: DomSanitizer, public appCom:AppComponent) { 
     this.mess = messageService.getMessageObj();
     this.oneDay = 24 * 60 * 60 * 1000;
     this.currentDate = new Date();
