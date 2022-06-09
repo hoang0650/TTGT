@@ -14,17 +14,17 @@
                         <div class="row">
                             <div class="col-6 p-0">
                                 <div class="btn-group">
-                                    <button [disabled]="!mapCom.permissions.indexOf('cameras:manage')|| !appCom.roles.indexOf('superadmin')" class="btn btn-success" type="button" [routerLink]="['./create']">
+                                    <button [disabled]="!appCom.checkPermission(['cameras:manage'])" class="btn btn-success" type="button" [routerLink]="['./create']">
                                         <i class="fa-solid fa-plus"></i>
                                         Thêm
                                     </button>
-                                    <button [disabled]="!mapCom.permissions.indexOf('cameras:update')|| !mapCom.permissions.indexOf('cameras:manage')|| !appCom.roles.indexOf('superadmin')" class="btn btn-primary" type="button" [routerLink]="['./groups']">
+                                    <button [disabled]="!appCom.checkPermission(['cameras:manage','cameras:update'])" class="btn btn-primary" type="button" [routerLink]="['./groups']">
                                         Nhóm
                                     </button>
                                 </div>
                             </div>
                             <div class="col-6 p-0">
-                                <button class="btn btn-secondary dropdown float-end" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button [disabled]="!appCom.checkPermission(['cameras:manage','cameras:update'])" class="btn btn-secondary dropdown float-end" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="cloud download icon"></i>
                                     Xuất dữ liệu
                                 </button>

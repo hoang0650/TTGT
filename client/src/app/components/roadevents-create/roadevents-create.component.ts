@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import L from 'leaflet';
 import _ from 'lodash';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { AppComponent } from 'src/app/app.component';
 import { ConfigureService } from 'src/app/services/configure.service';
 import { MarkerService } from 'src/app/services/marker.service';
 import { MessageService } from 'src/app/services/message.service';
@@ -38,7 +39,7 @@ export class RoadeventsCreateComponent implements OnInit, OnDestroy {
   tmpLocation: string;
   id: string;
 
-  constructor(public mapCom:MapComponent, private messageService:MessageService, public configure:ConfigureService, private modalService:NzModalService, private router:Router, private markerService:MarkerService, private roadeventService:RoadEventsService, private route:ActivatedRoute, private location:Location, private cdRef: ChangeDetectorRef) {
+  constructor(public mapCom:MapComponent, private messageService:MessageService, public configure:ConfigureService, private modalService:NzModalService, private router:Router, private markerService:MarkerService, private roadeventService:RoadEventsService, private route:ActivatedRoute, private location:Location, private cdRef: ChangeDetectorRef,public appCom:AppComponent) {
     this.button = messageService.getMessageObj().BUTTON;
     this.listColorCanUse = configure.roadEventColor;
     this.id = route.snapshot.paramMap.get("id") || "";

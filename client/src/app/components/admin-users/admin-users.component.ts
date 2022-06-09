@@ -13,6 +13,8 @@ export class AdminUsersComponent implements OnInit {
   selectedUsers: any = [];
   searchnickname:string = "";
   payload: object ={};
+  index: number=0;
+  tabs: string[]=[];
   constructor(private admin:AdminService) { }
 
   ngOnInit(): void {
@@ -221,44 +223,53 @@ changeUsersRole(action:string,data:object) {
 		};
 
 
-  appMetadataToRoleName(metadata:any) {
-    if (metadata && metadata.roles) {
-      if (metadata.roles.indexOf('superadmin') > -1) {
-        return 'Quản trị viên';
+    appMetadataToRoleName(metadata:any) {
+      if (metadata && metadata.roles) {
+        if (metadata.roles.indexOf('superadmin') > -1) {
+          return 'Quản trị viên';
+        }
+        if (metadata.roles.indexOf('admin') > -1) {
+          return 'Quản lý';
+        }
+        if (metadata.roles.indexOf('user') > -1) {
+          return 'Người dùng';
+        }
+        if (metadata.roles.indexOf('guest') > -1) {
+          return 'Khách';
+        }
       }
-      if (metadata.roles.indexOf('admin') > -1) {
-        return 'Quản lý';
-      }
-      if (metadata.roles.indexOf('user') > -1) {
-        return 'Người dùng';
-      }
-      if (metadata.roles.indexOf('guest') > -1) {
-        return 'Khách';
-      }
-    }
-    return 'Không xác định';
+      return 'Không xác định';
   }
 
-  appMetadataToStar(metadata:any) {
-    if (metadata && metadata.roles) {
-      if (metadata.roles.indexOf('superadmin') > -1) {
-        return 'red star';
+    appMetadataToStar(metadata:any) {
+      if (metadata && metadata.roles) {
+        if (metadata.roles.indexOf('superadmin') > -1) {
+          return 'red star';
+        }
+        if (metadata.roles.indexOf('admin') > -1) {
+          return 'purple star';
+        }
+        if (metadata.roles.indexOf('user') > -1) {
+          return 'yellow star';
+        }
+        if (metadata.roles.indexOf('guest') > -1) {
+          return 'yellow outline star';
+        }
       }
-      if (metadata.roles.indexOf('admin') > -1) {
-        return 'purple star';
-      }
-      if (metadata.roles.indexOf('user') > -1) {
-        return 'yellow star';
-      }
-      if (metadata.roles.indexOf('guest') > -1) {
-        return 'yellow outline star';
-      }
-    }
-    return 'grey empty star';
+      return 'grey empty star';
   }
 
   gotoInfo() {
     window.scrollTo(0, 0);
+  }
+
+  closeTab({ index }: { index: number }): void {
+    this.tabs.splice(index, 1);
+  }
+
+  newTab(): void {
+    this.tabs.push('New Tab');
+    this.index = this.tabs.length - 1;
   }
 
 

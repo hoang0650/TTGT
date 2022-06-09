@@ -102,10 +102,10 @@
 
                 <div class="row">
                     <div class="col-3">
-                        <button [disabled]="!staticMapForm.valid" (click)="createStatic(newStatic)" class="btn btn-success" type="button">{{id ? button.UPDATE : button.CREATE}}</button>
+                        <button [disabled]="!staticMapForm.valid || !appCom.checkPermission(['staticmaps:update','staticmaps:manage'])" (click)="createStatic(newStatic)" class="btn btn-success" type="button">{{id ? button.UPDATE : button.CREATE}}</button>
                     </div>
                     <div class="col-3 text-end">
-                        <button *ngIf="id" class="btn btn-danger" type="button" (click)="removeStatic(newStatic)">{{button.REMOVE}}</button>                            </div>
+                        <button *ngIf="id" [disabled]="!appCom.checkPermission(['staticmaps:manage'])" class="btn btn-danger" type="button" (click)="removeStatic(newStatic)">{{button.REMOVE}}</button>                            </div>
 
                     <div class="col-6 text-end">
                         <button class="btn btn-secondary" (click)="back(newStatic)" type="button">{{button.BACK}}</button>

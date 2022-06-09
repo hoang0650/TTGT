@@ -113,11 +113,11 @@
 
                 <div class="row">
                     <div class="col-3">
-                        <button class="btn btn-success" *ngIf="!id" type="button" [disabled]="!roadeventForm.valid" (click)="createGeo(geoObject)">{{button.CREATE}}</button>
-                        <button class="btn btn-success" *ngIf="id" type="button" [disabled]="!roadeventForm.valid" (click)="updateGeo(geoObject)">{{button.UPDATE}}</button>
+                        <button class="btn btn-success" *ngIf="!id" type="button" [disabled]="!roadeventForm.valid || !appCom.checkPermission(['roadevents:update', 'roadevents:manage'])" (click)="createGeo(geoObject)">{{button.CREATE}}</button>
+                        <button class="btn btn-success" *ngIf="id" type="button" [disabled]="!roadeventForm.valid || !appCom.checkPermission(['roadevents:update', 'roadevents:manage'])" (click)="updateGeo(geoObject)">{{button.UPDATE}}</button>
                     </div>
                     <div class="col-3 text-end">
-                        <button *ngIf="id" class="btn btn-danger" type="button" (click)="openPopupConfig('remove')">{{button.REMOVE}}</button>
+                        <button *ngIf="id" class="btn btn-danger" [disabled]="!appCom.checkPermission(['roadevents:manage'])" type="button" (click)="openPopupConfig('remove')">{{button.REMOVE}}</button>
                     </div>
 
                     <div class="col-6 text-end">
