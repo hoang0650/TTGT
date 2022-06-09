@@ -102,7 +102,7 @@ export class ParkingsCreateComponent implements OnInit, OnDestroy {
 
     if (!this.isCreate) {
       this.loadParkingByID(this.route.snapshot.paramMap.get('id'));
-      this.location.replaceState("./parkings/update")
+      this.location.replaceState("./map/parkings/update")
     }
   }
 

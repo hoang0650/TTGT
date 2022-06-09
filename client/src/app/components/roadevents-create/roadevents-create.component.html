@@ -1,213 +1,130 @@
-<div class="map-layout">
-    <div class="map-leaflet" 
-        leaflet 
-        leafletDraw
-        [leafletDrawOptions]="drawOptions"
-        [leafletOptions]="configure.options"
-        (leafletMapReady)="initMap($event)"
-        (leafletDrawCreated)="onDrawCreated($event)"
-        (leafletDrawReady)="onDrawReady($event)">
-        <div [leafletLayer]="geoLayer"></div>
-
-        <div class="contain-legend-road-event" *ngIf="haveGeoType(geoObject.featureCollection)">
-            <ng-container *ngFor="let feature of geoObject.featureCollection.features">
-                <div *ngIf="feature.properties.type === 'geo'">
-                    <div class="legend-line {{feature.properties.color}}"></div>
-                    <span>{{feature.properties.title}} ({{totalLength(feature)}} mét)</span>
+<div class="map-layout-info-content" #mapLayoutInfo>
+    <div class="ui segments">
+        <div class="ui segment">
+            <h2 class="ui center aligned header">
+                <div class="content">
+                    {{(!id) ?'Thêm phân luồng giao thông':'Chỉnh sửa phân luồng'}}
                 </div>
-            </ng-container>
-        </div>
-
-        <div class="contain-guide-line" *ngIf="currentType || choosedFeature">
-            <div class="ui large message">
-                <div class="header">
-                    Bạn có thể
-                </div>
-                <ul class="list">
-                    <li *ngIf="currentType == 'marker'">Click vào map để tạo điểm</li>
-                    <li *ngIf="currentType == 'label'">Click vào map để tạo nhãn</li>
-                    <li *ngIf="currentType == 'image'">Click vào map để tạo biển báo</li>
-                    <li *ngIf="currentType == 'geo'">Click vào map để vẽ đường</li>
-                    <li *ngIf="currentType == 'custom'">Click vào map để vẽ hình</li>
-                </ul>
-                <ul class="list" *ngIf="!currentType">
-                    <li *ngIf="choosedFeature.properties.type == 'marker'">Cầm kéo điểm để thay đổi vị trí</li>
-                    <li *ngIf="choosedFeature.properties.type == 'label'">Cầm kéo hai đầu của nhãn để thay đổi vị trí</li>
-                    <li *ngIf="choosedFeature.properties.type == 'image'">Cầm kéo biển báo để thay đổi vị trí</li>
-                    <li *ngIf="choosedFeature.properties.type == 'geo'">Click vào các con đường trên bản đồ để vẽ</li>
-                    <li *ngIf="choosedFeature.properties.type == 'geo'">Click chuột phải đường đã vẽ để thêm mũi tên chỉ hướng cho nó</li>
-                    <li *ngIf="choosedFeature.properties.type == 'custom'">Chọn các tùy chọn bên phải bản thông tin để vẽ</li>
-                </ul>
-            </div>
+            </h2>
         </div>
     </div>
 
-    <div class="map-search">
-        <div class="map-search-bar">
-            <nz-input-group [nzSuffix]="searchQuery.length > 0 ? suffixIconClose : suffixIconSearch" [nzSize]="'large'">
-                <input type="text" nz-input placeholder="Tìm vị trí" [(ngModel)]="searchQuery" appSearchRoads [appSearchRoadsText]="searchQuery" (newListRoads)="searchResults = $event" (isSearch)="isSearch = $event"/>
-            </nz-input-group>
-            <ng-template #suffixIconSearch>
-            <i nz-icon nzType="search"></i>
-            </ng-template>
-            <ng-template #suffixIconClose>
-                <i nz-icon nzType="close" (click)="searchIconClick()"></i>
-            </ng-template>
-    
-            <div class="results transition visible" *ngIf="searchResults?.length > 0 && isSearch">
-                <ul nz-menu>
-                    <li class="map-search-result" nz-menu-item *ngFor="let result of searchResults; index as i" (click)="searchSelect(result)">
-                        <b>{{result.properties.name}}</b>
-                        <br>
-                        {{result.properties.city}}
-                    </li>
-                </ul>
-            </div>
-            <div class="results transition visible" *ngIf="searchResults?.length <= 0 && isSearch" style="background-color: white;">
-                <a class="result">
-                    <div class="content">
-                        <div class="title">Không tìm thấy</div>
-                        <div class="description">Hãy thử lại</div>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <button class="map-layout-info-button" nz-button nzType="primary" [@mapLayoutInfoButton]="isOpen ? 'open' : 'closed'" (click)="toggleLayoutInfo()">
-        <i nz-icon nzType="{{isOpen ? 'right' : 'left'}}"></i>
-    </button>
-
-    <div [@mapLayoutInfo]="isOpen ? 'open' : 'closed'" class="map-layout-info-right">
-        <div class="map-layout-info-content" #mapLayoutInfo>
-            <div class="ui segments">
-                <div class="ui segment">
-                    <h2 class="ui center aligned header">
-                        <div class="content">
-                            {{(!id) ?'Thêm phân luồng giao thông':'Chỉnh sửa phân luồng'}}
+    <div class="ui segment">
+        <form #roadeventForm="ngForm">
+            <div class="container">
+                <h3>Thông tin chung</h3>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <label for="txtMapName" class="form-label required"><h5>Tên</h5></label>
+                            <input class="form-control" required type="text" id="txtMapName" name="txtMapName" placeholder="Phân luồng lễ 02/09" [(ngModel)]="geoObject.featureCollection.properties['name']" />
                         </div>
-                    </h2>
-                </div>
-            </div>
 
-            <div class="ui segment">
-                <form #roadeventForm="ngForm">
-                    <div class="container">
-                        <h3>Thông tin chung</h3>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label for="txtMapName" class="form-label required"><h5>Tên</h5></label>
-                                    <input class="form-control" required type="text" id="txtMapName" name="txtMapName" placeholder="Phân luồng lễ 02/09" [(ngModel)]="geoObject.featureCollection.properties['name']" />
-                                </div>
+                        <div class="mb-3">
+                            <label for="txtDescription" class="form-label required"><h5>Mô tả</h5></label>
+                            <textarea class="form-control" required type="text" id="txtDescription" name="txtDescription" rows="3" [(ngModel)]="geoObject.featureCollection.properties['desc']"  placeholder="Mô tả"></textarea>
+                        </div>
 
-                                <div class="mb-3">
-                                    <label for="txtDescription" class="form-label required"><h5>Mô tả</h5></label>
-                                    <textarea class="form-control" required type="text" id="txtDescription" name="txtDescription" rows="3" [(ngModel)]="geoObject.featureCollection.properties['desc']"  placeholder="Mô tả"></textarea>
-                                </div>
+                        <div class="mb-3">
+                            <label for="txtUrl" class="form-label"><h5>Đường dẫn liên kết</h5></label>
+                            <input class="form-control" type="text" id="txtUrl" name="txtUrl" placeholder="http://..." [(ngModel)]="geoObject.featureCollection.properties['url']" />
+                        </div>
 
-                                <div class="mb-3">
-                                    <label for="txtUrl" class="form-label"><h5>Đường dẫn liên kết</h5></label>
-                                    <input class="form-control" type="text" id="txtUrl" name="txtUrl" placeholder="http://..." [(ngModel)]="geoObject.featureCollection.properties['url']" />
-                                </div>
-
-                                <div class="mb-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="txtPublish" name="txtPublish" [(ngModel)]="geoObject['publish']">
-                                        <label class="form-check-label" for="txtPublish">Công bố</label>
-                                    </div>
-                                </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="txtPublish" name="txtPublish" [(ngModel)]="geoObject['publish']">
+                                <label class="form-check-label" for="txtPublish">Công bố</label>
                             </div>
                         </div>
+                    </div>
+                </div>
 
 
-                        <h3>Thêm lớp thông tin</h3>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="btn-group mb-3">
-                                    <button class="btn btn-secondary" [ngClass]="{'active': currentType == 'label'}" (click)="createFeature('label')" type="button" nz-tooltip nzTooltipTitle="Tạo nhãn"><i class="tag icon"></i></button>
-                                    <button class="btn btn-secondary" [ngClass]="{'active': currentType == 'marker'}" (click)="createFeature('marker')" type="button" nz-tooltip nzTooltipTitle="Tạo điểm"><i class="marker icon"></i></button>
-                                    <button class="btn btn-secondary" [ngClass]="{'active': currentType == 'image'}" (click)="createFeature('image')" type="button" nz-tooltip nzTooltipTitle="Tạo biển báo"><i class="warning circle icon"></i></button>
-                                    <button class="btn btn-secondary" [ngClass]="{'active': currentType == 'geo'}" (click)="createFeature('geo')" type="button" nz-tooltip nzTooltipTitle="Tạo đường (tối đa 5 đường)"><i class="road icon"></i></button>
-                                    <button class="btn btn-secondary" [ngClass]="{'active': currentType == 'custom'}" (click)="createFeature('custom')" type="button" nz-tooltip nzTooltipTitle="Tạo lớp hình học (tối đa 5 lớp)"><i class="write icon"></i></button>
-                                </div>
+                <h3>Thêm lớp thông tin</h3>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="btn-group mb-3">
+                            <button class="btn btn-secondary" [ngClass]="{'active': currentType == 'label'}" (click)="createFeature('label')" type="button" nz-tooltip nzTooltipTitle="Tạo nhãn"><i class="tag icon"></i></button>
+                            <button class="btn btn-secondary" [ngClass]="{'active': currentType == 'marker'}" (click)="createFeature('marker')" type="button" nz-tooltip nzTooltipTitle="Tạo điểm"><i class="marker icon"></i></button>
+                            <button class="btn btn-secondary" [ngClass]="{'active': currentType == 'image'}" (click)="createFeature('image')" type="button" nz-tooltip nzTooltipTitle="Tạo biển báo"><i class="warning circle icon"></i></button>
+                            <button class="btn btn-secondary" [ngClass]="{'active': currentType == 'geo'}" (click)="createFeature('geo')" type="button" nz-tooltip nzTooltipTitle="Tạo đường (tối đa 5 đường)"><i class="road icon"></i></button>
+                            <button class="btn btn-secondary" [ngClass]="{'active': currentType == 'custom'}" (click)="createFeature('custom')" type="button" nz-tooltip nzTooltipTitle="Tạo lớp hình học (tối đa 5 lớp)"><i class="write icon"></i></button>
+                        </div>
 
-                                <div *ngIf="!validateGeo(geoObject.featureCollection)" class="ui negative message">
-                                    <div class="header">
-                                        Trùng màu
-                                    </div>
-                                    <p>Các lớp đường hoặc các lớp hình học không được trùng màu với nhau.
-                                    </p>
-                                </div>
+                        <div *ngIf="!validateGeo(geoObject.featureCollection)" class="ui negative message">
+                            <div class="header">
+                                Trùng màu
+                            </div>
+                            <p>Các lớp đường hoặc các lớp hình học không được trùng màu với nhau.
+                            </p>
+                        </div>
 
-                                <div class="mb-3">
-                                    <div class="ui segment" *ngIf="geoObject.featureCollection.features.length > 0">
-                                        <div class="ui middle aligned selection divided list">
-                                            <div class="item" (click)="chooseFeatureFromList(feature)" *ngFor="let feature of geoObject.featureCollection.features; index as i" [ngClass]="{'active': choosedFeature == feature}">
-                                                <div class="content">
-                                                    <div class="ui fluid left labeled action input" *ngIf="feature.properties.type != 'image'">
-                                                        <div class="ui simple dropdown label color-picker {{feature.properties.color}} dropup">
-                                                            <i class="inverted icon no-spacing" [ngClass]="{'road': feature.properties.type == 'geo', 'marker': feature.properties.type == 'marker', 'tag': feature.properties.type == 'label', 'write':  feature.properties.type == 'custom'}"></i>
-                                                            <div class="menu">
-                                                                <div class="item {{color.id}} item-color-hover" (click)="changeFeatureColor(feature, color.id)" *ngFor="let color of listColorCanUse">
-                                                                    &nbsp;
-                                                                </div>
-                                                            </div>
+                        <div class="mb-3">
+                            <div class="ui segment" *ngIf="geoObject.featureCollection.features.length > 0">
+                                <div class="ui middle aligned selection divided list">
+                                    <div class="item" (click)="chooseFeatureFromList(feature)" *ngFor="let feature of geoObject.featureCollection.features; index as i" [ngClass]="{'active': choosedFeature == feature}">
+                                        <div class="content">
+                                            <div class="ui fluid left labeled action input" *ngIf="feature.properties.type != 'image'">
+                                                <div class="ui simple dropdown label color-picker {{feature.properties.color}} dropup">
+                                                    <i class="inverted icon no-spacing" [ngClass]="{'road': feature.properties.type == 'geo', 'marker': feature.properties.type == 'marker', 'tag': feature.properties.type == 'label', 'write':  feature.properties.type == 'custom'}"></i>
+                                                    <div class="menu">
+                                                        <div class="item {{color.id}} item-color-hover" (click)="changeFeatureColor(feature, color.id)" *ngFor="let color of listColorCanUse">
+                                                            &nbsp;
                                                         </div>
-                                                        <input type="text" maxlength="50" name="featureTitle{{i}}" *ngIf="feature['properties']['type'] == 'label' || feature['properties']['type'] == 'marker'" placeholder="Chú thích" [(ngModel)]="feature['properties']['title']" (change)="reDrawGeo()">
-                                                        <input type="text" maxlength="200" name="featureTitle{{i}}" *ngIf="feature['properties']['type'] != 'label' && feature['properties']['type'] != 'marker'" placeholder="Chú thích" [(ngModel)]="feature['properties']['title']" (change)="reDrawGeo()">
-                                                        <div class="ui icon button" (click)="removeFeature(feature)"><i class="remove icon"></i></div>
-                                                    </div>
-                                                    
-                                                    <div class="ui fluid left labeled action input image-choice" *ngIf="feature.properties.type == 'image'">
-                                                        <div class="ui simple dropdown dropup label color-picker notice-board">
-                                                            <img src="{{feature.properties.image.url}}" onerror="">
-                                                            <div class="menu">
-                                                                <div class="ui icon input">
-                                                                    <input type="text" name="searchImage{{i}}" [(ngModel)]="searchImage" placeholder="Search...">
-                                                                    <i class="search icon"></i>
-                                                                </div>
-                                                                <div class="item" (click)="chooseImage(feature, image)" *ngFor="let image of (noticeBoard | searchFilter:searchImage:['name'])">
-                                                                    <img class="ui image" src="{{image.url}}">{{image.id}} - {{image.name}}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row m-0">
-                                                            <div class="col-5 ui left icon input p-0">
-                                                                <input class="no-radius" type="number" min="20" max="100" name="featureRadius{{i}}" [(ngModel)]="feature.properties['radius']" (change)="reDrawGeo()" placeholder="50">
-                                                                <i class="resize horizontal icon"></i>
-                                                            </div>
-                                                            <div class="col-7 ui input p-0">
-                                                                <input class="ui input no-radius" type="text" placeholder="Chú thích" name="featureTitle{{i}}" [(ngModel)]="feature.properties['title']" (change)="reDrawGeo()">
-                                                            </div>
-                                                        </div>
-                                                        <div class="ui icon button" (click)="removeFeature(feature)"><i class="remove icon"></i></div>
                                                     </div>
                                                 </div>
+                                                <input type="text" maxlength="50" name="featureTitle{{i}}" *ngIf="feature['properties']['type'] == 'label' || feature['properties']['type'] == 'marker'" placeholder="Chú thích" [(ngModel)]="feature['properties']['title']" (change)="updateGeoLayer()">
+                                                <input type="text" maxlength="200" name="featureTitle{{i}}" *ngIf="feature['properties']['type'] != 'label' && feature['properties']['type'] != 'marker'" placeholder="Chú thích" [(ngModel)]="feature['properties']['title']" (change)="updateGeoLayer()">
+                                                <div class="ui icon button" (click)="removeFeature(feature)"><i class="remove icon"></i></div>
+                                            </div>
+                                            
+                                            <div class="ui fluid left labeled action input image-choice" *ngIf="feature.properties.type == 'image'">
+                                                <div class="ui simple dropdown dropup label color-picker notice-board">
+                                                    <img src="{{feature.properties.image.url}}" onerror="">
+                                                    <div class="menu">
+                                                        <div class="ui icon input">
+                                                            <input type="text" name="searchImage{{i}}" [(ngModel)]="searchImage" placeholder="Search...">
+                                                            <i class="search icon"></i>
+                                                        </div>
+                                                        <div class="item" (click)="chooseImage(feature, image)" *ngFor="let image of (noticeBoard | searchFilter:searchImage:['name'])">
+                                                            <img class="ui image" src="{{image.url}}">{{image.id}} - {{image.name}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row m-0">
+                                                    <div class="col-5 ui left icon input p-0">
+                                                        <input class="no-radius" type="number" min="20" max="100" name="featureRadius{{i}}" [(ngModel)]="feature.properties['radius']" (change)="updateGeoLayer()" placeholder="50">
+                                                        <i class="resize horizontal icon"></i>
+                                                    </div>
+                                                    <div class="col-7 ui input p-0">
+                                                        <input class="ui input no-radius" type="text" placeholder="Chú thích" name="featureTitle{{i}}" [(ngModel)]="feature.properties['title']" (change)="updateGeoLayer()">
+                                                    </div>
+                                                </div>
+                                                <div class="ui icon button" (click)="removeFeature(feature)"><i class="remove icon"></i></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-            
-                        </div>
-
-                        <div class="row">
-                            <div class="col-3">
-                                <button class="btn btn-success" *ngIf="!id" type="button" [disabled]="!roadeventForm.valid" (click)="createGeo(geoObject)">{{button.CREATE}}</button>
-                                <button class="btn btn-success" *ngIf="id" type="button" [disabled]="!roadeventForm.valid" (click)="updateGeo(geoObject)">{{button.UPDATE}}</button>
-                            </div>
-                            <div class="col-3 text-end">
-                                <button *ngIf="id" class="btn btn-danger" type="button" (click)="openPopupConfig('remove')">{{button.REMOVE}}</button>
-                            </div>
-
-                            <div class="col-6 text-end">
-                                <button class="btn btn-secondary" (click)="back()" type="button">{{button.BACK}}</button>
-                            </div>
                         </div>
                     </div>
-                </form>
+    
+                </div>
+
+                <div class="row">
+                    <div class="col-3">
+                        <button class="btn btn-success" *ngIf="!id" type="button" [disabled]="!roadeventForm.valid" (click)="createGeo(geoObject)">{{button.CREATE}}</button>
+                        <button class="btn btn-success" *ngIf="id" type="button" [disabled]="!roadeventForm.valid" (click)="updateGeo(geoObject)">{{button.UPDATE}}</button>
+                    </div>
+                    <div class="col-3 text-end">
+                        <button *ngIf="id" class="btn btn-danger" type="button" (click)="openPopupConfig('remove')">{{button.REMOVE}}</button>
+                    </div>
+
+                    <div class="col-6 text-end">
+                        <button class="btn btn-secondary" (click)="back()" type="button">{{button.BACK}}</button>
+                    </div>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>

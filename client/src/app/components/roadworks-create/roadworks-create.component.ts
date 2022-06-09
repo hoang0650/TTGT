@@ -1,4 +1,3 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -117,7 +116,7 @@ export class RoadworksCreateComponent implements OnInit, OnDestroy {
     this.createGeoForAnotherRoadwork();
     if (!this.isCreate) {
       this.loadRoadworkByID(this.route.snapshot.paramMap.get('id'));
-      this.location.replaceState("./roadworks/update")
+      this.location.replaceState("./map/roadworks/update")
     }
     this.mapCom.toggleLayout(true)
   }
@@ -126,10 +125,6 @@ export class RoadworksCreateComponent implements OnInit, OnDestroy {
     this.mapCom.removeOnClick()
     this.mapCom.removeLayers()
     this.mapCom.toggleLayout(false)
-  }
-
-  trackByFn(item:any) {
-    return item;
   }
 
   selectPosition(event:any) {

@@ -2,7 +2,11 @@
     <div class="map-leaflet"
         leaflet
         [leafletOptions]="configure.options"
-        (leafletMapReady)="initMap($event)">
+        (leafletMapReady)="initMap($event)"
+        
+        leafletDraw
+        [leafletDrawOptions]="drawOptions"
+        (leafletDrawCreated)="onDrawCreated($event)">
 
         <div *ngFor="let marker of markers | keyvalue; trackBy:trackByFn" [leafletLayer]="$any(marker).value"></div>
         <div [leafletLayer]="geoLayer"></div>
@@ -48,7 +52,7 @@
     </button>
 
     <div [@mapLayoutInfo]="{value: isOpen ? 'open' : 'closed', params: {curWidth: curWidth >= 992 ? '-33%':'-340px'}}" class="map-layout-info">
-        <router-outlet *ngIf="this.sideMap"></router-outlet>
+        <router-outlet *ngIf="this.sideMap" (activate)="onRouteOutletReady($event)"></router-outlet>
     </div>
 </div>
 

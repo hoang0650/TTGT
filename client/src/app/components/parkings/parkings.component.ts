@@ -48,7 +48,7 @@ export class ParkingsComponent implements OnInit, OnDestroy {
       }
       
       this.nzMessage.success(this.messageService.getMessageObj().NOTICE(this.route.snapshot.queryParamMap.get('result'), 'bãi đỗ xe'))
-      this.location.replaceState("./parkings")
+      this.location.replaceState("./map/parkings")
     }
 
     

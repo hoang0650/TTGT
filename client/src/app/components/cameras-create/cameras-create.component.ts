@@ -145,7 +145,7 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
 
         if (!this.isCreate) {
           this.loadCameraByID(this.route.snapshot.paramMap.get("id"))
-          this.location.replaceState("./cameras/update")
+          this.location.replaceState("./map/cameras/update")
         }
 
         this.mapCom.detectChanges()

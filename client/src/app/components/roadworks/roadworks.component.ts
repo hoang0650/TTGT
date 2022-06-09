@@ -81,7 +81,7 @@ export class RoadworksComponent implements OnInit, OnDestroy {
       }
       
       this.nzMessage.success(this.messageService.getMessageObj().NOTICE(this.route.snapshot.queryParamMap.get('result'), 'công trình giao thông'))
-      this.location.replaceState("./roadworks")
+      this.location.replaceState("./map/roadworks")
     }
 
     this.sideMap = this.mapCom.sideMap
@@ -190,7 +190,7 @@ export class RoadworksComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.toggleLayoutInfo(true)
+    this.mapCom.toggleLayout(true)
   }
 
   loadRoadwork() {
@@ -275,37 +275,5 @@ export class RoadworksComponent implements OnInit, OnDestroy {
     document.body.appendChild(e);
     e.click();
     document.body.removeChild(e);
-  }
-
-  trackByFn(item:any) {
-    return item;
-  }
-  
-  isSearch = false;
-  searchQuery = '';
-  searchResults:any = [];
-
-  searchIconClick() {
-    this.isSearch = false;
-    this.searchQuery = '';
-    this.searchResults = [];
-    this.cdRef.detectChanges()
-  }
-
-  searchSelect(result:any) {
-    if (result) {
-      if (result.geometry) {
-        this.searchQuery = result.properties.name
-        this.isSearch = false
-        this.mapCom.flyToBounds([[result.geometry.coordinates[1], result.geometry.coordinates[0]]])
-      }
-    }
-  }
-
-  isOpen = true;
-
-  toggleLayoutInfo(onoff?:boolean) {
-    this.isOpen = onoff || !this.isOpen;
-    this.cdRef.detectChanges()
   }
 }

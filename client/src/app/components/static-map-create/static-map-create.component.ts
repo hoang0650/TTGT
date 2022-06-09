@@ -1,6 +1,5 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Location } from '@angular/common';
-import { ChangeDetectorRef, Component, ComponentFactoryResolver, Injector, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ComponentFactoryResolver, Injector, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import L from 'leaflet';
 import _ from 'lodash';
@@ -10,6 +9,7 @@ import { MarkerService } from 'src/app/services/marker.service';
 import { MessageService } from 'src/app/services/message.service';
 import { StaticMapService } from 'src/app/services/static-map.service';
 import { AdminConfigConfirmComponent } from '../admin-config-confirm/admin-config-confirm.component';
+import { MapComponent } from '../map/map.component';
 import { StaticMapModalComponent } from '../static-map-modal/static-map-modal.component';
 import { StaticMapPopupComponent } from '../static-map-popup/static-map-popup.component';
 
@@ -17,48 +17,15 @@ declare var $: any;
 
 @Component({
   selector: 'app-static-map-create',
+  host: {
+    class: 'map-layout-info-container'
+  },
   templateUrl: './static-map-create.component.html',
   styleUrls: ['./static-map-create.component.css'],
-  animations: [
-    trigger('mapLayoutInfo', [
-      state('open', style({
-        position: 'absolute',
-        right: '0%',
-      })),
-      state('closed', style({
-        position: 'absolute',
-        right: '-408px',
-      })),
-      transition('open => closed', [
-        animate('0.3s')
-      ]),
-      transition('closed => open', [
-        animate('0.3s')
-      ]),
-    ]),
-    trigger('mapLayoutInfoButton', [
-    state('open', style({
-      position: 'absolute',
-      right: '408px',
-    })),
-    state('closed', style({
-      position: 'absolute',
-      right: '0px',
-    })),
-    transition('open => closed', [
-      animate('0.3s')
-    ]),
-    transition('closed => open', [
-      animate('0.3s')
-    ]),
-    ]),
-  ]
 })
-export class StaticMapCreateComponent implements OnInit {
-  sideMap: any;
+export class StaticMapCreateComponent implements OnInit, OnDestroy {
+  sideMap?: L.DrawMap;
   options: any;
-  drawMarker: boolean;
-  isSnaping: boolean;
   button: any;
   id: string;
   newStatic: any;
@@ -73,13 +40,11 @@ export class StaticMapCreateComponent implements OnInit {
   temporaryStatic: any;
   listRoads: any;
 
-  constructor(public configure:ConfigureService, private messageService:MessageService, private staticMapService:StaticMapService, private modalService:NzModalService, private markerService:MarkerService, private router:Router, private route:ActivatedRoute, private location:Location, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cdRef:ChangeDetectorRef) {
-    this.drawMarker = false;
+  constructor(public mapCom:MapComponent, public configure:ConfigureService, private messageService:MessageService, private staticMapService:StaticMapService, private modalService:NzModalService, private markerService:MarkerService, private router:Router, private route:ActivatedRoute, private location:Location, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cdRef:ChangeDetectorRef) {
     this.listRoads = []
-    this.isSnaping = false;
     this.id = route.snapshot.paramMap.get('id') || ""
     if (this.id) {
-      location.replaceState("./staticmaps/update")
+      location.replaceState("./map/staticmaps/update")
     }
     this.button = messageService.getMessageObj().BUTTON;
     this.listGeoLayers = []
@@ -91,18 +56,20 @@ export class StaticMapCreateComponent implements OnInit {
       properties: []
     }
 
-    this.drawOptions = {
-      position: 'topleft',
-      draw: false,
-      edit: {
-        featureGroup: this.drawnItems, //REQUIRED!!
-        edit: false,
-        remove: false
-      }
-    }
+    this.sideMap = mapCom.sideMap
   }
 
   ngOnInit(): void {
+    this.getGeo()
+    this.mapCom.toggleLayout(true)
+  }
+
+  ngOnDestroy(): void {
+    this.mapCom.removeLayers()
+    this.mapCom.toggleLayout(false)
+  }
+
+  getGeo() {
     if(this.id) {
       this.loadStaticMapByID(this.id)
     } else {
@@ -116,17 +83,11 @@ export class StaticMapCreateComponent implements OnInit {
     })
   }
 
-  initMap(map:any) {
-    this.sideMap = map
-  }
-
   onDrawReady(control:any) {
     this.drawControl = control
   }
 
   onDrawCreated(e: any) {
-    this.drawMarker = false
-    
     var layer = (e as L.DrawEvents.Created).layer.toGeoJSON();
     this.choosedFeature.features.push(layer)
  
@@ -134,9 +95,9 @@ export class StaticMapCreateComponent implements OnInit {
   }
 
   updateGeoLayer() {
-    this.listGeoLayers = []
-    this.newStatic.mapdatas.forEach((mapdata:any) => {
-      this.listGeoLayers.push(this.drawGeo(mapdata, this.newStatic, "black"))
+    this.mapCom.markers = {}
+    this.newStatic.mapdatas.forEach((mapdata:any, idx:number) => {
+      this.mapCom.markers['newStaticMap_'+idx] = this.drawGeo(mapdata, this.newStatic, "black")
     })
   }
 
@@ -186,7 +147,7 @@ export class StaticMapCreateComponent implements OnInit {
   }
 
   goBack(state?:string, id?:string) {
-    this.router.navigate([`/staticmaps`], {queryParams: {state:state, id:id}})
+    this.router.navigate([`/map/staticmaps`], {queryParams: {state:state, id:id}})
   }
 
   createStatic(staticMap:any) {
@@ -280,6 +241,7 @@ export class StaticMapCreateComponent implements OnInit {
       onEachFeature: (feature, layer) => {
         if (staticmap['properties']?.length > 0) {
           var popup = L.popup({
+            offset: [3, 35],
             closeButton:false,
             className:'stis-create-incident-popup'
           }).setContent(this.createStaticMapPopup(staticmap.properties, featureData.properties))
@@ -322,7 +284,6 @@ export class StaticMapCreateComponent implements OnInit {
       this.chooseFeature(feature);
 
       if (!feature.features.length && this.newStatic.type === 'marker') {
-        this.drawMarker = true;
         this.createFeature()
       }
     }
@@ -337,23 +298,25 @@ export class StaticMapCreateComponent implements OnInit {
   }
 
   createFeature() {
-    if (this.currentDrawer) {
-      this.currentDrawer.disable()
+    if (this.sideMap) {
+      if (this.currentDrawer) {
+        this.currentDrawer.disable()
+      }
+  
+      if (this.newStatic['type'] === 'geo') {
+        this.currentDrawer = new L.Draw.Polyline(this.sideMap, {
+          allowIntersection: false,
+          drawError: {
+            message: '<strong>Sai rồi</strong> bạn không thể vẽ như thế!'
+          },
+        })
+      } else {
+        this.currentDrawer = new L.Draw.Marker(this.sideMap, {
+          icon: !(this.newStatic['icon']) ? this.markerService.geticon(this.newStatic['type'], "red") : L.icon(this.newStatic['icon'].data)
+        })
+      }
+      this.currentDrawer.enable()
     }
-
-    if (this.newStatic['type'] === 'geo') {
-      this.currentDrawer = new L.Draw.Polyline(this.sideMap, {
-        allowIntersection: false,
-        drawError: {
-          message: '<strong>Sai rồi</strong> bạn không thể vẽ như thế!'
-        },
-      })
-    } else {
-      this.currentDrawer = new L.Draw.Marker(this.sideMap, {
-        icon: !(this.newStatic['icon']) ? this.markerService.geticon(this.newStatic['type'], "red") : L.icon(this.newStatic['icon'].data)
-      })
-    }
-    this.currentDrawer.enable()
   }
 
 
@@ -425,34 +388,5 @@ export class StaticMapCreateComponent implements OnInit {
     component.changeDetectorRef.detectChanges();
 
     return component.location.nativeElement;
-  }
-
-  
-  isSearch = false;
-  searchQuery = '';
-  searchResults:any = [];
-
-  searchIconClick() {
-    this.isSearch = false;
-    this.searchQuery = '';
-    this.searchResults = [];
-    this.cdRef.detectChanges()
-  }
-
-  searchSelect(result:any) {
-    if (result) {
-      if (result.geometry) {
-        this.searchQuery = result.properties.name
-        this.isSearch = false
-        this.sideMap?.flyTo([result.geometry.coordinates[1], result.geometry.coordinates[0]], 15);
-      }
-    }
-  }
-
-  isOpen = true;
-
-  toggleLayoutInfo(onoff?:boolean) {
-    this.isOpen = onoff || !this.isOpen;
-    this.cdRef.detectChanges()
   }
 }
