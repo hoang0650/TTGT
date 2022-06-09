@@ -30,35 +30,35 @@ const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
   { path: 'home', component:MainComponent},
   // { path: 'map', component: MapComponent , canActivate:[AuthGuard], data:{allowedRoles:['superadmin']}},
-  { path: 'map', component: MapComponent,
+  { path: 'map', component: MapComponent , canActivate:[AuthGuard], data:{allowedRoles:['superadmin','admin']},
     children: [
-      { path: 'events', component:EventsManagerComponent },
-      { path: 'events/stats', component:StatsEventsComponent },
+      { path: 'events', component:EventsManagerComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+      { path: 'events/stats', component:StatsEventsComponent , canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
 
-      { path: 'cameras', component: CamerasComponent },
-      { path: 'cameras/create', component: CamerasCreateComponent },
-      { path: 'cameras/groups', component: CameraGroupsComponent },
-      { path: 'cameras/:id/update', component: CamerasCreateComponent },
-      { path: 'cameras/**', redirectTo:'cameras' },
+      { path: 'cameras', component: CamerasComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+      { path: 'cameras/create', component: CamerasCreateComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+      { path: 'cameras/groups', component: CameraGroupsComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+      { path: 'cameras/:id/update', component: CamerasCreateComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+      { path: 'cameras/**', redirectTo:'cameras', pathMatch:'full' },
 
-      { path: 'roadworks', component: RoadworksComponent },
-      { path: 'roadworks/create', component:RoadworksCreateComponent },
-      { path: 'roadworks/:id/update', component: RoadworksCreateComponent },
+      { path: 'roadworks', component: RoadworksComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+      { path: 'roadworks/create', component:RoadworksCreateComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+      { path: 'roadworks/:id/update', component: RoadworksCreateComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
       { path: 'roadworks/**', redirectTo:'roadworks' },
 
-      { path: 'parkings', component: ParkingsComponent },
-      { path: 'parkings/create', component: ParkingsCreateComponent },
-      { path: 'parkings/:id/update', component: ParkingsCreateComponent },
+      { path: 'parkings', component: ParkingsComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+      { path: 'parkings/create', component: ParkingsCreateComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+      { path: 'parkings/:id/update', component: ParkingsCreateComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
       { path: 'parkings/**', redirectTo:'parkings' },
 
-      { path: 'roadevents', component: RoadeventsComponent },
-      { path: 'roadevents/create', component: RoadeventsCreateComponent },
-      { path: 'roadevents/:id/update', component: RoadeventsCreateComponent },
+      { path: 'roadevents', component: RoadeventsComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+      { path: 'roadevents/create', component: RoadeventsCreateComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+      { path: 'roadevents/:id/update', component: RoadeventsCreateComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
       { path: 'roadevents/**', redirectTo:'roadevents' },
 
       { path: 'staticmaps', component: StaticMapComponent },
-      { path: 'staticmaps/create', component: StaticMapCreateComponent },
-      { path: 'staticmaps/:id/update', component: StaticMapCreateComponent },
+      { path: 'staticmaps/create', component: StaticMapCreateComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+      { path: 'staticmaps/:id/update', component: StaticMapCreateComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
       { path: 'staticmaps/**', redirectTo:'staticmaps' },
     ]
   },
@@ -77,56 +77,56 @@ const routes: Routes = [
   {
     path: 'groups', component: AdminGroupsComponent,canActivate:[AuthGuard], data:{allowedRoles:['superadmin']}
   },
-  { path: 'events',canActivate:[AuthGuard], data:{allowedRoles:['admin']},
-    children: [
-      { path: '', component:EventsManagerComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
-      { path: 'stats', component:StatsEventsComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}}
-    ]
-  },
-  { path: 'cameras',canActivate:[AuthGuard], data:{allowedRoles:['admin']},
-    children: [
-      { path: '', component:CamerasComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
-      { path: 'create', component: CamerasCreateComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
-      { path: 'groups', component: CameraGroupsComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
-      { path: ':id/update', component: CamerasCreateComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
-      { path: '**', redirectTo:'' }
-    ]
-  },
-  { path: 'roadworks',canActivate:[AuthGuard], data:{allowedRoles:['admin']},
-    children: [
-      { path: '', component:RoadworksComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
-      { path: 'create', component: RoadworksCreateComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
-      { path: ':id/update', component: RoadworksCreateComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
-      { path: '**', redirectTo:'' }
-    ]
-  },
-  { path: 'parkings', canActivate:[AuthGuard], data:{allowedRoles:['admin']},
-    children: [
-      { path: '', component:ParkingsComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
-      { path: 'create', component: ParkingsCreateComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
-      { path: ':id/update', component: ParkingsCreateComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
-      { path: '**', redirectTo:'' }
-    ]
-  },
+  // { path: 'events',canActivate:[AuthGuard], data:{allowedRoles:['admin']},
+  //   children: [
+  //     { path: '', component:EventsManagerComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+  //     { path: 'stats', component:StatsEventsComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}}
+  //   ]
+  // },
+  // { path: 'cameras',canActivate:[AuthGuard], data:{allowedRoles:['admin']},
+  //   children: [
+  //     { path: '', component:CamerasComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
+  //     { path: 'create', component: CamerasCreateComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+  //     { path: 'groups', component: CameraGroupsComponent,canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+  //     { path: ':id/update', component: CamerasCreateComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+  //     { path: '**', redirectTo:'' }
+  //   ]
+  // },
+  // { path: 'roadworks',canActivate:[AuthGuard], data:{allowedRoles:['admin']},
+  //   children: [
+  //     { path: '', component:RoadworksComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
+  //     { path: 'create', component: RoadworksCreateComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
+  //     { path: ':id/update', component: RoadworksCreateComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
+  //     { path: '**', redirectTo:'' }
+  //   ]
+  // },
+  // { path: 'parkings', canActivate:[AuthGuard], data:{allowedRoles:['admin']},
+  //   children: [
+  //     { path: '', component:ParkingsComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
+  //     { path: 'create', component: ParkingsCreateComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
+  //     { path: ':id/update', component: ParkingsCreateComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
+  //     { path: '**', redirectTo:'' }
+  //   ]
+  // },
   
   // { path: 'staticmaps', component:StaticMapComponent , canActivate:[AuthGuard], data:{allowedRoles:['admin']}},
-  { path: 'staticmaps',
-    children: [
-      { path: '', component:StaticMapComponent },
-      { path: 'create', component: StaticMapCreateComponent },
-      { path: ':id/update', component: StaticMapCreateComponent },
-      { path: '**', redirectTo:'' }
-    ]
-  },
+  // { path: 'staticmaps',
+  //   children: [
+  //     { path: '', component:StaticMapComponent },
+  //     { path: 'create', component: StaticMapCreateComponent },
+  //     { path: ':id/update', component: StaticMapCreateComponent },
+  //     { path: '**', redirectTo:'' }
+  //   ]
+  // },
   // { path: 'roadevents', canActivate:[AuthGuard], data:{allowedRoles:['admin']}},
-  { path: 'roadevents',
-    children: [
-      { path: '', component:RoadeventsComponent, canActivateChild:[AuthGuard],data:{allowedRoles:['admin']} },
-      { path: 'create', component: RoadeventsCreateComponent, canActivateChild:[AuthGuard],data:{allowedRoles:['admin']}},
-      { path: ':id/update', component: RoadeventsCreateComponent, canActivateChild:[AuthGuard],data:{allowedRoles:['admin']}},
-      { path: '**', redirectTo:'' }
-    ]
-  },
+  // { path: 'roadevents',
+  //   children: [
+  //     { path: '', component:RoadeventsComponent, canActivateChild:[AuthGuard],data:{allowedRoles:['admin']} },
+  //     { path: 'create', component: RoadeventsCreateComponent, canActivateChild:[AuthGuard],data:{allowedRoles:['admin']}},
+  //     { path: ':id/update', component: RoadeventsCreateComponent, canActivateChild:[AuthGuard],data:{allowedRoles:['admin']}},
+  //     { path: '**', redirectTo:'' }
+  //   ]
+  // },
   // { path: 'roadworks', component:RoadworksComponent, canActivate:[AuthGuard], data:{allowedRoles:['admin']}},
   // { path: 'parkings', component:ParkingsComponent, canActivate:[AuthGuard], data:{allowedRoles:['admin']}},
   // { path: 'staticmaps', component:StaticMapComponent, canActivate:[AuthGuard], data:{allowedRoles:['admin']}},
@@ -135,7 +135,7 @@ const routes: Routes = [
   { path: 'notfound', component:NotFoundComponent}
 ];
 
-@NgModule({
+@NgModule({ 
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })

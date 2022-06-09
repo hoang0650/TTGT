@@ -21,6 +21,7 @@ export class AppComponent {
   roles = ['guest'];
   loginInterval?:any
   loginTry = 0;
+  permissions:string[] = []
 
   constructor(private groupService: GroupService,public auth:AuthorizationService, public authservice:AuthService, public admin:AdminService, private router:Router, private nzMessage:NzMessageService){
   }
@@ -45,7 +46,18 @@ export class AppComponent {
           this.getRoles()        
           this.getIdToken()
           localStorage.setItem('profile',JSON.stringify(this.profile));
-          this.groupService.getUserPermissions().subscribe(data=>localStorage.setItem('permissions',JSON.stringify(data)));
+          this.groupService.getUserPermissions().subscribe({
+            next: (data:any) => {
+              console.log(data);
+              
+              if (data) {
+                this.permissions = data
+              }
+            },
+            error: (err:any) => {
+              this.permissions = []
+            }
+          });
           clearInterval(this.loginInterval)
         }
         this.loginTry += 1
@@ -80,6 +92,26 @@ export class AppComponent {
     })
   }
 
+  checkPermission(permissions:string[]) {
+    if (this.roles.includes("superadmin")) {
+      return true
+    }
 
+    var ok = false
+    permissions.forEach((permission:string) => {
+      var tmpPermission:any = permission.split(":")
+
+      if (this.permissions[tmpPermission[0]] == tmpPermission[1]) {
+        ok = true
+        return
+      }
+    })
+
+    if (ok) {
+      return true
+    }
+
+    return false
+  }
 
 }

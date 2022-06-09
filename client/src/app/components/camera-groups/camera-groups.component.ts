@@ -81,7 +81,7 @@ export class CameraGroupsComponent implements OnInit {
   options: any;
   filter:string;
 
-  constructor(private messageService:MessageService, public configure:ConfigureService, private nzMessage:NzMessageService, private cameraService:CameraService, private markerModify:MarkerService, private cameraGroupService:CameraGroupService, private viewportScroller: ViewportScroller, private modalService:NzModalService, private cdRef:ChangeDetectorRef) {
+  constructor(private messageService:MessageService, public configure:ConfigureService, private nzMessage:NzMessageService, private cameraService:CameraService, private markerModify:MarkerService, private cameraGroupService:CameraGroupService, private viewportScroller: ViewportScroller, private modalService:NzModalService, private cdRef:ChangeDetectorRef, public appCom:AppComponent) {
     this.button = messageService.getMessageObj().BUTTON;
     this.filter = ""
     this.inputChange = false;
