@@ -66,6 +66,12 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
         name: 'Không duyệt',
         icon: 'remove',
         color: 'red'
+      },
+      expired: {
+        id: 'expired',
+        name: 'Hết hạn',
+        icon: 'hourglass end',
+        color: 'red'
       }
     };
 
@@ -128,7 +134,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     $(".ui.dropdown").dropdown()
-    this.getAllType()
+    this.refresh()
     this.mapCom.toggleLayout(true)
   }
 
@@ -165,6 +171,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
 
 
       this.markers[event._id].bindPopup(popup)
+
     });
   };
 
@@ -190,13 +197,9 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
         
         this.listEvents.forEach((event:any, index:number) => {
           event.color = this.listEventType[event.type].color;
-          if (index === this.listEvents.length - 1) {
-            // this.filterListEvent(null, null);
-          }
         })
         this.isLoadingStatus = false
         this.filterListEvent()
-        // this.sideMap.closePopup(this.eventPopup)
       }
     })
   };
@@ -205,9 +208,9 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
     if (this.markers) {
       Object.keys(this.markers).forEach((id:string) => {
         this.markers[id].closePopup()
-        this.sideMap?.removeLayer(this.markers[id])
       })
-      this.markers = {}
+      this.mapCom.markers = {}
+      this.markers = this.mapCom.markers
     }
   }
 
@@ -256,6 +259,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
   };
 
   refresh() {
+    this.listEventsForFilter = []
     this.isLoadingStatus = true;
     this.getAllType();
   };
@@ -279,7 +283,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
   approveEvent(event:any) {
     this.eventService.approveEvent(event._id, event).subscribe({
       next: (res) => {
-        this.getAllType();
+        event['tmpStatus'] = 'approved'
       }
     })
   };
@@ -287,7 +291,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
   rejectEvent(event:any) {
     this.eventService.rejectEvent(event._id, event).subscribe({
       next: (res) => {
-        this.getAllType();
+        event['tmpStatus'] = 'rejected'
       }
     })
   };
@@ -303,7 +307,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
   expireEvent(event:any) {
     this.eventService.expireEvent(event._id, event).subscribe({
       next: (res) => {
-        this.getAllType();
+        event['tmpStatus'] = 'expired'
       }
     })
   };

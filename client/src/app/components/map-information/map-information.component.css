@@ -8,10 +8,10 @@ nz-card.map-card {
 }
 
 
-.ui.feed > .event.active-event {
+.incident.active-incident {
     background-color: rgba(37, 37, 37, 0.38);
 }
 
-.ui.feed > .event:hover:not(.active-event) {
+.incident:hover:not(.active-incident) {
     background-color: rgba(37, 37, 37, 0.2);
 }

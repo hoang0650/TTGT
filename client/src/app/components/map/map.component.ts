@@ -122,19 +122,28 @@ export class MapComponent implements OnInit {
     this.shareLink = ""
   }
 
-  flyToBounds(bounds:L.LatLngBoundsExpression) {
-    var curBounds:any = this.sideMap?.getBounds()
+  flyToBounds(bounds:any) {
+    var curCenter:any = this.sideMap?.getCenter()
+    
+    var point = this.sideMap?.latLngToContainerPoint(curCenter);
+    if (point) {
+      var newPoint = L.point([point.x + (window.innerWidth >= 992 ? window.innerWidth*0.33 : (window.innerWidth <= 450 ? 0 : 372 ))/2, point.y]); 
+      curCenter = this.sideMap?.containerPointToLatLng(newPoint);
+    }
+
     if (!(bounds instanceof L.LatLngBounds)) {
       bounds = L.latLngBounds(bounds)
     } 
-    
-    // if (!curBounds?.equals(bounds, 0.02)) {
+
+    if (bounds.getCenter().distanceTo(curCenter) > 1) {
       this.sideMap?.flyToBounds(bounds, {
         paddingTopLeft: [window.innerWidth >= 992 ? window.innerWidth*0.33 : (window.innerWidth <= 450 ? 0 : 372 ), 0],
         duration: 1
       })
-    // }
+    }
   }
+
+  window = window
 
   download(url:string, filename:string) {
     const e = document.createElement('a');

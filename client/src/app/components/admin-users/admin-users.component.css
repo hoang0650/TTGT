@@ -112,3 +112,19 @@ table {
     font-weight: bold !important;
     opacity: 0.5 !important;
 }
+
+
+::ng-deep .user-tabset > nz-tabs-nav {
+    margin: 0 !important;
+}
+
+::ng-deep .ant-tabs-tab {
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+::ng-deep .ant-tabs-tab-btn {
+    padding: 16px;
+    font-size: 19.5px;
+    font-weight: bold;
+}

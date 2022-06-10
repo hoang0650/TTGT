@@ -421,7 +421,12 @@ export class MapInformationComponent implements OnInit, OnDestroy {
     }
     
     this.event['loc'] = {type:"Point", coordinates: [latlng.lng, latlng.lat]}
-    this.newCreateEvent.openPopup()
+    
+    setTimeout(() => {
+      this.newCreateEvent.openPopup()
+    }, 100)
+    
+    
     this.mapCom.detectChanges()
     this.cdRef.detectChanges()
   } 
@@ -467,7 +472,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
             setTimeout(() => {
               $(".ui.dropdown").dropdown()
               this.component?.changeDetectorRef.detectChanges()
-            }, 100)
+            }, 300)
           }
         })
 

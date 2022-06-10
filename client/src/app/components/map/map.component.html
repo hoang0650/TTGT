@@ -6,7 +6,9 @@
         
         leafletDraw
         [leafletDrawOptions]="drawOptions"
-        (leafletDrawCreated)="onDrawCreated($event)">
+        (leafletDrawCreated)="onDrawCreated($event)"
+        
+      >
 
         <div *ngFor="let marker of markers | keyvalue; trackBy:trackByFn" [leafletLayer]="$any(marker).value"></div>
         <div [leafletLayer]="geoLayer"></div>

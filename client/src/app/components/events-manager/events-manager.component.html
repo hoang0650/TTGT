@@ -9,12 +9,12 @@
         </div>
 
         <div class="ui secondary segment no-padding">
-            <nz-affix [nzTarget]="mapLayoutInfo">
+            <nz-affix [nzTarget]="mapLayoutInfo" class="map-header">
                 <div  class="affix-header">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-8 mb-3">
-                                <select class="form-select" aria-label="Example select with button addon" [(ngModel)]="status" (change)="filterListEvent()">
+                                <select class="form-select" aria-label="Example select with button addon" [(ngModel)]="status" (change)="refresh()">
                                     <option *ngFor="let statusData of statusListArray" value="{{statusData.id}}">{{statusData.name}} </option>
                                 </select>
                             </div>
@@ -44,10 +44,10 @@
         </h4>
     </div>
 
-    <div class="ui segment"  *ngFor="let event of listEvents | filter:filter | orderBy:['createdAt']">
+    <div class="ui segment incident"  [ngClass]="{'active-incident': event._id == chooseEventId}"  *ngFor="let event of listEvents | filter:filter | orderBy:['createdAt']">
         <div class="content">
             <div class="ui large feed">
-                <div class="event" [ngClass]="{'active-event': event._id == chooseEventId}"
+                <div class="event"
                     (click)="chooseEvent(event)">
                     <div class="label event-icon">
                         <i class="circle icon {{event.color}}"></i>
@@ -66,17 +66,20 @@
                             <div class="ui label">
                                 <i class="user icon"></i> Người đăng: {{event.creator.name}}
                             </div>
-                            <div class="ui label float right {{statusList[event.status].color}}">
+                            <div *ngIf="!event['tmpStatus']" class="ui label float right {{statusList[event.status].color}}">
                                 <i class="{{statusList[event.status].icon}} icon"></i>{{statusList[event.status].name}}
                             </div>
+                            <div *ngIf="event['tmpStatus']" class="ui label float right {{statusList[event.tmpStatus].color}}">
+                                <i class="{{statusList[event.tmpStatus].icon}} icon"></i>{{statusList[event.tmpStatus].name}}
+                            </div>
                         </div>
-                        <div class="extra text" *ngIf="event._id == chooseEventId && event.status != 'rejected'">
+                        <div class="extra text" *ngIf="event._id == chooseEventId && event.status != 'rejected' && !(event['tmpStatus'] == 'expired')">
                             <div class="ui tiny icon buttons">
-                                <button *ngIf="event.status == 'created'" data-tooltip="Duyệt" data-position="top center" (click)="approveEvent(event);$event.stopPropagation()"
+                                <button *ngIf="event.status == 'created' && !event['tmpStatus']" data-tooltip="Duyệt" data-position="top center" (click)="approveEvent(event);$event.stopPropagation()"
                                     class="ui button"><i class="checkmark icon"></i></button>
-                                <button *ngIf="event.status == 'created'" data-tooltip="Không duyệt" data-position="top center" (click)="rejectEvent(event);$event.stopPropagation()"
+                                <button *ngIf="event.status == 'created' && !event['tmpStatus']" data-tooltip="Không duyệt" data-position="top center" (click)="rejectEvent(event);$event.stopPropagation()"
                                     class="ui button"><i class="remove icon"></i></button>
-                                <button *ngIf="event.status == 'approved'" data-tooltip="Dừng cảnh báo" data-position="top center" (click)="expireEvent(event);$event.stopPropagation()"
+                                <button *ngIf="event.status == 'approved' || event['tmpStatus']  == 'approved'" data-tooltip="Dừng cảnh báo" data-position="top center" (click)="expireEvent(event);$event.stopPropagation()"
                                     class="ui button"><i class="times icon"></i></button>
                             </div>
                         </div>

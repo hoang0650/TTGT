@@ -1,36 +1,3 @@
-<!-- <div class="map-button">
-    <div class="map-search-bar">
-        <nz-input-group [nzSuffix]="searchQuery.length > 0 ? suffixIconClose : suffixIconSearch" [nzSize]="'large'">
-            <input type="text" nz-input placeholder="Tìm vị trí" [(ngModel)]="searchQuery" appSearchRoads [appSearchRoadsText]="searchQuery" (newListRoads)="searchResults = $event" (isSearch)="isSearch = $event"/>
-        </nz-input-group>
-        <ng-template #suffixIconSearch>
-        <i nz-icon nzType="search"></i>
-        </ng-template>
-        <ng-template #suffixIconClose>
-            <i nz-icon nzType="close" (click)="searchIconClick()"></i>
-        </ng-template>
-
-        <div class="results transition visible" *ngIf="searchResults?.length > 0 && isSearch">
-            <ul nz-menu>
-                <li class="map-search-result" nz-menu-item *ngFor="let result of searchResults; index as i" (click)="searchSelect(result)">
-                    <b>{{result.properties.name}}</b>
-                    <br>
-                    {{result.properties.city}}
-                </li>
-            </ul>
-        </div>
-        <div class="results transition visible" *ngIf="searchResults?.length <= 0 && isSearch" style="background-color: white;">
-            <a class="result">
-                <div class="content">
-                    <div class="title">Không tìm thấy</div>
-                    <div class="description">Hãy thử lại</div>
-                </div>
-            </a>
-        </div>
-    </div>
-
-    
-</div> -->
 <div class="map-layout-info-content" #mapLayoutInfo>
     <div class="ui segments">
         <div class="ui segment">
@@ -42,7 +9,7 @@
         </div>
 
         <div class="ui secondary segment no-padding">
-            <nz-affix [nzTarget]="mapLayoutInfo">
+            <nz-affix [nzTarget]="mapLayoutInfo" class="map-header">
                 <div  class="affix-header">
                     <div class="container">
                         <div class="row">
@@ -61,7 +28,7 @@
     </div>
 
     <div [hidden]="!(currentMode == 'cameras')">
-        <nz-card [nzCover]="cameraCover" class="map-card">
+        <nz-card [nzCover]="cameraCover" class="map-card" *ngIf="chosenMarkers['camera']">
             <img *ngIf="chosenMarkers['camera']" class="angle-camera" src="assets/images/compass.png" [ngStyle]="chosenMarkers['camera']?.angleStyle">
             <div id="crEventCamera" class="camera-create-event-icon" (click)="createdEventByCamera(chosenMarkers['camera'])" title="Tạo cảnh báo ở camera này"><i class="fa-solid fa-triangle-exclamation"></i></div>
         
@@ -86,7 +53,6 @@
         </nz-card>
 
         <ng-template #cameraCover>
-            <img class="map-camera-image" *ngIf="!chosenMarkers['camera']" src="//dummyimage.com/600x400/000/fff&text=Vui lòng chọn camera">
             <img class="map-camera-image" *ngIf="chosenMarkers['camera'] && chosenMarkers['camera']?.liveviewUrl" (error)="imageError($event)" src="{{chosenMarkers['camera'].url}}" (load)="cameraLoading = false">
             <img class="map-camera-image" *ngIf="chosenMarkers['camera'] && !chosenMarkers['camera']?.liveviewUrl || chosenMarkers['camera']?.liveview === ''" src="//dummyimage.com/600x400/000/fff&text=Camera sai thông số" (load)="cameraLoading = false">
         </ng-template>
@@ -115,8 +81,8 @@
 
     <div [hidden]="!(currentMode == 'parkings')">
 
-        <nz-card>              
-            <div *ngIf="chosenMarkers['parking']" >
+        <nz-card *ngIf="chosenMarkers['parking']">              
+            <div>
                 <nz-row class="parking-header">
                     <h3>{{chosenMarkers['parking'].name}}</h3>
                 </nz-row>
@@ -152,12 +118,6 @@
                           </button>
                     </nz-col>
                 </nz-row>              
-            </div>
-
-            <div *ngIf="!chosenMarkers['parking']" >
-                <nz-row>
-                    <h3>Vui lòng chọn bãi đỗ xe</h3>
-                </nz-row>       
             </div>
         </nz-card>
 
@@ -275,22 +235,24 @@
         </div>
 
 
-        <div class="ui segment" *ngIf="listEvent.length > 0">
-            <div class="content">
-                <div class="ui large feed">
-                    <div id="event-{{event._id}}" class="event" [ngClass]="{'active-event': event._id == chosenMarkers['incident']}" *ngFor="let event of listEvent | orderBy:['createdAt']:['desc']" (click)="chooseIncident(event)">
-                        <div class="label event-icon">
-                            <i class="circle icon {{listEventType[event.type].color}}"></i>
-                        </div>
-                        <div class="content">
-                            <div class="summary">
-                                <a class="user">{{event.desc[0]}}</a>
-                                <div class="date">
-                                    <span>{{event.createdAt | amLocale:'vi' | amTimeAgo}}</span>
-                                </div>
+        <div *ngIf="listEvent.length > 0">
+            <div class="ui segment incident" [ngClass]="{'active-incident': event._id == chosenMarkers['incident']}" *ngFor="let event of listEvent | orderBy:['createdAt']:['desc']">
+                <div class="content">
+                    <div class="ui large feed">
+                        <div id="event-{{event._id}}" class="event" (click)="chooseIncident(event)">
+                            <div class="label event-icon">
+                                <i class="circle icon {{listEventType[event.type].color}}"></i>
                             </div>
-                            <div class="extra text">
-                                {{event.desc[1]}}
+                            <div class="content">
+                                <div class="summary">
+                                    <a class="user">{{event.desc[0]}}</a>
+                                    <div class="date">
+                                        <span>{{event.createdAt | amLocale:'vi' | amTimeAgo}}</span>
+                                    </div>
+                                </div>
+                                <div class="extra text">
+                                    {{event.desc[1]}}
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -1,3 +1,7 @@
-.event.active-event {
+.incident.active-incident {
     background-color: rgba(37, 37, 37, 0.38);
+}
+
+.incident:hover:not(.active-incident) {
+    background-color: rgba(37, 37, 37, 0.2);
 }
