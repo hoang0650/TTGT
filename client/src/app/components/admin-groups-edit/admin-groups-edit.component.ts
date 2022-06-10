@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { AdminService } from 'src/app/services/admin.service';
 import { GroupService } from 'src/app/services/group.service';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   selector: 'app-admin-groups-edit',
@@ -19,9 +20,12 @@ export class AdminGroupsEditComponent implements OnInit {
     },
     users: []
   }
+  error: any;
   payload: object ={};
   isRemoving:boolean = false;
   isCreate: boolean = true;
+  
+  
   permissions:any = [
     {
       name: 'Camera giao thông',
@@ -53,8 +57,8 @@ export class AdminGroupsEditComponent implements OnInit {
     }
   ];
 
-  constructor(private modalRef:NzModalRef, private groupService:GroupService, private admin:AdminService) { 
-    this.permissions.forEach((permission:any) => {
+  constructor(private modalRef:NzModalRef, private groupService:GroupService, private admin:AdminService,private messageService:MessageService) { 
+      this.permissions.forEach((permission:any) => {
       this.group.permissions[permission.id] = "none"
     })
   }
@@ -87,10 +91,6 @@ export class AdminGroupsEditComponent implements OnInit {
 
   }
 
-
-
-
-
   removeUser(currentUser:any){
     this.group.users = this.group.users.filter((user:any) => {
       return user.user_id != currentUser.user_id
@@ -101,8 +101,8 @@ export class AdminGroupsEditComponent implements OnInit {
 
   submit(){
     this.groupService.save(this.group).subscribe({
-      next: (res) => {     
-        this.modalRef.close("created")
+      next: (res) => {    
+        this.modalRef.close("created")   
       }
     })
     
@@ -135,73 +135,15 @@ export class AdminGroupsEditComponent implements OnInit {
       }
     })
   }
-
-  // change user role
-
-// changeUsersRole(action:string,data:object) {
-		
-//   this.selectedUsers.forEach((selected:any, index:number) => {
-//     if (action == 'guest') {
-//       this.selectedUsers[index].loading = true;
-//       this.payload = data
-//       this.admin.changeToGuest(selected.user_id, action, data={'app_metadata':{"roles":"guest"}}).subscribe({
-//         next: (user:any) => {
-//           this.selectedUsers[index].app_metadata = user.app_metadata;
-//           this.selectedUsers[index].loading = false;
-//           this.lastUsersUpdated = new Date();
-//         },
-//         error: (err:any) => {
-//           console.log(err);
-//           this.selectedUsers[index].loading = false;
-//           this.lastUsersUpdated = new Date();
-//         }
-//       })
-//     } else if (action == 'user'){
-//       this.selectedUsers[index].loading = true;
-//       this.payload = data
-//       this.admin.unblockUser(selected.user_id, action, data={'app_metadata':{"roles":"user"}}).subscribe({
-//         next: (user:any) => {
-//           this.selectedUsers[index].app_metadata = user.app_metadata
-//           this.selectedUsers[index].loading = false;
-//           this.lastUsersUpdated = new Date();
-//         },
-//         error: (err) => {
-//           console.log(err)
-//           this.selectedUsers[index].loading = false;
-//           this.lastUsersUpdated = new Date();
-//         }
-//       })
-//     } else if (action =='admin'){
-//       this.selectedUsers[index].loading = true;
-//       this.payload = data
-//       this.admin.unblockUser(selected.user_id, action, data={'app_metadata':{"roles":"admin"}}).subscribe({
-//         next: (user:any) => {
-//           this.selectedUsers[index].app_metadata = user.app_metadata
-//           this.selectedUsers[index].loading = false;
-//           this.lastUsersUpdated = new Date();
-//         },
-//         error: (err) => {
-//           console.log(err)
-//           this.selectedUsers[index].loading = false;
-//           this.lastUsersUpdated = new Date();
-//         }
-//       })
-//     }
-
-   
-//   });
-
-// }
-
-
+  
   remove() {
     this.isRemoving = true;
   }
-
+  
   trackByFn(item:any) {
     return item;
   }
-
+  
   confirmRemove() {
     this.groupService.delete(this.group._id).subscribe({
       next: (res:any) => {
@@ -210,12 +152,71 @@ export class AdminGroupsEditComponent implements OnInit {
       }
     })
   }
-
+  
   cancel() {
     this.modalRef.close();
   }
-
+  
   abortRemove() {
     this.isRemoving = false;
   }
+  
+  
+
+  // change user role
+  
+  // changeUsersRole(action:string,data:object) {
+    
+  //   this.selectedUsers.forEach((selected:any, index:number) => {
+  //     if (action == 'guest') {
+  //       this.selectedUsers[index].loading = true;
+  //       this.payload = data
+  //       this.admin.changeToGuest(selected.user_id, action, data={'app_metadata':{"roles":"guest"}}).subscribe({
+  //         next: (user:any) => {
+  //           this.selectedUsers[index].app_metadata = user.app_metadata;
+  //           this.selectedUsers[index].loading = false;
+  //           this.lastUsersUpdated = new Date();
+  //         },
+  //         error: (err:any) => {
+  //           console.log(err);
+  //           this.selectedUsers[index].loading = false;
+  //           this.lastUsersUpdated = new Date();
+  //         }
+  //       })
+  //     } else if (action == 'user'){
+  //       this.selectedUsers[index].loading = true;
+  //       this.payload = data
+  //       this.admin.unblockUser(selected.user_id, action, data={'app_metadata':{"roles":"user"}}).subscribe({
+  //         next: (user:any) => {
+  //           this.selectedUsers[index].app_metadata = user.app_metadata
+  //           this.selectedUsers[index].loading = false;
+  //           this.lastUsersUpdated = new Date();
+  //         },
+  //         error: (err) => {
+  //           console.log(err)
+  //           this.selectedUsers[index].loading = false;
+  //           this.lastUsersUpdated = new Date();
+  //         }
+  //       })
+  //     } else if (action =='admin'){
+  //       this.selectedUsers[index].loading = true;
+  //       this.payload = data
+  //       this.admin.unblockUser(selected.user_id, action, data={'app_metadata':{"roles":"admin"}}).subscribe({
+  //         next: (user:any) => {
+  //           this.selectedUsers[index].app_metadata = user.app_metadata
+  //           this.selectedUsers[index].loading = false;
+  //           this.lastUsersUpdated = new Date();
+  //         },
+  //         error: (err) => {
+  //           console.log(err)
+  //           this.selectedUsers[index].loading = false;
+  //           this.lastUsersUpdated = new Date();
+  //         }
+  //       })
+  //     }
+  
+   
+  //   });
+  
+  // }
 }

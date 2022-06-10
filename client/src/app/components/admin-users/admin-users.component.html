@@ -11,7 +11,6 @@
                     </nz-card>
                 </nz-affix>
 
-
                 <ng-template #avatarTemplate>
                     <h3 class="header"><span>{{selectedUsers.length}}</span> tài khoản được chọn</h3>
                     <p *ngFor="let user of selectedUsers" [ngClass]="{loading: user.loading}">
@@ -31,10 +30,11 @@
                     </p>
 
                 </ng-template>
-           
+
                 <ng-template #actionUnblock>                  
                     <i nz-tooltip="Mở khóa" (click)="unblockUsers()" class="ui unlock icon"></i>
                 </ng-template>
+           
 
                 <ng-template #actionBlock >
                     <i nz-tooltip="Khóa" (click)="blockUsers()" class="ui lock icon"></i>
@@ -65,7 +65,6 @@
 
                 </nz-affix>
 
-                
                 <ng-template #avatarTemplate1>
 
                         <h4 class="ui header">
@@ -106,9 +105,6 @@
                         </div>
                 </ng-template>
                 
-
-                    
-
                 <nz-affix>
                     <nz-card class="user-card"  style="width: 100%;" *ngIf="selectedUsers.length === 0" nzTitle="Thống kê tài khoản">
                         <nz-card-meta [nzAvatar]="avatarTemplate2"></nz-card-meta>
@@ -116,6 +112,10 @@
                    
 
                 </nz-affix>
+                
+
+                    
+
 
                 <!-- <ng-template #Tittle2>
                     <div class="ant-card-head-title ng-star-inserted" style="background: #1890ff;">Thống kê tài khoản</div>
@@ -148,6 +148,8 @@
                         </nz-form-item>
                     </form>
                 </ng-template>
+
+
                 
             </div>
           <!-- </div> -->
@@ -244,7 +246,7 @@
                       
                         
                         </div>
-                    
+                        
                     
                 </nz-tab>
                     
@@ -256,6 +258,6 @@
         </div>
       </div>
   
+</nz-layout>
   
 
-</nz-layout>

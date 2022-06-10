@@ -13,7 +13,7 @@ export class AdminUsersComponent implements OnInit {
   selectedUsers: any = [];
   searchnickname:string = "";
   payload: object ={};
-  index: number=0;
+  index: number = 0;
   tabs: string[]=[];
   constructor(private admin:AdminService) { }
 

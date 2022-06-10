@@ -87,7 +87,7 @@
                                         </div>
 
                                         <div class="col-md-4">
-                                            <button [disabled]="!mapCom.permissions.indexOf('cameras:update')|| !mapCom.permissions.indexOf('cameras:manage')|| !appCom.roles.indexOf('superadmin')" class="btn btn-primary" [routerLink]="['.', camera._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
+                                            <button [disabled]=" !appCom.checkPermission(['cameras:update', 'cameras:manage'])" class="btn btn-primary" [routerLink]="['.', camera._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</button>
                                         </div>
                                     </div>
 
