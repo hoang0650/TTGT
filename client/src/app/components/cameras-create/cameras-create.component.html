@@ -69,8 +69,8 @@
                             <div class="input-group">                                      
                                 <input type="text" class="form-control" id="cameraTmpLocation" name="cameraTmpLocation" readonly placeholder="Chọn vị trí trên bản đồ" aria-describedby="buttonGetposition" [(ngModel)]="newCamera['tmpLocation']">
                                 <button class="btn btn-secondary" type="button" id="buttonGetposition" [disabled]="disableClick" (click)="getPosition()"><i class="selected radio icon"></i>Lấy vị trí hiện tại</button>
-                                <div class="ui pointing red basic label" *ngIf="error?.tmpLocation"> {{error.tmpLocation}} </div>
                             </div>
+                            <div class="ui pointing red basic label" *ngIf="error?.tmpLocation"> {{error.tmpLocation}} </div>
                         </div>
                         
                         <div class="mb-3">
@@ -165,7 +165,7 @@
                     </div>
 
                     <div class="col-6 text-end">
-                        <button class="btn btn-secondary" [routerLink]="['/map/cameras']" type="button">{{button.BACK}}</button>
+                        <button class="btn btn-secondary" (click)="back()" type="button">{{button.BACK}}</button>
                     </div>
                 </div>
             </div>

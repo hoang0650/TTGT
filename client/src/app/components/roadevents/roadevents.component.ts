@@ -45,7 +45,7 @@ export class RoadeventsComponent implements OnInit, OnDestroy {
       }
       
       this.nzMessage.success(this.messageService.getMessageObj().NOTICE(this.route.snapshot.queryParamMap.get('state'), 'phân luồng giao thông'))
-      this.location.replaceState("./map/roadevents")
+      this.location.replaceState("./roadevents")
     }
 
     this.sideMap = mapCom.sideMap
@@ -98,9 +98,6 @@ export class RoadeventsComponent implements OnInit, OnDestroy {
 
       this.mapCom.flyToBounds(this.getBounds(features))
     }
-
-    this.mapCom.detectChanges()
-    this.cdRef.detectChanges()
   }
 
   createMarker(feature:any, latLng:any) {

@@ -116,9 +116,6 @@ export class ParkingsComponent implements OnInit, OnDestroy {
 
         })
         this.isLoading = false;
-      
-        this.mapCom.detectChanges()
-        this.cdRef.detectChanges()
       }
     })
   }
@@ -165,8 +162,6 @@ export class ParkingsComponent implements OnInit, OnDestroy {
       this.mapCom.flyToBounds([[prk.loc.coordinates[1], prk.loc.coordinates[0]]])
     }
     this.markers[prk._id].setIcon(this.selectedIcon);
-    this.mapCom.detectChanges()
-    this.cdRef.detectChanges()
   };
 
   focusAndExpandParking(id:string) {
@@ -183,8 +178,6 @@ export class ParkingsComponent implements OnInit, OnDestroy {
         }
       });
     });
-    this.mapCom.detectChanges()
-    this.cdRef.detectChanges()
   };
 
   filterCustome(item:any, arg:string) {
@@ -214,8 +207,6 @@ export class ParkingsComponent implements OnInit, OnDestroy {
         });
         this.mapCom.flyToBounds(bound)
         this.previousDistrict = district
-        this.mapCom.detectChanges()
-        this.cdRef.detectChanges()
       }
     }
   };

@@ -94,9 +94,6 @@ export class ParkingsCreateComponent implements OnInit, OnDestroy {
             zIndexOffset: 10000,
           })
         })
-      
-        this.mapCom.detectChanges()
-        this.cdRef.detectChanges()
       }
     })
 
@@ -330,9 +327,6 @@ export class ParkingsCreateComponent implements OnInit, OnDestroy {
         this.newParking['tmpLocation'] = latlng.lat.toFixed(4) + ' , ' + latlng.lng.toFixed(4);
       }
     }
-
-    this.mapCom.detectChanges()
-    this.cdRef.detectChanges()
   }
 
   getPosition() {

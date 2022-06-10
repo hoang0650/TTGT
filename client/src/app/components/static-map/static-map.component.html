@@ -21,21 +21,17 @@
                                 </div>
                             </div>
                             <div class="col-6 p-0">
-                                <div class="btn-group float-end">
-            
-                                    <button class="btn btn-secondary dropdown" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="cloud download icon"></i>
-                                        Xuất dữ liệu
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
-                                        
-                                        <li><a class="dropdown-item" (click)="exportCSV()"><i class="file outline icon"></i> CSV</a></li>
-                                        <li><a class="dropdown-item" (click)="exportXLS()"><i class="file excel outline icon"></i> Excel</a></li>
-                                        <li><a class="dropdown-item" (click)="exportJSON()"><i class="file code outline icon"></i> JSON</a></li>
-                                    </ul>
-                                </div>
-                                
-                            </div>                        
+                                <button class="btn btn-secondary dropdown float-end" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="cloud download icon"></i>
+                                    Xuất dữ liệu
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                                    
+                                    <li><a class="dropdown-item" (click)="exportCSV()"><i class="file outline icon"></i> CSV</a></li>
+                                    <li><a class="dropdown-item" (click)="exportXLS()"><i class="file excel outline icon"></i> Excel</a></li>
+                                    <li><a class="dropdown-item" (click)="exportJSON()"><i class="file code outline icon"></i> JSON</a></li>
+                                </ul>
+                            </div>                           
                         </div>
                         <br>
                         <div class="row">
@@ -75,7 +71,7 @@
                     <img *ngIf="staticMap?.staticMapData?.icon" class="ui avatar image" src="{{staticMap.staticMapData.icon.data.iconUrl}}">
                 </div>
                 <div class="right floated content ">
-                    <button type="button" [disabled]="!appCom.checkPermission(['staticmaps:update','staticmaps:manage'])" class="ui icon button" [routerLink]="['.', staticMap.staticMapData._id, 'update']" data-tooltip="Chỉnh sửa lớp thông tin" data-position="top right"><i class="ui write icon"></i></button>
+                    <button [disabled]="!appCom.checkPermission(['staticmaps:update','staticmaps:manage'])" class="btn btn-primary" [routerLink]="['.', staticMap.staticMapData._id, 'update']" data-tooltip="Chỉnh sửa lớp thông tin"><i class="fa-solid fa-pen-to-square"></i> </button>
                 </div>
                 <div class="content">
                     <span class="header"> {{staticMap.staticMapData.name}} </span>

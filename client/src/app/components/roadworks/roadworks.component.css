@@ -10,3 +10,8 @@
 .no-border {
     border: none;
 }
+
+:host >>> .card.customClass .card-header{
+    background-color: #1890ff;
+    color: #fff;
+}

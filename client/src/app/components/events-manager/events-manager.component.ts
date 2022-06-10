@@ -123,8 +123,6 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
 
     this.sideMap = mapCom.sideMap
     this.markers = mapCom.markers
-    this.mapCom.detectChanges()
-    // this.cdRef.detectChanges()
   }
 
 

@@ -21,21 +21,17 @@
                                 </div>
                             </div>
                             <div class="col-6 p-0">
-                                <div class="btn-group float-end">
-            
-                                    <button [disabled]="!appCom.checkPermission(['roadworks:update','roadworks:manage'])" class="btn btn-secondary dropdown" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="cloud download icon"></i>
-                                        Xuất dữ liệu
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
-                                        
-                                        <li><a class="dropdown-item" (click)="exportCSV()"><i class="file outline icon"></i> CSV</a></li>
-                                        <li><a class="dropdown-item" (click)="exportXLS()"><i class="file excel outline icon"></i> Excel</a></li>
-                                        <li><a class="dropdown-item" (click)="exportJSON()"><i class="file code outline icon"></i> JSON</a></li>
-                                    </ul>
-                                </div>
-                                
-                            </div>                   
+                                <button [disabled]="!appCom.checkPermission(['roadworks:update','roadworks:manage'])" class="btn btn-secondary dropdown float-end" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="cloud download icon"></i>
+                                    Xuất dữ liệu
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                                    
+                                    <li><a class="dropdown-item" (click)="exportCSV()"><i class="file outline icon"></i> CSV</a></li>
+                                    <li><a class="dropdown-item" (click)="exportXLS()"><i class="file excel outline icon"></i> Excel</a></li>
+                                    <li><a class="dropdown-item" (click)="exportJSON()"><i class="file code outline icon"></i> JSON</a></li>
+                                </ul>
+                            </div>                    
                         </div>
                         <br>
                         <div class="row">
@@ -72,7 +68,7 @@
         </h4>
     </div>
 
-    <div class="ui segments no-border" *ngFor="let roadwork of listRoadwork | orderBy: ['name'] | searchFilter: filter:['name'] | filter: statusFilter: statusFilterValues" (click)="openRoadworkDetail(roadwork)">
+    <!-- <div class="ui segments no-border" *ngFor="let roadwork of listRoadwork | orderBy: ['name'] | searchFilter: filter:['name'] | filter: statusFilter: statusFilterValues" (click)="openRoadworkDetail(roadwork)">
         <div class="ui secondary segment roadwork-header">
             <h4>{{roadwork.name}}</h4>
         </div>
@@ -95,5 +91,71 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
+
+    <accordion [isAnimated]="true" [closeOthers]="true">
+        <div *ngIf="!filter "> 
+            <div *ngFor="let district of districts">
+                <accordion-group [isOpen]="district['expand']"  (isOpenChange)="selectDistrict($event, district)" *ngIf="district.roadwork" panelClass="customClass">
+                    <div accordion-heading>
+                        <span>{{district.district}}</span>
+                    </div>
+
+                    <accordion [isAnimated]="true" [closeOthers]="true">
+                        <div id="{{roadwork._id}}" *ngFor="let roadwork of district.roadwork">
+                            <accordion-group [isOpen]="updateRoadwork?._id === roadwork._id" (click)="openRoadworkDetail(roadwork)" panelClass="customClass">                        
+                                <span accordion-heading>{{roadwork.name}}</span>
+                               
+                                <div class="container">
+                                    <div class="row mb-3">
+                                        <div class="col-8">
+                                            <p><strong>Đơn vị chủ quản: </strong><span>{{roadwork.ownerBy}}</span></p>
+                                            <p><strong>Đường: </strong><span>{{roadwork.road}}</span></p>
+                                        </div>
+                    
+                                        <div class="col-4 text-end">
+                                            <button class="btn btn-primary" [routerLink]="['.', roadwork._id, 'update']"><i class="fa-solid fa-pen-to-square"></i></button>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+                                            <p><i class="fa-solid fa-bars-progress"></i> <strong> Tình trạng: </strong><span>{{roadwork.status}}</span></p>
+                                            <p><i class="fa-solid fa-hourglass-start"></i><strong> Bắt đầu: </strong><span>{{roadwork.startAt | date :'dd/MM/yyyy'}}</span></p>
+                                            <p><i class="fa-solid fa-hourglass-end"></i><strong> Kết thúc dự kiến: </strong><span>{{roadwork.finishPlan | date :'dd/MM/yyyy'}}</span></p>
+                                            <p *ngIf="roadwork.finishAt"><i class="fa-solid fa-flag-checkered"></i><strong> Kết thúc thực tế: </strong><span>{{roadwork.finishAt | date :'dd/MM/yyyy'}}</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </accordion-group>
+                        </div>
+                    </accordion>
+                </accordion-group>
+            </div>
+        </div>
+        <div *ngIf="filter ">
+            <accordion [isAnimated]="true" [closeOthers]="true">
+                <div id="{{roadwork._id}}" *ngFor="let roadwork of listRoadwork | orderBy: ['name'] | searchFilter: filter:['name'] | filter: statusFilter: statusFilterValues">
+                    <accordion-group [isOpen]="updateRoadwork?._id === roadwork._id" (click)="openRoadworkDetail(roadwork)" panelClass="customClass">                        
+                        <span accordion-heading>{{roadwork.name}}</span>
+                        
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-8">
+                                    <p><i class="fa-solid fa-hourglass-start"></i><strong> Bắt đầu: </strong><span>{{roadwork.startAt | date :'dd/MM/yyyy'}}</span></p>
+                                    <p><i class="fa-solid fa-hourglass-end"></i><strong> Kết thúc dự kiến: </strong><span>{{roadwork.finishPlan | date :'dd/MM/yyyy'}}</span></p>
+                                    <p *ngIf="roadwork.finishAt"><i class="fa-solid fa-flag-checkered"></i><strong> Kết thúc thực tế: </strong><span>{{roadwork.finishAt | date :'dd/MM/yyyy'}}</span></p>
+                                    <p *ngIf="roadwork.status"><i class="fa-solid fa-bars-progress"></i> <strong> Tình trạng: </strong><span>{{roadwork.status}}</span></p>
+                                </div>
+            
+                                <div class="col-4 text-end">
+                                    <button class="btn btn-primary" [routerLink]="['.', roadwork._id, 'update']"><i class="fa-solid fa-pen-to-square"></i> </button>
+                                </div>
+                            </div>
+                        </div>
+                    </accordion-group>
+                </div>
+            </accordion>
+        </div>
+    </accordion>
 </div>

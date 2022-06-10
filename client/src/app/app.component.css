@@ -1,0 +1,13 @@
+@media (min-width:992px) {
+    ::ng-deep .ant-affix {
+        left: auto !important;
+        width: calc(33% - 17px) !important;
+    }
+}
+
+@media (max-width:992px) {
+    ::ng-deep .ant-affix {
+        left: auto !important;
+        width: 323px !important;
+    }
+}

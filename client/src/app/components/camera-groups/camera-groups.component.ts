@@ -116,19 +116,13 @@ export class CameraGroupsComponent implements OnInit {
 
     this.cameraClusterLayer.removeLayer(this.markers[camera._id]);
     this.mapCom.markers[camera._id] = this.markers[camera._id]
-
-    this.mapCom.detectChanges()
-    this.cdRef.detectChanges()
   }
 
   deselectCameraById(camera:any) {
     var newIcon = L.divIcon(this.markerModify.deSelectedMarker(this.markers[camera._id].options.icon.options));
     this.markers[camera._id].setIcon(newIcon);
-    this.refreshCluster()
     delete this.mapCom.markers[camera._id]
-
-    this.mapCom.detectChanges()
-    this.cdRef.detectChanges()
+    this.refreshCluster()
   }
 
   refreshCluster() {
@@ -138,7 +132,7 @@ export class CameraGroupsComponent implements OnInit {
       markers[camera._id] = this.setMarkerForCamera(camera);
       this.cameraClusterLayer.addLayer(markers[camera._id]);
     });
-    this.sideMap.addLayer(this.cameraClusterLayer);
+    
     this.markers = markers;
   }
 

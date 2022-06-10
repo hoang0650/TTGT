@@ -81,8 +81,6 @@ export class StaticMapComponent implements OnInit {
         });
 
         this.isLoading = false
-        this.mapCom.detectChanges()
-        this.cdRef.detectChanges()
       }
     })
   }
@@ -150,8 +148,6 @@ export class StaticMapComponent implements OnInit {
         delete this.markers[staticMap.id+"_"+idx]
       }
     });
-    this.mapCom.detectChanges()
-    this.cdRef.detectChanges()
   }
 
   changeColorStaticMap(staticMap:any, color:any) {

@@ -18,6 +18,9 @@ import { StaticMapPopupComponent } from '../static-map-popup/static-map-popup.co
 
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { slidingMapLayout, slidingMapLayoutButton } from 'src/app/animations';
+import { AdminConfigConfirmComponent } from '../admin-config-confirm/admin-config-confirm.component';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { MessageService } from 'src/app/services/message.service';
 
 declare var $: any
 
@@ -56,7 +59,8 @@ export class MapComponent implements OnInit {
   }
 
   componentRef:any
-  constructor(public configure:ConfigureService, private staticMapService:StaticMapService, private markerService:MarkerService, private roadEventService:RoadEventsService, private route:ActivatedRoute, private location:Location, private mapService:MapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private geocoding:GeocodingService, private cameraService:CameraService, private parkingService:ParkingService, private cdRef:ChangeDetectorRef, private nzMessage:NzMessageService) {
+
+  constructor(public configure:ConfigureService, private staticMapService:StaticMapService, private markerService:MarkerService, private roadEventService:RoadEventsService, private route:ActivatedRoute, private location:Location, private mapService:MapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private geocoding:GeocodingService, private cameraService:CameraService, private parkingService:ParkingService, private cdRef:ChangeDetectorRef, private nzMessage:NzMessageService, private modalService:NzModalService, private messageService:MessageService) {
     
   }
 
@@ -71,6 +75,7 @@ export class MapComponent implements OnInit {
 
   onRouteOutletReady(componentRef:any) {
     this.componentRef = componentRef
+    this.cdRef.detectChanges()
   }
 
   onDrawCreated(e:any) {
@@ -118,12 +123,17 @@ export class MapComponent implements OnInit {
   }
 
   flyToBounds(bounds:L.LatLngBoundsExpression) {
-
-    this.sideMap?.flyToBounds(bounds, {
-      paddingTopLeft: [window.innerWidth >= 992 ? window.innerWidth*0.33 : (window.innerWidth <= 450 ? 0 : 372 ), 0],
-      duration: 1
-    })
+    var curBounds:any = this.sideMap?.getBounds()
+    if (!(bounds instanceof L.LatLngBounds)) {
+      bounds = L.latLngBounds(bounds)
+    } 
     
+    // if (!curBounds?.equals(bounds, 0.02)) {
+      this.sideMap?.flyToBounds(bounds, {
+        paddingTopLeft: [window.innerWidth >= 992 ? window.innerWidth*0.33 : (window.innerWidth <= 450 ? 0 : 372 ), 0],
+        duration: 1
+      })
+    // }
   }
 
   download(url:string, filename:string) {

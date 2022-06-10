@@ -162,8 +162,5 @@ export class StatsEventsComponent implements OnInit, OnDestroy {
     this.loadMonthlyChart();
 
     this.refreshExport();
-    
-    this.mapCom.detectChanges()
-    this.cdRef.detectChanges()
   };
 }

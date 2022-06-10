@@ -26,18 +26,20 @@ import { ParkingsCreateComponent } from './components/parkings-create/parkings-c
 import { RoadeventsCreateComponent } from './components/roadevents-create/roadevents-create.component';
 import { StaticMapCreateComponent } from './components/static-map-create/static-map-create.component';
 import { CameraGroupsComponent } from './components/camera-groups/camera-groups.component';
+import { MapInformationComponent } from './components/map-information/map-information.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
   { path: 'home', component:MainComponent},
   { path: 'map', component: MapComponent , canActivate:[AuthGuard], data:{allowedRoles:['superadmin','admin']},
     children: [
+      { path: '', component:MapInformationComponent },
       { path: 'events', 
-      children: [
-        { path: '', component: EventsManagerComponent },
-        { path: 'stats', component: StatsEventsComponent },
-      ] 
-    },
+        children: [
+          { path: '', component: EventsManagerComponent },
+          { path: 'stats', component: StatsEventsComponent },
+        ] 
+      },
 
       { path: 'cameras',
         children: [
@@ -90,8 +92,8 @@ const routes: Routes = [
     children:[
       { path: '', redirectTo: 'camera', pathMatch: 'full'},
       { path: 'camera', component: AdminConfigCameraComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
-      { path: 'traffic', component: AdminConfigTrafficComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
-      { path: 'event', component: AdminConfigEventComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']}},
+      { path: 'traffic', component: AdminConfigTrafficComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+      { path: 'event', component: AdminConfigEventComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
       { path: 'test', component: AdminConfigTestComponent },
    ],
   },

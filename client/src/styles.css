@@ -373,21 +373,12 @@ nz-layout {
     box-sizing : border-box; 
     position : relative; 
     background : rgb(243, 244, 245) none repeat scroll 0% 0% / auto padding-box border-box; 
-    box-shadow : rgba(34, 36, 38, 0.15) 0px 1px 2px 0px; 
-    margin : 0; 
+    box-shadow : rgba(34, 36, 38, 0.15) 0px 2px 1px 1px; 
     border-radius : 0px 0px 4px 4px; 
-    margin-bottom : 0px; 
-    top : 0px; 
-    bottom : 0px; 
-    border-right : 0px none rgba(0, 0, 0, 0.6); 
-    border-bottom : 0px none rgba(0, 0, 0, 0.6); 
-    border-left : 0px none rgba(0, 0, 0, 0.6); 
-    border-image : none; 
-    border-top : 1px solid rgba(34, 36, 38, 0.15); 
-    margin-top : 0px; 
     color : rgba(0, 0, 0, 0.6); 
     font-size : 14px;
     padding: 14px;
+    width: 100%;
 }
 
 .no-padding {

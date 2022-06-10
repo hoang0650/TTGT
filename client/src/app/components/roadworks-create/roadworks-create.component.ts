@@ -326,7 +326,7 @@ export class RoadworksCreateComponent implements OnInit, OnDestroy {
           var latlng = L.latLng([this.newRoadwork.loc.coordinates[1], this.newRoadwork.loc.coordinates[0]])
           this.updateNewRoadwork(latlng)
 
-          this.mapCom.flyToBounds([this.newRoadwork.loc.coordinates[1], this.newRoadwork.loc.coordinates[0]])
+          this.mapCom.flyToBounds([[this.newRoadwork.loc.coordinates[1], this.newRoadwork.loc.coordinates[0]]])
         }
       })
     }

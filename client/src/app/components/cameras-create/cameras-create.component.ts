@@ -53,7 +53,7 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
   geojson: any;
   options:any
   
-  constructor(public mapCom: MapComponent, private messageService:MessageService, private cdRef:ChangeDetectorRef, public configure:ConfigureService, private staticData:StaticService, private cameraGroupService:CameraGroupService, private cameraService:CameraService, private router: Router, private modalService:NzModalService, private route:ActivatedRoute, public nzMessage:NzMessageService,public appCom:AppComponent, private markerService:MarkerService, private location:Location) {
+  constructor(public mapCom: MapComponent, private messageService:MessageService, public configure:ConfigureService, private staticData:StaticService, private cameraGroupService:CameraGroupService, private cameraService:CameraService, private router: Router, private modalService:NzModalService, private route:ActivatedRoute, public nzMessage:NzMessageService,public appCom:AppComponent, private markerService:MarkerService, private location:Location) {
     this.button = this.messageService.getMessageObj().BUTTON;
     this.validateCamera = ['id', 'name', 'dist', 'tmpLocation'];
     this.inputChange = false;
@@ -148,7 +148,6 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
           this.location.replaceState("./map/cameras/update")
         }
 
-        this.mapCom.detectChanges()
       }
     })
   }
@@ -183,7 +182,6 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
         this.newCamera['tmpLocation'] = latlng.lat.toFixed(4) + ' , ' + latlng.lng.toFixed(4);
       }
     }
-    this.mapCom.detectChanges()
   }
 
   selectPosition(event:any) {
@@ -215,13 +213,13 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
     });
   }
 
-  openModal(type:string) {
+  openModal(type:string, isMessage?:boolean) {
     var form = this.messageService.getMessageObj().POPUP(type,'');
     return this.modalService.create({
       nzContent: AdminConfigConfirmComponent,
       nzComponentParams: {
         form:form,
-        isMessage: true
+        isMessage: isMessage
       }
     })
   }
@@ -367,8 +365,7 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
 
     newCamera['groups'] = $('.ui.dropdown').dropdown('get values')
     
-    
-
+  
 
 
     if (this.isCreate) {
@@ -376,15 +373,14 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
       delete newCamera._id;
       this.cameraService.create(newCamera).subscribe({
         next: (res:any) => {
-          this.router.navigate(['/cameras'], {queryParams: {camid:res._id, result:"create"}})
-          // this.noti.showNotification('top','center');
+          this.router.navigate(['/map/cameras'], {queryParams: {camid:res._id, result:"create"}})
         },
         error: (err) => {
-          // this.noti.dangerNotification('top','center');
           console.log(err);
           
           if (err?.error?.err?.code === 11000) {
-            this.openModal('duplicateCamera');
+            this.openModal('duplicateCamera', true);
+
           }
         }
       })
@@ -392,7 +388,7 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
       var camId = newCamera._id;
       this.cameraService.update(newCamera._id, newCamera).subscribe({
         next: (res) => {
-          this.router.navigate([`/cameras`], {queryParams: {camid:camId, result:"update"}})
+          this.router.navigate([`/map/cameras`], {queryParams: {camid:camId, result:"update"}})
           // this.noti.showNotification('top','center');
         },
         error: (err) => {
@@ -406,12 +402,13 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
 
   deleteCamera(camera:any) {
     var modalInstance = this.openModal('remove');
+
     modalInstance.afterClose.subscribe({
       next: (res: string) => {
         if (res === 'yes') {
           this.cameraService.delete(camera._id).subscribe({
             next: (res) => {
-              this.router.navigate(["/cameras"], {
+              this.router.navigate(["/map/cameras"], {
                 queryParams: {
                   camid: camera._id,
                   result: "remove"
@@ -422,20 +419,24 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
         }
       }
     })
+
   };
 
   back() {
+    console.log(this.inputChange);
+    
     if (this.inputChange) {
       var modalInstance = this.openModal('back');
       modalInstance.afterClose.subscribe({
         next: (res:string) => {
           if (res === 'yes') {
-            this.router.navigateByUrl('..')
+            this.router.navigateByUrl('/map/cameras')
           }
         }
       })
+
     } else {
-      this.router.navigateByUrl('..')
+      this.router.navigateByUrl('/map/cameras')
     }
   };
 
