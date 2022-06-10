@@ -60,7 +60,7 @@
         </div>
     </div>
 
-    <div *ngIf="currentMode == 'cameras'">
+    <div [hidden]="!(currentMode == 'cameras')">
         <nz-card [nzCover]="cameraCover" class="map-card">
             <img *ngIf="chosenMarkers['camera']" class="angle-camera" src="assets/images/compass.png" [ngStyle]="chosenMarkers['camera']?.angleStyle">
             <div id="crEventCamera" class="camera-create-event-icon" (click)="createdEventByCamera(chosenMarkers['camera'])" title="Tạo cảnh báo ở camera này"><i class="fa-solid fa-triangle-exclamation"></i></div>
@@ -113,7 +113,7 @@
         </div>
     </div>
 
-    <div *ngIf="currentMode == 'parkings'">
+    <div [hidden]="!(currentMode == 'parkings')">
 
         <nz-card>              
             <div *ngIf="chosenMarkers['parking']" >
@@ -200,7 +200,7 @@
         </div>
     </div>
 
-    <div *ngIf="currentMode == 'roadevents'">
+    <div [hidden]="!(currentMode == 'roadevents')">
         <div class="ui segment">
             <div class="ui fluid left icon input">
                 <input id="filterRoadEvent" type="text" placeholder="Tìm nhanh" [(ngModel)]="filterRoadEvent" class="form-control">
@@ -210,6 +210,12 @@
             <h4 class="ui center aligned header" *ngIf="listRoadEvents.length <= 0">
                 <div class="content">
                     Không có phân luồng nào
+                </div>
+            </h4>
+
+            <h4 class="ui center aligned header" *ngIf="listRoadEvents.length > 0 && (listRoadEvents | searchFilter: filterRoadEvent: ['geoObject', 'featureCollection', 'properties', 'name']).length <= 0">
+                <div class="content">
+                    Không tìm thấy phân luồng trên
                 </div>
             </h4>
 
@@ -226,12 +232,26 @@
         </div>
     </div>
 
-    <div *ngIf="currentMode == 'staticmaps'">
+    <div [hidden]="!(currentMode == 'staticmaps')">
         <div class="ui segment">
             <div class="ui fluid left icon input">
                 <input id="filterStaticMap" type="text" placeholder="Tìm nhanh" [(ngModel)]="filterStaticMap" class="form-control">
                     <i class="filter icon "></i>
             </div>
+
+            <h4 class="ui center aligned header" *ngIf="listStaticMaps.length <= 0">
+                <div class="content">
+                    Không có lớp thông tĩnh nào
+                </div>
+            </h4>
+
+            <h4 class="ui center aligned header" *ngIf="listStaticMaps.length > 0 && (listStaticMaps | searchFilter: filterStaticMap: ['staticMapData', 'name']).length <= 0">
+                <div class="content">
+                    Không tìm thấy lớp thông tĩnh trên
+                </div>
+            </h4>
+
+
             <div class="ui middle aligned selection divided list">
                 <div class="item" id="{{staticmap._id}}" *ngFor="let staticmap of (listStaticMaps | searchFilter: filterStaticMap: ['staticMapData', 'name'])">
                     <div class="ui toggle checkbox">
@@ -245,7 +265,7 @@
         </div>
     </div>
 
-    <div *ngIf="currentMode == 'incidents'">
+    <div [hidden]="!(currentMode == 'incidents')">
         <div class="ui segment"  *ngIf="listEvent.length <= 0">
             <h4 class="ui center aligned header">
                 <div class="content">

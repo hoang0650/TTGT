@@ -27,37 +27,24 @@ declare var $:any
 })
 export class MapInformationComponent implements OnInit, OnDestroy {
   sideMap?: L.Map;
-  mapurl: string;
 
   userInfo: any;
   isSubmit: boolean;
   
   listStaticMaps: any;
-  currentStaticMap: any;
   listRoadEvents: any;
-  trafficChildren: any;
-  legendTrafficText: any;
-
-  debounce:any;
-
   listEvent: any;
   listCamera: any
 
   event: any;
   listEventType: any;
   markers: any;
-  searchResults: any;
-
-  isSearch: boolean;
-  searchQuery: string;
 
   newCreateEvent: any;
   listParking: any;
   chosenMarkers: any;
   listFavoriteCamera: any;
   listFavoriteParking: any;
-  listHistoryCamera: any;
-  limitParking: boolean
   cameraLoading: boolean;
 
   component?:any
@@ -72,32 +59,24 @@ export class MapInformationComponent implements OnInit, OnDestroy {
   dividerText?:string;
   
   constructor(public mapCom:MapComponent, private configure:ConfigureService, private staticMapService:StaticMapService, private markerService:MarkerService, private roadEventService:RoadEventsService, private route:ActivatedRoute, private location:Location, private mapService:MapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private geocoding:GeocodingService, private cameraService:CameraService, private parkingService:ParkingService, private cdRef:ChangeDetectorRef, private nzMessage:NzMessageService) {
-    this.currentMode = "cameras";
-    this.limitParking = true
+    this.setCurrentMode("incidents")
     this.listEvent = []
     this.listCamera = []
     this.listParking = []
     this.listFavoriteCamera = []
     this.listFavoriteParking = []
-    this.mapurl = configure.livemap;
     this.isSubmit = true;
     this.userInfo = JSON.parse(localStorage.getItem("profile") || "")
-    this.isSearch = false
-    this.searchQuery = ""
     this.filterRoadEvent = ""
     this.filterStaticMap = ""
     this.cameraLoading = false
     this.backend = this.configure.backend
-    this.legendTrafficText = configure.mapConfig.legendTrafficText;
 
     this.event = {}
     this.chosenMarkers = {}
     this.markers = {}
     
     this.paramMap = {type: route.snapshot.queryParamMap.get("type"), id: route.snapshot.queryParamMap.get("id")}
-    location.replaceState("./map")
-    
-    this.trafficChildren = {} 
 
     this.isShare = false
 
@@ -119,20 +98,6 @@ export class MapInformationComponent implements OnInit, OnDestroy {
 
 
   getData() {
-    this.sideMap?.on({
-      contextmenu: (event:any) => {
-        if (this.trafficChildren['incidents']) {
-          this.createNewEventMarker(event.latlng)
-        }
-      },
-      popupopen: (event:any) => {
-        setTimeout(() => {
-          $(".ui.dropdown").dropdown()
-          this.component?.changeDetectorRef.detectChanges()
-        }, 100)
-      }
-    })
-
     setTimeout(() => {
       this.sideMap?.invalidateSize()
     }, 300)
@@ -150,7 +115,6 @@ export class MapInformationComponent implements OnInit, OnDestroy {
   resetList(user:any) {
     this.listFavoriteCamera = [];
     this.listFavoriteParking = [];
-    this.listHistoryCamera = user.history;
     user.favorite.forEach((fav:any) => {
       switch (fav.fType) {
         case 'camera':
@@ -178,9 +142,9 @@ export class MapInformationComponent implements OnInit, OnDestroy {
   chooseCameraFromList(camid:string) {
     this.listCamera.forEach((camera:any) => {
       if (camera._id == camid) {
-        this.sideMap?.flyTo([camera.loc.coordinates[1], camera.loc.coordinates[0]], 15)
+        this.mapCom.flyToBounds([[camera.loc.coordinates[1], camera.loc.coordinates[0]]])
         this.chosenMarkers['camera'] = camera
-        
+        this.location.replaceState(`./map?type=camera&id=${camid}`)
       }
     })
   }
@@ -237,86 +201,61 @@ export class MapInformationComponent implements OnInit, OnDestroy {
     return status;
   }
 
-  toggleTrafficActive() {
-    if (this.trafficChildren['traffic']) {
-      var layer = L.tileLayer(this.mapurl + 'traffic/{z}/{x}/{y}/fpt.png')
-      this.sideMap?.addLayer(layer)
-      this.markers['traffic'] = layer
-    } else {
-      this.sideMap?.removeLayer(this.markers['traffic'])
-      delete this.markers['traffic']
-    }
-  }
-
   toggleParkingActive() {
-    if (this.trafficChildren['parkings']) {
       
-      this.markers['parkings'] = L.markerClusterGroup({
-        disableClusteringAtZoom: 16,
-        maxClusterRadius: 64,
-        removeOutsideVisibleBounds: true,
-        animateAddingMarkers: true,
-        animate: true,
-        iconCreateFunction:(cluster) => {
-          var markers = cluster.getAllChildMarkers();
-          var icon = L.divIcon({
-            className: 'marker-parking',
-            iconSize: [33.5, 40],
-            iconAnchor: [16.5, 36.5],
-            html: `<div class="circle-cluster">${markers.length}</div>`
-          });
-          
-          return icon;
-        },
-      })
+    this.markers['parkings'] = L.markerClusterGroup({
+      disableClusteringAtZoom: 16,
+      maxClusterRadius: 64,
+      removeOutsideVisibleBounds: true,
+      animateAddingMarkers: true,
+      animate: true,
+      iconCreateFunction:(cluster) => {
+        var markers = cluster.getAllChildMarkers();
+        var icon = L.divIcon({
+          className: 'marker-parking',
+          iconSize: [33.5, 40],
+          iconAnchor: [16.5, 36.5],
+          html: `<div class="circle-cluster">${markers.length}</div>`
+        });
+        
+        return icon;
+      },
+    })
 
-      this.listParking.forEach((parking:any) => {
-        this.markers['parkings']?.addLayer(this.createParkingMarker(parking))
-      })
-
-    } else {
-      if (this.markers['parkings']) {
-        this.sideMap?.removeLayer(this.markers['parkings']) 
-      }
-    }
+    this.listParking.forEach((parking:any) => {
+      this.markers['parkings']?.addLayer(this.createParkingMarker(parking))
+    })
   }
 
-  toggleCameraActive() {
-    if (this.trafficChildren['cameras']) {
-      
-      this.markers['cameras'] = L.markerClusterGroup({
-        disableClusteringAtZoom: 16,
-        maxClusterRadius: 64,
-        removeOutsideVisibleBounds: true,
-        animateAddingMarkers: true,
-        animate: true,
-        iconCreateFunction:(cluster) => {
-          var markers = cluster.getAllChildMarkers();
-          var icon = L.divIcon({
-            className: "modify-marker good normal",
-            iconSize: [32, 32],
-            iconAnchor: [16, 16],
-            html: `<div class="marker-background"></div>` +
-                  `<div class="circle-cluster">${markers.length}</div>` +
-                  `<div class="marker-icon"></div>` +
-                  `<div class="marker-content"></div>`
-          });
-          
-          
-          return icon;
-        },
-      })
+  toggleCameraActive() {   
+    this.markers['cameras'] = L.markerClusterGroup({
+      disableClusteringAtZoom: 16,
+      maxClusterRadius: 64,
+      removeOutsideVisibleBounds: true,
+      animateAddingMarkers: true,
+      animate: true,
+      iconCreateFunction:(cluster) => {
+        var markers = cluster.getAllChildMarkers();
+        var icon = L.divIcon({
+          className: "modify-marker good normal",
+          iconSize: [32, 32],
+          iconAnchor: [16, 16],
+          html: `<div class="marker-background"></div>` +
+                `<div class="circle-cluster">${markers.length}</div>` +
+                `<div class="marker-icon"></div>` +
+                `<div class="marker-content"></div>`
+        });
+        
+        
+        return icon;
+      },
+    })
 
-      this.listCamera.forEach((camera:any) => {
-        this.markers['cameras']?.addLayer(this.createCameraMarker(camera))
-      })
+    this.listCamera.forEach((camera:any) => {
+      this.markers['cameras']?.addLayer(this.createCameraMarker(camera))
+    })
 
     //     _this._map.removeLayer(cameraClusterLayer);
-    } else {
-      if (this.markers['cameras']) {
-        this.sideMap?.removeLayer(this.markers['cameras']) 
-      }
-    }
   }
 
   createParkingMarker(parking:any) {
@@ -331,10 +270,11 @@ export class MapInformationComponent implements OnInit, OnDestroy {
       icon: icon,
     }).on({
       click: () => {
-        this.sideMap?.flyTo([parking.loc.coordinates[1], parking.loc.coordinates[0]])
-        this.chosenMarkers['parking'] = parking
-        this.cdRef.detectChanges()
+        this.mapCom.flyToBounds([[parking.loc.coordinates[1], parking.loc.coordinates[0]]])
         this.setCurrentMode("parkings")
+        this.chosenMarkers['parking'] = parking
+        this.location.replaceState(`./map?type=parking&id=${parking._id}`)
+        this.cdRef.detectChanges()
       }
     })
 
@@ -350,7 +290,9 @@ export class MapInformationComponent implements OnInit, OnDestroy {
       rotationAngle: camera.ptz ? 0 : camera.angle
     }).on({
       click: () => {
-        this.sideMap?.flyTo([camera.loc.coordinates[1], camera.loc.coordinates[0]])
+        
+        this.setCurrentMode("cameras")
+        this.mapCom.flyToBounds([[camera.loc.coordinates[1], camera.loc.coordinates[0]]])
         
         if (camera.angle) {
           camera.angleStyle = {
@@ -367,8 +309,8 @@ export class MapInformationComponent implements OnInit, OnDestroy {
         }
 
         this.chosenMarkers['camera'] = camera;
+        this.location.replaceState(`./map?type=camera&id=${camera._id}`)
         this.cdRef.detectChanges()
-        this.setCurrentMode("cameras")
         // this.selectCamera(camera)
       }
     })
@@ -377,13 +319,11 @@ export class MapInformationComponent implements OnInit, OnDestroy {
   }
 
   toggleIncidentActive() {
-    if (!this.trafficChildren['incidents']) {
-      this.cancelEvent();
-    } else {
+
       if (this.listEvent.length > 0) {
         this.toggleIncidentMarkers()
       }
-    }
+    
   }
 
   imageError(event:any) {
@@ -393,8 +333,9 @@ export class MapInformationComponent implements OnInit, OnDestroy {
   chooseParkingFromList(parkingId:string) {
     this.listParking.forEach((parking:any) => {
       if (parking._id == parkingId) {
-        this.sideMap?.flyTo([parking.loc.coordinates[1], parking.loc.coordinates[0]], 15)
+        this.mapCom?.flyToBounds([[parking.loc.coordinates[1], parking.loc.coordinates[0]]])
         this.chosenMarkers['parking'] = parking
+        this.location.replaceState(`./map?type=parking&id=${parkingId}`)
       }
     })
   }
@@ -414,49 +355,26 @@ export class MapInformationComponent implements OnInit, OnDestroy {
     return tempParkings
   }
 
-  searchIconClick() {
-    this.isSearch = false;
-    this.searchQuery = '';
-    this.searchResults = [];
-    this.cdRef.detectChanges()
-  }
-
-  searchSelect(result:any) {
-    if (result) {
-      if (result.geometry) {
-        this.searchQuery = result.properties.name
-        this.isSearch = false
-        this.sideMap?.flyTo([result.geometry.coordinates[1], result.geometry.coordinates[0]], 15);
-      }
-    }
-  }
-
+  incidents:any = {};
   toggleIncidentMarkers() {
-    if (this.trafficChildren['incidents']) {
-      this.markers['incidents'] = {}
-      this.listEvent.forEach((trafficEvent:any) => {
-        var latlng = [trafficEvent.loc.coordinates[1], trafficEvent.loc.coordinates[0]]
-        
-        var popup = L.popup({
-          closeButton:false,
-          className:'stis-create-incident-popup'
-        }).setContent(this.createCustomPopup(trafficEvent))
+    this.listEvent.forEach((trafficEvent:any) => {
+      var latlng = [trafficEvent.loc.coordinates[1], trafficEvent.loc.coordinates[0]]
+      
+      var popup = L.popup({
+        closeButton:false,
+        className:'stis-create-incident-popup'
+      }).setContent(this.createCustomPopup(trafficEvent))
 
-        var marker = this.createTrafficEventMarker(latlng, trafficEvent.type).bindPopup(popup).on({
-          popupopen: () => {
-            this.chooseIncident(trafficEvent)
-          }
-        })
-
-        this.sideMap?.addLayer(marker)
-        this.markers['incidents'][trafficEvent._id] = marker
-      }) 
-    } else {
-      Object.keys(this.markers['incidents']).forEach((id:string) => {
-        this.sideMap?.removeLayer(this.markers['incidents'][id])
+      var marker = this.createTrafficEventMarker(latlng, trafficEvent.type).bindPopup(popup).on({
+        popupopen: () => {
+          this.chooseIncident(trafficEvent, true)
+        }
       })
-      this.markers['incidents'] = {}
-    }
+      
+      this.incidents[trafficEvent._id] = marker
+      this.markers['incidents'].addLayer(marker)
+    }) 
+    
   }
   
   createTrafficEventMarker(latlng:any, type:string) {
@@ -496,13 +414,16 @@ export class MapInformationComponent implements OnInit, OnDestroy {
         }
       }).bindPopup(popup)
 
-      this.sideMap?.addLayer(this.newCreateEvent)
+      this.markers['newEvent'] = this.newCreateEvent
+      this.cdRef.detectChanges()
     } else {
       this.newCreateEvent.setLatLng(latlng)
     }
     
     this.event['loc'] = {type:"Point", coordinates: [latlng.lng, latlng.lat]}
     this.newCreateEvent.openPopup()
+    this.mapCom.detectChanges()
+    this.cdRef.detectChanges()
   } 
   
 
@@ -524,8 +445,9 @@ export class MapInformationComponent implements OnInit, OnDestroy {
     this.mapService.getAllEvent().subscribe({
       next: (res) => {
         this.listEvent = res
-        this.trafficChildren['incidents'] = true
-        this.toggleIncidentActive()
+        if (this.listEvent.length > 0) {
+          this.toggleIncidentMarkers()
+        }
         this.checkParam()
       }
     })
@@ -536,6 +458,19 @@ export class MapInformationComponent implements OnInit, OnDestroy {
     this.mapService.getAllType().subscribe({
       next: (res) => {
         this.listEventType = res;
+        this.markers['incidents'] = L.layerGroup()
+        this.sideMap?.on({
+          contextmenu: (event:any) => {
+            this.createNewEventMarker(event.latlng)
+          },
+          popupopen: (event:any) => {
+            setTimeout(() => {
+              $(".ui.dropdown").dropdown()
+              this.component?.changeDetectorRef.detectChanges()
+            }, 100)
+          }
+        })
+
         this.getAllEvent();
       }
     })
@@ -546,12 +481,29 @@ export class MapInformationComponent implements OnInit, OnDestroy {
       this.isSubmit = false;
 
       this.mapService.submitEvent(event).subscribe({
-        next: (res) => {
+        next: (trafficEvent:any) => {
+
           this.isSubmit = true
           this.newCreateEvent.closePopup()
-          this.sideMap?.removeLayer(this.newCreateEvent)
           delete this.newCreateEvent
+          delete this.markers['newEvent']
+          
+          
+          var latlng = [trafficEvent.loc.coordinates[1], trafficEvent.loc.coordinates[0]]
+      
+          var popup = L.popup({
+            closeButton:false,
+            className:'stis-create-incident-popup'
+          }).setContent(this.createCustomPopup(trafficEvent))
 
+          var marker = this.createTrafficEventMarker(latlng, trafficEvent.type).bindPopup(popup).on({
+            popupopen: () => {
+              this.chooseIncident(trafficEvent, true)
+            }
+          })
+          this.incidents[trafficEvent._id] = marker
+          this.markers['incidents']?.addLayer(marker)
+          marker.openPopup()
           this.nzMessage.success('Đã tạo cảnh báo mới, chờ quản trị viên duyệt')
         },
         error: (err) => {
@@ -575,7 +527,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
       // _this.showBigImage = false;
     this.cancelEvent()
     var latlng = L.latLng(camera.loc.coordinates[1], camera.loc.coordinates[0]);
-    this.sideMap?.flyTo(latlng);
+    this.mapCom.flyToBounds([[camera.loc.coordinates[1], camera.loc.coordinates[0]]]);
     this.createNewEventMarker(latlng);
     this.event.desc[0] = camera.name;
     
@@ -592,12 +544,15 @@ export class MapInformationComponent implements OnInit, OnDestroy {
     this.component.changeDetectorRef.detectChanges()
   }
 
-  chooseIncident(event:any) {
+  chooseIncident(event:any, noFly?:boolean) {
     this.setCurrentMode('incidents')
-    this.sideMap?.flyTo([event.loc.coordinates[1], event.loc.coordinates[0]]);
-    this.chosenMarkers['incident'] = event._id
+    if (!noFly) {
+      this.mapCom.flyToBounds([[event.loc.coordinates[1], event.loc.coordinates[0]]]);
+    }
     
-    this.markers['incidents'][event._id].openPopup()
+    this.chosenMarkers['incident'] = event._id
+    this.location.replaceState(`./map?type=event&id=${event._id}`)
+    this.incidents[event._id].openPopup()
     this.cdRef.detectChanges()
   }
 
@@ -633,6 +588,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
       onEachFeature: (feature, layer) => {
         if (staticmap['properties']?.length > 0) {
           var popup = L.popup({
+            offset: [3, 45],
             closeButton:false,
             className:'stis-create-incident-popup'
           }).setContent(this.createStaticMapPopup(staticmap.properties, featureData.properties))
@@ -686,7 +642,6 @@ export class MapInformationComponent implements OnInit, OnDestroy {
     this.cameraService.query().subscribe({
       next: (res) => {
         this.listCamera = res
-        this.trafficChildren['cameras'] = true
         this.toggleCameraActive()
         this.checkParam()
       }
@@ -698,7 +653,6 @@ export class MapInformationComponent implements OnInit, OnDestroy {
     this.parkingService.query().subscribe({
       next: (res) => {
         this.listParking = res
-        this.trafficChildren['parkings'] = true
         this.toggleParkingActive()
         this.checkParam()
       }
@@ -710,7 +664,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
       if (this.paramMap.type == "camera") {
         this.listCamera.forEach((camera:any) => {
           if (camera._id == this.paramMap.id) {
-            this.sideMap?.flyTo([camera.loc.coordinates[1], camera.loc.coordinates[0]], 15)
+            this.mapCom.flyToBounds([[camera.loc.coordinates[1], camera.loc.coordinates[0]]])
             if (camera.angle) {
               camera.angleStyle = {
                 '-ms-transform': 'rotate(' + (90 + camera.angle) + 'deg)',
@@ -724,28 +678,29 @@ export class MapInformationComponent implements OnInit, OnDestroy {
                 'transform': 'rotate(' + (90) + 'deg)'
               };
             }
-            this.chosenMarkers['camera'] = camera;
             this.setCurrentMode('cameras')
+            this.chosenMarkers['camera'] = camera;
             this.cdRef.detectChanges()
           }
         })
       } else if (this.paramMap.type == "parking") {
         this.listParking.forEach((parking:any) => {
           if (parking._id == this.paramMap.id) {
-            this.sideMap?.flyTo([parking.loc.coordinates[1], parking.loc.coordinates[0]])
-            this.chosenMarkers['parking'] = parking;
             this.setCurrentMode('parkings')
+            this.mapCom.flyToBounds([[parking.loc.coordinates[1], parking.loc.coordinates[0]]])
+            this.chosenMarkers['parking'] = parking;
             this.cdRef.detectChanges()
           }
         })
       } else if (this.paramMap.type == "event") {
         this.listEvent.forEach((event:any) => {
           if (event._id == this.paramMap.id) {
-            this.sideMap?.flyTo([event.loc.coordinates[1], event.loc.coordinates[0]])
+            this.mapCom.flyToBounds([[event.loc.coordinates[1], event.loc.coordinates[0]]])
             this.chooseIncident(event)
+            this.setCurrentMode('incidents')
             this.chosenMarkers['incident'] = event;
             
-            this.setCurrentMode('incidents')
+            
             this.cdRef.detectChanges()
           }
         })
@@ -902,6 +857,8 @@ export class MapInformationComponent implements OnInit, OnDestroy {
 
   setCurrentMode(mode?:string) {
     this.currentMode = mode
+    this.chosenMarkers = {}
+    this.location.replaceState(`./map`)
     if (mode == "cameras") {
       this.dividerText = "Camera"
     } else if (mode == "parkings") {

@@ -13,10 +13,6 @@
     color: #1890ff;
 }
 
-.ui.feed > .event.active-event {
-    background-color: rgba(37, 37, 37, 0.38);
-}
-
 .map-search {
     position: absolute;
     top: 0px;

@@ -23,6 +23,6 @@ export class MapPopupCreateEventComponent implements OnInit {
   }
 
   closePopup() {
-    this.map.markers['incidents'][this.event?._id].closePopup()
+    this.map.incidents[this.event?._id].closePopup()
   }
 }

@@ -6,3 +6,12 @@
 nz-card.map-card {
     padding: 0px 1px;
 }
+
+
+.ui.feed > .event.active-event {
+    background-color: rgba(37, 37, 37, 0.38);
+}
+
+.ui.feed > .event:hover:not(.active-event) {
+    background-color: rgba(37, 37, 37, 0.2);
+}

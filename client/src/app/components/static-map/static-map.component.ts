@@ -116,7 +116,7 @@ export class StaticMapComponent implements OnInit {
 
       onEachFeature: (feature, layer) => {
         var popup = L.popup({
-          offset: [3, 35],
+          offset: [3, 45],
           closeButton:false,
           className:'stis-create-incident-popup'
         }).setContent(this.createStaticMapPopup(staticmap.properties, featureData.properties))
