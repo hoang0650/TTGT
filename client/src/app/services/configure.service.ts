@@ -9,7 +9,7 @@ export class ConfigureService {
   constructor() { }
   fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
   fileExtension = '.xlsx';
-  backend = '/'
+  backend = 'http://localhost:3000/'
   livemap = '//map.thongtingiaothong.vn/'
   mapapi = '//api.thongtingiaothong.vn/'
   realtime = '//localhost:3002/realtime/'
