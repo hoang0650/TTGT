@@ -31,14 +31,14 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     this.appCom = component
   }
 
-  getProfile() {
-    
-  }
-
   getPermissions(next: ActivatedRouteSnapshot) {
     const allowedRoles = next.data.allowedRoles ||  [];
     const allowedPermissions = next.data.allowedPermissions || [];
     
+    if (allowedRoles[0] == "guest") {
+      return true
+    }
+
     return new Observable<boolean>((obs) => {
       this.auth.getAccessTokenSilently().subscribe({
         next: (token:string) => {
@@ -80,26 +80,14 @@ export class AuthGuard implements CanActivate, CanActivateChild {
           });
         },
         error: (err) => {
-          if (allowedRoles) {
-            if (allowedRoles[0] == "guest") {
-              obs.next(true)
-            } else {
-              obs.next(false)
-              this.router.navigate(['unauthorized']);
-            }
-          } else {
-            obs.next(false)
-            this.router.navigate(['unauthorized']);
-          }
+          obs.next(false)
+          this.router.navigate(['unauthorized']);        
         }
       })
     })
   }
   
   isAuthorized(next:ActivatedRouteSnapshot, token:string, allowedRoles:string[], allowedPermissions:string[]): boolean {
-    if (allowedRoles[0] == "guest") {
-      return true
-    }
     
     const decodeToken = this.jwtHelperService.decodeToken(token);
     const checkRole = decodeToken['https://hoang0650.com/app_metadata']['roles'];
