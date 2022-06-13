@@ -90,7 +90,7 @@ export class ConfigureService {
   }
 
   baselayer = {
-    tiles: tileLayer('//map.thongtingiaothong.vn/transport-full/{z}/{x}/{y}.png', {
+    tiles: tileLayer('//images.vietbando.com/ImageLoader/GetImage.ashx?LayerIds=RC&Level={z}&X={x}&Y={y}', {
       maxZoom: 18,
       minZoom: 3,
     }),

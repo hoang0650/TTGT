@@ -7,6 +7,7 @@ import { AdminService } from './services/admin.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { GroupService } from './services/group.service';
+import { update } from 'lodash';
 
 
 @Component({
@@ -97,13 +98,17 @@ export class AppComponent {
       return true
     }
 
+    var permissionAction = ['none', 'read', 'update', 'manage']
     var ok = false
     permissions.forEach((permission:string) => {
       var tmpPermission:any = permission.split(":")
-
-      if (this.permissions[tmpPermission[0]] == tmpPermission[1]) {
-        ok = true
-        return
+      if (tmpPermission.length > 1) {
+        var userActionLevel = permissionAction.indexOf(this.permissions[tmpPermission[0]])
+        var requiredLevel = permissionAction.indexOf(tmpPermission[1])
+        if (userActionLevel >= requiredLevel) {
+          ok = true
+          return
+        }
       }
     })
 
