@@ -97,18 +97,21 @@ export class AppComponent {
       return true
     }
 
-    var ok = false
-    permissions.forEach((permission:string) => {
-      var tmpPermission:any = permission.split(":")
+    if(this.roles.includes("admin")){
 
-      if (this.permissions[tmpPermission[0]] == tmpPermission[1]) {
-        ok = true
-        return
+      var ok = false
+      permissions.forEach((permission:string) => {
+        var tmpPermission:any = permission.split(":")
+  
+        if (this.permissions[tmpPermission[0]] == tmpPermission[1]) {
+          ok = true
+          return
+        }
+      })
+  
+      if (ok) {
+        return true
       }
-    })
-
-    if (ok) {
-      return true
     }
 
     return false

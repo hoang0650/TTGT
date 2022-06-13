@@ -6,6 +6,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal'
 import { AdminNotificationComponent } from '../admin-notification/admin-notification.component';
 import { AdminConfigConfirmComponent } from '../admin-config-confirm/admin-config-confirm.component';
 import { MessageService } from 'src/app/services/message.service';
+import { AppComponent } from 'src/app/app.component';
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
@@ -123,7 +124,7 @@ export class AdminComponent implements OnInit {
   modalRef?: NzModalRef;
   listMapType:any = [];
   
-  constructor(private location:Location, private settingService:SettingService,private modalService:NzModalService, public message:MessageService) { 
+  constructor(public appCom:AppComponent,private location:Location, private settingService:SettingService,private modalService:NzModalService, public message:MessageService) { 
     this.editMode = false;
 
     const newDate = new Date();
