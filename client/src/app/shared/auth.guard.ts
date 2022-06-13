@@ -15,7 +15,8 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       const allowedRoles = next.data.allowedRoles;
-      const isAuthorized = this.auth.isAuthorized(allowedRoles);
+      const allowedPermissions = next.data.allowedPermissions;
+      const isAuthorized = this.auth.isAuthorized(allowedRoles, allowedPermissions);
 
     if (!isAuthorized) {
         this.router.navigate(['unauthorized']);      
@@ -26,8 +27,12 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
   canActivateChild(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
     const allowedRoles = next.data.allowedRoles;
-    const isAuthorized = this.auth.isAuthorized(allowedRoles);
+    const allowedPermissions = next.data.allowedPermissions;
+    const isAuthorized = this.auth.isAuthorized(allowedRoles, allowedPermissions);
     
+    console.log(isAuthorized);
+    
+
   if (!isAuthorized) {
       this.router.navigate(['unauthorized']);
   }

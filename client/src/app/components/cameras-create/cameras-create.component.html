@@ -157,7 +157,7 @@
                 
                 <div class="row">
                     <div class="col-3">
-                        <button class="btn btn-success" type="button" *ngIf="isCreate" [disabled]="!cameraForm.valid || !appCom.checkPermission(['cameras:update'])" (click)="create(newCamera)">{{button.CREATE}}</button>
+                        <button class="btn btn-success" type="button" *ngIf="isCreate" [disabled]="!cameraForm.valid || !appCom.checkPermission(['cameras:manage'])" (click)="create(newCamera)">{{button.CREATE}}</button>
                         <button class="btn btn-success" type="button" *ngIf="!isCreate" [disabled]="!cameraForm.valid || !appCom.checkPermission(['cameras:update'])" (click)="create(newCamera)">{{button.UPDATE}}</button>
                     </div>
                     <div class="col-3 text-end">
