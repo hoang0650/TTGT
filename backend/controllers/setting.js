@@ -358,7 +358,6 @@ function getImageError (req, res) {
     }).sort({ 'createdAt': -1 }).limit(1).exec().then(st => {
         if (st && st.length > 0) {
             var setting = st[0];
-            console.log(setting);
             if (setting.cameraSituations && setting.cameraSituations.imageError) {
                 if (setting.cameraSituations.imageError.imageType === 'text') {
                     var textContent = encodeURIComponent(setting.cameraSituations.imageError.text);

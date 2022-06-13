@@ -14,6 +14,10 @@ export class AdminService {
     return this.http.get(`${this.Root_url}/${id}`);
   }
 
+  getUserInfo() {
+    return this.http.get('http://localhost:3000/api/user/info');
+  }
+
 
   blockUser(id: string, action:string, payload: Object){
     return this.http.post(`${this.Root_url}/${id}/${action}`,payload={'blocked':true});

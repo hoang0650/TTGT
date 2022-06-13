@@ -1,4 +1,7 @@
+const ManagementClient = require("auth0").ManagementClient;
 const config = require('../config/configure');
+const clientConfig = config.auth0ManagementClient;
+
 const {User} = require('../models/user');
 const {Camera} = require('../models/camera');
 const Parking = require('../models/parking');
@@ -91,6 +94,29 @@ const checkExistInDb = function (type, id) {
     }
     return defer.promise;
 };
+
+const management = new ManagementClient({
+    domain: clientConfig.domain,
+    token: clientConfig.token,
+});
+
+function getUserInfo(req, res) {
+    const userId = req.user.sub;
+    const params = { id: userId };
+    management
+        .getUser(params)
+        .then((users) => {
+            if (users) {
+                res.status(200).json(users)
+            } else {
+                res.status(200).json({})
+            }
+        })
+        .catch((err) => {
+            console.log("error", err);
+            res.status(500).json({ msg: err.message });
+        });
+}
 
 function findOneByUserId(req, res) {
     const userId = req.user.sub;
@@ -229,5 +255,5 @@ function addFavorite(req, res) {
 
 
 module.exports = {
-    findOneByUserId,addHistory,addFavorite
+    findOneByUserId,addHistory,addFavorite,getUserInfo
 }

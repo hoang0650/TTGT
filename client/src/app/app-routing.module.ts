@@ -29,18 +29,18 @@ import { MapInformationComponent } from './components/map-information/map-inform
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
-  { path: 'home', component:MainComponent},
-  { path: 'map', component: MapComponent,
+  { path: 'home', component:MainComponent, canActivate:[AuthGuard], data:{ allowedRoles:["guest"] } },
+  { path: 'map', component: MapComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:['cameras:read','parkings:read','roadevents:read','roadworks:read','staticmaps:read','trafficevents:read'] },
     children: [
       { path: '', component:MapInformationComponent },
-      { path: 'events', canActivateChild:[AuthGuard], data:{allowedPermissions:['staticmaps:read','staticmaps:update','staticmaps:manage']},
+      { path: 'events',
         children: [
-          { path: '', component: EventsManagerComponent },
-          { path: 'stats', component: StatsEventsComponent },
+          { path: '', component: EventsManagerComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["trafficevents:read"] } },
+          { path: 'stats', component: StatsEventsComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["trafficevents:read"] } },
         ] 
       },
 
-      { path: 'cameras', canActivateChild:[AuthGuard], data:{allowedPermissions:['cameras:read','cameras:update','cameras:manage']},
+      { path: 'cameras',
         children: [
           { path: '', component: CamerasComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["cameras:read"] }  },
           { path: 'create', component: CamerasCreateComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["cameras:manage"] } },
@@ -50,7 +50,7 @@ const routes: Routes = [
         ] 
       },
 
-      { path: 'roadworks', canActivateChild:[AuthGuard], data:{allowedPermissions:['roadworks:read','roadworks:update','roadworks:manage']}, 
+      { path: 'roadworks', 
         children: [
           { path: '', component: RoadworksComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["roadworks:read"] }   },
           { path: 'create', component: RoadworksCreateComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["roadworks:manage"] }   },
@@ -59,29 +59,29 @@ const routes: Routes = [
         ] 
       },
 
-      { path: 'parkings', canActivateChild:[AuthGuard], data:{allowedPermissions:['parkings:read','parkings:update','parkings:manage']},
+      { path: 'parkings',
         children: [
-          { path: '', component: ParkingsComponent },
-          { path: 'create', component: ParkingsCreateComponent },
-          { path: ':id/update', component: ParkingsCreateComponent },
+          { path: '', component: ParkingsComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["parkings:read"] } },
+          { path: 'create', component: ParkingsCreateComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["parkings:manage"] } },
+          { path: ':id/update', component: ParkingsCreateComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["parkings:update"] } },
           { path: '**', redirectTo:'' },
         ] 
       },
 
-      { path: 'roadevents', canActivateChild:[AuthGuard], data:{allowedPermissions:['roadevents:read','roadevents:update','roadevents:manage']},
+      { path: 'roadevents',
         children: [
-          { path: '', component: RoadeventsComponent },
-          { path: 'create', component: RoadeventsCreateComponent },
-          { path: ':id/update', component: RoadeventsCreateComponent },
+          { path: '', component: RoadeventsComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["roadevents:read"] } },
+          { path: 'create', component: RoadeventsCreateComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["roadevents:manage"] } },
+          { path: ':id/update', component: RoadeventsCreateComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["roadevents:update"] } },
           { path: '**', redirectTo:'' },
         ] 
       },
 
-      { path: 'staticmaps', canActivateChild:[AuthGuard], data:{allowedPermissions:['staticmaps:read','staticmaps:update','staticmaps:manage']},
+      { path: 'staticmaps',
         children: [
-          { path: '', component: StaticMapComponent },
-          { path: 'create', component: StaticMapCreateComponent },
-          { path: ':id/update', component: StaticMapCreateComponent },
+          { path: '', component: StaticMapComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["staticmaps:read"] } },
+          { path: 'create', component: StaticMapCreateComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["staticmaps:manage"] } },
+          { path: ':id/update', component: StaticMapCreateComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["staticmaps:update"] } },
           { path: '**', redirectTo:'' },
         ] 
       },
@@ -96,10 +96,10 @@ const routes: Routes = [
    ],
   },
   {
-    path: 'users', component: AdminUsersComponent,canActivate:[AuthGuard], data:{allowedRoles:['admin','superadmin']}
+    path: 'users', component: AdminUsersComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:manage"] }
   },
   {
-    path: 'groups', component: AdminGroupsComponent,canActivate:[AuthGuard], data:{allowedRoles:['admin','superadmin']}
+    path: 'groups', component: AdminGroupsComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:manage"] }
   },
   { path: 'unauthorized', component:UnauthorizedComponent },
   { path: 'notfound',component:NotFoundComponent}

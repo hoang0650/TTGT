@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { GroupService } from './services/group.service';
 import { update } from 'lodash';
+import { AuthGuard } from './shared/auth.guard';
 
 
 @Component({
@@ -22,10 +23,10 @@ export class AppComponent {
   roles = ['guest'];
   loginInterval?:any
   loginTry = 0;
-  permissions: string[]=[]
+  permissions:any = {}
 
-  constructor(private groupService: GroupService,public auth:AuthorizationService, public authservice:AuthService, public admin:AdminService, private router:Router, private nzMessage:NzMessageService){
-    
+  constructor(private groupService: GroupService,public auth:AuthorizationService, public authservice:AuthService, public admin:AdminService, private router:Router, private nzMessage:NzMessageService, private authGuard:AuthGuard){
+    authGuard.setComponent(this)
   }
   
   ngOnInit():void{
