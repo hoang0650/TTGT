@@ -126,8 +126,8 @@
 
                 <div class="row">
                     <div class="col-3">
-                        <button class="btn btn-success" *ngIf="isCreate" type="button" [disabled]="!parkingForm.valid ||!appCom.checkPermission(['parkings:update', 'parkings:manage'])" (click)="create(newParking)">{{button.CREATE}}</button>
-                        <button class="btn btn-success" *ngIf="!isCreate" type="button" [disabled]="!parkingForm.valid ||!appCom.checkPermission(['parkings:update', 'parkings:manage'])" (click)="create(newParking)">{{button.UPDATE}}</button>
+                        <button class="btn btn-success" *ngIf="isCreate" type="button" [disabled]="!parkingForm.valid ||!appCom.checkPermission(['parkings:update'])" (click)="create(newParking)">{{button.CREATE}}</button>
+                        <button class="btn btn-success" *ngIf="!isCreate" type="button" [disabled]="!parkingForm.valid ||!appCom.checkPermission(['parkings:update'])" (click)="create(newParking)">{{button.UPDATE}}</button>
                     </div>
                     <div class="col-3 text-end">
                         <button *ngIf="!isCreate" [disabled]="!appCom.checkPermission(['parkings:manage'])" class="btn btn-danger" type="button" (click)="deleteParking(newParking)">{{button.REMOVE}}</button>

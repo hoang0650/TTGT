@@ -14,14 +14,14 @@
                         <div class="row">
                             <div class="col-6 p-0">
                                 <div class="btn-group">
-                                    <button [disabled]="!appCom.checkPermission(['staticmaps:manage'])" class="btn btn-success" type="button" [routerLink]="['./create']">
+                                    <button [disabled]="!appCom.checkPermission(['staticmaps:manage'])" class="btn btn-success" type="button" [routerLink]="['./create']" data-tooltip="Thêm lớp thông tin mới" data-position="top left">
                                         <i class="fa-solid fa-plus"></i>
                                         Thêm
                                     </button>
                                 </div>
                             </div>
                             <div class="col-6 p-0">
-                                <button class="btn btn-secondary dropdown float-end" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="btn btn-secondary dropdown float-end" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false" data-tooltip="Tải dữ liệu lớp thông tin về máy" data-position="top right">
                                     <i class="cloud download icon"></i>
                                     Xuất dữ liệu
                                 </button>
@@ -71,7 +71,7 @@
                     <img *ngIf="staticMap?.staticMapData?.icon" class="ui avatar image" src="{{staticMap.staticMapData.icon.data.iconUrl}}">
                 </div>
                 <div class="right floated content ">
-                    <button [disabled]="!appCom.checkPermission(['staticmaps:update','staticmaps:manage'])" class="btn btn-primary" [routerLink]="['.', staticMap.staticMapData._id, 'update']" data-tooltip="Chỉnh sửa lớp thông tin"><i class="fa-solid fa-pen-to-square"></i> </button>
+                    <button [disabled]="!appCom.checkPermission(['staticmaps:update'])" class="btn btn-primary" [routerLink]="['.', staticMap.staticMapData._id, 'update']" data-tooltip="Chỉnh sửa lớp thông tin"><i class="fa-solid fa-pen-to-square"></i> </button>
                 </div>
                 <div class="content">
                     <span class="header"> {{staticMap.staticMapData.name}} </span>

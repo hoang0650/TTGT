@@ -133,8 +133,8 @@
 
                 <div class="row">
                     <div class="col-3">
-                        <button class="btn btn-success" type="button" *ngIf="isCreate" [disabled]="!cameraGroupForm.valid || !appCom.checkPermission(['cameras:update', 'cameras:manage'])" (click)="submit(group)">{{button.CREATE}}</button>
-                        <button class="btn btn-success" type="button" *ngIf="!isCreate" [disabled]="!cameraGroupForm.valid || !appCom.checkPermission(['cameras:update', 'cameras:manage'])" (click)="submit(group)">{{button.UPDATE}}</button>
+                        <button class="btn btn-success" type="button" *ngIf="isCreate" [disabled]="!cameraGroupForm.valid || !appCom.checkPermission(['cameras:update'])" (click)="submit(group)">{{button.CREATE}}</button>
+                        <button class="btn btn-success" type="button" *ngIf="!isCreate" [disabled]="!cameraGroupForm.valid || !appCom.checkPermission(['cameras:update'])" (click)="submit(group)">{{button.UPDATE}}</button>
                     </div>
                     <div class="col-3 text-end">
                         <button *ngIf="!isCreate" class="btn btn-danger" type="button" [disabled]="isRemoving || !appCom.checkPermission(['cameras:manage'])" (click)="remove()">{{button.REMOVE}}</button>

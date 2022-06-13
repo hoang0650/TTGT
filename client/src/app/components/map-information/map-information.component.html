@@ -14,11 +14,11 @@
                     <div class="container">
                         <div class="row">
                             <div class="map-navigate">
-                                <button nz-button [nzSize]="'large'" nzShape="round" nzBlock [disabled]="currentMode == 'cameras'" (click)="setCurrentMode('cameras')" nz-tooltip="Camera"><i nz-icon><i class="fa-solid fa-camera"></i></i></button>
-                                <button nz-button [nzSize]="'large'" nzShape="round" nzBlock [disabled]="currentMode == 'parkings'" (click)="setCurrentMode('parkings')" nz-tooltip="Bãi đỗ xe"><i nz-icon><i class="fa-solid fa-square-parking"></i></i></button>
-                                <button nz-button [nzSize]="'large'" nzShape="round" nzBlock [disabled]="currentMode == 'roadevents'" (click)="setCurrentMode('roadevents')" nz-tooltip="Phân luồng"><i nz-icon><i class="fa-solid fa-road"></i></i></button>
-                                <button nz-button [nzSize]="'large'" nzShape="round" nzBlock [disabled]="currentMode == 'staticmaps'" (click)="setCurrentMode('staticmaps')" nz-tooltip="Thông tin tĩnh"><i nz-icon><i class="fa-solid fa-circle-info"></i></i></button>
-                                <button nz-button [nzSize]="'large'" nzShape="round" nzBlock [disabled]="currentMode == 'incidents'" (click)="setCurrentMode('incidents')" nz-tooltip="Cảnh báo"><i nz-icon><i class="fa-solid fa-triangle-exclamation"></i></i></button>
+                                <button nz-button [nzSize]="'large'" nzShape="round" nzBlock [disabled]="currentMode == 'cameras'" (click)="setCurrentMode('cameras')" data-tooltip="Camera" data-position="top center"><i nz-icon><i class="fa-solid fa-camera"></i></i></button>
+                                <button nz-button [nzSize]="'large'" nzShape="round" nzBlock [disabled]="currentMode == 'parkings'" (click)="setCurrentMode('parkings')" data-tooltip="Bãi đỗ xe" data-position="top center"><i nz-icon><i class="fa-solid fa-square-parking"></i></i></button>
+                                <button nz-button [nzSize]="'large'" nzShape="round" nzBlock [disabled]="currentMode == 'roadevents'" (click)="setCurrentMode('roadevents')" data-tooltip="Phân luồng" data-position="top center"><i nz-icon><i class="fa-solid fa-road"></i></i></button>
+                                <button nz-button [nzSize]="'large'" nzShape="round" nzBlock [disabled]="currentMode == 'staticmaps'" (click)="setCurrentMode('staticmaps')" data-tooltip="Thông tin tĩnh" data-position="top center"><i nz-icon><i class="fa-solid fa-circle-info"></i></i></button>
+                                <button nz-button [nzSize]="'large'" nzShape="round" nzBlock [disabled]="currentMode == 'incidents'" (click)="setCurrentMode('incidents')" data-tooltip="Cảnh báo" data-position="top center"><i nz-icon><i class="fa-solid fa-triangle-exclamation"></i></i></button>
                             </div>
                         </div>
                     </div>

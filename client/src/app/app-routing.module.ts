@@ -12,7 +12,6 @@ import { ParkingsComponent } from './components/parkings/parkings.component';
 import { StaticMapComponent } from './components/static-map/static-map.component';
 import { RoadeventsComponent } from './components/roadevents/roadevents.component';
 import { StatsEventsComponent } from './components/stats-events/stats-events.component';
-import { AdminConfigTestComponent } from './components/admin-config-test/admin-config-test.component';
 import { MainComponent } from './components/main/main.component';
 import { AdminUsersComponent } from './components/admin-users/admin-users.component';
 import { AdminGroupsComponent } from './components/admin-groups/admin-groups.component';
@@ -94,7 +93,6 @@ const routes: Routes = [
       { path: 'camera', component: AdminConfigCameraComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin','superadmin']} },
       { path: 'traffic', component: AdminConfigTrafficComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin','superadmin']} },
       { path: 'event', component: AdminConfigEventComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin','superadmin']} },
-      { path: 'test', component: AdminConfigTestComponent },
    ],
   },
   {

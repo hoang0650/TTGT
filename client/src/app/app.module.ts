@@ -69,7 +69,6 @@ import { StaticMapComponent } from './components/static-map/static-map.component
 import { RoadeventsComponent } from './components/roadevents/roadevents.component';
 import { StatsEventsComponent } from './components/stats-events/stats-events.component';
 import { NgChartsModule } from 'ng2-charts';
-import { AdminConfigTestComponent } from './components/admin-config-test/admin-config-test.component';
 import { AdminConfigCameraComponent } from './components/admin-config-camera/admin-config-camera.component';
 import { CamerasCreateComponent } from './components/cameras-create/cameras-create.component';
 import { Auth0Service } from './shared/auth0.service';
@@ -120,7 +119,6 @@ export function tokenGetters() {
     StaticMapComponent,
     RoadeventsComponent,
     StatsEventsComponent,
-    AdminConfigTestComponent,
     AdminConfigCameraComponent,
     CamerasCreateComponent,
     UnauthorizedComponent,

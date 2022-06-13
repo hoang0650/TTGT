@@ -74,14 +74,14 @@
                             </div>
                         </div>
                         <div class="extra text" *ngIf="event._id == chooseEventId && event.status != 'rejected' && !(event['tmpStatus'] == 'expired')">
-                            <div class="ui tiny icon buttons">
+                            <div class="btn-group" role="group" aria-label="Basic example">
                                 <button *ngIf="event.status == 'created' && !event['tmpStatus']" data-tooltip="Duyệt" data-position="top center" (click)="approveEvent(event);$event.stopPropagation()"
-                                    class="ui button"><i class="checkmark icon"></i></button>
+                                    class="btn btn-success"><i class="checkmark icon"></i></button>
                                 <button *ngIf="event.status == 'created' && !event['tmpStatus']" data-tooltip="Không duyệt" data-position="top center" (click)="rejectEvent(event);$event.stopPropagation()"
-                                    class="ui button"><i class="remove icon"></i></button>
+                                    class="btn btn-danger"><i class="remove icon"></i></button>
                                 <button *ngIf="event.status == 'approved' || event['tmpStatus']  == 'approved'" data-tooltip="Dừng cảnh báo" data-position="top center" (click)="expireEvent(event);$event.stopPropagation()"
-                                    class="ui button"><i class="times icon"></i></button>
-                            </div>
+                                    class="btn btn-danger"><i class="times icon"></i></button>
+                              </div>
                         </div>
                     </div>
                 </div>
