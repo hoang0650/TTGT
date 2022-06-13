@@ -54,7 +54,8 @@ export class AppComponent {
               
               if (data) {
                 this.permissions = data
-                localStorage.setItem("permissions", JSON.stringify(this.permissions))
+              } else {
+                this.permissions = {}
               }
             },
             error: (err:any) => {
@@ -90,6 +91,7 @@ export class AppComponent {
     this.authservice.getAccessTokenSilently().subscribe({
       next: (token:string) => {
         this.idToken = token
+        
         localStorage.setItem('id_token',JSON.stringify(this.idToken));
       }
     })

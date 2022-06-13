@@ -71,7 +71,6 @@ import { StatsEventsComponent } from './components/stats-events/stats-events.com
 import { NgChartsModule } from 'ng2-charts';
 import { AdminConfigCameraComponent } from './components/admin-config-camera/admin-config-camera.component';
 import { CamerasCreateComponent } from './components/cameras-create/cameras-create.component';
-import { Auth0Service } from './shared/auth0.service';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { RoadworksCreateComponent } from './components/roadworks-create/roadworks-create.component';
@@ -249,7 +248,7 @@ export function tokenGetters() {
       },
     }),
   ],
-  providers: [Auth0Service,
+  providers: [
     { provide: NZ_I18N, useValue: vi_VN },
     {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi:true },
     DatePipe

@@ -30,7 +30,7 @@ import { MapInformationComponent } from './components/map-information/map-inform
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
   { path: 'home', component:MainComponent},
-  { path: 'map', component: MapComponent , canActivate:[AuthGuard], data:{allowedRoles:['superadmin'], allowedPermissions:["cameras:read"]},
+  { path: 'map', component: MapComponent,
     children: [
       { path: '', component:MapInformationComponent },
       { path: 'events', 
@@ -42,19 +42,19 @@ const routes: Routes = [
 
       { path: 'cameras',
         children: [
-          { path: '', component: CamerasComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["cameras:read"] }  },
-          { path: 'create', component: CamerasCreateComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["cameras:manage"] } },
-          { path: 'groups', component: CameraGroupsComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["cameras:update"] } },
-          { path: ':id/update', component: CamerasCreateComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["cameras:update"] } },
+          { path: '', component: CamerasComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["cameras:read"] }  },
+          { path: 'create', component: CamerasCreateComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["cameras:manage"] } },
+          { path: 'groups', component: CameraGroupsComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["cameras:update"] } },
+          { path: ':id/update', component: CamerasCreateComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["cameras:update"] } },
           { path: '**', redirectTo: '' },
         ] 
       },
 
       { path: 'roadworks', 
         children: [
-          { path: '', component: RoadworksComponent },
-          { path: 'create', component: RoadworksCreateComponent },
-          { path: ':id/update', component: RoadworksCreateComponent },
+          { path: '', component: RoadworksComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["roadworks:read"] }   },
+          { path: 'create', component: RoadworksCreateComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["roadworks:manage"] }   },
+          { path: ':id/update', component: RoadworksCreateComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["roadworks:update"] }   },
           { path: '**', redirectTo:'' },
         ] 
       },
@@ -87,12 +87,12 @@ const routes: Routes = [
       },
     ]
   },
-  { path: 'config', component:AdminComponent, canActivate:[AuthGuard], data:{allowedRoles:['admin','superadmin']},
+  { path: 'config', component:AdminComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:manage"], },
     children:[
       { path: '', redirectTo: 'camera', pathMatch: 'full'},
-      { path: 'camera', component: AdminConfigCameraComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin','superadmin'], } },
-      { path: 'traffic', component: AdminConfigTrafficComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin','superadmin']} },
-      { path: 'event', component: AdminConfigEventComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin','superadmin']} },
+      { path: 'camera', component: AdminConfigCameraComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:manage"] }, },
+      { path: 'traffic', component: AdminConfigTrafficComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:manage"] }, },
+      { path: 'event', component: AdminConfigEventComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:manage"] }, },
    ],
   },
   {
