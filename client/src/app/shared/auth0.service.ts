@@ -16,9 +16,13 @@ import { AppComponent } from '../app.component';
   providedIn: 'root'
 })
 export class Auth0Service {
-  permissions:any = {}
+  // permissions:any = {}
+ 
   constructor(public router: Router,private jwtHelperService: JwtHelperService) {
-    this.permissions = JSON.parse(localStorage.getItem("permissions") || "{}")
+    // this.permissions = JSON.parse(localStorage.getItem("permissions") || "{}")
+    // console.log(this.permissions);
+   
+
   }
 
   isAuthorized(allowedRoles: string[], allowedPermissions: string[]): boolean {
@@ -34,31 +38,37 @@ export class Auth0Service {
     const decodeToken = this.jwtHelperService.decodeToken(token);
     // const decodeToken1 = this.jwtHelperService.decodeToken(token1);
     const checkRole = _.intersection(allowedRoles,decodeToken['https://hoang0650.com/app_metadata']['roles']);
+    
+    const permissions: string = localStorage.getItem("permissions") || '{}';
 
+    console.log('permissiosn',permissions);
+    const checkPermission = _.intersection(allowedPermissions,permissions);
+    console.log('checkPermissions',checkPermission);
     // check if it was decoded successfully, if not the token is not valid, deny access
     if (!decodeToken) {
       return false;
     }
 
-    
-    
-
     if(checkRole.includes('superadmin')){
      return true;
     }
+    if(checkPermission){
+      return true
+    }
+    
     
     return this.checkPermission(allowedPermissions)
+    // return false;
   }
 
   checkPermission(permissions:string[]) {
     var permissionAction = ['none', 'read', 'update', 'manage']
     var ok = false
-    console.log(permissions);
-    
+    console.log('permissions',permissions);
     permissions.forEach((permission:string) => {
       var tmpPermission:any = permission.split(":")
       if (tmpPermission.length > 1) {
-        var userActionLevel = permissionAction.indexOf(this.permissions[tmpPermission[0]])
+        var userActionLevel = permissionAction.indexOf(permissions[tmpPermission[0]])
         var requiredLevel = permissionAction.indexOf(tmpPermission[1])
         if (userActionLevel >= requiredLevel) {
           ok = true

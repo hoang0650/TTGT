@@ -30,27 +30,27 @@ import { MapInformationComponent } from './components/map-information/map-inform
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
   { path: 'home', component:MainComponent},
-  { path: 'map', component: MapComponent , canActivate:[AuthGuard], data:{allowedRoles:['superadmin'], allowedPermissions:["cameras:read"]},
+  { path: 'map', component: MapComponent , canActivate:[AuthGuard], data:{allowedRoles:['superadmin'], allowedPermissions:['cameras:read','cameras:update','cameras:manage','parkings:read','parkings:update','parkings:manage','roadevents:read','roadevents:update','roadevents:manage','roadworks:read','roadworks:update','roadworks:manage','staticmaps:read','staticmaps:update','staticmaps:manage']},
     children: [
       { path: '', component:MapInformationComponent },
-      { path: 'events', 
+      { path: 'events', canActivateChild:[AuthGuard], data:{allowedPermissions:['staticmaps:read','staticmaps:update','staticmaps:manage']},
         children: [
           { path: '', component: EventsManagerComponent },
           { path: 'stats', component: StatsEventsComponent },
         ] 
       },
 
-      { path: 'cameras',
+      { path: 'cameras', canActivateChild:[AuthGuard], data:{allowedPermissions:['cameras:read','cameras:update','cameras:manage']},
         children: [
-          { path: '', component: CamerasComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["cameras:read"] }  },
-          { path: 'create', component: CamerasCreateComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["cameras:manage"] } },
-          { path: 'groups', component: CameraGroupsComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["cameras:update"] } },
-          { path: ':id/update', component: CamerasCreateComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["cameras:update"] } },
+          { path: '', component: CamerasComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['admin','superadmin'], allowedPermissions:["cameras:read"] }  },
+          { path: 'create', component: CamerasCreateComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['admin','superadmin'], allowedPermissions:['cameras:update','cameras:manage'] } },
+          { path: 'groups', component: CameraGroupsComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['admin','superadmin'], allowedPermissions:['cameras:update','cameras:manage'] } },
+          { path: ':id/update', component: CamerasCreateComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['admin','superadmin'], allowedPermissions:['cameras:update','cameras:manage'] } },
           { path: '**', redirectTo: '' },
         ] 
       },
 
-      { path: 'roadworks', 
+      { path: 'roadworks', canActivateChild:[AuthGuard], data:{allowedPermissions:['roadworks:read','roadworks:update','roadworks:manage']}, 
         children: [
           { path: '', component: RoadworksComponent },
           { path: 'create', component: RoadworksCreateComponent },
@@ -59,7 +59,7 @@ const routes: Routes = [
         ] 
       },
 
-      { path: 'parkings', 
+      { path: 'parkings', canActivateChild:[AuthGuard], data:{allowedPermissions:['parkings:read','parkings:update','parkings:manage']},
         children: [
           { path: '', component: ParkingsComponent },
           { path: 'create', component: ParkingsCreateComponent },
@@ -68,7 +68,7 @@ const routes: Routes = [
         ] 
       },
 
-      { path: 'roadevents', 
+      { path: 'roadevents', canActivateChild:[AuthGuard], data:{allowedPermissions:['roadevents:read','roadevents:update','roadevents:manage']},
         children: [
           { path: '', component: RoadeventsComponent },
           { path: 'create', component: RoadeventsCreateComponent },
@@ -77,7 +77,7 @@ const routes: Routes = [
         ] 
       },
 
-      { path: 'staticmaps', 
+      { path: 'staticmaps', canActivateChild:[AuthGuard], data:{allowedPermissions:['staticmaps:read','staticmaps:update','staticmaps:manage']},
         children: [
           { path: '', component: StaticMapComponent },
           { path: 'create', component: StaticMapCreateComponent },
