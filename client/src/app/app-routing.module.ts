@@ -91,17 +91,17 @@ const routes: Routes = [
   { path: 'config', component:AdminComponent, canActivate:[AuthGuard], data:{allowedRoles:['admin','superadmin']},
     children:[
       { path: '', redirectTo: 'camera', pathMatch: 'full'},
-      { path: 'camera', component: AdminConfigCameraComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
-      { path: 'traffic', component: AdminConfigTrafficComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
-      { path: 'event', component: AdminConfigEventComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin']} },
+      { path: 'camera', component: AdminConfigCameraComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin','superadmin']} },
+      { path: 'traffic', component: AdminConfigTrafficComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin','superadmin']} },
+      { path: 'event', component: AdminConfigEventComponent, canActivateChild:[AuthGuard], data:{allowedRoles:['admin','superadmin']} },
       { path: 'test', component: AdminConfigTestComponent },
    ],
   },
   {
-    path: 'users', component: AdminUsersComponent,canActivate:[AuthGuard], data:{allowedRoles:['superadmin']}
+    path: 'users', component: AdminUsersComponent,canActivate:[AuthGuard], data:{allowedRoles:['admin','superadmin']}
   },
   {
-    path: 'groups', component: AdminGroupsComponent,canActivate:[AuthGuard], data:{allowedRoles:['superadmin']}
+    path: 'groups', component: AdminGroupsComponent,canActivate:[AuthGuard], data:{allowedRoles:['admin','superadmin']}
   },
   { path: 'unauthorized', component:UnauthorizedComponent },
   { path: 'notfound',component:NotFoundComponent}

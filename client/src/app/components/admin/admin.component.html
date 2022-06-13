@@ -36,7 +36,7 @@
         </nz-content>
         <nz-footer>
             <button *ngIf="!editMode" nz-button nzType="primary" type="button" (click)="startSetting()">Chỉnh sửa</button>
-            <button *ngIf="editMode" nz-button nzType="primary" type="submit" [disabled]="!configForm.dirty" (click)="openPopupConfig('save')">Lưu</button>
+            <button *ngIf="editMode" nz-button nzType="primary" type="submit" [disabled]="!configForm.dirty || !appCom.checkPermission(['settings:update','settings:manage','cameras:update','cameras:manage','roadevents:update','roadevents:manage','trafficevents:update','trafficevents:manage'])" (click)="openPopupConfig('save')">Lưu</button>
             <button *ngIf="editMode" nz-button nzType="primary" nzDanger type="button" (click)="openPopupConfig('cancel')">Hủy</button>
         </nz-footer>
     </nz-layout>
