@@ -10,10 +10,10 @@
         <li class="nav-item" [ngClass]="{'active': isActive('/home')}">
           <a class="nav-link" aria-current="page" [routerLink]="['/home']">Giới thiệu</a>
         </li>
-        <li class="nav-item" *ngIf="appCom.checkPermission(['settings:update','settings:manage','cameras:update','cameras:manage','parkings:update','parkings:manage','roadevents:update','roadevents:manage','roadworks:update','roadworks:manage','staticmaps:update','staticmaps:manage','trafficevents:update','trafficevents:manage'])"[ngClass]="{'active': isActive('/map')}">
+        <li class="nav-item" *ngIf="appCom.checkPermission(['cameras:read','cameras:update','cameras:manage','parkings:read','parkings:update','parkings:manage','roadevents:read','roadevents:update','roadevents:manage','roadworks:read','roadworks:update','roadworks:manage','staticmaps:read','staticmaps:update','staticmaps:manage'])"[ngClass]="{'active': isActive('/map')}">
           <a class="nav-link" [routerLink]="['/map']">Bản đồ</a>
         </li>
-        <li class="nav-item dropdown" *ngIf="appCom.checkPermission(['settings:update','settings:manage','cameras:update','cameras:manage','parkings:update','parkings:manage','roadevents:update','roadevents:manage','roadworks:update','roadworks:manage','staticmaps:update','staticmaps:manage','trafficevents:update','trafficevents:manage'])" [ngClass]="{'active': isActiveList(['/events', '/cameras', '/roadworks', '/parkings', '/roadevents', '/staticmaps'])}">
+        <li class="nav-item dropdown" *ngIf="appCom.checkPermission(['cameras:read','cameras:update','cameras:manage','parkings:read','parkings:update','parkings:manage','roadevents:read','roadevents:update','roadevents:manage','roadworks:read','roadworks:update','roadworks:manage','staticmaps:read','staticmaps:update','staticmaps:manage'])" [ngClass]="{'active': isActiveList(['/events', '/cameras', '/roadworks', '/parkings', '/roadevents', '/staticmaps'])}">
           <a class="nav-link dropdown" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Quản lý
           </a>

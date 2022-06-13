@@ -22,10 +22,10 @@ export class AppComponent {
   roles = ['guest'];
   loginInterval?:any
   loginTry = 0;
-  permissions:any = {}
+  permissions: string[]=[]
 
   constructor(private groupService: GroupService,public auth:AuthorizationService, public authservice:AuthService, public admin:AdminService, private router:Router, private nzMessage:NzMessageService){
-    localStorage.setItem("permissions", "{}")
+    
   }
   
   ngOnInit():void{
@@ -59,7 +59,7 @@ export class AppComponent {
               }
             },
             error: (err:any) => {
-              this.permissions = {}
+              this.permissions = []
             }
           });
           clearInterval(this.loginInterval)
