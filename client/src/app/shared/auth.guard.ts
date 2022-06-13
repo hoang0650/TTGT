@@ -32,22 +32,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   }
 
   getProfile() {
-    this.adminService.getUserInfo().subscribe({
-      next: (profile:any) => {
-        if (profile && this.appCom) {
-          this.appCom.profile = profile
-          if (profile.blocked) {
-            this.nzMessage.error("Tài khoản bạn đã bị khóa!")
-            this.auth.logout({
-              returnTo: "http://localhost:9000/home?message=blocked"
-            })
-          }
-        } else {
-          this.nzMessage.error("Bạn cần đăng nhập!")
-          this.auth.loginWithRedirect()
-        }
-      }
-    });
+    
   }
 
   getPermissions(next: ActivatedRouteSnapshot) {
@@ -57,27 +42,42 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     return new Observable<boolean>((obs) => {
       this.auth.getAccessTokenSilently().subscribe({
         next: (token:string) => {
-          this.getProfile()
-          this.groupService.getUserPermissions().subscribe({
-            next: (data) => {
-              this.permissions = data || {}
-              const isAuthorized = this.isAuthorized(next, token, allowedRoles, allowedPermissions)
-              
-              if (this.appCom) {
-                this.appCom.permissions = this.permissions
+          this.adminService.getUserInfo().subscribe({
+            next: (profile:any) => {
+              if (profile && this.appCom) {
+                this.appCom.profile = profile
+                if (profile.blocked) {
+                  this.nzMessage.error("Tài khoản bạn đã bị khóa!")
+                  this.auth.logout({
+                    returnTo: "http://localhost:9000/home?message=blocked"
+                  })
+                }
+                this.groupService.getUserPermissions().subscribe({
+                  next: (data) => {
+                    this.permissions = data || {}
+                    const isAuthorized = this.isAuthorized(next, token, allowedRoles, allowedPermissions)
+                    
+                    if (this.appCom) {
+                      this.appCom.permissions = this.permissions
+                    }
+      
+                    obs.next(isAuthorized)
+      
+                    if (!isAuthorized) {
+                      this.router.navigate(['unauthorized']);
+                    }
+                  }, 
+                  error: (err) => {
+                    obs.next(false)
+                    this.router.navigate(['unauthorized']);
+                  }
+                })
+              } else {
+                this.nzMessage.error("Bạn cần đăng nhập!")
+                this.auth.loginWithRedirect()
               }
-
-              obs.next(isAuthorized)
-
-              if (!isAuthorized) {
-                this.router.navigate(['unauthorized']);
-              }
-            }, 
-            error: (err) => {
-              obs.next(false)
-              this.router.navigate(['unauthorized']);
             }
-          })
+          });
         },
         error: (err) => {
           if (allowedRoles) {
