@@ -32,12 +32,11 @@
                 </ng-template>
 
                 <ng-template #actionUnblock>                  
-                    <i nz-tooltip="Mở khóa" (click)="unblockUsers()" class="ui unlock icon"></i>
+                    <i nz-icon (click)="unblockUsers()"><i nz-tooltip="Mở khóa" class="ui unlock icon"></i></i>
                 </ng-template>
-           
 
-                <ng-template #actionBlock >
-                    <i nz-tooltip="Khóa" (click)="blockUsers()" class="ui lock icon"></i>
+                <ng-template #actionBlock>
+                    <i nz-icon (click)="blockUsers()"><i nz-tooltip="Khóa" class="ui lock icon"></i></i>
                 </ng-template>
 
                 <ng-template #actionEllipsis>
