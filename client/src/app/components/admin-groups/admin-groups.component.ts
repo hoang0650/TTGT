@@ -128,9 +128,7 @@ export class AdminGroupsComponent implements OnInit {
         });
 
         this.groups = groups
-        
-        // const setGroupToLocal: any = localStorage.setItem('group',JSON.stringify(this.groups));
-        // this.currentGroup.emit(setGroupToLocal)
+    
       }
     })
   }
@@ -149,12 +147,17 @@ export class AdminGroupsComponent implements OnInit {
     }
   }
 
+  
 
   toggleEdit(group:any, event:any){
     event.stopPropagation();
     this.openEdit(group);
   }
 
+  toggleGroup(group:any, event:any) {
+    event.stopPropagation();
+    // this.selectGroup(group)
+  }
   openEdit(group?:any){
     var modalRef = this.modalService.create({
       nzContent: AdminGroupsEditComponent,

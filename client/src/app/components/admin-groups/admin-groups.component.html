@@ -1,21 +1,26 @@
 <div class="table-wrapper">  
     <button  class="btn btn-success" id="btnAddGroupTop" data-tooltip="Thêm nhóm" data-position="top left" (click)="openEdit()"><i class="add icon"></i> Thêm nhóm mới</button>
-    <nz-table class="table table-striped table-hover" style="width: 100%;">
+    <table class="ui unstackable celled padded table" style="width: 100%;">
         <thead>
             <tr>
-                <th nzLeft></th>
+                <th></th>
                 <th> Tên nhóm</th>
                 <th> Số lượng thành viên</th>
-                <th nzRight> Quyền</th>
+                <th> Quyền</th>
+                <th>Chỉnh sửa</th>
      
             </tr>
         </thead>
         <tbody>
-            <tr  *ngFor="let group of groups" (click)="selectGroup(group)" [ngClass]="{positive: group.isSelected}">
+            <tr *ngFor="let group of groups"  [ngClass]="{positive: group.isSelected}">
                 <td class="collapsing">
-                    <button class="no-animate ui compact icon button" (click)="toggleEdit(group, $event);">
-                        <i  class="write icon"></i>
-                    </button>
+                    
+                    <!-- <div class="ui checkbox" (click)="toggleUser(user, $event);">
+                        <input type="checkbox" [checked]="user.isSelected"> <label></label>
+                    </div> -->
+                    <div class="ui checkbox" (click)="selectGroup(group)">
+                        <input type="checkbox" [checked]="group.isSelected"> <label></label>
+                    </div>
                 </td>
                 <td class=" ">
                     <h4 class="ui header">
@@ -63,8 +68,13 @@
                         </div>
                     </div>
                 </td>
+                <td>
+                    <button class="no-animate ui compact icon button" (click)="toggleEdit(group, $event);">
+                        <i  class="write icon"></i>
+                    </button>
+                </td>
             </tr>
         </tbody>
-    </nz-table>
+    </table>
 
 </div>
