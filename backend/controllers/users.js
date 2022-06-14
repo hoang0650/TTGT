@@ -103,19 +103,19 @@ const management = new ManagementClient({
 function getUserInfo(req, res) {
     const userId = req.user.sub;
     const params = { id: userId };
-    management
-        .getUser(params)
-        .then((users) => {
-            if (users) {
-                res.status(200).json(users)
+    
+    User.findOne({userId: userId})
+        .then((user) => {
+            if (user) {
+                res.status(200).json({blocked:user.blocked, roles: user.roles})
             } else {
                 res.status(200).json({})
             }
         })
         .catch((err) => {
-            console.log("error", err);
             res.status(500).json({ msg: err.message });
         });
+        
 }
 
 function findOneByUserId(req, res) {

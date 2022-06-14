@@ -1,6 +1,8 @@
 const ManagementClient = require("auth0").ManagementClient;
 const UserGroup = require('../models/userGroup');
+const {User} = require('../models/user');
 const config = require("../config/configure");
+const _ = require('lodash');
 const clientConfig = config.auth0ManagementClient;
 
 const management = new ManagementClient({
@@ -65,6 +67,8 @@ function blockUser(req, res) {
   const params = { id: id };
   const data = { blocked: true };
 
+  updateUserData(res, id, data)
+
   management
     .updateUser(params, data)
     .then((user) => res.status(200).json(user))
@@ -77,19 +81,41 @@ function unblockUser(req, res) {
   const params = { id: id };
   const data = { blocked: false };
 
+  updateUserData(res, id, data)
+  
   management
     .updateUser(params, data)
     .then((user) => res.status(200).json(user))
     .catch((err) => res.status(500).end(err.message));
 }
 
+function updateUserData(res, userId, data) {
+  User.findOne({ userId: userId })
+  .then((user) => {
+    if (!user) {
+      const newUser = new User();
+      newUser.userId = userId;
+      newUser.blocked = false
+      newUser.roles = ["guest"]
+      newUser.save()
+      user = newUser
+    }
+    
+    User.updateOne({ userId: user.userId }, {$set:data})
+  })
+
+  User.updateOne({ userId: userId }, data).catch((err) => res.status(500).end(err.message))
+}
+
 function changeToGuest(req, res) {
+  const id = req.params.id;
   const data = {
     app_metadata: {
       roles: ["guest"],
     },
   };
-  const id = req.params.id;
+
+  updateUserData(res, id, {roles: ["guest"]})
   if (!id) return res.status(500).end();
   const params = { id: id };
   management
@@ -99,12 +125,13 @@ function changeToGuest(req, res) {
 }
 
 function changeToUser(req, res) {
+  const id = req.params.id;
   const data = {
     app_metadata: {
       roles: ["user"],
     },
   };
-  const id = req.params.id;
+  updateUserData(res, id, {roles: ["user"]})
   if (!id) return res.status(500).end();
   const params = { id: id };
   management
@@ -114,12 +141,14 @@ function changeToUser(req, res) {
 }
 
 function changeToAdmin(req, res) {
+  const id = req.params.id;
   const data = {
     app_metadata: {
       roles: ["admin"],
     },
   };
-  const id = req.params.id;
+  updateUserData(res, id, {roles: ["admin"]})
+
   if (!id) return res.status(500).end();
 
   const params = { id: id };
