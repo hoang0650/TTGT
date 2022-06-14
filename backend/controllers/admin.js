@@ -83,7 +83,7 @@ function unblockUser(req, res) {
     .catch((err) => res.status(500).end(err.message));
 }
 
-function changeToQuest(req, res) {
+function changeToGuest(req, res) {
   const data = {
     app_metadata: {
       roles: ["guest"],
@@ -121,30 +121,13 @@ function changeToAdmin(req, res) {
   };
   const id = req.params.id;
   if (!id) return res.status(500).end();
+
   const params = { id: id };
   management
     .updateUser(params, data)
     .then((user) => res.status(200).json(user))
     .catch((err) => res.status(500).end(err.message));
 }
-
-// function getLogs(req,res){
-//   const id = req.params.id;
-//   if (!id) return res.status(500).end();
-//   const params = {
-//     id: id,
-//     q: `description:"user is blocked"`,
-//   };
-
-//   management
-//   .getLog(params)
-//   .then((user)=>{
-//     res.status(200).json({user})
-//   }).catch((err)=>{
-//     res.status(500).json({err})
-//   })
-
-// }
 
 
 module.exports = {
@@ -155,6 +138,6 @@ module.exports = {
   blockUser,
   unblockUser,
   changeToUser,
-  changeToQuest,
+  changeToGuest,
   changeToAdmin,
 };

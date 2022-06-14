@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import _ from 'lodash';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { GroupService } from '../services/group.service';
@@ -40,44 +40,49 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     }
 
     return new Observable<boolean>((obs) => {
-      this.auth.getAccessTokenSilently().subscribe({
-        next: (token:string) => {
-          this.adminService.getUserInfo().subscribe({
-            next: (profile:any) => {
-              if (profile && this.appCom) {
-                this.appCom.profile = profile
-                if (profile.blocked) {
-                  this.auth.logout({
-                    returnTo: "http://localhost:9000/home?message=blocked"
-                  })
-                } else {
-                  this.groupService.getUserPermissions().subscribe({
-                    next: (data) => {
-                      this.permissions = data || {}
-                      const isAuthorized = this.isAuthorized(next, token, allowedRoles, allowedPermissions)
-                      
-                      if (this.appCom) {
-                        this.appCom.permissions = this.permissions
-                      }
-        
-                      obs.next(isAuthorized)
-        
-                      if (!isAuthorized) {
-                        this.router.navigate(['unauthorized']);
-                      }
-                    }, 
-                    error: (err) => {
-                      obs.next(false)
-                      this.router.navigate(['unauthorized']);
-                    }
-                  })
+      forkJoin([this.auth.getAccessTokenSilently(), this.adminService.getUserInfo()]).subscribe({
+        next: (data) => {
+          if (!data[0] || !data[1]) {
+            obs.next(false)
+            this.router.navigate(['unauthorized']);        
+            obs.complete()
+          }
+
+          var profile:any = data[1]
+          var token = data[0]
+
+          if (profile && this.appCom) {
+            this.appCom.profile = profile
+            if (profile.blocked) {
+              this.auth.logout({
+                returnTo: "http://localhost:9000/home?message=blocked"
+              })
+            } else {
+              this.groupService.getUserPermissions().subscribe({
+                next: (data) => {
+                  this.permissions = data || {}
+                  const isAuthorized = this.isAuthorized(next, token, allowedRoles, allowedPermissions)
+                  
+                  if (this.appCom) {
+                    this.appCom.permissions = this.permissions
+                  }
+    
+                  obs.next(isAuthorized)
+    
+                  if (!isAuthorized) {
+                    this.router.navigate(['unauthorized']);
+                  }
+                }, 
+                error: (err) => {
+                  obs.next(false)
+                  this.router.navigate(['unauthorized']);
                 }
-              } else {
-                this.nzMessage.error("Bạn cần đăng nhập!")
-                this.auth.loginWithRedirect()
-              }
+              })
             }
-          });
+          } else {
+            this.nzMessage.error("Bạn cần đăng nhập!")
+            this.auth.loginWithRedirect()
+          }
         },
         error: (err) => {
           obs.next(false)
@@ -100,6 +105,10 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     
     if(checkRole.includes('superadmin')){
       return true;
+    }
+
+    if(checkRole.includes('guest')){
+      return false;
     }
      
     if (allowedRoles == null || allowedRoles.length === 0) {

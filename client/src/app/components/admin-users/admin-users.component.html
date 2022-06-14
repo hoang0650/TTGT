@@ -1,11 +1,10 @@
-<nz-layout>
-    <div nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }" style="margin-top: 10px;">
-
+<div class="users-layout" #usersLayout>
+    <div class="mt-3" nz-row [nzGutter]="{ xs: 8, sm: 16, md: 24, lg: 32 }">
       <div nz-col class="gutter-row" [nzSpan]="6" >
           <div class="inner-box">
             <!-- <div class="table-responsive"> -->
-                <nz-affix>
-                    <nz-card style="width:100%" [nzActions]="[actionUnblock, actionBlock, actionEllipsis]" *ngIf="selectedUsers.length > 1">
+                <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10">
+                    <nz-card [nzActions]="[actionUnblock, actionBlock, actionEllipsis]" *ngIf="selectedUsers.length > 1">
                         <nz-card-meta
                         [nzAvatar]="avatarTemplate"></nz-card-meta>
                     </nz-card>
@@ -56,7 +55,7 @@
                     </nz-dropdown-menu>
                 </ng-template>
 
-                <nz-affix>
+                <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10">
                     <nz-card style="width:100%" [nzActions]="[actionUnblock, actionBlock, actionEllipsis]" *ngIf="selectedUsers.length === 1">
                         <nz-card-meta
                         [nzAvatar]="avatarTemplate1"></nz-card-meta>
@@ -104,7 +103,7 @@
                         </div>
                 </ng-template>
                 
-                <nz-affix>
+                <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10">
                     <nz-card class="user-card"  style="width: 100%;" *ngIf="selectedUsers.length === 0" nzTitle="Thống kê tài khoản">
                         <nz-card-meta [nzAvatar]="avatarTemplate2"></nz-card-meta>
                     </nz-card>
@@ -257,6 +256,6 @@
         </div>
       </div>
   
-</nz-layout>
+    </div>
   
 
