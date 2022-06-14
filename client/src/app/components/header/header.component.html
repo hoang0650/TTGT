@@ -40,17 +40,17 @@
           </ul>
           
         </li>
-        <li class="nav-item dropdown" *ngIf="appCom.checkPermission(['settings:manage'])" [ngClass]="{'active': isActiveList(['/config/*', '/users', '/groups'])}">
+        <li class="nav-item dropdown" *ngIf="appCom.checkPermission(['settings:update','settings:manage'])" [ngClass]="{'active': isActiveList(['/config/*', '/users', '/groups'])}">
           <a class="nav-link dropdown" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Quản trị
           </a>
           
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li>
-              <a class="dropdown-item" *ngIf="appCom.checkPermission(['settings:manage'])" [ngClass]="{'active': isActive('/config')}" [routerLink]="['/config']">Cấu hình</a>
+              <a class="dropdown-item"  [ngClass]="{'active': isActive('/config')}" [routerLink]="['/config']">Cấu hình</a>
             </li>
             <li>
-              <a class="dropdown-item" *ngIf="appCom.checkPermission(['settings:manage'])" [ngClass]="{'active': isActive('/users')}" [routerLink]="['/users']">Người dùng</a>
+              <a class="dropdown-item"  [ngClass]="{'active': isActive('/users')}" [routerLink]="['/users']">Người dùng</a>
             </li>
             <!-- <li>
               <a class="dropdown-item" *ngIf="roles.indexOf('superadmin')>-1" [ngClass]="{'active': isActive('/groups')}" [routerLink]="['/groups']">Nhóm người dùng</a>

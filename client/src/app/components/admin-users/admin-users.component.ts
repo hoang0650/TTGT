@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 import { AdminService } from 'src/app/services/admin.service';
+import { AdminGroupsComponent } from '../admin-groups/admin-groups.component';
 
 @Component({
   selector: 'app-admin-users',
@@ -7,14 +8,17 @@ import { AdminService } from 'src/app/services/admin.service';
   styleUrls: ['./admin-users.component.css']
 })
 export class AdminUsersComponent implements OnInit {
+  // @ViewChild('configForm', { static: true })configForm:any;
   isUsersLoading: boolean = true;
   users: string[] = [];
   lastUsersUpdated: Date = new Date();
   selectedUsers: any = [];
   searchnickname:string = "";
   payload: object ={};
-  index: number = 0;
+  tabIndex: number = 0;
   tabs: string[]=[];
+
+  groupCom?:AdminGroupsComponent
   constructor(private admin:AdminService) { }
 
   ngOnInit(): void {
@@ -267,10 +271,6 @@ changeUsersRole(action:string,data:object) {
     this.tabs.splice(index, 1);
   }
 
-  newTab(): void {
-    this.tabs.push('New Tab');
-    this.index = this.tabs.length - 1;
-  }
 
 
 
