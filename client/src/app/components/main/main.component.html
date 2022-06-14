@@ -78,7 +78,7 @@
 					<h3 class="mt-4 text-capitalize h5 ">Tin tức - Sự kiện</h3>
 					<div class="regular text-muted" [ngClass]="{'scroll-contain': isScrolled, 'default-contain': !isScrolled}">
 						<div scroll-only-this="scroll-only-this"  class="ui relaxed divided list">
-							<a *ngFor="let content of contents" class="text-primary" href="{{content.url}}" target="_blank" >{{content.title}}<nz-divider></nz-divider></a>
+							<a *ngFor="let content of contents" class="text-primary" href="{{content.url}}" target="_blank" >{{content.title}}<nz-divider style="margin-top: 5px;"></nz-divider></a>
 						</div>
 					</div>
 				</div>
@@ -92,11 +92,7 @@
 								<div *ngIf="favoriteList?.length <= 0">
 									Bạn chưa quan tâm camera nào cả
 								</div>
-								<!-- <div class="item contain-history-camera" *ngFor="let camera of favoriteList" [routerLink]="['/map']" [queryParams]="{type:'camera', id: camera.fId}">
-									<img class="ui fluid image image-camera-main" src="{{backend}}api/snapshot/{{camera.fId}}" (error)="imageError($event)">
-									<div class="camera-name limit-character">{{camera.fName}}</div>
-									<nz-divider></nz-divider>
-								</div> -->
+								
 								<div class="regular text-muted" [ngClass]="{'scroll-contain': isScrolled, 'default-contain': !isScrolled}">
 									<form nz-form scroll-only-this="scroll-only-this"  class="ui relaxed divided list" *ngFor="let camera of favoriteList" [routerLink]="['/map']" [queryParams]="{type:'camera', id: camera.fId}">
 										<!-- <nz-form-item> -->
@@ -105,14 +101,11 @@
 											<nz-divider></nz-divider>
 
 										<!-- </nz-form-item> -->
-									
-										
 									</form>
 								</div>
 							</div>
 						</div>
 					</div>
-					<!-- <div class="regular text-muted" *ngIf="!appCom.profile"><p>Đăng nhập để xem nội dung này</p></div> -->
 					
 				</div>
 			</div>

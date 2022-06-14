@@ -4,7 +4,7 @@
       <div nz-col class="gutter-row" [nzSpan]="6" >
           <div class="inner-box">
             <!-- <div class="table-responsive"> -->
-                <nz-affix>
+                <nz-affix *ngIf="tabIndex==0">
                     <nz-card style="width:100%" [nzActions]="[actionUnblock, actionBlock, actionEllipsis]" *ngIf="selectedUsers.length > 1">
                         <nz-card-meta
                         [nzAvatar]="avatarTemplate"></nz-card-meta>
@@ -56,7 +56,7 @@
                     </nz-dropdown-menu>
                 </ng-template>
 
-                <nz-affix>
+                <nz-affix *ngIf="tabIndex==0">
                     <nz-card style="width:100%" [nzActions]="[actionUnblock, actionBlock, actionEllipsis]" *ngIf="selectedUsers.length === 1">
                         <nz-card-meta
                         [nzAvatar]="avatarTemplate1"></nz-card-meta>
@@ -105,7 +105,7 @@
                 </ng-template>
                 
                 <nz-affix>
-                    <nz-card class="user-card"  style="width: 100%;" *ngIf="selectedUsers.length === 0" nzTitle="Thống kê tài khoản">
+                    <nz-card class="user-card"  style="width: 100%;" *ngIf="selectedUsers.length === 0" [nzTitle]="tabIndex == 0 ? 'Thống kê tài khoản':'Thống kê nhóm'">
                         <nz-card-meta [nzAvatar]="avatarTemplate2"></nz-card-meta>
                     </nz-card>
                    
@@ -123,6 +123,56 @@
                 <ng-template #avatarTemplate2>
                     <!-- <div class="item" [ngClass]="{loading: isUsersLoading}">{{users.length}}</div>
                     <p>ada</p> -->
+                   <form nz-form  *ngIf="tabIndex==0">
+                        <nz-form-item>
+                            <nz-form-label>Tài khoản</nz-form-label>
+                            <nz-form-control><p>{{users.length}}</p></nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <nz-form-label>Khách</nz-form-label>
+                            <nz-form-control><p>{{getUserByRole('guest').length}}</p></nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <nz-form-label>Người dùng</nz-form-label>
+                            <nz-form-control><p>{{getUserByRole('user').length}}</p></nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <nz-form-label>Quản lý</nz-form-label>
+                            <nz-form-control><p>{{getUserByRole('admin').length}}</p></nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <nz-form-label>Bị chặn</nz-form-label>
+                            <nz-form-control><p>{{getUserByBlocked(true).length}}</p></nz-form-control>
+                        </nz-form-item>
+                    </form>
+
+                    <form nz-form *ngIf="tabIndex==1">
+                        <nz-form-item>
+                            <nz-form-label>Số nhóm</nz-form-label>
+                            <nz-form-control><p>
+                                {{groupCom?.groups?.length}}
+                            </p></nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <nz-form-label>Số lượng thành viên</nz-form-label>
+                            <nz-form-control><p></p></nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <nz-form-label>Quyền của nhóm</nz-form-label>
+                            <nz-form-control>
+                                <!-- <accordion [isAnimated]="true" [closeOthers]="true">
+                                    
+                                </accordion> -->
+                            </nz-form-control>
+                        </nz-form-item>
+                    </form>
+
+                </ng-template>
+
+
+                <!-- group -->
+                <!-- <ng-template #group>
+                    
                    <form nz-form>
                         <nz-form-item>
                             <nz-form-label>Tài khoản</nz-form-label>
@@ -146,7 +196,7 @@
                             <nz-form-control><p>{{getUserByBlocked(true).length}}</p></nz-form-control>
                         </nz-form-item>
                     </form>
-                </ng-template>
+                </ng-template> -->
 
 
                 
@@ -156,7 +206,7 @@
       
       <div nz-col class="grutter-row" [nzSpan]="18">
 
-            <nz-tabset [(nzSelectedIndex)]="index" nzType="card" class="user-tabset">
+            <nz-tabset [(nzSelectedIndex)]="tabIndex" nzType="card" class="user-tabset">
                 <nz-tab nzTitle="Danh sách người dùng">
                         <div class="table-wrapper">
                             <nz-table class="table table-striped table-hover" style="width: 100%;">                            

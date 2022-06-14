@@ -10,7 +10,7 @@ export class UnauthorizedComponent implements OnInit {
   constructor(private message: NzMessageService) { }
 
   ngOnInit(): void {
-    this.message.create('warning', 'Bạn không có quyền truy cập vô trang này!!!');
+    this.message.create('warning', 'Bạn không có quyền truy cập');
   }
 
 }

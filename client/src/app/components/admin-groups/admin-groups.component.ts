@@ -4,6 +4,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { AdminService } from 'src/app/services/admin.service';
 import { GroupService } from 'src/app/services/group.service';
 import { AdminGroupsEditComponent } from '../admin-groups-edit/admin-groups-edit.component';
+import { AdminUsersComponent } from '../admin-users/admin-users.component';
 
 declare var $:any; 
 
@@ -13,7 +14,7 @@ declare var $:any;
   styleUrls: ['./admin-groups.component.css']
 })
 export class AdminGroupsComponent implements OnInit {
-  // @Output() currentGroup: EventEmitter<object> = new EventEmitter<object>();
+  @Output() userGroup = new EventEmitter<any>();
   isUsersLoading: boolean =false;
   lastResult:any;
   groups:any;
@@ -70,18 +71,10 @@ export class AdminGroupsComponent implements OnInit {
     manage: 'Quản lý'
   };
 
-  // key:string[] = Object.keys(this.permissionToText.forEach((data: any)=>{
-  //   console.log(data);
-  // }))
 
-  // value:string[] = Object.keys(this.roleToText.forEach((data:any)=>{
-  //   console.log(data);
-  // }))
-  // setPermission = {key:this.value}
-  // setLocalPermission = localStorage.setItem('permissions',JSON.stringify(this.setPermission));
 
-  constructor(public admin:AdminService, public modalService:NzModalService, private groupsService:GroupService, private nzMessage:NzMessageService) {
-
+  constructor(public admin:AdminService, public modalService:NzModalService, private groupsService:GroupService, private nzMessage:NzMessageService, private userCom:AdminUsersComponent) {
+    userCom.groupCom = this
    }
 
   ngOnInit(): void {

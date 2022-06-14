@@ -87,12 +87,12 @@ const routes: Routes = [
       },
     ]
   },
-  { path: 'config', component:AdminComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:manage"], },
+  { path: 'config', component:AdminComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:update","settings:manage"] },
     children:[
       { path: '', redirectTo: 'camera', pathMatch: 'full'},
-      { path: 'camera', component: AdminConfigCameraComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:manage"] }, },
-      { path: 'traffic', component: AdminConfigTrafficComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:manage"] }, },
-      { path: 'event', component: AdminConfigEventComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:manage"] }, },
+      { path: 'camera', component: AdminConfigCameraComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:update"] }, },
+      { path: 'traffic', component: AdminConfigTrafficComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:update"] }, },
+      { path: 'event', component: AdminConfigEventComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:update"] }, },
    ],
   },
   {
