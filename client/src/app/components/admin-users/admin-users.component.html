@@ -103,7 +103,7 @@
                         </div>
                 </ng-template>
                 
-                <nz-affix>
+                <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10">
                     <nz-card class="user-card" *ngIf="selectedUsers.length === 0" [nzTitle]="tabIndex == 0 ? 'Thống kê tài khoản':'Thống kê nhóm'">
                         <nz-card-meta [nzAvatar]="avatarTemplate2"></nz-card-meta>
                     </nz-card>
@@ -304,8 +304,5 @@
             </nz-tabset>
 
         </div>
-      </div>
-  
     </div>
-  
-
+</div>
