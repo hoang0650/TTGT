@@ -46,8 +46,7 @@ export class AdminUsersComponent implements OnInit {
     return -1;
   }
 
-  toggleUser(user:any, event:any) {
-    event.stopPropagation();
+  toggleUser(user:any) {
 
     //Being selected
     var index = this.userIndexOf(this.selectedUsers, user);

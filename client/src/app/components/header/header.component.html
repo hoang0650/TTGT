@@ -18,23 +18,23 @@
             Quản lý
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li>
+            <li *ngIf="appCom.checkPermission(['trafficevents:read'])">
               <a class="dropdown-item" [routerLink]="['/map/events']" [ngClass]="{'active': isActive('/map/events')}">Cảnh báo giao thông</a>
             </li>
-            <li>
+            <li *ngIf="appCom.checkPermission(['cameras:read'])">
               <a class="dropdown-item" [routerLink]="['/map/cameras']" [ngClass]="{'active': isActive('/map/cameras')}">Camera giao thông</a>
             </li>
-            <li>
+            <li *ngIf="appCom.checkPermission(['roadworks:read'])">
               <a class="dropdown-item" [routerLink]="['/map/roadworks']" [ngClass]="{'active': isActive('/map/roadworks')}">Công trình thi công</a>
             </li>
-            <li>
+            <li *ngIf="appCom.checkPermission(['parkings:read'])">
               <a class="dropdown-item" [routerLink]="['/map/parkings']" [ngClass]="{'active': isActive('/map/parkings')}">Bãi đỗ xe</a>
             </li>
             <nz-divider class="ant-divider-inner-text" nzPlain nzText="Thông tin"></nz-divider>
-            <li>
+            <li *ngIf="appCom.checkPermission(['roadevents:read'])">
               <a class="dropdown-item" [routerLink]="['/map/roadevents']" [ngClass]="{'active': isActive('/map/roadevents')}">Phân luồng giao thông</a>
             </li>
-            <li>
+            <li *ngIf="appCom.checkPermission(['staticmaps:read'])">
               <a class="dropdown-item" [routerLink]="['/map/staticmaps']" [ngClass]="{'active': isActive('/map/staticmaps')}">Lớp thông tin tĩnh</a>
             </li>
           </ul>
@@ -46,19 +46,16 @@
           </a>
           
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li>
+            <li *ngIf="appCom.checkPermission(['settings:update'])">
               <a class="dropdown-item"  [ngClass]="{'active': isActive('/config')}" [routerLink]="['/config']">Cấu hình</a>
             </li>
-            <li>
+            <li *ngIf="appCom.checkPermission(['settings:manage'])">
               <a class="dropdown-item"  [ngClass]="{'active': isActive('/users')}" [routerLink]="['/users']">Người dùng</a>
             </li>
-            <!-- <li>
-              <a class="dropdown-item" *ngIf="roles.indexOf('superadmin')>-1" [ngClass]="{'active': isActive('/groups')}" [routerLink]="['/groups']">Nhóm người dùng</a>
-            </li> -->
           </ul>
         </li>
         
-        <li class="nav-item dropdown" *ngIf="appCom.checkPermission(['settings:update','settings:manage','cameras:update','cameras:manage','parkings:update','parkings:manage','roadevents:update','roadevents:manage','roadworks:update','roadworks:manage','staticmaps:update','staticmaps:manage','trafficevents:update','trafficevents:manage'])" [ngClass]="{'active': isActiveList(['/map/events/stats'])}">
+        <li class="nav-item dropdown" *ngIf="appCom.checkPermission(['trafficevents:read'])" [ngClass]="{'active': isActiveList(['/map/events/stats'])}">
           <a class="nav-link dropdown" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Thống kê
           </a>

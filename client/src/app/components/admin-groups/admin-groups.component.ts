@@ -120,11 +120,14 @@ export class AdminGroupsComponent implements OnInit {
           
         
           group.permissionsStats = {};
+
           for(var key in group.permissions){
             var value = group.permissions[key];
             group.permissionsStats[value] = (group.permissionsStats[value] || 0)+1;
             group.permissionsStats.total = (group.permissionsStats.total ||0)+1;
           }
+          console.log(group.permissionsStats);
+          
         });
 
         this.groups = groups

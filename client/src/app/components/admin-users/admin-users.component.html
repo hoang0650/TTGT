@@ -4,9 +4,36 @@
           <div class="inner-box">
             <!-- <div class="table-responsive"> -->
                 <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10">
-                    <nz-card style="width:100%" [nzActions]="[actionUnblock, actionBlock, actionEllipsis]" *ngIf="tabIndex==0 && selectedUsers.length > 1">
-                        <nz-card-meta
-                        [nzAvatar]="avatarTemplate"></nz-card-meta>
+                    <nz-card [nzActions]="[actionUnblock, actionBlock, actionEllipsis]" *ngIf="tabIndex==0 && selectedUsers.length > 1">
+                        <h3 class="header"><span>{{selectedUsers.length}}</span> tài khoản được chọn</h3>
+                        <div class="container" *ngFor="let user of selectedUsers" [ngClass]="{loading: user.loading}">
+                            <div class="row">
+                                <div class="col-2">
+                                    <img src="{{user.picture}}" class="ui rounded image">
+                                </div>
+                                <div class="col-8">
+                                    <span class="d-inline-block text-truncate font-weight-bold" style="max-width: 100%;">{{user.nickname}} <i class="ui {{appMetadataToStar(user.app_metadata)}} icon" title="{{appMetadataToRoleName(user.app_metadata)}}"></i></span>
+                                </div>
+                                <div class="col-2">
+                                    <span *ngIf="user.blocked" class="ui red tiny label"><i class="lock icon m-0"></i></span>
+                                </div>
+                            </div>
+    
+                            <div class="row">
+                                <div class="col-10 d-inline-block">
+                                    <span class="d-inline-block text-truncate"  style="max-width: 90%;">
+                                        {{user.email}} 
+                                    </span>
+                                    <span style="max-width: 10%;">                 
+                                        <i class="ui green checkmark icon" *ngIf="user.email_verified" title="Email đã được xác nhận"></i>
+                                        <i class="ui red remove icon" *ngIf="!user.email_verified" title="Email chưa được xác nhận"></i>
+                                    </span>
+                                </div>
+                                <div class="col-2">   
+                                    <button class="btn px-2 py-0" data-tooltip="Bỏ chọn" (click)="toggleUser(user)"><i class="remove icon m-0"></i></button>
+                                </div>
+                            </div>
+                        </div>
                     </nz-card>
                     <nz-card style="width:100%" [nzActions]="[actionUnblock, actionBlock, actionEllipsis]" *ngIf="tabIndex==1 && groupCom?.selectGroups?.length == 1">
                         <nz-card-meta
@@ -15,23 +42,13 @@
                 </nz-affix>
 
                 <ng-template #avatarTemplate>
-                    <h3 class="header"><span>{{selectedUsers.length}}</span> tài khoản được chọn</h3>
-                    <p *ngFor="let user of selectedUsers" [ngClass]="{loading: user.loading}">
-                        <nz-avatar  [nzSrc]="user.picture">
-                        </nz-avatar>
+                   
+                    
                         
-                        <span style="padding-left: 10px;">{{user.nickname}}</span>
-                        <i style="padding-left: 10px;" class="ui {{appMetadataToStar(user.app_metadata)}} icon" title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
-                        <span *ngIf="user.blocked" class="ui red tiny label"> <i class="ui lock icon"></i> BỊ KHÓA</span>
-                        <a class="sub header">
-                            <span>{{user.email}}</span>
-                            <i style="padding-left: 10px;" class="ui green checkmark icon" *ngIf="user.email_verified" title="Email đã được xác nhận"></i>
-                            <i style="padding-left: 10px;" class="ui red remove icon" *ngIf="!user.email_verified" title="Email chưa được xác nhận"></i>
-                        </a>
-                        <span style="padding-left: 10px;"></span>
-                        <button  nz-button (click)="toggleUser(user, $event)" nz-tooltip="Bỏ chọn" ><i class="ui remove icon"></i></button>
-                    </p>
-
+                        
+                        
+                        
+                        
                 </ng-template>
 
                 <ng-template #actionUnblock>                  
@@ -75,8 +92,8 @@
                             <span style="padding-left: 10px;">{{selectedUsers[0].nickname}}</span> <span *ngIf="selectedUsers[0].blocked" class="ui red tiny label"> <i class="ui lock icon"></i> BỊ KHÓA</span>
                                 <div class="sub header">
                                     <span>{{selectedUsers[0].email}}</span>
-                                    <i style="padding-left: 10px;" class="{{selectedUsers[0]}} green checkmark icon" *ngIf="selectedUsers[0].email_verified" title="Email đã được xác nhận"></i>
-                                    <i style="padding-left: 10px;" class="ui red remove icon" *ngIf="!selectedUsers[0].email_verified" title="Email chưa được xác nhận"></i>
+                                    <i style="padding-left: 10px;" class="{{selectedUsers[0]}} green checkmark icon" *ngIf="selectedUsers[0].email_verified" data-tooltip="Email đã được xác nhận"></i>
+                                    <i style="padding-left: 10px;" class="ui red remove icon" *ngIf="!selectedUsers[0].email_verified" data-tooltip="Email chưa được xác nhận"></i>
                                 </div>
                             
                         </h4>
@@ -165,103 +182,92 @@
 
             <nz-tabset [(nzSelectedIndex)]="tabIndex" nzType="card" class="user-tabset">
                 <nz-tab nzTitle="Danh sách người dùng">
-                        <div class="table-wrapper">
-                            <!-- ui unstackable celled padded table -->
-                            <!-- table table-striped table-hover -->
-                            <table class="ui unstackable celled padded table" style="width: 100%;">                            
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th> Tài khoản</th>
-                                            <th> Đăng nhập lần cuối</th>
-                                            <th> Khách</th>
-                                            <th> Người dùng</th>
-                                            <th> Quản lý</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="collapsing">
-                                         
-                                            </td>
-                                            <td>
-                                                <div class="ui fluid left icon input">
-                                                    <input type="text" placeholder="Tìm nhanh theo tài khoản" [(ngModel)]="searchnickname">
-                                                    <i class="filter icon"></i>
-                                                </div>
-                                             
-                                            </td>
-                                           
-                                        </tr>
-    
-    
-                                        <tr *ngIf="isUsersLoading">
-                                            <td colspan="7">
-                                            <div class="ui attached segment height-100">
-                                                <div class="ui active inverted dimmer">
-                                                    <div class="ui text loader">Loading</div>
+                    <div class="table-wrapper">
+                        <table class="ui unstackable celled padded table">                            
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th> Tài khoản</th>
+                                    <th> Đăng nhập lần cuối</th>
+                                    <th> Khách</th>
+                                    <th> Người dùng</th>
+                                    <th> Quản lý</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="collapsing">
+                                    
+                                    </td>
+                                    <td>
+                                        <div class="ui fluid left icon input">
+                                            <input type="text" placeholder="Tìm nhanh theo tài khoản" [(ngModel)]="searchnickname">
+                                            <i class="filter icon"></i>
+                                        </div>
+                                        
+                                    </td>
+                                    
+                                </tr>
+
+
+                                <tr *ngIf="isUsersLoading">
+                                    <td colspan="7">
+                                    <div class="ui attached segment height-100">
+                                        <div class="ui active inverted dimmer">
+                                            <div class="ui text loader">Loading</div>
+                                        </div>
+                                    </div>
+                                </tr>
+                                <tr (click)="toggleUser(user)" *ngFor="let user of (users|searchFilter:searchnickname: ['nickname'])" [ngClass]="{positive: user.isSelected, negative: user.loading}">
+                                    <td class="collapsing">
+                                        <input class="form-check-input" type="checkbox" [checked]="user.isSelected"> <label></label>
+                                    </td>
+                                    <td>
+                                        <h4 class="ui header">
+                                            <img src="{{user.picture}}" class="ui mini rounded image">
+                                            <div class="content">
+                                                <span>{{user.nickname}}</span> <span *ngIf="user.blocked" class="ui red tiny label"> <i class="ui lock icon"></i> BỊ KHÓA</span>
+                                                <div class="sub header">
+                                                    <span>{{user.email}}</span>
+                                                    <i style="padding-left: 10px;" class="ui green checkmark icon" *ngIf="user.email_verified" title="Email đã được xác nhận"></i>
+                                                    <i style="padding-left: 10px;" class="ui red remove icon" *ngIf="!user.email_verified" title="Email chưa được xác nhận"></i>
                                                 </div>
                                             </div>
-                                        </tr>
-                                        <tr (click)="selectUser(user)" *ngFor="let user of (users|searchFilter:searchnickname: ['nickname'])" [ngClass]="{positive: user.isSelected, negative: user.loading}">
-                                            <td class="collapsing">
-                                            
-                                                <div class="ui checkbox" (click)="toggleUser(user, $event);">
-                                                    <input type="checkbox" [checked]="user.isSelected"> <label></label>
+                                        </h4>
+                                    
+                                    </td>
+                                    <td class="collapsing">
+                                        <h4 class="ui header">
+                                            <div class="content">
+                                                <span>{{user.last_login | amLocale:'vi' | amTimeAgo }}</span>
+                                                <div class="sub header">
+                                                    <span>{{user.last_ip}}</span>
                                                 </div>
-                                            </td>
-                                            <td>
-                                                <h4 class="ui header">
-                                                    <img src="{{user.picture}}" class="ui mini rounded image">
-                                                    <div class="content">
-                                                        <span>{{user.nickname}}</span> <span *ngIf="user.blocked" class="ui red tiny label"> <i class="ui lock icon"></i> BỊ KHÓA</span>
-                                                        <div class="sub header">
-                                                            <span>{{user.email}}</span>
-                                                            <i style="padding-left: 10px;" class="ui green checkmark icon" *ngIf="user.email_verified" title="Email đã được xác nhận"></i>
-                                                            <i style="padding-left: 10px;" class="ui red remove icon" *ngIf="!user.email_verified" title="Email chưa được xác nhận"></i>
-                                                        </div>
-                                                    </div>
-                                                </h4>
-                                            
-                                            </td>
-                                            <td class="collapsing">
-                                                <h4 class="ui header">
-                                                    <div class="content">
-                                                        <span>{{user.last_login | amLocale:'vi' | amTimeAgo }}</span>
-                                                        <div class="sub header">
-                                                            <span>{{user.last_ip}}</span>
-                                                        </div>
-                                                    </div>
-                                                </h4>      
-                                            </td>
-                                            <td>
-                                                <i *ngIf="!user.app_metadata || (user.app_metadata && user.app_metadata.roles.indexOf('guest') >-1)" class="ui big {{appMetadataToStar(user.app_metadata)}} icon"
-                                                    title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
-                                            </td>
-                                            <td>
-                                                <i style="padding-left: 20px;" *ngIf="user.app_metadata && user.app_metadata.roles.indexOf('user') >-1 " class="ui big {{appMetadataToStar(user.app_metadata)}} icon"
-                                                    title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
-                                            </td>
-                                            <td class="collapsing center aligned">
-                                                <i *ngIf="user.app_metadata && user.app_metadata.roles.indexOf('admin') >-1 " class="ui big {{appMetadataToStar(user.app_metadata)}} icon"
-                                                    title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                
-                            </table>
-                      
-                        
-                        </div>
-                        
-                    
+                                            </div>
+                                        </h4>      
+                                    </td>
+                                    <td>
+                                        <i *ngIf="!user.app_metadata || (user.app_metadata && user.app_metadata.roles.indexOf('guest') >-1)" class="ui big {{appMetadataToStar(user.app_metadata)}} icon"
+                                            title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
+                                    </td>
+                                    <td>
+                                        <i style="padding-left: 20px;" *ngIf="user.app_metadata && user.app_metadata.roles.indexOf('user') >-1 " class="ui big {{appMetadataToStar(user.app_metadata)}} icon"
+                                            title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
+                                    </td>
+                                    <td class="collapsing center aligned">
+                                        <i *ngIf="user.app_metadata && user.app_metadata.roles.indexOf('admin') >-1 " class="ui big {{appMetadataToStar(user.app_metadata)}} icon"
+                                            title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
+                                    </td>
+                                </tr>
+                            </tbody>                       
+                        </table>
+                    </div>                      
                 </nz-tab>
                     
                 <nz-tab nzTitle="Nhóm người dùng">
                     <app-admin-groups></app-admin-groups>
                 </nz-tab>
             </nz-tabset>
-
         </div>
     </div>
 </div>

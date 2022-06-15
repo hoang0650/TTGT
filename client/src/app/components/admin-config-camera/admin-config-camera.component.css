@@ -5,3 +5,9 @@
 .ui.radio.checkbox > label {
     margin: 0;
 }
+
+tbody, td, tfoot, th, thead, tr {
+    border-color: inherit;
+    border-style: none;
+    border-width: 0;
+}

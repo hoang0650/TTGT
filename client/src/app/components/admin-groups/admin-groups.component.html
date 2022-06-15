@@ -51,7 +51,7 @@
                 <td>
                     <div class="ui  segments">
                         <div class="ui secondary segment">
-                            {{group.permissionsStats.total - group.permissionsStats.none}} quyền ({{group.permissionsStats.read || 0}} Xem | {{group.permissionsStats.update
+                            {{group.permissionsStats.total - (group.permissionsStats.none || 0)}} quyền ({{group.permissionsStats.read || 0}} Xem | {{group.permissionsStats.update
                             || 0}} Cập nhật | {{group.permissionsStats.manage || 0}} Quản lý)
                         </div>
                         <div class="ui tertiary segment" *ngIf="group.isSelected && group.permissionsStats.total - group.permissionsStats.none !== 0">
