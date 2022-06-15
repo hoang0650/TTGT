@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
-import { forkJoin, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import _ from 'lodash';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { GroupService } from '../services/group.service';
@@ -18,11 +18,11 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   constructor(private auth:AuthService, private router:Router, private jwtHelperService: JwtHelperService, private groupService:GroupService, private adminService:AdminService, private nzMessage:NzMessageService){}
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    return this.getPermissions(next)
+    return this.getPermissions(next, state)
   }
 
   canActivateChild(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    return this.getPermissions(next)
+    return this.getPermissions(next, state)
   }
 
 
@@ -31,95 +31,97 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     this.appCom = component
   }
 
-  getPermissions(next: ActivatedRouteSnapshot) {
+  getPermissions(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     const allowedRoles = next.data.allowedRoles ||  [];
     const allowedPermissions = next.data.allowedPermissions || [];
-    
+
     if (allowedRoles[0] == "guest") {
       return true
     }
 
     return new Observable<boolean>((obs) => {
-      forkJoin([this.auth.getAccessTokenSilently(), this.adminService.getUserInfo()]).subscribe({
+      if (!this.checkRoles(allowedRoles)) {
+        obs.next(false)
+        this.router.navigate(['unauthorized']);
+      }
+
+      this.groupService.getUserPermissions().subscribe({
         next: (data) => {
-          if (!data[0] || !data[1]) {
-            obs.next(false)
-            this.router.navigate(['unauthorized']);        
-            obs.complete()
+          this.permissions = data || {}
+         
+          const isAuthorized = this.checkPermission(allowedPermissions)
+
+          if (this.appCom) {
+            this.appCom.permissions = this.permissions
           }
 
-          var profile:any = data[1]
-          var token = data[0]
+          obs.next(isAuthorized)
 
-          if (profile && this.appCom) {
-            this.appCom.profile = profile
-            if (profile.blocked) {
+          if (!isAuthorized) {
+            this.router.navigate(['unauthorized']);
+          }
+        }, 
+        error: (err) => {
+          obs.next(false)
+          this.router.navigate(['unauthorized']);
+        }
+      })
+
+      this.adminService.getUserInfo().subscribe({
+        next: (userInfo:any) => {
+          if (userInfo) {
+            if (userInfo['blocked']) {
               this.auth.logout({
                 returnTo: "http://localhost:9000/home?message=blocked"
               })
             } else {
-              this.groupService.getUserPermissions().subscribe({
-                next: (data) => {
-                  this.permissions = data || {}
-                  const isAuthorized = this.isAuthorized(next, token, allowedRoles, allowedPermissions)
-                  
-                  if (this.appCom) {
-                    this.appCom.permissions = this.permissions
-                  }
-    
-                  obs.next(isAuthorized)
-    
-                  if (!isAuthorized) {
-                    this.router.navigate(['unauthorized']);
-                  }
-                }, 
-                error: (err) => {
-                  obs.next(false)
-                  this.router.navigate(['unauthorized']);
+              if (this.appCom) {
+                this.appCom.roles = userInfo['roles'] || ['guest']
+                if (this.appCom?.roles.includes("superadmin")) {
+                  obs.next(true)
+                  this.router.navigate([state.url])
                 }
-              })
+              }
+
+              if (this.checkRoles(allowedRoles) && this.checkPermission(allowedPermissions)) {
+                obs.next(true)
+                this.router.navigate([state.url])
+              }
+
+              if (!this.checkRoles(allowedRoles)) {
+                obs.next(false)
+                this.router.navigate(['unauthorized']);
+              }
             }
           } else {
             this.nzMessage.error("Bạn cần đăng nhập!")
             this.auth.loginWithRedirect()
           }
-        },
-        error: (err) => {
-          obs.next(false)
-          this.router.navigate(['unauthorized']);        
         }
-      })
+      }) 
     })
   }
-  
-  isAuthorized(next:ActivatedRouteSnapshot, token:string, allowedRoles:string[], allowedPermissions:string[]): boolean {
-    
-    const decodeToken = this.jwtHelperService.decodeToken(token);
-    const checkRole = decodeToken['https://hoang0650.com/app_metadata']['roles'];
 
-    if (!decodeToken) {
-      return false;
-    }
-
-    console.log(decodeToken);
-    
-    if(checkRole.includes('superadmin')){
-      return true;
-    }
-
-    if(checkRole.includes('guest')){
-      return false;
-    }
-     
+  checkRoles(allowedRoles:string[]) {
     if (allowedRoles == null || allowedRoles.length === 0) {
       return false;
     }
 
-    
-    return this.checkPermission(allowedPermissions)
+    const checkRole = this.appCom?.['roles'] || ['guest']
+
+    if(checkRole.includes('superadmin') || allowedRoles.includes(checkRole[0])){
+      return true;
+    }
+
+    return false
   }
 
   checkPermission(permissions:string[]) {
+    const checkRole = this.appCom?.['roles'] || ['guest']
+    if(checkRole.includes('superadmin')){
+      return true;
+    }
+
     var permissionAction = ['none', 'read', 'update', 'manage']
     var ok = false
     
@@ -135,10 +137,6 @@ export class AuthGuard implements CanActivate, CanActivateChild {
       }
     })
 
-    if (ok) {
-      return true
-    }
-
-    return false
+    return ok
   }
 }

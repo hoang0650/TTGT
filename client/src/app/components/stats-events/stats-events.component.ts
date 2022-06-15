@@ -66,7 +66,7 @@ export class StatsEventsComponent implements OnInit, OnDestroy {
     };
 
     this.heatmapLayer = new HeatmapOverlay(heatLayerConfig);
-    this.heatmapLayer.addTo(this.sideMap);
+    this.mapCom.markers = {heatmap:this.heatmapLayer}
 
     this.refresh()
     setTimeout(() => {

@@ -2,8 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-    userId: String,
+    userId: { type: String, unique: true, required: true },
+    blocked: Boolean,
     history: Array,
+    roles: Array,
     tmpHistory: {
         hId: String,
         hName: String,

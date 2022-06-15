@@ -70,6 +70,12 @@ export class MapComponent implements OnInit {
 
   initMap(event:L.Map) {
     this.sideMap = event as L.DrawMap
+    this.sideMap.on({
+      dblclick: (event) => {
+        console.log(event);
+        
+      }
+    })
     // L.control.zoom({ position: 'bottomright' }).addTo(this.sideMap);
   }
 

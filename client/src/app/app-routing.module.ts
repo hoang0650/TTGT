@@ -30,9 +30,9 @@ import { MapInformationComponent } from './components/map-information/map-inform
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
   { path: 'home', component:MainComponent, canActivate:[AuthGuard], data:{ allowedRoles:["guest"] } },
-  { path: 'map', component: MapComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:['cameras:read','parkings:read','roadevents:read','roadworks:read','staticmaps:read','trafficevents:read'] },
+  { path: 'map', component: MapComponent,
     children: [
-      { path: '', component:MapInformationComponent },
+      { path: '', component:MapInformationComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:['cameras:read','parkings:read','roadevents:read','roadworks:read','staticmaps:read','trafficevents:read'] } },
       { path: 'events',
         children: [
           { path: '', component: EventsManagerComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["trafficevents:read"] } },
@@ -87,22 +87,20 @@ const routes: Routes = [
       },
     ]
   },
-  { path: 'config', component:AdminComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:update","settings:manage"] },
+  { path: 'config', component:AdminComponent,
     children:[
       { path: '', redirectTo: 'camera', pathMatch: 'full'},
-      { path: 'camera', component: AdminConfigCameraComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:update"] }, },
-      { path: 'traffic', component: AdminConfigTrafficComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:update"] }, },
-      { path: 'event', component: AdminConfigEventComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:update"] }, },
+      { path: 'camera', component: AdminConfigCameraComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:update"] }, },
+      { path: 'traffic', component: AdminConfigTrafficComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:update"] }, },
+      { path: 'event', component: AdminConfigEventComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:update"] }, },
    ],
   },
   {
-    path: 'users', component: AdminUsersComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:manage"] }
-  },
-  {
-    path: 'groups', component: AdminGroupsComponent, canActivateChild:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:manage"] }
+    path: 'users', component: AdminUsersComponent, canActivate:[AuthGuard], data:{ allowedRoles:['admin'], allowedPermissions:["settings:manage"] }
   },
   { path: 'unauthorized', component:UnauthorizedComponent },
-  { path: 'notfound',component:NotFoundComponent}
+  { path: 'notfound',component:NotFoundComponent},
+  { path: '**', redirectTo: 'notfound'}
 ];
 
 @NgModule({ 
