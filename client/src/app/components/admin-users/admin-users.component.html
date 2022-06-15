@@ -5,12 +5,11 @@
             <!-- <div class="table-responsive"> -->
                 <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10">
                     <nz-card style="width:100%" [nzActions]="[actionUnblock, actionBlock, actionEllipsis]" *ngIf="tabIndex==0 && selectedUsers.length > 1">
-                        <nz-card-meta
-                        [nzAvatar]="avatarTemplate"></nz-card-meta>
+                        <nz-card-meta [nzAvatar]="avatarTemplate"></nz-card-meta>
                     </nz-card>
-                    <nz-card style="width:100%" [nzActions]="[actionUnblock, actionBlock, actionEllipsis]" *ngIf="tabIndex==1 && groupCom?.selectGroups?.length == 1">
+                    <nz-card style="width:100%" [nzActions]="[actionDelete]" *ngIf="tabIndex==1 && groupCom?.selectedGroups?.length > 1">
                         <nz-card-meta
-                        [nzAvatar]="avatarTemplate"></nz-card-meta>
+                        [nzAvatar]="groupTemplate"></nz-card-meta>
                     </nz-card>
                 </nz-affix>
 
@@ -31,15 +30,62 @@
                         <span style="padding-left: 10px;"></span>
                         <button  nz-button (click)="toggleUser(user, $event)" nz-tooltip="Bỏ chọn" ><i class="ui remove icon"></i></button>
                     </p>
+                </ng-template>
+                <ng-template #groupTemplate>
+                    <h3 class="header"><span>{{groupCom?.selectedGroups.length}}</span> Nhóm được chọn</h3>
+                    <p *ngFor="let group of groupCom?.selectedGroups" [ngClass]="{loading: group.loading}">
+                        Nhóm: <span>{{group.name}}</span><br>
+                        
+                        Thành viên:<br>
+                        <accordion>
+                            <accordion-group>
+                                <div accordion-heading>
+                                    <span>{{group.users.length}} thành viên</span>
+                                </div>
+                                <div class="item" *ngFor="let user of group.users">
+                                    <img [src]="user.picture" class="left floated mini ui rounded image">
+                                    <div class="content">
+                                        <div class="header">{{user.username}}</div>
+                                        <span>{{user.email}}</span>
+                                    </div>
+                                </div>
+                            </accordion-group>
+                        </accordion>
+                        Quyền:
+                        <accordion>
+                            <accordion-group>
+                                <div accordion-heading>
+                                    <span>{{group.permissionsStats.total - (group.permissionsStats.none|| 0)}} quyền</span>
+                                </div>
+                                <div *ngFor="let permission of group.permissions | keyvalue">
+                                    <div class="item" *ngIf="permission.value !== 'none'">
+                                        <div class="content">
+                                            <div class="header"><h4>{{groupCom?.permissionToText[$any(permission.key)]}}:</h4>
+                                                {{groupCom?.roleToText[$any(permission.value)]}}
 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </accordion-group>
+                        </accordion>
+                    </p>
+                </ng-template>
+
+                <ng-template #actionDelete>                  
+                    <i nz-icon (click)="unblockUsers()"><i nz-tooltip="Xóa nhóm" class="trash icon"></i></i>
+                </ng-template>
+
+                <ng-template #actionEdit>                  
+                    <i nz-icon (click)="unblockUsers()"><i nz-tooltip="Chỉnh sửa" class=" edit icon"></i></i>
                 </ng-template>
 
                 <ng-template #actionUnblock>                  
-                    <i nz-icon (click)="unblockUsers()"><i nz-tooltip="Mở khóa" class="ui unlock icon"></i></i>
+                    <i nz-icon (click)="unblockUsers()"><i nz-tooltip="Mở khóa" class="unlock icon"></i></i>
                 </ng-template>
 
                 <ng-template #actionBlock>
-                    <i nz-icon (click)="blockUsers()"><i nz-tooltip="Khóa" class="ui lock icon"></i></i>
+                    <i nz-icon (click)="blockUsers()"><i nz-tooltip="Khóa" class="lock icon"></i></i>
                 </ng-template>
 
                 <ng-template #actionEllipsis>
@@ -50,19 +96,18 @@
                             <li nz-menu-item (click)="changeUserToGuest()">Khách</li>
                             <li nz-menu-item (click)="changeUserToUser()">Người dùng</li>
                             <li nz-menu-item (click)="changeUserToAdmin()">Quản lý</li>
-                            <!-- <nz-divider class="ant-divider-inner-text" nzPlain nzText="Liên lạc"></nz-divider> -->
-                            <!-- <li nz-menu-item><i class="mail icon"></i> Liên lạc</li> -->
-                            <!-- <li nz-menu-item>Gửi email xác thực</li>
-                            <nz-divider class="ant-divider-inner-text" nzPlain nzText="Chú ý"></nz-divider>
-                            <li nz-menu-item>Xóa tài khoản</li> -->
                         </ul>
                     </nz-dropdown-menu>
                 </ng-template>
 
-                <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10" *ngIf="tabIndex==0">
-                    <nz-card style="width:100%" [nzActions]="[actionUnblock, actionBlock, actionEllipsis]" *ngIf="selectedUsers.length === 1">
+                <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10">
+                    <nz-card style="width:100%" [nzActions]="[actionUnblock, actionBlock, actionEllipsis]" *ngIf="tabIndex==0 && selectedUsers.length === 1">
                         <nz-card-meta
                         [nzAvatar]="avatarTemplate1"></nz-card-meta>
+                    </nz-card>
+                    <nz-card style="width:100%" [nzActions]="[actionEdit, actionDelete]" *ngIf="tabIndex==1 && groupCom?.selectedGroups?.length === 1">
+                        <nz-card-meta
+                        [nzAvatar]="groupTemplate1"></nz-card-meta>
                     </nz-card>
 
                 </nz-affix>
@@ -106,15 +151,62 @@
 
                         </div>
                 </ng-template>
+
+                <ng-template #groupTemplate1>
+                    <div *ngFor="let group of groupCom?.selectedGroups" [ngClass]="{loading: group.loading}">
+                        <h3 class="header"> Nhóm: <span>{{group.name}}</span></h3>
+                        <!-- <br> -->
+                        Thành viên:
+                        <accordion [isAnimated]="true" [closeOthers]="true">
+                            <accordion-group>
+                                <div accordion-heading>
+                                    <span>{{group.users.length}} thành viên</span>
+                                </div>
+                                <div class="item" *ngFor="let user of group.users">
+                                    <img [src]="user.picture" class="left floated mini ui rounded image">
+                                    <div class="content">
+                                        <div class="header">{{user.username}}</div>
+                                        <span>{{user.email}}</span>
+                                    </div>
+                                </div>
+                            </accordion-group>
+                        </accordion>
+                        Quyền:
+                        <accordion [isAnimated]="true" [closeOthers]="true">
+                            <accordion-group>
+                                <div accordion-heading>
+                                    <span>{{group.permissionsStats.total - (group.permissionsStats.none|| 0)}} quyền</span>
+                                </div>
+                                <div *ngFor="let permission of group.permissions | keyvalue">
+                                    <div class="item" *ngIf="permission.value !== 'none'">
+                                        <div class="content">
+                                            <div class="header"><h4>{{groupCom?.permissionToText[$any(permission.key)]}}:</h4>
+                                                {{groupCom?.roleToText[$any(permission.value)]}}
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </accordion-group>
+                        </accordion>
+                    </div>
+                    <!-- <span>{{groupCom?.}}</span> -->
+                </ng-template>
+                
+                    
+
                 
                 <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10">
-                    <nz-card class="user-card" *ngIf="selectedUsers.length === 0" [nzTitle]="tabIndex == 0 ? 'Thống kê tài khoản':'Thống kê nhóm'">
+                    <nz-card *ngIf="selectedUsers.length === 0 && tabIndex==0" class="user-card" nzTitle= 'Thống kê tài khoản'>
                         <nz-card-meta [nzAvatar]="avatarTemplate2"></nz-card-meta>
+                    </nz-card>
+                    <nz-card *ngIf="groupCom?.selectedGroups.length === 0 && tabIndex==1" class="user-card" nzTitle= 'Thống kê nhóm'>
+                        <nz-card-meta [nzAvatar]="groupTemplate2"></nz-card-meta>
                     </nz-card>
                 </nz-affix>
 
                 <ng-template #avatarTemplate2>
-                    <form nz-form  *ngIf="tabIndex==0 ">
+                    <form nz-form >
                          <nz-form-item>
                              <nz-form-label>Tài khoản</nz-form-label>
                              <nz-form-control><p>{{users.length}}</p></nz-form-control>
@@ -136,28 +228,33 @@
                              <nz-form-control><p>{{getUserByBlocked(true).length}}</p></nz-form-control>
                          </nz-form-item>
                      </form>
-                     <form nz-form *ngIf="tabIndex==1">
-                         <nz-form-item>
-                             <nz-form-label>Số nhóm</nz-form-label>
-                             <nz-form-control><p>
-                                 {{groupCom?.groups?.length}}
-                             </p></nz-form-control>
-                         </nz-form-item>
-                         <nz-form-item>
-                             <nz-form-label>Tên nhóm</nz-form-label>
-                             <nz-form-control><p>
-                                 {{groupCom?.selectGroup?.length}}
-                             </p></nz-form-control>
-                         </nz-form-item>
-                         <nz-form-item>
-                             <nz-form-label> nhóm</nz-form-label>
-                             <nz-form-control>
-                                 <!-- <accordion [isAnimated]="true" [closeOthers]="true">                                    
-                                 </accordion> -->
-                             </nz-form-control>
-                         </nz-form-item>
-                     </form>
-                </ng-template>           
+                </ng-template>
+                
+                <ng-template #groupTemplate2>
+                    <form nz-form>
+                        <nz-form-item>
+                            <nz-form-label>Số nhóm</nz-form-label>
+                            <nz-form-control><p>
+                                {{groupCom?.groups?.length}}
+                            </p></nz-form-control>
+                        </nz-form-item>
+                        <!-- <nz-form-item>
+                            <nz-form-label>Tên nhóm</nz-form-label>
+                            <nz-form-control><p>
+                                {{groupCom?.selectGroup?.length}}
+                            </p></nz-form-control>
+                        </nz-form-item> -->
+                        <nz-form-item>
+                            <nz-form-label>Tổng thành viên nhóm</nz-form-label>
+                            <nz-form-control>
+                                <!-- {{groupCom?.group}} -->
+                                <!-- <accordion [isAnimated]="true" [closeOthers]="true">                                    
+                                </accordion> -->
+                            </nz-form-control>
+                        </nz-form-item>
+                    </form>
+                </ng-template>
+                     
             </div>
       </div>
       

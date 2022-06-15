@@ -14,7 +14,6 @@ export class AdminGroupsEditComponent implements OnInit {
 
   @Input() users: any;
   @Input() editGroup: any;
-  // @Output() currentGroup: EventEmitter<object> = new EventEmitter<object>();
   group:any = {
     permissions: {
     },
