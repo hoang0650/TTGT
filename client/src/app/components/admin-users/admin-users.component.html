@@ -4,6 +4,7 @@
           <div class="inner-box">
             <!-- <div class="table-responsive"> -->
                 <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10">
+
                     <nz-card [nzActions]="[actionUnblock, actionBlock, actionEllipsis]" *ngIf="tabIndex==0 && selectedUsers.length > 1">
                         <h3 class="header"><span>{{selectedUsers.length}}</span> tài khoản được chọn</h3>
                         <div class="container" *ngFor="let user of selectedUsers" [ngClass]="{loading: user.loading}">
@@ -35,6 +36,7 @@
                             </div>
                         </div>
                     </nz-card>
+                    
                     <nz-card style="width:100%" [nzActions]="[actionDelete]" *ngIf="tabIndex==1 && groupCom?.selectedGroups?.length > 1">
                         <nz-card-meta
                         [nzAvatar]="groupTemplate"></nz-card-meta>
@@ -52,11 +54,13 @@
                                 <div accordion-heading>
                                     <span>{{group.users.length}} thành viên</span>
                                 </div>
-                                <div class="item" *ngFor="let user of group.users">
-                                    <img [src]="user.picture" class="left floated mini ui rounded image">
-                                    <div class="content">
-                                        <div class="header">{{user.username}}</div>
-                                        <span>{{user.email}}</span>
+                                <div class="container">
+                                    <div class="row" *ngFor="let user of group.users">
+                                        <img [src]="user.picture" class="left floated mini ui rounded image">
+                                        <div class="content">
+                                            <div class="header">{{user.username}}</div>
+                                            <span>{{user.email}}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </accordion-group>
@@ -172,11 +176,13 @@
                                 <div accordion-heading>
                                     <span>{{group.users.length}} thành viên</span>
                                 </div>
-                                <div class="item" *ngFor="let user of group.users">
-                                    <img [src]="user.picture" class="left floated mini ui rounded image">
-                                    <div class="content">
-                                        <div class="header">{{user.username}}</div>
-                                        <span>{{user.email}}</span>
+                                <div class="container">
+                                    <div class="row" *ngFor="let user of group.users">
+                                        <img [src]="user.picture" class="left floated mini ui rounded image">
+                                        <div class="content">
+                                            <div class="header">{{user.username}}</div>
+                                            <span>{{user.email}}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </accordion-group>
