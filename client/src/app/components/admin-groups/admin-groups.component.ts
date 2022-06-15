@@ -20,7 +20,7 @@ export class AdminGroupsComponent implements OnInit {
   groups:any;
   users = [];
   currentUsers = []
-  selectGroups:any = [];
+  selectedGroups:any = [];
   lastUsersUpdated: Date = new Date();
   permissions:any = [
     {
@@ -139,13 +139,13 @@ export class AdminGroupsComponent implements OnInit {
 
   selectGroup(group:any){
     if(group.isSelected){
-      this.selectGroups = [];
+      this.selectedGroups = [];
       group.isSelected = false;
     } else {
-      this.selectGroups.forEach((selected:any)=>{
+      this.selectedGroups.forEach((selected:any)=>{
         selected.isSelected = false;
       });
-      this.selectGroups = [group];
+      this.selectedGroups = [group];
       group.isSelected = true;
     }
   }
@@ -159,8 +159,27 @@ export class AdminGroupsComponent implements OnInit {
 
   toggleGroup(group:any, event:any) {
     event.stopPropagation();
-    // this.selectGroup(group)
+     //Being selected   
+     var index = this.groupIndexOf(this.selectedGroups, group); 
+     if (index > -1) {
+       this.selectedGroups.splice(index,1);
+       group.isSelected = false;
+     } else {
+       this.selectedGroups.push(group);
+       group.isSelected = true;
+     }
   }
+
+  groupIndexOf(groups:any, group:any) {
+    for (var i = 0; i < groups.length; i++) {
+      var u = groups[i];
+      if (u._id === group._id) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
   openEdit(group?:any){
     var modalRef = this.modalService.create({
       nzContent: AdminGroupsEditComponent,

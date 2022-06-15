@@ -12,14 +12,14 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let group of groups"  [ngClass]="{positive: group.isSelected}">
+            <tr (click)="selectGroup(group)" *ngFor="let group of groups"  [ngClass]="{positive: group.isSelected}">
                 <td class="collapsing">
                     
                     <!-- <div class="ui checkbox" (click)="toggleUser(user, $event);">
                         <input type="checkbox" [checked]="user.isSelected"> <label></label>
                     </div> -->
-                    <div class="ui checkbox" (click)="selectGroup(group)">
-                        <input type="checkbox" [checked]="group.isSelected"> <label></label>
+                    <div class="ui checkbox" (click)="toggleGroup(group, $event)">
+                        <input type="checkbox" [checked]="group['isSelected']"> <label></label>
                     </div>
                 </td>
                 <td class=" ">
@@ -31,25 +31,15 @@
                     </h4>
                 </td>
                 <td>
-                    <div class="ui  segments">
-                        <div class="ui secondary segment">
-                            <span>{{group.users.length}}</span> thành viên
-                        </div>
-                        <div class="ui tertiary segment" *ngIf="group.isSelected">
-                            <div class="ui middle aligned selection divided list">
-                                <div class="item" *ngFor="let user of group.users">
-                                    <img [src]="user.picture" class="left floated mini ui rounded image">
-                                    <div class="content">
-                                        <div class="header">{{user.username}}</div>
-                                        <span>{{user.email}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <span>{{group.users.length}}</span> thành viên
                 </td>
                 <td>
-                    <div class="ui  segments">
+                    <span>
+                        {{group.permissionsStats.total - (group.permissionsStats.none|| 0)}} quyền ({{group.permissionsStats.read || 0}} Xem | {{group.permissionsStats.update
+                            || 0}} Cập nhật | {{group.permissionsStats.manage || 0}} Quản lý)
+                    </span>
+
+                    <!-- <div class="ui  segments">
                         <div class="ui secondary segment">
                             {{group.permissionsStats.total - (group.permissionsStats.none || 0)}} quyền ({{group.permissionsStats.read || 0}} Xem | {{group.permissionsStats.update
                             || 0}} Cập nhật | {{group.permissionsStats.manage || 0}} Quản lý)
@@ -66,7 +56,7 @@
                                 </ng-container>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </td>
                 <td>
                     <button class="no-animate ui compact icon button" (click)="toggleEdit(group, $event);">
