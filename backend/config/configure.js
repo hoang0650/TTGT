@@ -69,7 +69,7 @@ module.exports = {
         clientSecret: 'q4BwehtczePPPHA4XicwBJmSNGCjdkBj2ufKwWNvkJ2AXkkN_BFl8hz55PVsGIEH',
         connection: 'Username-Password-Authentication'
     },
-    listApiNotAuthenticate: ['/api/createtoken', /^\/api\/([^\s]+)\/uploads\/.*/, /^\/api\/([^\s]+)\/([^\s]+)\/([^\s]+)\/([^\s]+)\/geojson*/, '/api/setting/getimageerror', '/api/news', /^\/api\/roadevents\/*/, /^\/api\/monitors\/*/],
+    listApiNotAuthenticate: ['/api/createtoken', /^\/api\/([^\s]+)\/uploads\/.*/, /^\/api\/([^\s]+)\/([^\s]+)\/([^\s]+)\/([^\s]+)\/geojson*/, '/api/news', /^\/api\/roadevents\/*/, /^\/api\/monitors\/*/],
 
     trafficEventType: {
         normal: {

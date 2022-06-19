@@ -32,6 +32,7 @@ const roleAccessApi = require('./config/roleApi.json');
 const cors = require('cors');
 const jwt = require('express-jwt');
 const dotenv = require('dotenv');
+const {getSnapShot} = require('./controllers/cammeras.snapshots')
 const {getImageError} = require('./controllers/setting.js');
 dotenv.config();
 
@@ -84,20 +85,22 @@ const checkJwt = jwt({
   }
 });
 
+
+
 //Midleware for check Auth
 function checkAuth(req, res, next) {
   const isUnless = true;
   config.listApiNotAuthenticate.forEach(function (api) {
-    if (req.originalUrl.match(api)) {
+  if (req.originalUrl.match(api)) {
       isUnless = true;
-    }
+  }
   });
   if (isUnless) {
     req.notNeedAuth = true;
     return next();
   }
   const roles = req.user['https://hoang0650.com/roles'];
-  
+  console.log('req.body',req.body);
   req.user.app_metadata = {
     roles: roles
   };
@@ -138,6 +141,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/api/setting/getimageerror', getImageError);
+// app.get('/api/snapshot/:id', getSnapShot);
 app.use(checkJwt);
 // app.use('/api', indexRouter);
 // mở ra khi check valid token

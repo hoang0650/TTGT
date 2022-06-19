@@ -1,7 +1,4 @@
-const ManagementClient = require("auth0").ManagementClient;
 const config = require('../config/configure');
-const clientConfig = config.auth0ManagementClient;
-
 const {User} = require('../models/user');
 const {Camera} = require('../models/camera');
 const Parking = require('../models/parking');
@@ -95,19 +92,21 @@ const checkExistInDb = function (type, id) {
     return defer.promise;
 };
 
-const management = new ManagementClient({
-    domain: clientConfig.domain,
-    token: clientConfig.token,
-});
 
 function getUserInfo(req, res) {
     const userId = req.user.sub;
-    const params = { id: userId };
-    
-    User.findOne({userId: userId})
+    const userInfor = new User(req.body);
+    const blocked = userInfor.blocked
+    userInfor.userId = userId;
+    if(blocked==true){
+        return res.status(403).end()
+    }else{
+         User.findOne({userId})
         .then((user) => {
             if (user) {
+                userInfor.update({blocked:blocked, roles:user.roles});
                 res.status(200).json({blocked:user.blocked, roles: user.roles})
+                
             } else {
                 res.status(200).json({})
             }
@@ -115,6 +114,8 @@ function getUserInfo(req, res) {
         .catch((err) => {
             res.status(500).json({ msg: err.message });
         });
+    }
+   
         
 }
 

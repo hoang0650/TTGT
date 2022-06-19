@@ -6,6 +6,7 @@
     "start": "nodemon ./bin/www"
   },
   "dependencies": {
+    "accesscontrol": "^2.2.1",
     "auth0": "^2.40.0",
     "consul": "^0.40.0",
     "cookie-parser": "~1.4.4",

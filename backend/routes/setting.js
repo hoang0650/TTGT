@@ -36,7 +36,7 @@ router.get('/getfrontendsetting', getFrontendSetting);
 router.get('/getfirstfrontendsetting', getFirstFrontendSetting);
 router.get('/getimageerror', getImageError);
 router.get('/getmapurl', getMapUrl);
-
+// app.get('/api/setting/getimageerror', getImageError);
 router.get('/', 
 checkPermissions(["settings:manage"]), 
 findAll);
