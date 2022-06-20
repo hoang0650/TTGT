@@ -106,7 +106,6 @@ function getUserPermissions(req, res){
             , () => res.status(404).end());
 };
 
-
 module.exports = {
     all,create,update,remove,getUserPermissions
 }

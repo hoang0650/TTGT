@@ -13,7 +13,7 @@
                                         <img src="{{user.picture}}" class="ui rounded image">
                                     </div>
                                     <div class="col-8">
-                                        <span class="d-inline-block text-truncate font-weight-bold" style="max-width: 100%;">{{user.nickname}} <i class="ui {{appMetadataToStar(user.app_metadata)}} icon" title="{{appMetadataToRoleName(user.app_metadata)}}"></i></span>
+                                        <span class="d-inline-block text-truncate font-weight-bold mw-100">{{user.nickname}} <i class="ui {{appMetadataToStar(user.app_metadata)}} icon" title="{{appMetadataToRoleName(user.app_metadata)}}"></i></span>
                                     </div>
                                     <div class="col-2">
                                         <span *ngIf="user.blocked" class="ui red tiny label"><i class="lock icon m-0"></i></span>
@@ -38,7 +38,7 @@
                             </div>
                     
                     </nz-card>
-                    
+
                     <nz-card style="width:100%" [nzActions]="[actionDelete]" *ngIf="tabIndex==1 && groupCom?.selectedGroups?.length > 1">
                         <nz-card-meta
                         [nzAvatar]="groupTemplate"></nz-card-meta>
@@ -265,10 +265,10 @@
                                 <tr>
                                     <th></th>
                                     <th> Tài khoản</th>
-                                    <th> Đăng nhập lần cuối</th>
-                                    <th> Khách</th>
-                                    <th> Người dùng</th>
-                                    <th> Quản lý</th>
+                                    <th class="d-none d-lg-table-cell"> Đăng nhập lần cuối</th>
+                                    <th colspan="1"> Khách</th>
+                                    <th colspan="1"> Người dùng</th>
+                                    <th colspan="1"> Quản lý</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -288,7 +288,7 @@
 
 
                                 <tr *ngIf="isUsersLoading">
-                                    <td colspan="7">
+                                    <td colspan="5">
                                     <div class="ui attached segment height-100">
                                         <div class="ui active inverted dimmer">
                                             <div class="ui text loader">Loading</div>
@@ -298,44 +298,61 @@
                                 <tr (click)="toggleUser(user)" *ngFor="let user of (users|searchFilter:searchnickname: ['nickname'])" [ngClass]="{positive: user.isSelected, negative: user.loading}">
                                     <td class="collapsing">
                                         <div class="ui checkbox">
+<<<<<<< HEAD
                                             <input type="checkbox" [checked]="user.isSelected"> <label></label>
 
+=======
+                                            <input type="checkbox" [checked]="user['isSelected']"> <label></label>
+>>>>>>> 6aa4634da65c06ea12a06810f181c2191a8a2ab9
                                         </div>
                                     </td>
-                                    <td>
-                                        <h4 class="ui header">
-                                            <img src="{{user.picture}}" class="ui mini rounded image">
-                                            <div class="content">
-                                                <span>{{user.nickname}}</span> <span *ngIf="user.blocked" class="ui red tiny label"> <i class="ui lock icon"></i> BỊ KHÓA</span>
-                                                <div class="sub header">
-                                                    <span>{{user.email}}</span>
-                                                    <i style="padding-left: 10px;" class="ui green checkmark icon" *ngIf="user.email_verified" title="Email đã được xác nhận"></i>
-                                                    <i style="padding-left: 10px;" class="ui red remove icon" *ngIf="!user.email_verified" title="Email chưa được xác nhận"></i>
-                                                </div>
-                                            </div>
-                                        </h4>
-                                    
-                                    </td>
+
                                     <td class="collapsing">
-                                        <h4 class="ui header">
-                                            <div class="content">
-                                                <span>{{user.last_login | amLocale:'vi' | amTimeAgo }}</span>
-                                                <div class="sub header">
-                                                    <span>{{user.last_ip}}</span>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-2">
+                                                    <img src="{{user.picture}}" class="ui mini rounded image">
+                                                </div>
+                                                <div class="col-8">
+                                                    <span class="d-inline-block text-truncate font-weight-bold mw-100">{{user.nickname}} <i class="ui {{appMetadataToStar(user.app_metadata)}} icon" title="{{appMetadataToRoleName(user.app_metadata)}}"></i></span>
+                                                </div>
+                                                <div class="col-2">
+                                                    <span *ngIf="user.blocked" class="ui red tiny label"><i class="lock icon m-0"></i></span>
                                                 </div>
                                             </div>
-                                        </h4>      
+                    
+                                            <div class="row">
+                                                <div class="col-10 d-inline-block">
+                                                    <span class="d-inline-block text-truncate mw-100">
+                                                        {{user.email}} 
+                                                    </span>
+                                                    <i class="ui green checkmark icon position-absolute" *ngIf="user.email_verified" title="Email đã được xác nhận"></i>
+                                                    <i class="ui red remove icon position-absolute" *ngIf="!user.email_verified" title="Email chưa được xác nhận"></i>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
-                                    <td>
-                                        <i *ngIf="!user.app_metadata || (user.app_metadata && user.app_metadata.roles.indexOf('guest') >-1)" class="ui big {{appMetadataToStar(user.app_metadata)}} icon"
-                                            title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
+                                    <td class="collapsing d-none d-lg-table-cell">
+                                        <div class="container">
+                                            <div class="row">
+                                                <span class="d-inline-block text-truncate font-weight-bold mw-100">{{user.last_login | amLocale:'vi' | amTimeAgo }}</span>
+                                            </div>
+                    
+                                            <div class="row">
+                                                <span class="d-inline-block text-truncate mw-100">{{user.last_ip}}</span>
+                                            </div>
+                                        </div>   
                                     </td>
-                                    <td>
-                                        <i style="padding-left: 20px;" *ngIf="user.app_metadata && user.app_metadata.roles.indexOf('user') >-1 " class="ui big {{appMetadataToStar(user.app_metadata)}} icon"
+                                    <td class="collapsing center aligned">
+                                        <i *ngIf="!user.app_metadata || (user.app_metadata && user.app_metadata.roles.indexOf('guest') >-1)" class="big {{appMetadataToStar(user.app_metadata)}} icon"
                                             title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
                                     </td>
                                     <td class="collapsing center aligned">
-                                        <i *ngIf="user.app_metadata && user.app_metadata.roles.indexOf('admin') >-1 " class="ui big {{appMetadataToStar(user.app_metadata)}} icon"
+                                        <i *ngIf="user.app_metadata && user.app_metadata.roles.indexOf('user') >-1 " class="big {{appMetadataToStar(user.app_metadata)}} icon"
+                                            title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
+                                    </td>
+                                    <td class="collapsing center aligned">
+                                        <i *ngIf="user.app_metadata && user.app_metadata.roles.indexOf('admin') >-1 " class="big {{appMetadataToStar(user.app_metadata)}} icon"
                                             title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
                                     </td>
                                 </tr>

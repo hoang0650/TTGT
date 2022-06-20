@@ -109,6 +109,9 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
     const checkRole = this.appCom?.['roles'] || ['guest']
 
+    console.log();
+    
+
     if(checkRole.includes('superadmin') || allowedRoles.includes(checkRole[0])){
       return true;
     }

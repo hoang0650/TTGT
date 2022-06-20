@@ -147,3 +147,9 @@ table {
 :host >>> .ant-tabs-tab-active > div {
     color: #fff !important;
 }
+
+tbody, td, tfoot, th, thead, tr {
+    border-color: inherit;
+    border-style: none;
+    border-width: 0;
+}
