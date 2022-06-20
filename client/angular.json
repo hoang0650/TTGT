@@ -57,7 +57,8 @@
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
               "node_modules/fomantic-ui/dist/semantic.min.js",
-              "node_modules/aos/dist/aos.js"
+              "node_modules/aos/dist/aos.js",
+              "src/script.js"
             ]
           },
           "configurations": {

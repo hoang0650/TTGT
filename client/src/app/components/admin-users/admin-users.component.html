@@ -4,7 +4,7 @@
             <div class="col-lg-4 col-md-12 mb-3 order-last">
                 <div class="inner-box">
                     <!-- <div class="table-responsive"> -->
-                        <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10" [nzOffsetBottom]="0">
+                        <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10" [nzOffsetBottom]="0" class="user-affix">
                             <nz-card [nzActions]="[actionUnblock, actionBlock, actionEllipsis]" *ngIf="tabIndex==0 && selectedUsers.length > 1" class="user-card" [nzTitle]="selectedUsers.length + ' tài khoản được chọn'">
                                 <div class="user-card-body">
                                     <div class="container" *ngFor="let user of selectedUsers" [ngClass]="{loading: user.loading}">
@@ -13,23 +13,28 @@
                                                 <img src="{{user.picture}}" class="ui rounded mini image">
                                             </div>
                                             <div class="col-8">
-                                                <span class="d-inline-block text-truncate font-weight-bold mw-100">{{user.nickname}} <i class="ui {{appMetadataToStar(user.app_metadata)}} icon position-absolute" title="{{appMetadataToRoleName(user.app_metadata)}}"></i></span>
-                                            </div>
-                                            <div class="col-2">
-                                                <span *ngIf="user.blocked" class="ui red tiny label"><i class="lock icon m-0"></i></span>
-                                            </div>
-                                        </div>
-                
-                                        <div class="row">
-                                            <div class="col-10 d-inline-block">
-                                                <span class="d-inline-block text-truncate mw-100">
-                                                    {{user.email}} 
-                                                </span>
-                                                <i class="ui green checkmark icon position-absolute" *ngIf="user.email_verified" title="Email đã được xác nhận"></i>
-                                                <i class="ui red remove icon position-absolute" *ngIf="!user.email_verified" title="Email chưa được xác nhận"></i>
-                                            </div>
-                                            <div class="col-2">   
-                                                <button class="btn px-2 py-0" data-tooltip="Bỏ chọn" (click)="toggleUser(user)"><i class="remove icon m-0"></i></button>
+                                                <div class="row">
+                                                    <div class="col-9">
+                                                        <span class="d-inline-block text-truncate font-weight-bold mw-100">{{user.nickname}} <i class="ui {{appMetadataToStar(user.app_metadata)}} icon position-absolute" title="{{appMetadataToRoleName(user.app_metadata)}}"></i></span>
+                                                    </div>
+                                                  
+                                                    <div class="col-3">
+                                                        <span *ngIf="user.blocked" class="ui red tiny label"><i class="lock icon m-0"></i></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-10 d-inline-block">
+                                                        <span class="d-inline-block text-truncate mw-100">
+                                                            {{user.email}} 
+                                                        </span>
+                                                        <i class="ui green checkmark icon position-absolute" *ngIf="user.email_verified" title="Email đã được xác nhận"></i>
+                                                        <i class="ui red remove icon position-absolute" *ngIf="!user.email_verified" title="Email chưa được xác nhận"></i>
+                                                    </div>
+                                                    <div class="col-2">   
+                                                        <button class="btn px-2 py-0" data-tooltip="Bỏ chọn" (click)="toggleUser(user)"><i class="remove icon m-0"></i></button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

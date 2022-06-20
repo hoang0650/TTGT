@@ -157,7 +157,11 @@ tbody, td, tfoot, th, thead, tr {
 @media (min-width:992px) {
     .user-card-body {
         overflow-y: auto;
-        max-height: 90vh;
+        max-height: 70vh;
+    }
+
+    ::ng-deep .user-affix > .ant-affix {
+        width: 31% !important
     }
 }
 
@@ -165,5 +169,9 @@ tbody, td, tfoot, th, thead, tr {
     .user-card-body {
         overflow-y: auto;
         max-height: 20vh;
+    }
+
+    ::ng-deep .user-affix > .ant-affix {
+        width: 100% !important
     }
 }
