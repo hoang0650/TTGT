@@ -55,7 +55,7 @@
           </ul>
         </li>
         
-        <li class="nav-item dropdown" *ngIf="roles.includes('superadmin') || roles.includes('admin') || appCom.checkPermission(['trafficevents:read'])" [ngClass]="{'active': isActiveList(['/map/events/stats'])}">
+        <li class="nav-item dropdown" *ngIf="roles.includes('superadmin') || roles.includes('admin') && appCom.checkPermission(['trafficevents:read'])" [ngClass]="{'active': isActiveList(['/map/events/stats'])}">
           <a class="nav-link dropdown" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Thống kê
           </a>

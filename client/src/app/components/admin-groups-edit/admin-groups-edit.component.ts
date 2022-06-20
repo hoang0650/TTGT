@@ -4,6 +4,7 @@ import { NzModalRef } from 'ng-zorro-antd/modal';
 import { AdminService } from 'src/app/services/admin.service';
 import { GroupService } from 'src/app/services/group.service';
 import { MessageService } from 'src/app/services/message.service';
+import { AdminGroupsComponent } from '../admin-groups/admin-groups.component';
 
 @Component({
   selector: 'app-admin-groups-edit',
@@ -57,7 +58,7 @@ export class AdminGroupsEditComponent implements OnInit {
   ];
 
   constructor(private modalRef:NzModalRef, private groupService:GroupService, private admin:AdminService,private messageService:MessageService) { 
-      this.permissions.forEach((permission:any) => {
+    this.permissions.forEach((permission:any) => {
       this.group.permissions[permission.id] = "none"
     })
   }

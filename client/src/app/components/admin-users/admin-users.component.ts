@@ -80,34 +80,8 @@ export class AdminUsersComponent implements OnInit {
     )
   }
 
-  // changeUserBlocked(action:string){
-  //   if(action==='block'){
-  //     this.admin.blockUser(id:user_id)
-  //   }
-  // }
-
-  	// function changeUserBlocked(user, action, cb) {
-		// 	if (action === 'block') {
-		// 		admin.blockUser({ id: user.user_id }, function (user) {
-		// 			cb(user);
-		// 			_this.lastUsersUpdated = new Date();
-		// 		});
-
-		// 	} else if (action === 'unblock') {
-		// 		admin.unblockUser({ id: user.user_id }, function (user) {
-		// 			cb(user);
-		// 			_this.lastUsersUpdated = new Date();
-		// 		});
-		// 	}
-
-
-		// }
-
-
   changeUsersBlocked(action:string,data:object) {
     this.selectedUsers.forEach((selected:any, index:number) => {
-
-      
       if (action == 'block') {
       this.selectedUsers[index].loading = true;
       this.payload = data
@@ -138,9 +112,7 @@ export class AdminUsersComponent implements OnInit {
           this.lastUsersUpdated = new Date();
         }
       })
-    }
-
-   
+    }   
   });
 }
 
