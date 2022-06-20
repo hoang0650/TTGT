@@ -12,6 +12,14 @@
             </tr>
         </thead>
         <tbody>
+            <tr *ngIf="isUsersLoading">
+                <td colspan="5">
+                <div class="ui attached segment height-100">
+                    <div class="ui active inverted dimmer">
+                        <div class="ui text loader">Loading</div>
+                    </div>
+                </div>
+            </tr>
             <tr (click)="selectGroup(group)" *ngFor="let group of groups"  [ngClass]="{positive: group.isSelected}">
                 <td class="collapsing">
                     <div class="ui checkbox" (click)="toggleGroup(group, $event)">

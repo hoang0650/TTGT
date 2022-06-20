@@ -88,13 +88,12 @@ export class AdminGroupsComponent implements OnInit {
         this.lastUsersUpdated = new Date();
         this.isUsersLoading = false;
         this.getGroup();
-        // this.setLocalPermission
-        // console.log(this.setLocalPermission);
       },
       error: err => {
         console.log(err)
       },
     });
+
   }
 
 
@@ -124,18 +123,21 @@ export class AdminGroupsComponent implements OnInit {
 
           for(var key in group.permissions){
             var value = group.permissions[key];
-            group.permissionsStats[value] = (group.permissionsStats[value] || 0)+1;
+            group.permissionsStats[value] = (group.permissionsStats[value] ||0)+1;
             group.permissionsStats.total = (group.permissionsStats.total ||0)+1;
           }
+
           console.log(group.permissionsStats);
-          
+         
         });
 
         this.groups = groups
+        
     
       }
     })
   }
+
 
 
   selectGroup(group:any){

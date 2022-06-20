@@ -36,7 +36,7 @@
                                 </div>
                             </nz-card>
 
-                            <nz-card style="width:100%" [nzActions]="[actionDelete]" *ngIf="tabIndex==1 && groupCom?.selectedGroups?.length > 1">
+                            <nz-card style="width:100%" *ngIf="tabIndex==1 && groupCom?.selectedGroups?.length > 1">
                                 <nz-card-meta
                                 [nzAvatar]="groupTemplate"></nz-card-meta>
                             </nz-card>
@@ -44,46 +44,22 @@
 
                         <ng-template #groupTemplate>
                             <h3 class="header"><span>{{groupCom?.selectedGroups.length}}</span> Nhóm được chọn</h3>
-                            <p *ngFor="let group of groupCom?.selectedGroups" [ngClass]="{loading: group.loading}">
-                                Nhóm: <span>{{group.name}}</span><br>
-                                
-                                Thành viên:<br>
-                                <accordion>
-                                    <accordion-group>
-                                        <div accordion-heading>
-                                            <span>{{group.users.length}} thành viên</span>
-                                        </div>
-                                        <div class="container">
-                                            <div class="row" *ngFor="let user of group.users">
-                                                <img [src]="user.picture" class="left floated mini ui rounded image">
-                                                <div class="content">
-                                                    <div class="header">{{user.username}}</div>
-                                                    <span>{{user.email}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </accordion-group>
-                                </accordion>
-                                Quyền:
-                                <accordion>
-                                    <accordion-group>
-                                        <div accordion-heading>
-                                            <span>{{group.permissionsStats.total - (group.permissionsStats.none|| 0)}} quyền</span>
-                                        </div>
-                                        <div *ngFor="let permission of group.permissions | keyvalue">
-                                            <div class="item" *ngIf="permission.value !== 'none'">
-                                                <div class="content">
-                                                    <div class="header"><h4>{{groupCom?.permissionToText[$any(permission.key)]}}:</h4>
-                                                        {{groupCom?.roleToText[$any(permission.value)]}}
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </accordion-group>
-                                </accordion>
-                            </p>
+                            <div *ngFor="let group of groupCom?.selectedGroups" [ngClass]="{loading: group.loading}">
+                                <div class="row">
+                                    <div class="col-10 d-inline-block">
+                                        <strong>Nhóm:</strong> <span>  {{group.name}}</span> 
+                                    </div>                       
+                                    <div class="col-2">                                  
+                                        <button class="btn px-2 py-0" data-tooltip="Bỏ chọn" (click)="groupCom?.toggleGroup(group,$event)"><i class="check icon m-0"></i></button>                                
+                                    </div>  
+                                </div>
+                                <strong>Thành viên:</strong><br>
+                                <span>{{group.users.length}} thành viên</span><br>
+                                <strong>Quyền:</strong><br>
+                                <span>{{group.permissionsStats.total - (group.permissionsStats.none|| 0)}} quyền</span><br><br>
+                            </div>
                         </ng-template>
+                                        
 
                         <ng-template #actionDelete>                  
                             <i nz-icon *ngFor="let group of groupCom?.selectedGroups" (click)="groupCom?.confirmRemove(group)"><i nz-tooltip="Xóa nhóm" class="trash icon"></i></i>
@@ -249,20 +225,7 @@
                                         {{groupCom?.groups?.length}}
                                     </p></nz-form-control>
                                 </nz-form-item>
-                                <!-- <nz-form-item>
-                                    <nz-form-label>Tên nhóm</nz-form-label>
-                                    <nz-form-control><p>
-                                        {{groupCom?.selectGroup?.length}}
-                                    </p></nz-form-control>
-                                </nz-form-item> -->
-                                <nz-form-item>
-                                    <nz-form-label>Tổng thành viên nhóm</nz-form-label>
-                                    <nz-form-control>
-                                        <!-- {{groupCom?.group}} -->
-                                        <!-- <accordion [isAnimated]="true" [closeOthers]="true">                                    
-                                        </accordion> -->
-                                    </nz-form-control>
-                                </nz-form-item>
+                                
                             </form>
                         </ng-template>
                             
