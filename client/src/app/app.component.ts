@@ -51,8 +51,6 @@ export class AppComponent {
           localStorage.setItem('profile',JSON.stringify(this.profile));
           this.groupService.getUserPermissions().subscribe({
             next: (data:any) => {
-              console.log(data);
-              
               if (data) {
                 this.permissions = data
               } else {
@@ -82,6 +80,7 @@ export class AppComponent {
     this.admin.getUser(this.profile.sub).subscribe({
       next: (data:any) => {
         this.roles = data.users.app_metadata.roles
+        
         const accessToken:any = localStorage.getItem('profile');        
         const profile = JSON.parse(accessToken);
       }
