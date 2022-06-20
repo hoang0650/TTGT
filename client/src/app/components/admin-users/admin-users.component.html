@@ -310,14 +310,6 @@
                                         </div>
                                     </tr>
                                     <tr (click)="toggleUser(user)" *ngFor="let user of (users|searchFilter:searchnickname: ['nickname'])" [ngClass]="{positive: user.isSelected, negative: user.loading}">
-                                        <td class="collapsing">
-                                            <div class="ui checkbox">
-                                                <input type="checkbox" [checked]="user['isSelected']"> <label></label>
-                                            </div>
-                                        </td>
-
-                                    </tr>
-                                    <tr (click)="toggleUser(user)" *ngFor="let user of (users|searchFilter:searchnickname: ['nickname'])" [ngClass]="{positive: user.isSelected, negative: user.loading}">
                                     <td class="collapsing">
                                         <div class="ui checkbox">
                                             <input type="checkbox" [checked]="user['isSelected']"> <label></label>
