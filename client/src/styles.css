@@ -407,3 +407,7 @@ nz-layout {
     overflow-y: auto;
     padding: 0 5px;
 }
+
+.cdk-overlay-container {
+    z-index: 1010 !important;
+}

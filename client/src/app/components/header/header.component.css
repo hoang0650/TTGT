@@ -98,6 +98,19 @@ a.nav-link:hover {
     }
 }
 
+.navbar {
+    z-index: 1005;
+    width: 100%;
+}
+
+div.navbar-holder {
+    height: 50px;
+}
+
+.navbar-toggler {
+    margin: 7.375px 5px;
+}
+
 ::ng-deep ul.dropdown-menu {
     z-index: 2000;
 }

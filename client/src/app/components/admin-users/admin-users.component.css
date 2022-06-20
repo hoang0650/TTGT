@@ -153,3 +153,17 @@ tbody, td, tfoot, th, thead, tr {
     border-style: none;
     border-width: 0;
 }
+
+@media (min-width:992px) {
+    .user-card-body {
+        overflow-y: auto;
+        max-height: 90vh;
+    }
+}
+
+@media (max-width:992px) {
+    .user-card-body {
+        overflow-y: auto;
+        max-height: 20vh;
+    }
+}
