@@ -121,6 +121,12 @@ ul.social-links li a i {
   color: #000;
 }
 
+hr.vertical {
+  width: 0px;
+  height: 100%;
+  /* or height in PX */
+}
+
 body {
   overflow-x: hidden;
 }

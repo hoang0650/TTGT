@@ -190,6 +190,8 @@ export class AdminGroupsComponent implements OnInit {
       nzWidth: 900
     })
 
+    
+
     setTimeout(() => {
       $(".ui.dropdown").dropdown()
     }, 100)
@@ -204,6 +206,14 @@ export class AdminGroupsComponent implements OnInit {
           this.nzMessage.create('success', 'Đã xóa nhóm')
         }
         this.getGroup()
+      }
+    })
+  }
+
+  confirmRemove(group:any) {
+    this.groupsService.delete(group._id).subscribe({
+      next: (res:any) => {
+        console.log(res);
       }
     })
   }

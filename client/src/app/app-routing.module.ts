@@ -100,7 +100,7 @@ const routes: Routes = [
   },
   { path: 'unauthorized', component:UnauthorizedComponent },
   { path: 'notfound',component:NotFoundComponent},
-  { path: '**', redirectTo: 'notfound'}
+  // { path: '**', redirectTo: 'notfound'}
 ];
 
 @NgModule({ 

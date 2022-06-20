@@ -85,11 +85,11 @@
                 </ng-template>
 
                 <ng-template #actionDelete>                  
-                    <i nz-icon (click)="unblockUsers()"><i nz-tooltip="Xóa nhóm" class="trash icon"></i></i>
+                    <i nz-icon *ngFor="let group of groupCom?.selectedGroups" (click)="groupCom?.confirmRemove(group)"><i nz-tooltip="Xóa nhóm" class="trash icon"></i></i>
                 </ng-template>
 
                 <ng-template #actionEdit>                  
-                    <i nz-icon (click)="unblockUsers()"><i nz-tooltip="Chỉnh sửa" class=" edit icon"></i></i>
+                    <i nz-icon *ngFor="let group of groupCom?.selectedGroups" (click)="groupCom?.toggleEdit(group, $event);"><i nz-tooltip="Chỉnh sửa" class=" edit icon"></i></i>
                 </ng-template>
 
                 <ng-template #actionUnblock>                  

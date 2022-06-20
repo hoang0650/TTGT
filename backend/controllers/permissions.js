@@ -1,6 +1,8 @@
 const UserGroup = require('../models/userGroup');
+const {User} = require('../models/user')
 const config = require("../config/configure");
 const _ = require('lodash');
+const { result } = require('lodash');
 
 
 function getPermissions(req,res,next){
@@ -64,6 +66,7 @@ function checkPermissions(permissions)
          id: userId,
          permissions: {$eq: permissions}
      }
+     
 
      UserGroup.find(query).exec((err,result)=>{
         if(err) {

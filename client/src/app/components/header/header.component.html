@@ -10,10 +10,10 @@
         <li class="nav-item" [ngClass]="{'active': isActive('/home')}">
           <a class="nav-link" aria-current="page" [routerLink]="['/home']">Giới thiệu</a>
         </li>
-        <li class="nav-item" *ngIf="appCom.checkPermission(['cameras:read','parkings:read','roadevents:read','roadworks:read','staticmaps:read','trafficevents:read'])" [ngClass]="{'active': isActive('/map')}">
+        <li class="nav-item" *ngIf="roles.includes('superadmin') || roles.includes('admin') && appCom.checkPermission(['cameras:read','parkings:read','roadevents:read','roadworks:read','staticmaps:read','trafficevents:read'])" [ngClass]="{'active': isActive('/map')}">
           <a class="nav-link" [routerLink]="['/map']">Bản đồ</a>
         </li>
-        <li class="nav-item dropdown" *ngIf="appCom.checkPermission(['cameras:read','parkings:read','roadevents:read','roadworks:read','staticmaps:read','trafficevents:read'])" [ngClass]="{'active': isActiveList(['/map/events', '/map/cameras', '/map/roadworks', '/map/parkings', '/map/roadevents', '/map/staticmaps'])}">
+        <li class="nav-item dropdown" *ngIf="roles.includes('superadmin')|| roles.includes('admin') && appCom.checkPermission(['cameras:read','parkings:read','roadevents:read','roadworks:read','staticmaps:read','trafficevents:read'])" [ngClass]="{'active': isActiveList(['/map/events', '/map/cameras', '/map/roadworks', '/map/parkings', '/map/roadevents', '/map/staticmaps'])}">
           <a class="nav-link dropdown" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Quản lý
           </a>
@@ -40,7 +40,7 @@
           </ul>
           
         </li>
-        <li class="nav-item dropdown" *ngIf="appCom.checkPermission(['settings:update','settings:manage'])" [ngClass]="{'active': isActiveList(['/config/*', '/users', '/groups'])}">
+        <li class="nav-item dropdown" *ngIf="roles.includes('superadmin') || roles.includes('admin') && appCom.checkPermission(['settings:update','settings:manage'])" [ngClass]="{'active': isActiveList(['/config/*', '/users', '/groups'])}">
           <a class="nav-link dropdown" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Quản trị
           </a>
@@ -55,7 +55,7 @@
           </ul>
         </li>
         
-        <li class="nav-item dropdown" *ngIf="appCom.checkPermission(['trafficevents:read'])" [ngClass]="{'active': isActiveList(['/map/events/stats'])}">
+        <li class="nav-item dropdown" *ngIf="roles.includes('superadmin') || roles.includes('admin') || appCom.checkPermission(['trafficevents:read'])" [ngClass]="{'active': isActiveList(['/map/events/stats'])}">
           <a class="nav-link dropdown" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Thống kê
           </a>
