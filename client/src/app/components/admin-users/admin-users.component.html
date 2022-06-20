@@ -207,8 +207,6 @@
                             <!-- <span>{{groupCom?.}}</span> -->
                         </ng-template>
                         
-                            
-
                         
                         <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10" [nzOffsetBottom]="0">
                             <nz-card *ngIf="selectedUsers.length === 0 && tabIndex==0" class="user-card" nzTitle= 'Thống kê tài khoản'>
@@ -318,6 +316,13 @@
                                             </div>
                                         </td>
 
+                                    </tr>
+                                    <tr (click)="toggleUser(user)" *ngFor="let user of (users|searchFilter:searchnickname: ['nickname'])" [ngClass]="{positive: user.isSelected, negative: user.loading}">
+                                    <td class="collapsing">
+                                        <div class="ui checkbox">
+                                            <input type="checkbox" [checked]="user['isSelected']"> <label></label>
+                                        </div>
+                                    </td>
                                         <td class="collapsing">
                                             <div class="container">
                                                 <div class="row">

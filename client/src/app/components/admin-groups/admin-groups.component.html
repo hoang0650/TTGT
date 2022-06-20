@@ -1,6 +1,6 @@
 <div class="table-wrapper">  
     <button  class="btn btn-success" id="btnAddGroupTop" data-tooltip="Thêm nhóm" data-position="top left" (click)="openEdit()"><i class="add icon"></i> Thêm nhóm mới</button>
-    <table class="ui unstackable celled padded table" style="width: 100%;">
+    <table class="ui unstackable celled padded table">
         <thead>
             <tr>
                 <th></th>
@@ -14,10 +14,6 @@
         <tbody>
             <tr (click)="selectGroup(group)" *ngFor="let group of groups"  [ngClass]="{positive: group.isSelected}">
                 <td class="collapsing">
-                    
-                    <!-- <div class="ui checkbox" (click)="toggleUser(user, $event);">
-                        <input type="checkbox" [checked]="user.isSelected"> <label></label>
-                    </div> -->
                     <div class="ui checkbox" (click)="toggleGroup(group, $event)">
                         <input type="checkbox" [checked]="group['isSelected']"> <label></label>
                     </div>
@@ -38,25 +34,6 @@
                         {{group.permissionsStats.total - (group.permissionsStats.none|| 0)}} quyền ({{group.permissionsStats.read || 0}} Xem | {{group.permissionsStats.update
                             || 0}} Cập nhật | {{group.permissionsStats.manage || 0}} Quản lý)
                     </span>
-
-                    <!-- <div class="ui  segments">
-                        <div class="ui secondary segment">
-                            {{group.permissionsStats.total - (group.permissionsStats.none || 0)}} quyền ({{group.permissionsStats.read || 0}} Xem | {{group.permissionsStats.update
-                            || 0}} Cập nhật | {{group.permissionsStats.manage || 0}} Quản lý)
-                        </div>
-                        <div class="ui tertiary segment" *ngIf="group.isSelected && group.permissionsStats.total - group.permissionsStats.none !== 0">
-                            <div class="ui middle aligned selection divided list">
-                                <ng-container *ngFor="let permission of group.permissions | keyvalue">
-                                    <div class="item" *ngIf="permission.value !== 'none'">
-                                        <div class="content">
-                                            <div class="header">{{permissionToText[$any(permission.key)]}}</div>
-                                            {{roleToText[$any(permission.value)]}}
-                                        </div>
-                                    </div>
-                                </ng-container>
-                            </div>
-                        </div>
-                    </div> -->
                 </td>
                 <td>
                     <button class="no-animate ui compact icon button" (click)="toggleEdit(group, $event);">

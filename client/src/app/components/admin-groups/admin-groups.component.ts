@@ -1,4 +1,5 @@
 import { Component, OnInit, Output,EventEmitter} from '@angular/core';
+import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { AdminService } from 'src/app/services/admin.service';
@@ -73,7 +74,7 @@ export class AdminGroupsComponent implements OnInit {
 
 
 
-  constructor(public admin:AdminService, public modalService:NzModalService, private groupsService:GroupService, private nzMessage:NzMessageService, private userCom:AdminUsersComponent) {
+  constructor(public admin:AdminService, public modalService:NzModalService, private groupsService:GroupService, private nzMessage:NzMessageService, private userCom:AdminUsersComponent,private router: Router) {
     userCom.groupCom = this
    }
 
@@ -213,7 +214,7 @@ export class AdminGroupsComponent implements OnInit {
   confirmRemove(group:any) {
     this.groupsService.delete(group._id).subscribe({
       next: (res:any) => {
-        console.log(res);
+        this.getGroup();
       }
     })
   }
