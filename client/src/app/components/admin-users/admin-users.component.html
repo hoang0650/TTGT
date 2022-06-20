@@ -285,7 +285,7 @@
                                                         <img src="{{user.picture}}" class="ui mini rounded image">
                                                     </div>
                                                     <div class="col-8">
-                                                        <span class="d-inline-block text-truncate font-weight-bold mw-100">{{user.nickname}} <i class="ui {{appMetadataToStar(user.app_metadata)}} icon position-absolute" title="{{appMetadataToRoleName(user.app_metadata)}}"></i></span>
+                                                        <span class="d-inline-block text-truncate font-weight-bold">{{user.nickname}} <i class="ui {{appMetadataToStar(user.app_metadata)}} icon position-absolute" title="{{appMetadataToRoleName(user.app_metadata)}}"></i></span>
                                                     </div>
                                                     <div class="col-2">
                                                         <span *ngIf="user.blocked" class="ui red tiny label"><i class="lock icon m-0"></i></span>
@@ -294,7 +294,7 @@
                         
                                                 <div class="row">
                                                     <div class="col-10 d-inline-block">
-                                                        <span class="d-inline-block text-truncate mw-100">
+                                                        <span class="d-inline-block text-truncate">
                                                             {{user.email}} 
                                                         </span>
                                                         <i class="ui green checkmark icon position-absolute" *ngIf="user.email_verified" title="Email đã được xác nhận"></i>
@@ -307,13 +307,13 @@
                                             <div class="container">
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <span class="d-inline-block text-truncate font-weight-bold mw-100">{{user.last_login | amLocale:'vi' | amTimeAgo }}</span>
+                                                        <span class="d-inline-block text-truncate font-weight-bold">{{user.last_login | amLocale:'vi' | amTimeAgo }}</span>
                                                     </div>
                                                 </div>
                         
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <span class="d-inline-block text-truncate mw-100">{{user.last_ip}}</span>
+                                                        <span class="d-inline-block text-truncate"  style="max-width:100px; word-break:break-all">{{user.last_ip}}</span>
                                                     </div>
                                                 </div>
                                             </div>   
