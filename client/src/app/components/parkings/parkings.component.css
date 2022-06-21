@@ -2,3 +2,7 @@
     background-color: #1890ff;
     color: #fff;
 }
+
+:host >>> .card.customClass .card-header:hover{
+    background-color: rgba(24, 143, 255, 0.8);
+}
