@@ -215,14 +215,26 @@ export class AdminGroupsComponent implements OnInit {
     })
   }
 
-  confirmRemove(group:any) {
-    this.groupsService.delete(group._id).subscribe({
-      next: (res:any) => {
-        this.getGroup();
-      },
-      error: (err) => {
-        this.appCom.errorHandler(err)
+  remove(action:string) {
+    this.selectedGroups.forEach((selected:any,index:number)=>{
+      if(action=='delete'){
+        this.selectedGroups[index].loading = true;
+        this.groupsService.delete(selected._id,action).subscribe({
+          next: (res:any) => {
+            this.getGroup();
+          },
+          error: (err) => {
+            this.appCom.errorHandler(err)
+          }
+        })
       }
     })
   }
+
+
+  deleteGroups() 
+    {
+			return this.remove('delete');
+		};
+
 }

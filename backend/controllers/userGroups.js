@@ -49,7 +49,6 @@ function update(req, res){
         return user.user_id;
     });
    
-
     const group = new UserGroup(req.body);
     group.creator = {
         email: req.user.email,

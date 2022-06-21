@@ -154,17 +154,26 @@ export class AdminGroupsEditComponent implements OnInit {
     return item;
   }
   
-  confirmRemove() {
-    this.groupService.delete(this.group._id).subscribe({
-      next: (res:any) => {
-        this.isRemoving = true
-        this.modalRef.close("removed")
-      },
-      error: (err) => {
-        this.appCom?.errorHandler(err)
-      }
-    })
+  confirmRemove(action:string) {
+    // console.log(this.group._id);
+    if(action=='delete'){
+      this.groupService.delete(this.group._id,action).subscribe({
+        next: (res:any) => {
+          this.isRemoving = true
+          this.modalRef.close("removed")
+        },
+        error: (err) => {
+          this.appCom?.errorHandler(err)
+        }
+      })
+    }
   }
+
+  deleteGroups() 
+  {
+    return this.confirmRemove('delete');
+  };
+
   
   cancel() {
     this.modalRef.close();

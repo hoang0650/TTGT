@@ -43,7 +43,7 @@
                                 </div>
                             </nz-card>
 
-                            <nz-card style="width:100%" *ngIf="tabIndex==1 && groupCom?.selectedGroups?.length > 1">
+                            <nz-card style="width:100%" [nzActions]="[actionDelete]" *ngIf="tabIndex==1 && groupCom?.selectedGroups?.length > 1">
                                 <nz-card-meta
                                 [nzAvatar]="groupTemplate"></nz-card-meta>
                             </nz-card>
@@ -69,7 +69,7 @@
                                         
 
                         <ng-template #actionDelete>                  
-                            <i nz-icon *ngFor="let group of groupCom?.selectedGroups" (click)="groupCom?.confirmRemove(group)"><i nz-tooltip="Xóa nhóm" class="trash icon"></i></i>
+                            <i nz-icon (click)="groupCom?.deleteGroups()" ><i nz-tooltip="Xóa nhóm" class="trash icon"></i></i>
                         </ng-template>
 
                         <ng-template #actionEdit>                  

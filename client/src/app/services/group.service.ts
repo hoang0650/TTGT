@@ -12,8 +12,8 @@ export class GroupService {
     return this.http.get(`${this.Root_Url}`);
   }
 
-  delete(id:string){
-    return this.http.delete(`${this.Root_Url}/${id}`)
+  delete(id: string, action:string){
+    return this.http.delete(`${this.Root_Url}/${id}/${action}`)
   }
 
   save(data:object) {
