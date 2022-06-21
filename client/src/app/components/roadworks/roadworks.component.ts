@@ -202,9 +202,7 @@ export class RoadworksComponent implements OnInit, OnDestroy {
         this.roadworkService.query().subscribe({
           next: (roadworks) => {
             this.listRoadwork = roadworks
-            console.log(this.listRoadwork);
             
-    
             this.listRoadwork.forEach((rw:any) => {
               this.setStatusForRoadwork(rw);
     
@@ -241,11 +239,16 @@ export class RoadworksComponent implements OnInit, OnDestroy {
     
             this.isLoading = false
 
+          },
+          error: (err) => {
+            this.appCom.errorHandler(err)
           }
         })
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
-   
   }
 
   addRoadworkToDistrict(districts:any, roadwork:any) {

@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, ComponentFactoryResolver, ElementRef, HostListener, Injector, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ComponentFactoryResolver, HostListener, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
 import _ from 'lodash';
@@ -13,16 +13,11 @@ import { MarkerService } from 'src/app/services/marker.service';
 import { ParkingService } from 'src/app/services/parking.service';
 import { RoadEventsService } from 'src/app/services/road-events.service';
 import { StaticMapService } from 'src/app/services/static-map.service';
-import { MapPopupCreateEventComponent } from '../map-popup-create-event/map-popup-create-event.component';
-import { StaticMapPopupComponent } from '../static-map-popup/static-map-popup.component';
 
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { slidingMapLayout, slidingMapLayoutButton } from 'src/app/animations';
-import { AdminConfigConfirmComponent } from '../admin-config-confirm/admin-config-confirm.component';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { MessageService } from 'src/app/services/message.service';
-
-declare var $: any
 
 @Component({
   selector: 'app-map',
@@ -60,7 +55,7 @@ export class MapComponent implements OnInit {
 
   componentRef:any
 
-  constructor(public configure:ConfigureService, private staticMapService:StaticMapService, private markerService:MarkerService, private roadEventService:RoadEventsService, private route:ActivatedRoute, private location:Location, private mapService:MapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private geocoding:GeocodingService, private cameraService:CameraService, private parkingService:ParkingService, private cdRef:ChangeDetectorRef, private nzMessage:NzMessageService, private modalService:NzModalService, private messageService:MessageService) {
+  constructor(public configure:ConfigureService, private cdRef:ChangeDetectorRef) {
     
   }
 
@@ -72,7 +67,6 @@ export class MapComponent implements OnInit {
     this.sideMap = event as L.DrawMap
     this.sideMap.on({
       dblclick: (event) => {
-        console.log(event);
         
       }
     })

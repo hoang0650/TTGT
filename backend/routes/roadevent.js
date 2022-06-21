@@ -4,19 +4,19 @@ const {RoadEvent} = require('../models/roadevent');
 const {exportToCsv,create,update,findAll,findAllPublish,findById,deleteRoadevent}= require('../controllers/roadevent.js');
 const {checkRoles,checkPermissions} = require('../controllers/permissions');
 
-router.get('/csv', checkRoles(['admin']),
+router.get('/csv', checkRoles(['user', 'admin']),
   checkPermissions(['roadevents:manage']), 
  exportToCsv);
-router.post('/', checkRoles(['admin']),
- checkPermissions(['roadevents:update', 'roadevents:manage']), 
+router.post('/', checkRoles(['user', 'admin']),
+ checkPermissions(['roadevents:manage']), 
 create);
-router.put('/:id', checkRoles(['admin']),
- checkPermissions(['roadevents:update', 'roadevents:manage']), 
+router.put('/:id', checkRoles(['user', 'admin']),
+ checkPermissions(['roadevents:update']), 
 update);
 router.get('/', findAll);
 router.get('/publish', findAllPublish);
 router.get('/:id', findById);
-router.delete('/:id', checkRoles(['admin']),
+router.delete('/:id', checkRoles(['user', 'admin']),
  checkPermissions(['roadevents:manage']), 
 deleteRoadevent);
 

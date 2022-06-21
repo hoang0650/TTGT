@@ -87,6 +87,9 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
     cameraService.getCameraType().subscribe({
       next: (typeList:any) => {
         this.listType = typeList;
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     });
 
@@ -94,6 +97,9 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
       next: (res:any) => {
         this.listCamGroup = res.data;
        
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     });
 
@@ -104,6 +110,9 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
         this.newCamera['type'] = ""
         this.newCamera['values'] = {}
         this.newCamera['angle'] = 0
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
 
@@ -132,6 +141,9 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
     this.staticData.loadDistrictAPI().subscribe({
       next: (hcmDistricts:any) => {
         this.districtList = hcmDistricts;
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     });
 
@@ -148,6 +160,9 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
           this.location.replaceState("./map/cameras/update")
         }
 
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -164,8 +179,6 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
   }
 
   updateNewCamera(latlng?:any) {
-    
-    
     if (this.markers['newMarker']?._latlng || latlng) {
       this.markers['newMarker'] = L.marker(latlng || this.markers['newMarker']._latlng, {
         draggable: true,
@@ -182,6 +195,7 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
         this.newCamera['tmpLocation'] = latlng.lat.toFixed(4) + ' , ' + latlng.lng.toFixed(4);
       }
     }
+    this.mapCom.detectChanges()
   }
 
   selectPosition(event:any) {
@@ -376,11 +390,10 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
           this.router.navigate(['/map/cameras'], {queryParams: {camid:res._id, result:"create"}})
         },
         error: (err) => {
-          console.log(err);
-          
           if (err?.error?.err?.code === 11000) {
             this.openModal('duplicateCamera', true);
-
+          } else {
+            this.appCom.errorHandler(err)
           }
         }
       })
@@ -389,14 +402,12 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
       this.cameraService.update(newCamera._id, newCamera).subscribe({
         next: (res) => {
           this.router.navigate([`/map/cameras`], {queryParams: {camid:camId, result:"update"}})
-          // this.noti.showNotification('top','center');
         },
         error: (err) => {
-          // this.noti.dangerNotification('top','center');
+          this.appCom.errorHandler(err)
         }
       })
     }
-    // this.noti.dangerNotification
     this.disableClick = false;
   };
 
@@ -417,14 +428,15 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
             }
           })
         }
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
 
   };
 
   back() {
-    console.log(this.inputChange);
-    
     if (this.inputChange) {
       var modalInstance = this.openModal('back');
       modalInstance.afterClose.subscribe({
@@ -432,6 +444,9 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
           if (res === 'yes') {
             this.router.navigateByUrl('/map/cameras')
           }
+        },
+        error: (err) => {
+          this.appCom.errorHandler(err)
         }
       })
 
@@ -445,21 +460,12 @@ export class CamerasCreateComponent implements OnInit, OnDestroy {
       this.disableClick = true;
       this.cameraService.getcamerapreview(newCamera).subscribe({
         next: (data:any) => {
-          // this.modalService.show(CameraPreviewComponent, {
-          //   initialState: {
-          //     data: data.data
-          //   },
-          //   class: "modal-sm popupCameraPreview"
-          // })
-        
-          // this.disableClick = false;
+
         },
-        error: () => {
-        //   this.modalService.show(CameraPreviewComponent, {
-        //     class: "modal-sm popupCameraPreview"
-        //   })
-        // this.disableClick = false;
-      }});
+        error: (err) => {
+          this.appCom.errorHandler(err)
+        }
+      });
     }
   };
 

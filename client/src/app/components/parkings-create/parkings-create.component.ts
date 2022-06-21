@@ -78,6 +78,9 @@ export class ParkingsCreateComponent implements OnInit, OnDestroy {
     this.staticData.loadDistrictAPI().subscribe({
       next: (hcmDistricts) => {
         this.districtList = hcmDistricts;
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     });
 
@@ -94,17 +97,22 @@ export class ParkingsCreateComponent implements OnInit, OnDestroy {
             zIndexOffset: 10000,
           })
         })
+
+        if (!this.isCreate) {
+          this.loadParkingByID(this.route.snapshot.paramMap.get('id'));
+          this.location.replaceState("./map/parkings/update")
+        }
+
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
-
-    if (!this.isCreate) {
-      this.loadParkingByID(this.route.snapshot.paramMap.get('id'));
-      this.location.replaceState("./map/parkings/update")
-    }
   }
 
   loadParkingByID(id:string | null) {
     if (id) {
+      delete this.markers[id]
       this.parkingService.get(id).subscribe({
         next: (parking:any) => {
           this.newParking = parking
@@ -128,6 +136,9 @@ export class ParkingsCreateComponent implements OnInit, OnDestroy {
           this.updateNewParking(latlng)
 
           this.mapCom.flyToBounds([[this.newParking.loc.coordinates[1], this.newParking.loc.coordinates[0]]])
+        },
+        error: (err) => {
+          this.appCom.errorHandler(err)
         }
       })
     }
@@ -243,10 +254,9 @@ export class ParkingsCreateComponent implements OnInit, OnDestroy {
                 id: parking._id
               }
             });
-            // this.noti.showNotification('top','center');
-            
-          }, error: (err) => {
-            // this.noti.dangerNotification('top','center');
+          },
+          error: (err) => {
+            this.appCom.errorHandler(err)
           }
         })
     } else {
@@ -258,9 +268,9 @@ export class ParkingsCreateComponent implements OnInit, OnDestroy {
               id: parking._id
             }
           });
-          // this.noti.showNotification('top','center');
-        }, error: (err) => {
-          // this.noti.dangerNotification('top','center');
+        },
+        error: (err) => {
+          this.appCom.errorHandler(err)
         }
       })
     }
@@ -279,9 +289,9 @@ export class ParkingsCreateComponent implements OnInit, OnDestroy {
                   result:"remove"
                 }
               });
-              // this.noti.showNotification('top','center');
-            }, error: (err)=>{
-              // this.noti.dangerNotification('top','center');
+            },
+            error: (err) => {
+              this.appCom.errorHandler(err)
             }
           })
         }
@@ -297,6 +307,9 @@ export class ParkingsCreateComponent implements OnInit, OnDestroy {
           if (reponse === 'yes') {
             this.router.navigateByUrl('/map/parkings')
           }
+        },
+        error: (err) => {
+          this.appCom.errorHandler(err)
         }
       })
     } else {
@@ -327,6 +340,7 @@ export class ParkingsCreateComponent implements OnInit, OnDestroy {
         this.newParking['tmpLocation'] = latlng.lat.toFixed(4) + ' , ' + latlng.lng.toFixed(4);
       }
     }
+    this.mapCom.detectChanges()
   }
 
   getPosition() {

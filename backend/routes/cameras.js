@@ -12,38 +12,38 @@ router.get('/:bbox/geojson', getByBbox);
 router.get('/:z/:x/:y/geojson', getByTile);
 router.get('/geojson', all);
 
-router.get('/getdefaultcamera', checkRoles(['admin']),
-checkPermissions(['cameras:update', 'cameras:manage']), 
+router.get('/getdefaultcamera', checkRoles(['user', 'admin']),
+checkPermissions(['cameras:update']), 
 getDefaultCamera);
 // router.get('/exportcamera', checkPermissions(['cameras:update', 'cameras:manage']), exportCameraData);
-router.get('/getcameratype', checkRoles(['admin']),
-checkPermissions(['cameras:update', 'cameras:manage']),
+router.get('/getcameratype', checkRoles(['user', 'admin']),
+checkPermissions(['cameras:update']),
 getCameraType);
-router.get('/getcameraconfig', checkRoles(['admin']),
-checkPermissions(['cameras:update', 'cameras:manage']), 
+router.get('/getcameraconfig', checkRoles(['user', 'admin']),
+checkPermissions(['cameras:update']), 
 getCameraConfig);
-router.get('/csv', checkRoles(['admin']),
+router.get('/csv', checkRoles(['user', 'admin']),
 checkPermissions(['cameras:manage']), 
 exportToCsv);
 
-router.get('/xls', checkRoles(['admin']),
+router.get('/xls', checkRoles(['user', 'admin']),
 checkPermissions(['cameras:manage']), 
 exportCameraData);
 
-router.post('/', checkRoles(['admin']),
-checkPermissions(['cameras:update', 'cameras:manage']), 
+router.post('/', checkRoles(['user', 'admin']),
+checkPermissions(['cameras:manage']), 
 create);
-router.delete('/:id', checkRoles(['admin']),
+router.delete('/:id', checkRoles(['user', 'admin']),
 checkPermissions('cameras:manage'), 
 deleteCamera);
-router.put('/:id', checkRoles(['admin']),
-checkPermissions(['cameras:update', 'cameras:manage']), 
+router.put('/:id', checkRoles(['user', 'admin']),
+checkPermissions(['cameras:update']), 
 update);
 router.get('/:id', findById);
 router.get('/', findAll);
 router.get('/sortbylocation', sortByLocation);
-router.get('/camid/:camId', checkRoles(['admin']),
-checkPermissions(['cameras:read', 'cameras:update', 'cameras:manage']), 
+router.get('/camid/:camId', checkRoles(['user', 'admin']),
+checkPermissions(['cameras:read']), 
 findOneByCamId);
 
 

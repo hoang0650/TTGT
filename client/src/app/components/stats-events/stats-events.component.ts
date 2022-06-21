@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import 'heatmap.js';
+import { AppComponent } from 'src/app/app.component';
 import { ConfigureService } from 'src/app/services/configure.service';
 import { StatsService } from 'src/app/services/stats.service';
 import { MapComponent } from '../map/map.component';
@@ -36,7 +37,7 @@ export class StatsEventsComponent implements OnInit, OnDestroy {
   }
   heatmapLayer: any;
 
-  constructor(public mapCom:MapComponent, public configure:ConfigureService, private statsService:StatsService, private datePipe:DatePipe, private cdRef:ChangeDetectorRef) {
+  constructor(public mapCom:MapComponent, public configure:ConfigureService, private statsService:StatsService, private datePipe:DatePipe, private cdRef:ChangeDetectorRef, private appCom:AppComponent) {
     this.startDate = this.datePipe.transform(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), 'yyyy-MM-dd');
     this.endDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
 
@@ -83,7 +84,7 @@ export class StatsEventsComponent implements OnInit, OnDestroy {
         this.exported = true
       },
       error: (err) => {
-        console.log(err)
+        this.appCom.errorHandler(err)
         this.exported = true
       }
     })
@@ -107,7 +108,7 @@ export class StatsEventsComponent implements OnInit, OnDestroy {
         this.isWeeklyLoading = false;
       },
       error: (err) => {
-        console.log(err)
+        this.appCom.errorHandler(err)
         this.isWeeklyLoading = false;
       }
     })
@@ -130,7 +131,7 @@ export class StatsEventsComponent implements OnInit, OnDestroy {
         this.isMonthlyLoading = false;
       },
       error: (err) => {
-        console.log(err)
+        this.appCom.errorHandler(err)
         this.isMonthlyLoading = false;
       }
     })
@@ -150,7 +151,7 @@ export class StatsEventsComponent implements OnInit, OnDestroy {
         this.isHeatmapLoading = false;
       },
       error: (err) => {
-        console.log(err)
+        this.appCom.errorHandler(err)
         this.isHeatmapLoading = false;
       }
     })

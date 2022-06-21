@@ -3,9 +3,9 @@ import { ChangeDetectorRef, Component, ComponentFactoryResolver, Injector, OnDes
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { AppComponent } from 'src/app/app.component';
 import { CameraService } from 'src/app/services/camera.service';
 import { ConfigureService } from 'src/app/services/configure.service';
-import { GeocodingService } from 'src/app/services/geocoding.service';
 import { MapService } from 'src/app/services/map.service';
 import { MarkerService } from 'src/app/services/marker.service';
 import { ParkingService } from 'src/app/services/parking.service';
@@ -58,7 +58,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
   currentMode?:string;
   dividerText?:string;
   
-  constructor(public mapCom:MapComponent, private configure:ConfigureService, private staticMapService:StaticMapService, private markerService:MarkerService, private roadEventService:RoadEventsService, private route:ActivatedRoute, private location:Location, private mapService:MapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private geocoding:GeocodingService, private cameraService:CameraService, private parkingService:ParkingService, private cdRef:ChangeDetectorRef, private nzMessage:NzMessageService) {
+  constructor(public mapCom:MapComponent, private configure:ConfigureService, private staticMapService:StaticMapService, private markerService:MarkerService, private roadEventService:RoadEventsService, route:ActivatedRoute, private location:Location, private mapService:MapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cameraService:CameraService, private parkingService:ParkingService, private cdRef:ChangeDetectorRef, private nzMessage:NzMessageService, private appCom:AppComponent) {
     this.setCurrentMode("incidents")
     this.listEvent = []
     this.listCamera = []
@@ -133,8 +133,10 @@ export class MapInformationComponent implements OnInit, OnDestroy {
   getInfoOfUser() {
     this.mapService.getInfoOfUser().subscribe({
       next: (res) => {
-        
         this.resetList(res);
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -159,6 +161,9 @@ export class MapInformationComponent implements OnInit, OnDestroy {
         if (res) {
           this.resetList(res);
         }
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -173,6 +178,9 @@ export class MapInformationComponent implements OnInit, OnDestroy {
         if (res) {
           this.resetList(res);
         }
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -454,6 +462,9 @@ export class MapInformationComponent implements OnInit, OnDestroy {
           this.toggleIncidentMarkers()
         }
         this.checkParam()
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -468,7 +479,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
           contextmenu: (event:any) => {
             this.createNewEventMarker(event.latlng)
           },
-          popupopen: (event:any) => {
+          popupopen: () => {
             setTimeout(() => {
               $(".ui.dropdown").dropdown()
               this.component?.changeDetectorRef.detectChanges()
@@ -477,6 +488,9 @@ export class MapInformationComponent implements OnInit, OnDestroy {
         })
 
         this.getAllEvent();
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -511,7 +525,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
           marker.openPopup()
           this.nzMessage.success('Đã tạo cảnh báo mới, chờ quản trị viên duyệt')
         },
-        error: (err) => {
+        error: () => {
           this.nzMessage.error('Tạo cảnh báo mới thất bại, hãy thử lại')
           this.isSubmit = true
         }
@@ -602,7 +616,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
         }
 
         layer.on({
-          mouseover: (event) => {
+          mouseover: () => {
             
             if (staticmap['properties']?.length > 0) {
               
@@ -638,6 +652,9 @@ export class MapInformationComponent implements OnInit, OnDestroy {
         this.listStaticMaps.push(staticMapObject);
 
       });
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -649,6 +666,9 @@ export class MapInformationComponent implements OnInit, OnDestroy {
         this.listCamera = res
         this.toggleCameraActive()
         this.checkParam()
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -660,6 +680,9 @@ export class MapInformationComponent implements OnInit, OnDestroy {
         this.listParking = res
         this.toggleParkingActive()
         this.checkParam()
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -766,7 +789,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
       pointToLayer: (feature, latLng) => {
           return this.createRoadEventMarker(feature, latLng);
       },
-      onEachFeature: (feature, layer) => {
+      onEachFeature: () => {
         // listEvent[feature.properties.type](feature, layer, geo);
       }
     });
@@ -786,6 +809,9 @@ export class MapInformationComponent implements OnInit, OnDestroy {
             geoLayer: geoObject
           });
         })
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }

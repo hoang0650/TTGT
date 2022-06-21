@@ -86,8 +86,14 @@ export class CamerasComponent implements OnInit, OnDestroy {
             this.districts = hcmDistricts;
 
             this.readDataFromSearchQuery()
+          },
+          error: (err) => {
+            this.appCom.errorHandler(err)
           }
         })
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -235,6 +241,9 @@ export class CamerasComponent implements OnInit, OnDestroy {
     this.cameraService.getCameraCSV().subscribe({
       next:(res:any) => {
         this.mapCom.download(URL.createObjectURL(new Blob([res],{type:'text/csv'})),"ttgt-cameras.csv")
+      }, 
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   };

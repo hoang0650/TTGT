@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, ComponentFactoryResolver, Injector, OnDestroy, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, Injector, OnDestroy, OnInit } from '@angular/core';
 import L from 'leaflet';
 import _ from 'lodash';
-import { ConfigureService } from 'src/app/services/configure.service';
+import { AppComponent } from 'src/app/app.component';
 import { EventService } from 'src/app/services/event.service';
 import { EventsManagerPopupComponent } from '../events-manager-popup/events-manager-popup.component';
 import { MapComponent } from '../map/map.component';
@@ -35,7 +35,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
   component: any;
 
 
-  constructor(public mapCom:MapComponent, private configure:ConfigureService, private eventService:EventService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cdRef:ChangeDetectorRef) {
+  constructor(public mapCom:MapComponent, private eventService:EventService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, public appCom:AppComponent) {
     this.status = "created"
     this.filter = {status:this.status}
     this.markers = {}
@@ -195,11 +195,14 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
         
         this.listEvents = res
         
-        this.listEvents.forEach((event:any, index:number) => {
+        this.listEvents.forEach((event:any) => {
           event.color = this.listEventType[event.type].color;
         })
         this.isLoadingStatus = false
         this.filterListEvent()
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   };
@@ -254,6 +257,9 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
         this.listEventType = res
         
         this.getAllEventInData();
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   };
@@ -282,32 +288,44 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
 
   approveEvent(event:any) {
     this.eventService.approveEvent(event._id, event).subscribe({
-      next: (res) => {
+      next: () => {
         event['tmpStatus'] = 'approved'
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   };
 
   rejectEvent(event:any) {
     this.eventService.rejectEvent(event._id, event).subscribe({
-      next: (res) => {
+      next: () => {
         event['tmpStatus'] = 'rejected'
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   };
 
   updateEvent(event:any) {
     this.eventService.updateEvent(event._id, event).subscribe({
-      next: (res) => {
+      next: () => {
         this.getAllType();
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   };
 
   expireEvent(event:any) {
     this.eventService.expireEvent(event._id, event).subscribe({
-      next: (res) => {
+      next: () => {
         event['tmpStatus'] = 'expired'
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   };

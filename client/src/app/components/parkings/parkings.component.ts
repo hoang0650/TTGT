@@ -116,6 +116,9 @@ export class ParkingsComponent implements OnInit, OnDestroy {
 
         })
         this.isLoading = false;
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -216,6 +219,9 @@ export class ParkingsComponent implements OnInit, OnDestroy {
     this.parkingService.getParkingCSV().subscribe({
       next:(res:any) => {
         this.mapCom.download(URL.createObjectURL(new Blob([res],{type:'text/csv'})),"ttgt-parkings.csv")
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   };

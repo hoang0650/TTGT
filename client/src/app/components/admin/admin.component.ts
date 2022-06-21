@@ -221,6 +221,9 @@ export class AdminComponent implements OnInit {
       next: (res) => {
         
         this.listMapType = res;
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     }) 
   }
@@ -289,6 +292,9 @@ export class AdminComponent implements OnInit {
               localStorage.setItem('sessionObject', JSON.stringify(session));
               this.getSetting();
             }
+          },
+          error: (err) => {
+            this.appCom.errorHandler(err)
           }
         }
       )
@@ -317,7 +323,9 @@ export class AdminComponent implements OnInit {
       next: (lastSetting) => {
         this.setting = lastSetting;
         this.expiredSession();
-        // this.openPopupConfig('expire');
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   };
@@ -329,6 +337,9 @@ export class AdminComponent implements OnInit {
       next: (data) => {
         this.getLastSetting();
         this.expiredSession();
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   };

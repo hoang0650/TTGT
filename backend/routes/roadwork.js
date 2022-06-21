@@ -8,25 +8,25 @@ const {exportToCsv,create,update,findAll,uploadFile,
 const {checkRoles,checkPermissions} = require('../controllers/permissions');
 
 router.get('/geojson', all);
-router.get('/csv', checkRoles(['admin']),
+router.get('/csv', checkRoles(['user', 'admin']),
 checkPermissions(['roadworks:manage']), 
 exportToCsv);
 
-router.post('/', checkRoles(['admin']),
-checkPermissions(['roadworks:update', 'roadworks:manage']), 
+router.post('/', checkRoles(['user', 'admin']),
+checkPermissions(['roadworks:manage']), 
 create);
-router.put('/:id', checkRoles(['admin']),
-checkPermissions(['roadworks:update', 'roadworks:manage']), 
+router.put('/:id', checkRoles(['user', 'admin']),
+checkPermissions(['roadworks:update']), 
 update);
 router.get('/', findAll);
-router.post('/upload/', checkRoles(['admin']),
+router.post('/upload/', checkRoles(['user', 'admin']),
 checkPermissions(['roadworks:update', 'roadworks:manage']), 
 uploadImage.array('documents', 18), uploadFile);
 router.get('/upload/:fileName', displayFile);
-router.delete('/:id', checkRoles(['admin']),
+router.delete('/:id', checkRoles(['user', 'admin']),
 checkPermissions(['roadworks:manage']), 
 deleteRoadwork);
-router.delete('/upload/:fileName', checkRoles(['admin']),
+router.delete('/upload/:fileName', checkRoles(['user', 'admin']),
 checkPermissions(['roadworks:manage']), 
 deleteFile);
 router.get('/:id', findById);

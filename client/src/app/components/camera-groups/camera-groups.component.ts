@@ -223,6 +223,10 @@ export class CameraGroupsComponent implements OnInit {
         
        
         this.isLoading = false;
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err[0])
+        this.appCom.errorHandler(err[1])
       }
     });
   }
@@ -354,10 +358,7 @@ export class CameraGroupsComponent implements OnInit {
         
       },
       error: (err) => {
-        // this.noti.dangerNotification('top','center');
-        // if (err?.data?.code === 11000) {
-        //   this.openModal('duplicateCamera');
-        // }
+        this.appCom.errorHandler(err)
       }
     })
 
@@ -372,6 +373,9 @@ export class CameraGroupsComponent implements OnInit {
             this.lastResult = null;
             this.group = null;
           }
+        },
+        error: (err) => {
+          this.appCom.errorHandler(err)
         }
       })
 
@@ -400,8 +404,8 @@ export class CameraGroupsComponent implements OnInit {
         this.closeEditor('remove');
         this.nzMessage.success(this.messageService.getMessageObj().NOTICE('remove', 'phân luồng giao thông'))
       },
-      error: (err)=>{
-        // this.noti.dangerNotification('top','center');
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }

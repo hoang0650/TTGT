@@ -167,8 +167,11 @@ export class RoadeventsCreateComponent implements OnInit, OnDestroy {
 
         this.updateGeoLayer()
         this.getAutoPosition()
-      }}
-    )
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
+      }
+    })
   }
 
   createMarker(feature:any, latLng:any) {

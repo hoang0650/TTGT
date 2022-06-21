@@ -5,25 +5,25 @@ const {create,findAllPublish,getIcons,exportToCsv,findById,findAll,update,delete
 const utils = require('../controllers/util.js');
 const {checkRoles,checkPermissions} = require('../controllers/permissions');
 
-router.post('/', checkRoles(['admin']),
-checkPermissions(['staticmaps:update', 'staticmaps:manage']), 
+router.post('/', checkRoles(['user', 'admin']),
+checkPermissions(['staticmaps:manage']), 
 create);
 router.get('/publish', findAllPublish);
 router.get('/icons', getIcons);
-router.get('/csv', checkRoles(['admin']),
+router.get('/csv', checkRoles(['user', 'admin']),
 checkPermissions(['staticmaps:manage']), 
 exportToCsv);
 router.get('/:id', findById);
 router.get('/', findAll);
-router.put('/:id', checkRoles(['admin']),
-checkPermissions(['staticmaps:update', 'staticmaps:manage']), 
+router.put('/:id', checkRoles(['user', 'admin']),
+checkPermissions(['staticmaps:update']), 
 function(req, res, next) {
     utils.upVersion(req, res, next, StaticMap);
 });
-router.put('/:id', checkRoles(['admin']),
-checkPermissions(['staticmaps:update', 'staticmaps:manage']), 
+router.put('/:id', checkRoles(['user', 'admin']),
+checkPermissions(['staticmaps:update']), 
 update);
-router.delete('/:id', checkRoles(['admin']),
+router.delete('/:id', checkRoles(['user', 'admin']),
 checkPermissions(['staticmaps:manage']), 
 deleteStaticmap);
 

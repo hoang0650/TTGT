@@ -18,19 +18,19 @@ const {
 const {checkRoles,checkPermissions} = require('../controllers/permissions');
 
 router.post('/', 
-// checkPermissions(["settings:update", "settings:manage"]),
+// checkPermissions(["settings:update"]),
 create);
 router.get('/getsession', checkRoles(['admin']),
-checkPermissions(["settings:update", "settings:manage"]),
+checkPermissions(["settings:update"]),
 getSession);
 router.post('/cancelsession', checkRoles(['admin']),
-checkPermissions(["settings:update", "settings:manage"]), 
+checkPermissions(["settings:update"]), 
 cancelSession);
 router.get('/getlastsetting', checkRoles(['admin']),
-checkPermissions(["settings:update", "settings:manage"]), 
+checkPermissions(["settings:update"]), 
 getLastSetting);
 router.get('/getfirstsetting', checkRoles(['admin']),
-checkPermissions(["settings:update", "settings:manage"]), 
+checkPermissions(["settings:update"]), 
 getFirstSetting);
 router.get('/getfrontendsetting', getFrontendSetting);
 router.get('/getfirstfrontendsetting', getFirstFrontendSetting);
@@ -38,10 +38,10 @@ router.get('/getimageerror', getImageError);
 router.get('/getmapurl', getMapUrl);
 // app.get('/api/setting/getimageerror', getImageError);
 router.get('/', checkRoles(['admin']),
-checkPermissions(["settings:manage"]), 
+checkPermissions(["settings:update"]), 
 findAll);
 router.get('/:id', checkRoles(['admin']),
-checkPermissions(["settings:update", "settings:manage"]), 
+checkPermissions(["settings:update"]), 
 findById);
 
 router.param('id', function (req, res, next, id) {

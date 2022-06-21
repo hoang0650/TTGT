@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ConfigureService } from 'src/app/services/configure.service';
 import { MapService } from 'src/app/services/map.service';
 import { AppComponent } from 'src/app/app.component';
-import { NewService } from 'src/app/services/new.service';
 import { Content } from 'src/app/interfaces/contents';
 import * as AOS from 'aos';
 import { AuthorizationService } from 'src/app/services/authorization.service';
@@ -46,7 +45,7 @@ export class MainComponent implements OnInit {
   listEventType:any;
   listEvent: any;
 
-  constructor(public appCom: AppComponent,private configure: ConfigureService, private mapService: MapService, private newService: NewService, private auth: AuthorizationService, private route: ActivatedRoute, private nzMessage: NzMessageService) { }
+  constructor(public appCom: AppComponent,private configure: ConfigureService, private mapService: MapService, private auth: AuthorizationService, private route: ActivatedRoute, private nzMessage: NzMessageService) { }
 
   ngOnInit(): void {
     var message = this.route.snapshot.queryParamMap.get("message")

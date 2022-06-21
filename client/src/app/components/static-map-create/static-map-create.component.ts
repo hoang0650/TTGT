@@ -80,6 +80,9 @@ export class StaticMapCreateComponent implements OnInit, OnDestroy {
     this.staticMapService.getIcons().subscribe({
       next: (icons:any) => {
         this.listIcons = icons;
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -116,6 +119,9 @@ export class StaticMapCreateComponent implements OnInit, OnDestroy {
         if (res?.['action'] == "create") {
           this.newStatic.properties.push(res['column'])
         }
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -143,6 +149,9 @@ export class StaticMapCreateComponent implements OnInit, OnDestroy {
             feature.properties.splice(index, 1);
           });
         }
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -156,12 +165,18 @@ export class StaticMapCreateComponent implements OnInit, OnDestroy {
       this.staticMapService.create(staticMap).subscribe({
         next: (res:any) => {
           this.goBack('create', res._id);
+        },
+        error: (err) => {
+          this.appCom.errorHandler(err)
         }
       })
     } else {
       this.staticMapService.update(this.id, staticMap).subscribe({
         next: (res:any) => {
           this.goBack('update', this.id);
+        },
+        error: (err) => {
+          this.appCom.errorHandler(err)
         }
       })
     }
@@ -171,6 +186,9 @@ export class StaticMapCreateComponent implements OnInit, OnDestroy {
     this.staticMapService.delete(staticMap._id).subscribe({
       next: (res) => {
         this.goBack('remove');
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -194,6 +212,9 @@ export class StaticMapCreateComponent implements OnInit, OnDestroy {
             this.remove(staticMap);
           }
         }
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -370,6 +391,9 @@ export class StaticMapCreateComponent implements OnInit, OnDestroy {
           $('.dropdown').dropdown('set selected', staticmap.icon._id);
         }
         this.updateGeoLayer()
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   };

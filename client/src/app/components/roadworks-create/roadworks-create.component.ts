@@ -102,6 +102,9 @@ export class RoadworksCreateComponent implements OnInit, OnDestroy {
     this.staticData.loadDistrictAPI().subscribe({
       next:(hcmDistricts) => {
         this.districtList = hcmDistricts;
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
 
@@ -217,10 +220,10 @@ export class RoadworksCreateComponent implements OnInit, OnDestroy {
               id: res.id
             }})
 
-          }, error: (err) => {
-
+          },
+          error: (err) => {
+            this.appCom.errorHandler(err)
           }
-          
         })
     } else {
       newRoadwork.values.log.push('Cập nhật bởi: ' + profile.nickname + ' - Vào lúc: ' + dateString);
@@ -230,8 +233,9 @@ export class RoadworksCreateComponent implements OnInit, OnDestroy {
             result: "update",
             id: res.id
           }})
-        }, error: (err) => {
-
+        },
+        error: (err) => {
+          this.appCom.errorHandler(err)
         }
       })
     }
@@ -260,6 +264,9 @@ export class RoadworksCreateComponent implements OnInit, OnDestroy {
           if (res === 'yes') {
             this.router.navigateByUrl('/map/roadworks')
           }
+        },
+        error: (err) => {
+          this.appCom.errorHandler(err)
         }
       })
     } else {
@@ -278,6 +285,9 @@ export class RoadworksCreateComponent implements OnInit, OnDestroy {
             }
           })
         }
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -327,6 +337,9 @@ export class RoadworksCreateComponent implements OnInit, OnDestroy {
           this.updateNewRoadwork(latlng)
 
           this.mapCom.flyToBounds([[this.newRoadwork.loc.coordinates[1], this.newRoadwork.loc.coordinates[0]]])
+        },
+        error: (err) => {
+          this.appCom.errorHandler(err)
         }
       })
     }
@@ -351,6 +364,9 @@ export class RoadworksCreateComponent implements OnInit, OnDestroy {
 
         this.mapCom.detectChanges()
         this.cdRef.detectChanges()
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }

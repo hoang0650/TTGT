@@ -8,35 +8,35 @@ const {getByBboxx,getByTilee,alls} = require('../controllers/capevents.js');
 const {checkRoles,checkPermissions} = require('../controllers/permissions');
 
 // traffic event
-router.get('/traffic/:bbox/geojson', checkRoles(['admin']),
-checkPermissions(['trafficevents:read', 'trafficevents:update', 'trafficevents:manage']), 
+router.get('/traffic/:bbox/geojson', checkRoles(['user', 'admin']),
+checkPermissions(['trafficevents:read']), 
 getByBbox);
-router.get('/traffic/:z/:x/:y/geojson', checkRoles(['admin']),
-checkPermissions(['trafficevents:read', 'trafficevents:update', 'trafficevents:manage']), 
+router.get('/traffic/:z/:x/:y/geojson', checkRoles(['user', 'admin']),
+checkPermissions(['trafficevents:read']), 
 getByTile);
-router.get('/traffic/geojson', checkRoles(['admin']),
-checkPermissions(['trafficevents:read', 'trafficevents:update', 'trafficevents:manage']), 
+router.get('/traffic/geojson', checkRoles(['user', 'admin']),
+checkPermissions(['trafficevents:read']), 
 all);
 
-router.get('/getallbydatetomanage', checkRoles(['admin']),
-checkPermissions(['trafficevents:update', 'trafficevents:manage']), 
+router.get('/getallbydatetomanage', checkRoles(['user', 'admin']),
+checkPermissions(['trafficevents:read']), 
 getAllByDateToManage);
 router.get('/sortbylocation', sortByLocation);
 router.get('/getalltype', getAllType);
-router.get('/getall', checkRoles(['admin']),
-checkPermissions(['trafficevents:update', 'trafficevents:manage']), 
+router.get('/getall', checkRoles(['user', 'admin']),
+checkPermissions(['trafficevents:read']), 
 findAllWithoutCondition);
-router.put('/:id/approve', checkRoles(['admin']),
-checkPermissions(['trafficevents:update', 'trafficevents:manage']), 
+router.put('/:id/approve', checkRoles(['user', 'admin']),
+checkPermissions(['trafficevents:update']), 
 approveEvent);
-router.put('/:id/reject', checkRoles(['admin']),
-checkPermissions(['trafficevents:update', 'trafficevents:manage']), 
+router.put('/:id/reject', checkRoles(['user', 'admin']),
+checkPermissions(['trafficevents:update']), 
 rejectEvent);
-router.put('/:id/expire', checkRoles(['admin']),
-checkPermissions(['trafficevents:update', 'trafficevents:manage']), 
+router.put('/:id/expire', checkRoles(['user', 'admin']),
+checkPermissions(['trafficevents:update']), 
 expireEvent);
-router.put('/:id/update', checkRoles(['admin']),
-checkPermissions(['trafficevents:update', 'trafficevents:manage']), 
+router.put('/:id/update', checkRoles(['user', 'admin']),
+checkPermissions(['trafficevents:update']), 
 updateEvent);
 router.post('/', createOnTtgt); //api create by thongtingiaothong
 router.get('/', findAllApproved);

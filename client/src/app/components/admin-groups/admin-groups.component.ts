@@ -2,6 +2,7 @@ import { Component, OnInit, Output,EventEmitter} from '@angular/core';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { AppComponent } from 'src/app/app.component';
 import { AdminService } from 'src/app/services/admin.service';
 import { GroupService } from 'src/app/services/group.service';
 import { AdminGroupsEditComponent } from '../admin-groups-edit/admin-groups-edit.component';
@@ -74,7 +75,7 @@ export class AdminGroupsComponent implements OnInit {
 
 
 
-  constructor(public admin:AdminService, public modalService:NzModalService, private groupsService:GroupService, private nzMessage:NzMessageService, private userCom:AdminUsersComponent,private router: Router) {
+  constructor(public admin:AdminService, public appCom:AppComponent, public modalService:NzModalService, private groupsService:GroupService, private nzMessage:NzMessageService, private userCom:AdminUsersComponent,private router: Router) {
     userCom.groupCom = this
    }
 
@@ -89,8 +90,8 @@ export class AdminGroupsComponent implements OnInit {
         this.isUsersLoading = false;
         this.getGroup();
       },
-      error: err => {
-        console.log(err)
+      error: (err) => {
+        this.appCom.errorHandler(err)
       },
     });
 
@@ -126,14 +127,11 @@ export class AdminGroupsComponent implements OnInit {
             group.permissionsStats[value] = (group.permissionsStats[value] ||0)+1;
             group.permissionsStats.total = (group.permissionsStats.total ||0)+1;
           }
-
-          console.log(group.permissionsStats);
-         
         });
-
         this.groups = groups
-        
-    
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -188,7 +186,8 @@ export class AdminGroupsComponent implements OnInit {
       nzContent: AdminGroupsEditComponent,
       nzComponentParams: {
         users: this.currentUsers,
-        editGroup: group
+        editGroup: group,
+        appCom: this.appCom
       },
       nzWidth: 900
     })
@@ -209,6 +208,9 @@ export class AdminGroupsComponent implements OnInit {
           this.nzMessage.create('success', 'Đã xóa nhóm')
         }
         this.getGroup()
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -217,6 +219,9 @@ export class AdminGroupsComponent implements OnInit {
     this.groupsService.delete(group._id).subscribe({
       next: (res:any) => {
         this.getGroup();
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }

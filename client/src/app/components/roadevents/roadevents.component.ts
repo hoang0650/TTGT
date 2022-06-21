@@ -72,6 +72,9 @@ export class RoadeventsComponent implements OnInit, OnDestroy {
         })
         this.reDrawGeo()
         this.isLoading = false
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -200,6 +203,9 @@ export class RoadeventsComponent implements OnInit, OnDestroy {
     this.roadeventsService.getRoadEventCSV().subscribe({
       next:(res:any) => {
         this.mapCom.download(URL.createObjectURL(new Blob([res],{type:'text/csv'})),"ttgt-roadevents.csv")
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   };

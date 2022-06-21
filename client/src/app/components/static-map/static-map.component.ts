@@ -81,6 +81,9 @@ export class StaticMapComponent implements OnInit {
         });
 
         this.isLoading = false
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     })
   }
@@ -169,6 +172,9 @@ export class StaticMapComponent implements OnInit {
     this.staticMap.getStaticCSV().subscribe({
       next: (data:any) => {
         this.objectUrl = URL.createObjectURL(new Blob([data],{type:'text/csv'}));
+      },
+      error: (err) => {
+        this.appCom.errorHandler(err)
       }
     });
   }

@@ -17,7 +17,6 @@ export class AdminConfigConfirmComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("Hello");
     
   }
 

@@ -1,6 +1,7 @@
 import { Component, OnInit,ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
+import { AppComponent } from 'src/app/app.component';
 import { AdminService } from 'src/app/services/admin.service';
 import { AuthorizationService } from 'src/app/services/authorization.service';
 import { AdminGroupsComponent } from '../admin-groups/admin-groups.component';
@@ -22,7 +23,7 @@ export class AdminUsersComponent implements OnInit {
   tabs: string[]=[];
 
   groupCom?:AdminGroupsComponent
-  constructor(private admin:AdminService,private auth:AuthService,private router:Router) { }
+  constructor(private admin:AdminService, private appCom:AppComponent) { }
 
   ngOnInit(): void {
     //Gọi API lấy về mảng user
@@ -33,14 +34,9 @@ export class AdminUsersComponent implements OnInit {
         this.isUsersLoading = false;
       },
       error: (err) => {
-        if(err.status===403){
-          // this.auth.logout({
-          //   returnTo: "http://localhost:9000/home?message=blocked"
-          // })
-          this.router.navigate(["http://localhost:9000/home?message=blocked"]);
-        }
-      }});
-
+        this.appCom.errorHandler(err)
+      }
+    });
   }
 
   userIndexOf(users:any, user:any) {
@@ -99,7 +95,7 @@ export class AdminUsersComponent implements OnInit {
           this.lastUsersUpdated = new Date();
         },
         error: (err) => {
-          console.log(err)
+          this.appCom.errorHandler(err)
           this.selectedUsers[index].loading = false;
           this.lastUsersUpdated = new Date();
         }
@@ -114,7 +110,7 @@ export class AdminUsersComponent implements OnInit {
           this.lastUsersUpdated = new Date();
         },
         error: (err) => {
-          console.log(err)
+          this.appCom.errorHandler(err)
           this.selectedUsers[index].loading = false;
           this.lastUsersUpdated = new Date();
         }
@@ -145,8 +141,8 @@ changeUsersRole(action:string,data:object) {
           this.selectedUsers[index].loading = false;
           this.lastUsersUpdated = new Date();
         },
-        error: (err:any) => {
-          console.log(err);
+        error: (err) => {
+          this.appCom.errorHandler(err)
           this.selectedUsers[index].loading = false;
           this.lastUsersUpdated = new Date();
         }
@@ -161,7 +157,7 @@ changeUsersRole(action:string,data:object) {
           this.lastUsersUpdated = new Date();
         },
         error: (err) => {
-          console.log(err)
+          this.appCom.errorHandler(err)
           this.selectedUsers[index].loading = false;
           this.lastUsersUpdated = new Date();
         }
@@ -176,7 +172,7 @@ changeUsersRole(action:string,data:object) {
           this.lastUsersUpdated = new Date();
         },
         error: (err) => {
-          console.log(err)
+          this.appCom.errorHandler(err)
           this.selectedUsers[index].loading = false;
           this.lastUsersUpdated = new Date();
         }

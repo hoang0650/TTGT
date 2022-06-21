@@ -13,10 +13,10 @@ router.get('/:bbox/geojson', getByBbox);
 router.get('/:z/:x/:y/geojson', getByTile);
 router.get('/geojson', all);
 
-router.post('/', checkRoles(['admin']),
-checkPermissions(['parkings:update', 'parkings:manage']), 
+router.post('/', checkRoles(['user', 'admin']),
+checkPermissions(['parkings:manage']), 
 create);
-router.post('/upload/', checkRoles(['admin']),
+router.post('/upload/', checkRoles(['user', 'admin']),
 checkPermissions(['parkings:update', 'parkings:manage']), 
 uploadImage.array('images', 18), uploadImages);
 router.get('/hcmdistrict/', loaddistrict);
@@ -26,16 +26,16 @@ router.get('/sortbydistrict', sortByDistrict);
 router.get('/sortbylocationdistance', sortByLocationWithDistance);
 router.get('/upload/:imageName', displayImage);
 router.get('/', findAll);
-router.delete('/upload/:imageName', checkRoles(['admin']),
+router.delete('/upload/:imageName', checkRoles(['user', 'admin']),
 checkPermissions(['parkings:manage']), 
 deleteImage);
-router.get('/csv', checkRoles(['admin']),
+router.get('/csv', checkRoles(['user', 'admin']),
 checkPermissions(['parkings:manage']), 
 exportToCsv);
-router.put('/:id', checkRoles(['admin']),
-checkPermissions(['parkings:update', 'parkings:manage']), 
+router.put('/:id', checkRoles(['user', 'admin']),
+checkPermissions(['parkings:update']), 
 update);
-router.delete('/:id', checkRoles(['admin']),
+router.delete('/:id', checkRoles(['user', 'admin']),
 checkPermissions(['parkings:manage']), 
 deleteParking);
 router.get('/:id', findById);

@@ -4,10 +4,9 @@ import 'leaflet-rotatedmarker';
 import { AuthorizationService } from './services/authorization.service';
 import {AuthService} from '@auth0/auth0-angular';
 import { AdminService } from './services/admin.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { GroupService } from './services/group.service';
-import { update } from 'lodash';
 import { AuthGuard } from './shared/auth.guard';
 
 
@@ -25,7 +24,7 @@ export class AppComponent {
   loginTry = 0;
   permissions:any = {}
 
-  constructor(private groupService: GroupService,public auth:AuthorizationService, public authservice:AuthService, public admin:AdminService, private router:Router, private nzMessage:NzMessageService, private authGuard:AuthGuard){
+  constructor(private groupService: GroupService,public auth:AuthorizationService, public authservice:AuthService, public admin:AdminService, private router:Router, private nzMessage:NzMessageService, authGuard:AuthGuard){
     authGuard.setComponent(this)
   }
   
@@ -123,4 +122,15 @@ export class AppComponent {
     return false
   }
 
+  errorHandler(err:any) {
+    if (err?.status == 401) {
+      this.router.navigate(['unauthorized'])
+    } else if (err?.status == 403) {
+      this.authservice.logout({
+        returnTo: "http://localhost:9000/home?message=blocked"
+      })
+    } else {
+      this.nzMessage.error("Lỗi không xác định")
+    }
+  }
 }

@@ -34,7 +34,7 @@
             </form>
         </div>
         </nz-content>
-        <nz-footer>
+        <nz-footer style="z-index: 100;">
             <button *ngIf="!editMode" nz-button nzType="primary" type="button" (click)="startSetting()">Chỉnh sửa</button>
             <button *ngIf="editMode" nz-button nzType="primary" type="submit" [disabled]="!configForm.dirty || !appCom.checkPermission(['settings:update'])" (click)="openPopupConfig('save')">Lưu</button>
             <button *ngIf="editMode" nz-button nzType="primary" nzDanger type="button" (click)="openPopupConfig('cancel')">Hủy</button>
