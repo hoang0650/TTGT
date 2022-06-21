@@ -9,32 +9,34 @@
                                 <div class="user-card-body">
                                     <div class="container" *ngFor="let user of selectedUsers" [ngClass]="{loading: user.loading}">
                                         <div class="row">
-                                            <div class="col-2 p-0">
-                                                <img src="{{user.picture}}" class="ui rounded mini image">
+                                            <div class="col-2 p-0 user-card-avatar">
+                                                <img src="{{user.picture}}" class="ui rounded fluid image p-1">
                                             </div>
                                             <div class="col-8">
                                                 <div class="row">
-                                                    <div class="col-9">
-                                                        <span class="d-inline-block text-truncate font-weight-bold mw-100">{{user.nickname}} <i class="ui {{appMetadataToStar(user.app_metadata)}} icon position-absolute" title="{{appMetadataToRoleName(user.app_metadata)}}"></i></span>
-                                                    </div>
-                                                  
-                                                    <div class="col-3">
-                                                        <span *ngIf="user.blocked" class="ui red tiny label"><i class="lock icon m-0"></i></span>
+                                                    <div class="col-12">
+                                                        <span class="d-inline-block text-truncate font-weight-bold mw-100">
+                                                            {{user.nickname}} 
+                                                            <i *ngIf="!user['blocked']" class="ui {{appMetadataToStar(user.app_metadata)}} icon position-absolute" title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
+                                                            <span *ngIf="user['blocked']" class="ui red tiny label position-absolute" title="Bị chặn"><i class="lock icon m-0"></i></span>
+                                                        </span>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
-                                                    <div class="col-10 d-inline-block">
+                                                    <div class="col-12 d-inline-block">
                                                         <span class="d-inline-block text-truncate mw-100">
                                                             {{user.email}} 
                                                         </span>
                                                         <i class="ui green checkmark icon position-absolute" *ngIf="user.email_verified" title="Email đã được xác nhận"></i>
                                                         <i class="ui red remove icon position-absolute" *ngIf="!user.email_verified" title="Email chưa được xác nhận"></i>
                                                     </div>
-                                                    <div class="col-2">   
-                                                        <button class="btn px-2 py-0" data-tooltip="Bỏ chọn" (click)="toggleUser(user)"><i class="remove icon m-0"></i></button>
-                                                    </div>
                                                 </div>
+                                            </div>
+
+                                            
+                                            <div class="col-2 align-self-center">   
+                                                <button class="btn px-2 py-0" data-tooltip="Bỏ chọn" data-position="left center" (click)="toggleUser(user)"><i class="remove icon m-0"></i></button>
                                             </div>
                                         </div>
                                     </div>
@@ -286,24 +288,29 @@
                                         <td class="collapsing">
                                             <div class="container">
                                                 <div class="row">
-                                                    <div class="col-2">
-                                                        <img src="{{user.picture}}" class="ui mini rounded image">
+                                                    <div class="col-2 p-0 user-card-avatar">
+                                                        <img src="{{user.picture}}" class="ui rounded fluid image p-1">
                                                     </div>
                                                     <div class="col-8">
-                                                        <span class="d-inline-block text-truncate font-weight-bold">{{user.nickname}} <i class="ui {{appMetadataToStar(user.app_metadata)}} icon position-absolute" title="{{appMetadataToRoleName(user.app_metadata)}}"></i></span>
-                                                    </div>
-                                                    <div class="col-2">
-                                                        <span *ngIf="user.blocked" class="ui red tiny label"><i class="lock icon m-0"></i></span>
-                                                    </div>
-                                                </div>
-                        
-                                                <div class="row">
-                                                    <div class="col-10 d-inline-block">
-                                                        <span class="d-inline-block text-truncate">
-                                                            {{user.email}} 
-                                                        </span>
-                                                        <i class="ui green checkmark icon position-absolute" *ngIf="user.email_verified" title="Email đã được xác nhận"></i>
-                                                        <i class="ui red remove icon position-absolute" *ngIf="!user.email_verified" title="Email chưa được xác nhận"></i>
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <span class="d-inline-block text-truncate font-weight-bold mw-100">
+                                                                    {{user.nickname}} 
+                                                                    <i *ngIf="!user['blocked']" class="ui {{appMetadataToStar(user.app_metadata)}} icon position-absolute" title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
+                                                                    <span *ngIf="user['blocked']" class="ui red tiny label position-absolute" title="Bị chặn"><i class="lock icon m-0"></i></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+        
+                                                        <div class="row">
+                                                            <div class="col-12 d-inline-block">
+                                                                <span class="d-inline-block text-truncate mw-100">
+                                                                    {{user.email}} 
+                                                                </span>
+                                                                <i class="ui green checkmark icon position-absolute" *ngIf="user.email_verified" title="Email đã được xác nhận"></i>
+                                                                <i class="ui red remove icon position-absolute" *ngIf="!user.email_verified" title="Email chưa được xác nhận"></i>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

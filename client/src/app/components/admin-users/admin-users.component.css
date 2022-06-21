@@ -172,6 +172,14 @@ tbody, td, tfoot, th, thead, tr {
     }
 
     ::ng-deep .user-affix > .ant-affix {
-        width: 100% !important
+        width: 98% !important
     }
+}
+
+.user-card-avatar > .fluid.image {
+    max-width: 50px !important;
+}
+
+.user-card-avatar {
+    text-align: -webkit-right !important;
 }
