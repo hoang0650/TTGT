@@ -141,7 +141,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/api/setting/getimageerror', getImageError);
-// app.get('/api/snapshot/:id', getSnapShot);
 app.use(checkJwt);
 // app.use('/api', indexRouter);
 // mở ra khi check valid token

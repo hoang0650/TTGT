@@ -58,24 +58,102 @@ function getPermissions(req,res,next){
 //     };
 // };
 
+function checkRoles(allowedRoles){
+    return (req,res,next) =>{
+        
+        if(allowedRoles == null || allowedRoles.length === 0){
+            return res.status(401).end();
+        }
+
+        const userId = req.user.sub;
+        User.findOne({userId:userId})
+        .then((user) => {
+            if (user) {
+                const checkRoles = user.roles || ['guest']
+                req.user.roles = user.roles || ['guest']
+                if(user.blocked){
+                    return res.status(403).end()
+                }
+                if(checkRoles.includes('superadmin') || allowedRoles.includes(checkRoles[0])){
+                    return next();
+                }
+                return res.status(401).end()
+            } else {
+                return res.status(401).json({})
+            }
+        })
+       .catch((err) => {
+           res.status(500).json({ msg: err.message });
+       });     
+        
+    }
+    
+}
+
+        
+
 function checkPermissions(permissions)
 {
     return (req, res, next) => {
-     const userId = req.user.sub;
-     const query = {
-         id: userId,
-         permissions: {$eq: permissions}
-     }
-     
-
-     UserGroup.find(query).exec((err,result)=>{
-        if(err) {
-            return res.status(401).json({err});
+    var userPermissions = null
+    const query = {
+        status: {
+            $ne: 'removed'
         }
-        
-        return next();
-     })}
+    };
+
+    const sort = { createdAt: 1 };
+    UserGroup
+        .find(query)
+        .sort(sort)
+        .exec()
+        .then(groups => {
+            var curGroup = null
+            groups.forEach(group=>{
+                group.users.forEach(user => {
+                    if (user == req.user.sub ) {
+                        curGroup = group
+                        return
+                    }
+                })
+                    if (curGroup) {
+                        return
+                    }
+                })
+            if (curGroup) {
+                userPermissions = curGroup.permissions || {}
+            }
+
+            const checkRoles = req.user.roles || ['guest']
+            if(checkRoles.includes('superadmin')){
+            return next();
+            }
+
+            var permissionAction = ['none', 'read', 'update', 'manage']
+            var ok = false
+            
+            permissions.forEach((permission) => {
+            var tmpPermission = permission.split(":")
+            if (tmpPermission.length > 1) {
+                var userActionLevel = permissionAction.indexOf(userPermissions[tmpPermission[0]])
+                var requiredLevel = permissionAction.indexOf(tmpPermission[1])
+                if (userActionLevel >= requiredLevel) {
+                ok = true
+                return
+                }
+            }
+            })
+            if(ok){
+                return next();
+            }
+
+            return res.status(401).end();
+        })
+
+
+  }
 }
+
 
 function checkPermission(permission){
     return checkPermissions([permission]);
@@ -83,6 +161,7 @@ function checkPermission(permission){
 
 module.exports = {
     getPermissions,
+    checkRoles,
     checkPermissions,
     checkPermission,
 }

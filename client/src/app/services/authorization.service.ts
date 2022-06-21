@@ -11,9 +11,7 @@ import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
 export class AuthorizationService {
 
   idToken ='';
-  private isLoggIn = new ReplaySubject<boolean>(1);
-  isLogged = this.isLoggIn.asObservable();
-  constructor(public auth:AuthService, public admin:AdminService,private jwtHelper:JwtHelperService,private route: ActivatedRoute, private message:NzMessageService) { }
+  constructor(public auth:AuthService, public admin:AdminService) { }
   
   get userProfile(): any {
     if (this.isAuthenticated()) {
@@ -23,14 +21,6 @@ export class AuthorizationService {
       return {};
     }
   }
-  aud='https://dev-0gy0vn9g.us.auth0.com';
-  scop = 'openid profile app_metadata roles name email username';
-  
-  roles:any = {
-    admin: 'admin',
-    user: 'user',
-    superadmin: 'superadmin'
-  };
  
   authorize() {
     return this.auth.getAccessTokenSilently().subscribe({
@@ -39,18 +29,6 @@ export class AuthorizationService {
         localStorage.setItem('id_token',JSON.stringify(this.idToken))
       }
     })
-    // this.auth.getIdTokenClaims({audience:this.aud,scope:this.scop}).subscribe({
-    //   next: (data)=>{
-    //     console.log(data);
-    //     this.setSession(data);
-    //     this.router.navigate(['/home']);
-    //     this.profile(()=>{});
-    //   },
-    //   error: (err)=>{
-    //     this.router.navigate(['/home']);
-    //     console.log(err);
-    //   }
-    // })
   }
  
 
@@ -59,6 +37,11 @@ export class AuthorizationService {
     localStorage.getItem('id_token'); 
   }
  
+  blocked(){
+    return this.auth.logout({
+      returnTo: "http://localhost:9000/home?message=blocked"
+    })
+  }
 
   logout() {
     localStorage.removeItem('access_token');
@@ -77,7 +60,6 @@ export class AuthorizationService {
     localStorage.setItem('expires_at', expiresAt);
   }
 
-  
 
   public isAuthenticated(): boolean {
     // Check whether the current time is past the

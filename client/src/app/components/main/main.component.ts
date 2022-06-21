@@ -46,31 +46,22 @@ export class MainComponent implements OnInit {
   listEventType:any;
   listEvent: any;
 
-  constructor(public appCom: AppComponent,private configure:ConfigureService, private mapService:MapService, private newService:NewService, private auth:AuthorizationService, private route:ActivatedRoute, private nzMessage:NzMessageService) { }
+  constructor(public appCom: AppComponent,private configure: ConfigureService, private mapService: MapService, private newService: NewService, private auth: AuthorizationService, private route: ActivatedRoute, private nzMessage: NzMessageService) { }
 
   ngOnInit(): void {
     var message = this.route.snapshot.queryParamMap.get("message")
     if (message == "blocked") {
       this.nzMessage.error("Tài khoản của bạn đã bị khóa")
     }
-
     AOS.init();
     this.pullDown();
     this.getAllType()
     this.getInfoOfUser()
-    // this.newService.getNew().subscribe({
-    //   next: (res:any) => {
-    // }
-    // })
   }
 
   imageError(event:any) {
     event.target.src = this.configure.backend + 'api/setting/getimageerror'
   }
-  
-  // NewServices.getNew(function(res) {
-  //     _this.contents = res;
-  // }) ;
 
   getInfoOfUser() {
     this.mapService.getInfoOfUser().subscribe({
@@ -124,7 +115,6 @@ export class MainComponent implements OnInit {
       }
     })
   }
-
 
   login() {
     this.auth.login()

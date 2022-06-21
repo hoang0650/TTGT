@@ -82,7 +82,6 @@ export class AuthGuard implements CanActivate, CanActivateChild {
                   this.router.navigate([state.url])
                 }
               }
-
               if (this.checkRoles(allowedRoles) && this.checkPermission(allowedPermissions)) {
                 obs.next(true)
                 this.router.navigate([state.url])
@@ -107,10 +106,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
       return false;
     }
 
-    const checkRole = this.appCom?.['roles'] || ['guest']
-
-    console.log();
-    
+    const checkRole = this.appCom?.['roles'] || ['guest']  
 
     if(checkRole.includes('superadmin') || allowedRoles.includes(checkRole[0])){
       return true;
@@ -139,7 +135,6 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         }
       }
     })
-
     return ok
   }
 }

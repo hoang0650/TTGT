@@ -5,28 +5,28 @@ const {uploadImage} = require('../controllers/util.js');
 const {exportToCsv,create,update,findAll,uploadFile,
     displayFile,deleteRoadwork,deleteFile,findById,
     sortByDistrict,getByBbox,getByTile,all} = require('../controllers/roadwork');
-const {checkPermissions} = require('../controllers/permissions');
+const {checkRoles,checkPermissions} = require('../controllers/permissions');
 
 router.get('/geojson', all);
-router.get('/csv', 
+router.get('/csv', checkRoles(['admin']),
 checkPermissions(['roadworks:manage']), 
 exportToCsv);
 
-router.post('/', 
+router.post('/', checkRoles(['admin']),
 checkPermissions(['roadworks:update', 'roadworks:manage']), 
 create);
-router.put('/:id', 
+router.put('/:id', checkRoles(['admin']),
 checkPermissions(['roadworks:update', 'roadworks:manage']), 
 update);
 router.get('/', findAll);
-router.post('/upload/', 
+router.post('/upload/', checkRoles(['admin']),
 checkPermissions(['roadworks:update', 'roadworks:manage']), 
 uploadImage.array('documents', 18), uploadFile);
 router.get('/upload/:fileName', displayFile);
-router.delete('/:id', 
+router.delete('/:id', checkRoles(['admin']),
 checkPermissions(['roadworks:manage']), 
 deleteRoadwork);
-router.delete('/upload/:fileName', 
+router.delete('/upload/:fileName', checkRoles(['admin']),
 checkPermissions(['roadworks:manage']), 
 deleteFile);
 router.get('/:id', findById);

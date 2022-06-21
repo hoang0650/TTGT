@@ -15,21 +15,21 @@ const {
   getImageError
 } = require('../controllers/setting.js');
 
-const {checkPermissions} = require('../controllers/permissions');
+const {checkRoles,checkPermissions} = require('../controllers/permissions');
 
 router.post('/', 
 // checkPermissions(["settings:update", "settings:manage"]),
 create);
-router.get('/getsession',
+router.get('/getsession', checkRoles(['admin']),
 checkPermissions(["settings:update", "settings:manage"]),
 getSession);
-router.post('/cancelsession', 
+router.post('/cancelsession', checkRoles(['admin']),
 checkPermissions(["settings:update", "settings:manage"]), 
 cancelSession);
-router.get('/getlastsetting',
+router.get('/getlastsetting', checkRoles(['admin']),
 checkPermissions(["settings:update", "settings:manage"]), 
 getLastSetting);
-router.get('/getfirstsetting', 
+router.get('/getfirstsetting', checkRoles(['admin']),
 checkPermissions(["settings:update", "settings:manage"]), 
 getFirstSetting);
 router.get('/getfrontendsetting', getFrontendSetting);
@@ -37,10 +37,10 @@ router.get('/getfirstfrontendsetting', getFirstFrontendSetting);
 router.get('/getimageerror', getImageError);
 router.get('/getmapurl', getMapUrl);
 // app.get('/api/setting/getimageerror', getImageError);
-router.get('/', 
+router.get('/', checkRoles(['admin']),
 checkPermissions(["settings:manage"]), 
 findAll);
-router.get('/:id', 
+router.get('/:id', checkRoles(['admin']),
 checkPermissions(["settings:update", "settings:manage"]), 
 findById);
 

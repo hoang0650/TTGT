@@ -2,19 +2,19 @@ const express = require('express');
 const router = express.Router();
 const CameraGroup = require('../models/camera.group');
 const {create,update,findAll,findById,deleteCamGroup} = require('../controllers/cameras.groups.js');
-const {checkPermissions} = require('../controllers/permissions');
+const {checkRoles,checkPermissions} = require('../controllers/permissions');
 
-router.post('/', 
+router.post('/', checkRoles(['admin']),
 checkPermissions(['cameras:update', 'cameras:manage']), 
 create);
-router.post('/:id',
+router.post('/:id', checkRoles(['admin']),
 checkPermissions(['cameras:update', 'cameras:manage']), 
 update);
 router.get('/', findAll);
-router.get('/:id', 
+router.get('/:id', checkRoles(['admin']),
 checkPermissions(['cameras:read', 'cameras:update', 'cameras:manage']),
 findById);
-router.delete('/:id', 
+router.delete('/:id', checkRoles(['admin']),
 checkPermissions('cameras:manage'), 
 deleteCamGroup);
 

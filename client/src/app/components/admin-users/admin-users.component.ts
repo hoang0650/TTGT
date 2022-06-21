@@ -1,5 +1,8 @@
 import { Component, OnInit,ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '@auth0/auth0-angular';
 import { AdminService } from 'src/app/services/admin.service';
+import { AuthorizationService } from 'src/app/services/authorization.service';
 import { AdminGroupsComponent } from '../admin-groups/admin-groups.component';
 
 @Component({
@@ -19,7 +22,7 @@ export class AdminUsersComponent implements OnInit {
   tabs: string[]=[];
 
   groupCom?:AdminGroupsComponent
-  constructor(private admin:AdminService) { }
+  constructor(private admin:AdminService,private auth:AuthService,private router:Router) { }
 
   ngOnInit(): void {
     //Gọi API lấy về mảng user
@@ -29,10 +32,14 @@ export class AdminUsersComponent implements OnInit {
         this.lastUsersUpdated = new Date();
         this.isUsersLoading = false;
       },
-      error: err => {
-        console.log(err)
-      },
-    });
+      error: (err) => {
+        if(err.status===403){
+          // this.auth.logout({
+          //   returnTo: "http://localhost:9000/home?message=blocked"
+          // })
+          this.router.navigate(["http://localhost:9000/home?message=blocked"]);
+        }
+      }});
 
   }
 
