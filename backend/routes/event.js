@@ -5,37 +5,37 @@ const {createOnTtgt,updateEvent,approveEvent,rejectEvent,expireEvent,
 findAllApproved,findAllWithoutCondition,findById,getAllByDateToManage,
 sortByLocation,getAllType,getByTile,getByBbox,all} = require('../controllers/trafficevent');
 const {getByBboxx,getByTilee,alls} = require('../controllers/capevents.js');
-const {checkPermissions} = require('../controllers/permissions');
+const {checkRoles,checkPermissions} = require('../controllers/permissions');
 
 // traffic event
-router.get('/traffic/:bbox/geojson', 
+router.get('/traffic/:bbox/geojson', checkRoles(['admin']),
 checkPermissions(['trafficevents:read', 'trafficevents:update', 'trafficevents:manage']), 
 getByBbox);
-router.get('/traffic/:z/:x/:y/geojson', 
+router.get('/traffic/:z/:x/:y/geojson', checkRoles(['admin']),
 checkPermissions(['trafficevents:read', 'trafficevents:update', 'trafficevents:manage']), 
 getByTile);
-router.get('/traffic/geojson', 
+router.get('/traffic/geojson', checkRoles(['admin']),
 checkPermissions(['trafficevents:read', 'trafficevents:update', 'trafficevents:manage']), 
 all);
 
-router.get('/getallbydatetomanage', 
+router.get('/getallbydatetomanage', checkRoles(['admin']),
 checkPermissions(['trafficevents:update', 'trafficevents:manage']), 
 getAllByDateToManage);
 router.get('/sortbylocation', sortByLocation);
 router.get('/getalltype', getAllType);
-router.get('/getall', 
+router.get('/getall', checkRoles(['admin']),
 checkPermissions(['trafficevents:update', 'trafficevents:manage']), 
 findAllWithoutCondition);
-router.put('/:id/approve', 
+router.put('/:id/approve', checkRoles(['admin']),
 checkPermissions(['trafficevents:update', 'trafficevents:manage']), 
 approveEvent);
-router.put('/:id/reject', 
+router.put('/:id/reject', checkRoles(['admin']),
 checkPermissions(['trafficevents:update', 'trafficevents:manage']), 
 rejectEvent);
-router.put('/:id/expire', 
+router.put('/:id/expire', checkRoles(['admin']),
 checkPermissions(['trafficevents:update', 'trafficevents:manage']), 
 expireEvent);
-router.put('/:id/update', 
+router.put('/:id/update', checkRoles(['admin']),
 checkPermissions(['trafficevents:update', 'trafficevents:manage']), 
 updateEvent);
 router.post('/', createOnTtgt); //api create by thongtingiaothong

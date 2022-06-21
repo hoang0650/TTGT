@@ -6,43 +6,43 @@ const {exportCameraData,getByBbox,getByTile,all,getDefaultCamera,
     getCameraType,getCameraConfig,exportToCsv,
     create,deleteCamera,update,findAll,findById,
     sortByLocation,findOneByCamId} = require('../controllers/cameras');
-const {checkPermissions} = require('../controllers/permissions');
+const {checkRoles,checkPermissions} = require('../controllers/permissions');
 
 router.get('/:bbox/geojson', getByBbox);
 router.get('/:z/:x/:y/geojson', getByTile);
 router.get('/geojson', all);
 
-router.get('/getdefaultcamera', 
+router.get('/getdefaultcamera', checkRoles(['admin']),
 checkPermissions(['cameras:update', 'cameras:manage']), 
 getDefaultCamera);
 // router.get('/exportcamera', checkPermissions(['cameras:update', 'cameras:manage']), exportCameraData);
-router.get('/getcameratype', 
+router.get('/getcameratype', checkRoles(['admin']),
 checkPermissions(['cameras:update', 'cameras:manage']),
 getCameraType);
-router.get('/getcameraconfig', 
+router.get('/getcameraconfig', checkRoles(['admin']),
 checkPermissions(['cameras:update', 'cameras:manage']), 
 getCameraConfig);
-router.get('/csv', 
+router.get('/csv', checkRoles(['admin']),
 checkPermissions(['cameras:manage']), 
 exportToCsv);
 
-router.get('/xls',
+router.get('/xls', checkRoles(['admin']),
 checkPermissions(['cameras:manage']), 
 exportCameraData);
 
-router.post('/', 
+router.post('/', checkRoles(['admin']),
 checkPermissions(['cameras:update', 'cameras:manage']), 
 create);
-router.delete('/:id', 
+router.delete('/:id', checkRoles(['admin']),
 checkPermissions('cameras:manage'), 
 deleteCamera);
-router.put('/:id', 
+router.put('/:id', checkRoles(['admin']),
 checkPermissions(['cameras:update', 'cameras:manage']), 
 update);
 router.get('/:id', findById);
 router.get('/', findAll);
 router.get('/sortbylocation', sortByLocation);
-router.get('/camid/:camId', 
+router.get('/camid/:camId', checkRoles(['admin']),
 checkPermissions(['cameras:read', 'cameras:update', 'cameras:manage']), 
 findOneByCamId);
 

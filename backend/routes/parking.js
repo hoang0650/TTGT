@@ -7,16 +7,16 @@ const {getByBbox, getByTile, all, create,uploadImages,
     loaddistrict,loadDistrictName,sortByRegion,sortByDistrict,
     sortByLocationWithDistance,displayImage,findAll,findById,deleteImage,
     exportToCsv,update,deleteParking} = require('../controllers/parking.js');
-const {checkPermissions} = require('../controllers/permissions');
+const {checkRoles,checkPermissions} = require('../controllers/permissions');
 
 router.get('/:bbox/geojson', getByBbox);
 router.get('/:z/:x/:y/geojson', getByTile);
 router.get('/geojson', all);
 
-router.post('/', 
+router.post('/', checkRoles(['admin']),
 checkPermissions(['parkings:update', 'parkings:manage']), 
 create);
-router.post('/upload/', 
+router.post('/upload/', checkRoles(['admin']),
 checkPermissions(['parkings:update', 'parkings:manage']), 
 uploadImage.array('images', 18), uploadImages);
 router.get('/hcmdistrict/', loaddistrict);
@@ -26,16 +26,16 @@ router.get('/sortbydistrict', sortByDistrict);
 router.get('/sortbylocationdistance', sortByLocationWithDistance);
 router.get('/upload/:imageName', displayImage);
 router.get('/', findAll);
-router.delete('/upload/:imageName', 
+router.delete('/upload/:imageName', checkRoles(['admin']),
 checkPermissions(['parkings:manage']), 
 deleteImage);
-router.get('/csv', 
+router.get('/csv', checkRoles(['admin']),
 checkPermissions(['parkings:manage']), 
 exportToCsv);
-router.put('/:id', 
+router.put('/:id', checkRoles(['admin']),
 checkPermissions(['parkings:update', 'parkings:manage']), 
 update);
-router.delete('/:id', 
+router.delete('/:id', checkRoles(['admin']),
 checkPermissions(['parkings:manage']), 
 deleteParking);
 router.get('/:id', findById);

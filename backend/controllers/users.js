@@ -95,16 +95,9 @@ const checkExistInDb = function (type, id) {
 
 function getUserInfo(req, res) {
     const userId = req.user.sub;
-    const userInfor = new User(req.body);
-    const blocked = userInfor.blocked
-    userInfor.userId = userId;
-    if(blocked==true){
-        return res.status(403).end()
-    }else{
-         User.findOne({userId})
+         User.findOne({userId:userId})
         .then((user) => {
             if (user) {
-                userInfor.update({blocked:blocked, roles:user.roles});
                 res.status(200).json({blocked:user.blocked, roles: user.roles})
                 
             } else {
@@ -113,10 +106,7 @@ function getUserInfo(req, res) {
         })
         .catch((err) => {
             res.status(500).json({ msg: err.message });
-        });
-    }
-   
-        
+        });      
 }
 
 function findOneByUserId(req, res) {

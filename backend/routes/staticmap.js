@@ -3,27 +3,27 @@ const router = express.Router();
 const StaticMap = require('../models/staticmap');
 const {create,findAllPublish,getIcons,exportToCsv,findById,findAll,update,deleteStaticmap} = require('../controllers/staticmap.js');
 const utils = require('../controllers/util.js');
-const {checkPermissions} = require('../controllers/permissions');
+const {checkRoles,checkPermissions} = require('../controllers/permissions');
 
-router.post('/', 
+router.post('/', checkRoles(['admin']),
 checkPermissions(['staticmaps:update', 'staticmaps:manage']), 
 create);
 router.get('/publish', findAllPublish);
 router.get('/icons', getIcons);
-router.get('/csv', 
+router.get('/csv', checkRoles(['admin']),
 checkPermissions(['staticmaps:manage']), 
 exportToCsv);
 router.get('/:id', findById);
 router.get('/', findAll);
-router.put('/:id', 
+router.put('/:id', checkRoles(['admin']),
 checkPermissions(['staticmaps:update', 'staticmaps:manage']), 
 function(req, res, next) {
     utils.upVersion(req, res, next, StaticMap);
 });
-router.put('/:id', 
+router.put('/:id', checkRoles(['admin']),
 checkPermissions(['staticmaps:update', 'staticmaps:manage']), 
 update);
-router.delete('/:id', 
+router.delete('/:id', checkRoles(['admin']),
 checkPermissions(['staticmaps:manage']), 
 deleteStaticmap);
 
