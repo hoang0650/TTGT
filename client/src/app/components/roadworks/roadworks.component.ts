@@ -221,6 +221,7 @@ export class RoadworksComponent implements OnInit, OnDestroy {
                 }).on({
                   click: () => {
                     this.openRoadworkDetail(rw)
+                    this.expandDistrict(rw._id)
                   }
                 })
               }
@@ -233,6 +234,7 @@ export class RoadworksComponent implements OnInit, OnDestroy {
               this.listRoadwork.forEach((rw:any) => {
                 if (rw._id == this.id) {
                   this.openRoadworkDetail(rw)
+                  this.expandDistrict(rw._id)
                 } 
               })
             }
@@ -306,4 +308,26 @@ export class RoadworksComponent implements OnInit, OnDestroy {
       this.mapCom.flyToBounds(bound)
     }
   };
+
+  selectedDist:any
+  expandDistrict(id:string) {
+    var choosenDist: any
+    var choosenRoadwork: any
+    this.districts.forEach((district:any) => {
+      if (district.roadwork) {
+        district.roadwork.forEach((roadwork:any) => {
+          if (roadwork._id === id) {
+            choosenDist = district
+            choosenRoadwork = roadwork
+          }
+        });
+      }
+    });
+
+    if (this.selectedDist) {
+      this.selectedDist.expand = false
+    }
+    this.selectedDist = choosenDist
+    this.selectedDist.expand = true
+  }
 }
