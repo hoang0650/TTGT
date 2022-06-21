@@ -74,7 +74,6 @@ export class MapInformationComponent implements OnInit, OnDestroy {
 
     this.event = {}
     this.chosenMarkers = {}
-    this.markers = {}
     
     this.paramMap = {type: route.snapshot.queryParamMap.get("type"), id: route.snapshot.queryParamMap.get("id")}
 
@@ -639,19 +638,20 @@ export class MapInformationComponent implements OnInit, OnDestroy {
 
     this.staticMapService.getAllPublish().subscribe({
       next: (staticMapsList:any) => {
-      staticMapsList.forEach((staticMap:any) => {
-        var listGeo:any = [];
-        staticMap.color = 'black';
-        staticMap.mapdatas.forEach((data:any) => {
-          listGeo.push(this.drawGeo(data, staticMap, staticMap.color));
-        });
-        var staticMapObject = {
-          staticMapData: staticMap,
-          listGeo: listGeo,
-        };
-        this.listStaticMaps.push(staticMapObject);
+        this.markers['staticmaps'] = L.layerGroup()
+        staticMapsList.forEach((staticMap:any) => {
+          var listGeo:any = [];
+          staticMap.color = 'black';
+          staticMap.mapdatas.forEach((data:any) => {
+            listGeo.push(this.drawGeo(data, staticMap, staticMap.color));
+          });
+          var staticMapObject = {
+            staticMapData: staticMap,
+            listGeo: listGeo,
+          };
+          this.listStaticMaps.push(staticMapObject);
 
-      });
+        });
       },
       error: (err) => {
         this.appCom.errorHandler(err)
@@ -740,9 +740,9 @@ export class MapInformationComponent implements OnInit, OnDestroy {
     staticMapObject['toggle'] = !staticMapObject['toggle']
     staticMapObject.listGeo.forEach((geo:any) => {
       if (staticMapObject['toggle']) {
-        this.sideMap?.addLayer(geo);
+        this.markers['staticmaps'].addLayer(geo);
       } else {
-        this.sideMap?.removeLayer(geo);
+        this.markers['staticmaps'].removeLayer(geo);
       }
     });
   }
@@ -800,6 +800,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
     this.listRoadEvents = []
     this.roadEventService.getAllPublish().subscribe({
       next: (roadeventsList:any) => {
+        this.markers['roadevents'] = L.layerGroup()
         roadeventsList.forEach((geo:any) => {
           var geoObject = this.getRoadEventGeo();
           geoObject.addData(geo.featureCollection);
@@ -819,9 +820,9 @@ export class MapInformationComponent implements OnInit, OnDestroy {
   toggleRoadEvent(roadEventObject:any) {
     roadEventObject['toggle'] = !roadEventObject['toggle']
     if (roadEventObject.toggle) {
-      this.sideMap?.addLayer(roadEventObject.geoLayer);
+      this.markers['roadevents'].addLayer(roadEventObject.geoLayer);
     } else {
-      this.sideMap?.removeLayer(roadEventObject.geoLayer);
+      this.markers['roadevents'].removeLayer(roadEventObject.geoLayer);
     }
   }
 
@@ -884,6 +885,13 @@ export class MapInformationComponent implements OnInit, OnDestroy {
   closeModal() {
     this.isShare = false
     this.shareLink = ""
+  }
+
+  setVisible(mode:string) {
+    this.chosenMarkers = {}
+    this.location.replaceState(`./map`)
+    
+    this.markers[mode]['hidden'] = !this.markers[mode]['hidden']
   }
 
   setCurrentMode(mode?:string) {

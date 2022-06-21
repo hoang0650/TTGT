@@ -14,11 +14,45 @@
                     <div class="container">
                         <div class="row">
                             <div class="map-navigate">
-                                <button nz-button [nzSize]="'large'" nzShape="round" nzBlock [disabled]="currentMode == 'cameras'" (click)="setCurrentMode('cameras')" data-tooltip="Camera" data-position="top center"><i nz-icon><i class="fa-solid fa-camera"></i></i></button>
-                                <button nz-button [nzSize]="'large'" nzShape="round" nzBlock [disabled]="currentMode == 'parkings'" (click)="setCurrentMode('parkings')" data-tooltip="Bãi đỗ xe" data-position="top center"><i nz-icon><i class="fa-solid fa-square-parking"></i></i></button>
-                                <button nz-button [nzSize]="'large'" nzShape="round" nzBlock [disabled]="currentMode == 'roadevents'" (click)="setCurrentMode('roadevents')" data-tooltip="Phân luồng" data-position="top center"><i nz-icon><i class="fa-solid fa-road"></i></i></button>
-                                <button nz-button [nzSize]="'large'" nzShape="round" nzBlock [disabled]="currentMode == 'staticmaps'" (click)="setCurrentMode('staticmaps')" data-tooltip="Thông tin tĩnh" data-position="top center"><i nz-icon><i class="fa-solid fa-circle-info"></i></i></button>
-                                <button nz-button [nzSize]="'large'" nzShape="round" nzBlock [disabled]="currentMode == 'incidents'" (click)="setCurrentMode('incidents')" data-tooltip="Cảnh báo" data-position="top center"><i nz-icon><i class="fa-solid fa-triangle-exclamation"></i></i></button>
+                                <button class="btn btn-block rounded-pill m-0 mx-2" [ngClass]="{'btn-primary': !markers['cameras']?.['hidden'] && currentMode != 'cameras', 'btn-danger':markers['cameras']?.['hidden'], 'btn-success':!markers['cameras']?.['hidden'] && currentMode == 'cameras'}" 
+                                    (click)="currentMode != 'cameras' ? setCurrentMode('cameras') : setVisible('cameras')" 
+                                    [attr.data-tooltip]="currentMode != 'cameras' ? 'Camera' : (markers['cameras']?.['hidden'] ? 'Ẩn camera' : 'Hiện camera')" data-position="top center">
+                                    <i class="fa-solid fa-camera" *ngIf="currentMode != 'cameras'"></i>
+                                    <i class="fa-solid fa-eye" *ngIf="currentMode == 'cameras' && !markers['cameras']?.['hidden']"></i>
+                                    <i class="fa-solid fa-eye-slash" *ngIf="currentMode == 'cameras' && markers['cameras']?.['hidden']"></i>
+                                </button>
+
+                                <button class="btn btn-block rounded-pill m-0 mx-2" [ngClass]="{'btn-primary': !markers['parkings']?.['hidden'] && currentMode != 'parkings', 'btn-danger':markers['parkings']?.['hidden'], 'btn-success':!markers['parkings']?.['hidden'] && currentMode == 'parkings'}" 
+                                    (click)="currentMode != 'parkings' ? setCurrentMode('parkings') : setVisible('parkings')" 
+                                    [attr.data-tooltip]="currentMode != 'parkings' ? 'Bãi xe' : (markers['parkings']?.['hidden'] ? 'Ẩn bãi xe' : 'Hiện bãi xe')" data-position="top center">
+                                    <i class="fa-solid fa-square-parking" *ngIf="currentMode != 'parkings'"></i>
+                                    <i class="fa-solid fa-eye" *ngIf="currentMode == 'parkings' && !markers['parkings']?.['hidden']"></i>
+                                    <i class="fa-solid fa-eye-slash" *ngIf="currentMode == 'parkings' && markers['parkings']?.['hidden']"></i>
+                                </button>
+
+                                <button class="btn btn-block rounded-pill m-0 mx-2" [ngClass]="{'btn-primary': !markers['roadevents']?.['hidden'] && currentMode != 'roadevents', 'btn-danger':markers['roadevents']?.['hidden'], 'btn-success':!markers['roadevents']?.['hidden'] && currentMode == 'roadevents'}" 
+                                    (click)="currentMode != 'roadevents' ? setCurrentMode('roadevents') : setVisible('roadevents')" 
+                                    [attr.data-tooltip]="currentMode != 'roadevents' ? 'Phân luồng' : (markers['roadevents']?.['hidden'] ? 'Ẩn phân luồng' : 'Hiện phân luồng')" data-position="top center">
+                                    <i class="fa-solid fa-road" *ngIf="currentMode != 'roadevents'"></i>
+                                    <i class="fa-solid fa-eye" *ngIf="currentMode == 'roadevents' && !markers['roadevents']?.['hidden']"></i>
+                                    <i class="fa-solid fa-eye-slash" *ngIf="currentMode == 'roadevents' && markers['roadevents']?.['hidden']"></i>
+                                </button>
+
+                                <button class="btn btn-block rounded-pill m-0 mx-2" [ngClass]="{'btn-primary': !markers['staticmaps']?.['hidden'] && currentMode != 'staticmaps', 'btn-danger':markers['staticmaps']?.['hidden'], 'btn-success':!markers['staticmaps']?.['hidden'] && currentMode == 'staticmaps'}" 
+                                    (click)="currentMode != 'staticmaps' ? setCurrentMode('staticmaps') : setVisible('staticmaps')" 
+                                    [attr.data-tooltip]="currentMode != 'staticmaps' ? 'Thông tin tĩnh' : (markers['staticmaps']?.['hidden'] ? 'Ẩn thông tin tĩnh' : 'Hiện thông tin tĩnh')" data-position="top center">
+                                    <i class="fa-solid fa-circle-info" *ngIf="currentMode != 'staticmaps'"></i>
+                                    <i class="fa-solid fa-eye" *ngIf="currentMode == 'staticmaps' && !markers['staticmaps']?.['hidden']"></i>
+                                    <i class="fa-solid fa-eye-slash" *ngIf="currentMode == 'staticmaps' && markers['staticmaps']?.['hidden']"></i>
+                                </button>
+
+                                <button class="btn btn-block rounded-pill m-0 mx-2" [ngClass]="{'btn-primary': !markers['incidents']?.['hidden'] && currentMode != 'incidents', 'btn-danger':markers['incidents']?.['hidden'], 'btn-success':!markers['incidents']?.['hidden'] && currentMode == 'incidents'}" 
+                                    (click)="currentMode != 'incidents' ? setCurrentMode('incidents') : setVisible('incidents')" 
+                                    [attr.data-tooltip]="currentMode != 'incidents' ? 'Cảnh báo' : (markers['incidents']?.['hidden'] ? 'Ẩn cảnh báo' : 'Hiện cảnh báo')" data-position="top center">
+                                    <i class="fa-solid fa-triangle-exclamation" *ngIf="currentMode != 'incidents'"></i>
+                                    <i class="fa-solid fa-eye" *ngIf="currentMode == 'incidents' && !markers['incidents']?.['hidden']"></i>
+                                    <i class="fa-solid fa-eye-slash" *ngIf="currentMode == 'incidents' && markers['incidents']?.['hidden']"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -28,140 +62,167 @@
     </div>
 
     <div [hidden]="!(currentMode == 'cameras')">
-        <nz-card [nzCover]="cameraCover" class="map-card" *ngIf="chosenMarkers['camera']">
-            <img *ngIf="chosenMarkers['camera']" class="angle-camera" src="assets/images/compass.png" [ngStyle]="chosenMarkers['camera']?.angleStyle">
-            <div id="crEventCamera" class="camera-create-event-icon" (click)="createdEventByCamera(chosenMarkers['camera'])" title="Tạo cảnh báo ở camera này"><i class="fa-solid fa-triangle-exclamation"></i></div>
-        
-            <div *ngIf="chosenMarkers['camera']" >
-                <nz-card-meta [nzTitle]="'Tên camera: '+chosenMarkers['camera'].name" [nzDescription]="chosenMarkers['camera'].lastUpdated | amLocale:'vi' | amTimeAgo"></nz-card-meta>
-                <br>
-                <nz-row>
-                    <nz-col nzFlex="1">
-                        <button nz-button nzBlock="true" (click)="share('camera', chosenMarkers['camera']._id)">
-                            <i class="fa-solid fa-share-from-square"></i>
-                            <span class="map-layout-info-content-button">Chia sẻ</span>
-                        </button>
-                    </nz-col>
-                    <nz-col nzFlex="1">
-                        <button nz-button nzBlock="true" (click)="favoriteCamera(chosenMarkers['camera'])">
-                            <i class="fa-solid fa-star" [ngClass]="{'yellow': checkExistInFavoriteList(chosenMarkers['camera']._id)}"></i>
-                            <span class="map-layout-info-content-button" [ngClass]="{'yellow': checkExistInFavoriteList(chosenMarkers['camera']._id)}">Quan tâm</span>
-                          </button>
-                    </nz-col>
-                </nz-row>              
-            </div>
-        </nz-card>
-
-        <ng-template #cameraCover>
-            <img class="map-camera-image" *ngIf="chosenMarkers['camera'] && chosenMarkers['camera']?.liveviewUrl" (error)="imageError($event)" src="{{chosenMarkers['camera'].url}}" (load)="cameraLoading = false">
-            <img class="map-camera-image" *ngIf="chosenMarkers['camera'] && !chosenMarkers['camera']?.liveviewUrl || chosenMarkers['camera']?.liveview === ''" src="//dummyimage.com/600x400/000/fff&text=Camera sai thông số" (load)="cameraLoading = false">
-        </ng-template>
-        <nz-divider nzText="Quan tâm" class="divider-blue"></nz-divider>
-
-        <div *ngIf="listFavoriteCamera.length <= 0">
-            <nz-card>
-                <nz-card-meta nzTitle="Bạn chưa quan tâm camera nào"></nz-card-meta> 
-            </nz-card>
-            <br>
+        <div class="ui segment" [hidden]="!markers['cameras']?.['hidden']">
+            <h4 class="ui center aligned header">
+                <div class="content">
+                    Đang ẩn camera
+                </div>
+            </h4>
         </div>
-        
-        <div *ngIf="listFavoriteCamera.length > 0">
-            <div *ngFor="let favCamera of listFavoriteCamera" (click)="chooseCameraFromList(favCamera.fId)">
-                <nz-card [nzCover]="cameraCoverFavorite">
-                    <nz-card-meta [nzTitle]="'Tên camera: '+favCamera.fName"></nz-card-meta> 
-                </nz-card>
 
-                <ng-template #cameraCoverFavorite>
-                    <img class="map-camera-image" (error)="imageError($event)" src="{{backend}}api/snapshot/{{favCamera.fId}}" (load)="cameraLoading = false">
-                </ng-template>
+        <div [hidden]="markers['cameras']?.['hidden']">
+            <nz-card [nzCover]="cameraCover" class="map-card" *ngIf="chosenMarkers['camera']">
+                <img *ngIf="chosenMarkers['camera']" class="angle-camera" src="assets/images/compass.png" [ngStyle]="chosenMarkers['camera']?.angleStyle">
+                <div id="crEventCamera" class="camera-create-event-icon" (click)="createdEventByCamera(chosenMarkers['camera'])" title="Tạo cảnh báo ở camera này"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            
+                <div *ngIf="chosenMarkers['camera']" >
+                    <nz-card-meta [nzTitle]="'Tên camera: '+chosenMarkers['camera'].name" [nzDescription]="chosenMarkers['camera'].lastUpdated | amLocale:'vi' | amTimeAgo"></nz-card-meta>
+                    <br>
+                    <nz-row>
+                        <nz-col nzFlex="1">
+                            <button nz-button nzBlock="true" (click)="share('camera', chosenMarkers['camera']._id)">
+                                <i class="fa-solid fa-share-from-square"></i>
+                                <span class="map-layout-info-content-button">Chia sẻ</span>
+                            </button>
+                        </nz-col>
+                        <nz-col nzFlex="1">
+                            <button nz-button nzBlock="true" (click)="favoriteCamera(chosenMarkers['camera'])">
+                                <i class="fa-solid fa-star" [ngClass]="{'yellow': checkExistInFavoriteList(chosenMarkers['camera']._id)}"></i>
+                                <span class="map-layout-info-content-button" [ngClass]="{'yellow': checkExistInFavoriteList(chosenMarkers['camera']._id)}">Quan tâm</span>
+                            </button>
+                        </nz-col>
+                    </nz-row>              
+                </div>
+            </nz-card>
+
+            <ng-template #cameraCover>
+                <img class="map-camera-image" *ngIf="chosenMarkers['camera'] && chosenMarkers['camera']?.liveviewUrl" (error)="imageError($event)" src="{{chosenMarkers['camera'].url}}" (load)="cameraLoading = false">
+                <img class="map-camera-image" *ngIf="chosenMarkers['camera'] && !chosenMarkers['camera']?.liveviewUrl || chosenMarkers['camera']?.liveview === ''" src="//dummyimage.com/600x400/000/fff&text=Camera sai thông số" (load)="cameraLoading = false">
+            </ng-template>
+            <nz-divider nzText="Quan tâm" class="divider-blue"></nz-divider>
+
+            <div *ngIf="listFavoriteCamera.length <= 0">
+                <nz-card>
+                    <nz-card-meta nzTitle="Bạn chưa quan tâm camera nào"></nz-card-meta> 
+                </nz-card>
                 <br>
+            </div>
+            
+            <div *ngIf="listFavoriteCamera.length > 0">
+                <div *ngFor="let favCamera of listFavoriteCamera" (click)="chooseCameraFromList(favCamera.fId)">
+                    <nz-card [nzCover]="cameraCoverFavorite">
+                        <nz-card-meta [nzTitle]="'Tên camera: '+favCamera.fName"></nz-card-meta> 
+                    </nz-card>
+
+                    <ng-template #cameraCoverFavorite>
+                        <img class="map-camera-image" (error)="imageError($event)" src="{{backend}}api/snapshot/{{favCamera.fId}}" (load)="cameraLoading = false">
+                    </ng-template>
+                    <br>
+                </div>
             </div>
         </div>
     </div>
 
     <div [hidden]="!(currentMode == 'parkings')">
-
-        <nz-card *ngIf="chosenMarkers['parking']">              
-            <div>
-                <nz-row class="parking-header">
-                    <h3>{{chosenMarkers['parking'].name}}</h3>
-                </nz-row>
-                <nz-row class="mt-3">
-                    <div class="ui blue labels" *ngIf="chosenMarkers['parking']['vehicle_type']['car'] || chosenMarkers['parking']['vehicle_type']['bike']">
-                        <div class="ui label" *ngIf="chosenMarkers['parking']['vehicle_type']['car']"> Ô tô </div>
-                        <div class="ui label" *ngIf="chosenMarkers['parking']['vehicle_type']['bike']"> Xe máy </div>
-                    </div>
-
-                    
-                </nz-row>
-                <nz-row  *ngIf="chosenMarkers['parking']?.worktime">
-                    <p><b>Địa chỉ: </b> {{chosenMarkers['parking']?.addr}}</p>
-                </nz-row>
-                <nz-row  *ngIf="chosenMarkers['parking']?.worktime">
-                    <p><b>Thời gian làm việc: </b> Từ {{chosenMarkers['parking'].worktime['startWorking']}} đến {{chosenMarkers['parking'].worktime['endWorking']}} giờ</p>
-                </nz-row>
-                <nz-row  *ngIf="chosenMarkers['parking']?.worktime_details">
-                    <p><b>Ngày làm việc: </b> {{chosenMarkers['parking'].worktime_details}}</p>
-                </nz-row>
-                <nz-row class="mt-3">
-                    <nz-col nzFlex="1">
-                        <button nz-button nzBlock="true" (click)="share('parking', chosenMarkers['parking']?._id)">
-                            <i class="fa-solid fa-share-from-square"></i>
-                            <span class="map-layout-info-content-button">Chia sẻ</span>
-                        </button>
-                    </nz-col>
-
-                    <nz-col nzFlex="1">
-                        <button nz-button nzBlock="true" (click)="favoriteParking(chosenMarkers['parking'])">
-                            <i class="fa-solid fa-star" [ngClass]="{'yellow': checkParkingExistInFavoriteList(chosenMarkers['parking']._id)}"></i>
-                            <span class="map-layout-info-content-button" [ngClass]="{'yellow': checkParkingExistInFavoriteList(chosenMarkers['parking']._id)}">Quan tâm</span>
-                          </button>
-                    </nz-col>
-                </nz-row>              
-            </div>
-        </nz-card>
-
-        <nz-divider nzText="Quan tâm" class="divider-blue"></nz-divider>
-
-        <div *ngIf="getParkingFromFavorList().length <= 0">
-            <nz-card>
-                <nz-card-meta nzTitle="Bạn chưa quan tâm bãi xe nào"></nz-card-meta> 
-            </nz-card>
-            <br>
+        <div class="ui segment" [hidden]="!markers['parkings']?.['hidden']">
+            <h4 class="ui center aligned header">
+                <div class="content">
+                    Đang ẩn bãi xe
+                </div>
+            </h4>
         </div>
-        
-        <div *ngIf="getParkingFromFavorList().length > 0">
-            <div class="mb-3" *ngFor="let parkingFav of getParkingFromFavorList()" (click)="chooseParkingFromList(parkingFav._id)">
-                <nz-card>              
-                    <div>
-                        <nz-row class="parking-header">
-                            <h3>{{parkingFav.name}}</h3>
-                        </nz-row>
-                        <nz-row class="mt-3">
-                            <div class="ui blue labels" *ngIf="parkingFav['vehicle_type']['car'] || parkingFav['vehicle_type']['bike']">
-                                <div class="ui label" *ngIf="parkingFav['vehicle_type']['car']"> Ô tô </div>
-                                <div class="ui label" *ngIf="parkingFav['vehicle_type']['bike']"> Xe máy </div>
-                            </div>
 
-                            
-                        </nz-row>
-                        <nz-row  *ngIf="parkingFav?.worktime">
-                            <p><b>Địa chỉ: </b> {{parkingFav?.addr}}</p>
-                        </nz-row>
-                        <nz-row  *ngIf="parkingFav?.worktime">
-                            <p><b>Thời gian làm việc: </b> Từ {{parkingFav.worktime['startWorking']}} đến {{parkingFav.worktime['endWorking']}} giờ</p>
-                        </nz-row>
-                        <nz-row  *ngIf="parkingFav?.worktime_details">
-                            <p><b>Ngày làm việc: </b> {{parkingFav.worktime_details}}</p>
-                        </nz-row>    
-                    </div>
+        <div [hidden]="markers['parkings']?.['hidden']">
+            <nz-card *ngIf="chosenMarkers['parking']">              
+                <div>
+                    <nz-row class="parking-header">
+                        <h3>{{chosenMarkers['parking'].name}}</h3>
+                    </nz-row>
+                    <nz-row class="mt-3">
+                        <div class="ui blue labels" *ngIf="chosenMarkers['parking']['vehicle_type']['car'] || chosenMarkers['parking']['vehicle_type']['bike']">
+                            <div class="ui label" *ngIf="chosenMarkers['parking']['vehicle_type']['car']"> Ô tô </div>
+                            <div class="ui label" *ngIf="chosenMarkers['parking']['vehicle_type']['bike']"> Xe máy </div>
+                        </div>
+
+                        
+                    </nz-row>
+                    <nz-row  *ngIf="chosenMarkers['parking']?.worktime">
+                        <p><b>Địa chỉ: </b> {{chosenMarkers['parking']?.addr}}</p>
+                    </nz-row>
+                    <nz-row  *ngIf="chosenMarkers['parking']?.worktime">
+                        <p><b>Thời gian làm việc: </b> Từ {{chosenMarkers['parking'].worktime['startWorking']}} đến {{chosenMarkers['parking'].worktime['endWorking']}} giờ</p>
+                    </nz-row>
+                    <nz-row  *ngIf="chosenMarkers['parking']?.worktime_details">
+                        <p><b>Ngày làm việc: </b> {{chosenMarkers['parking'].worktime_details}}</p>
+                    </nz-row>
+                    <nz-row class="mt-3">
+                        <nz-col nzFlex="1">
+                            <button nz-button nzBlock="true" (click)="share('parking', chosenMarkers['parking']?._id)">
+                                <i class="fa-solid fa-share-from-square"></i>
+                                <span class="map-layout-info-content-button">Chia sẻ</span>
+                            </button>
+                        </nz-col>
+
+                        <nz-col nzFlex="1">
+                            <button nz-button nzBlock="true" (click)="favoriteParking(chosenMarkers['parking'])">
+                                <i class="fa-solid fa-star" [ngClass]="{'yellow': checkParkingExistInFavoriteList(chosenMarkers['parking']._id)}"></i>
+                                <span class="map-layout-info-content-button" [ngClass]="{'yellow': checkParkingExistInFavoriteList(chosenMarkers['parking']._id)}">Quan tâm</span>
+                            </button>
+                        </nz-col>
+                    </nz-row>              
+                </div>
+            </nz-card>
+
+            <nz-divider nzText="Quan tâm" class="divider-blue"></nz-divider>
+
+            <div *ngIf="getParkingFromFavorList().length <= 0">
+                <nz-card>
+                    <nz-card-meta nzTitle="Bạn chưa quan tâm bãi xe nào"></nz-card-meta> 
                 </nz-card>
+                <br>
+            </div>
+            
+            <div *ngIf="getParkingFromFavorList().length > 0">
+                <div class="mb-3" *ngFor="let parkingFav of getParkingFromFavorList()" (click)="chooseParkingFromList(parkingFav._id)">
+                    <nz-card>              
+                        <div>
+                            <nz-row class="parking-header">
+                                <h3>{{parkingFav.name}}</h3>
+                            </nz-row>
+                            <nz-row class="mt-3">
+                                <div class="ui blue labels" *ngIf="parkingFav['vehicle_type']['car'] || parkingFav['vehicle_type']['bike']">
+                                    <div class="ui label" *ngIf="parkingFav['vehicle_type']['car']"> Ô tô </div>
+                                    <div class="ui label" *ngIf="parkingFav['vehicle_type']['bike']"> Xe máy </div>
+                                </div>
+
+                                
+                            </nz-row>
+                            <nz-row  *ngIf="parkingFav?.worktime">
+                                <p><b>Địa chỉ: </b> {{parkingFav?.addr}}</p>
+                            </nz-row>
+                            <nz-row  *ngIf="parkingFav?.worktime">
+                                <p><b>Thời gian làm việc: </b> Từ {{parkingFav.worktime['startWorking']}} đến {{parkingFav.worktime['endWorking']}} giờ</p>
+                            </nz-row>
+                            <nz-row  *ngIf="parkingFav?.worktime_details">
+                                <p><b>Ngày làm việc: </b> {{parkingFav.worktime_details}}</p>
+                            </nz-row>    
+                        </div>
+                    </nz-card>
+                </div>
             </div>
         </div>
     </div>
 
     <div [hidden]="!(currentMode == 'roadevents')">
-        <div class="ui segment">
+        <div class="ui segment" [hidden]="!markers['roadevents']?.['hidden']">
+            <h4 class="ui center aligned header">
+                <div class="content">
+                    Đang ẩn phân luồng
+                </div>
+            </h4>
+        </div>
+
+        <div class="ui segment" [hidden]="markers['roadevents']?.['hidden']">
             <div class="ui fluid left icon input">
                 <input id="filterRoadEvent" type="text" placeholder="Tìm nhanh" [(ngModel)]="filterRoadEvent" class="form-control">
                     <i class="filter icon "></i>
@@ -193,7 +254,15 @@
     </div>
 
     <div [hidden]="!(currentMode == 'staticmaps')">
-        <div class="ui segment">
+        <div class="ui segment" [hidden]="!markers['staticmaps']?.['hidden']">
+            <h4 class="ui center aligned header">
+                <div class="content">
+                    Đang ẩn thông tin tĩnh
+                </div>
+            </h4>
+        </div>
+
+        <div class="ui segment" [hidden]="markers['staticmaps']?.['hidden']">
             <div class="ui fluid left icon input">
                 <input id="filterStaticMap" type="text" placeholder="Tìm nhanh" [(ngModel)]="filterStaticMap" class="form-control">
                     <i class="filter icon "></i>
@@ -226,7 +295,16 @@
     </div>
 
     <div [hidden]="!(currentMode == 'incidents')">
-        <div class="ui segment"  *ngIf="listEvent.length <= 0">
+        <div class="ui segment"  [hidden]="!markers['incidents']?.['hidden']">
+            <h4 class="ui center aligned header">
+                <div class="content">
+                    Đang ẩn cảnh báo
+                </div>
+            </h4>
+        </div>
+
+
+        <div class="ui segment"  [hidden]="listEvent.length > 0 || markers['incidents']?.['hidden']">
             <h4 class="ui center aligned header">
                 <div class="content">
                     Không có cảnh báo nào

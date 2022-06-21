@@ -164,8 +164,8 @@ export class MapComponent implements OnInit {
     this.componentRef = null
   }
 
-  trackByFn(item:any) {
-    return item;
+  trackByFn(index:any) {
+    return index;
   }
 
   detectChanges() {

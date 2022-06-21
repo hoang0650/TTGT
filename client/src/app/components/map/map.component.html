@@ -10,7 +10,9 @@
         
       >
 
-        <div *ngFor="let marker of markers | keyvalue; trackBy:trackByFn" [leafletLayer]="$any(marker).value"></div>
+        <ng-container *ngFor="let marker of markers | keyvalue; trackBy:trackByFn">
+            <div *ngIf="!$any(marker).value['hidden']" [leafletLayer]="$any(marker).value"></div>
+        </ng-container>
         <div [leafletLayer]="geoLayer"></div>
     </div>
 
