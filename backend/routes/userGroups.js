@@ -7,7 +7,7 @@ const UserGroup = require('../models/userGroup');
 router.get('/', all);
 router.post('/', create);
 router.put('/:id', update);
-router.delete('/:id', remove);
+router.delete('/:id/delete', remove);
 router.get('/permissions',getUserPermissions);
 
 router.param('id', function (req, res, next, id) {

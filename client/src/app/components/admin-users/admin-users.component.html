@@ -42,11 +42,11 @@
                             </div>
                         </nz-card>
 
-                        <nz-card style="width:100%" *ngIf="tabIndex==1 && groupCom?.selectedGroups?.length > 1">
-                            <nz-card-meta
-                            [nzAvatar]="groupTemplate"></nz-card-meta>
-                        </nz-card>
-                    </nz-affix>
+                            <nz-card style="width:100%" [nzActions]="[actionDelete]" *ngIf="tabIndex==1 && groupCom?.selectedGroups?.length > 1">
+                                <nz-card-meta
+                                [nzAvatar]="groupTemplate"></nz-card-meta>
+                            </nz-card>
+                        </nz-affix>
 
                     <ng-template #groupTemplate>
                         <h3 class="header"><span>{{groupCom?.selectedGroups.length}}</span> Nhóm được chọn</h3>
@@ -67,9 +67,9 @@
                     </ng-template>
                                     
 
-                    <ng-template #actionDelete>                  
-                        <i nz-icon *ngFor="let group of groupCom?.selectedGroups" (click)="groupCom?.confirmRemove(group)"><i nz-tooltip="Xóa nhóm" class="trash icon"></i></i>
-                    </ng-template>
+                        <ng-template #actionDelete>                  
+                            <i nz-icon (click)="groupCom?.deleteGroups()" ><i nz-tooltip="Xóa nhóm" class="trash icon"></i></i>
+                        </ng-template>
 
                     <ng-template #actionEdit>                  
                         <i nz-icon *ngFor="let group of groupCom?.selectedGroups" (click)="groupCom?.toggleEdit(group, $event);"><i nz-tooltip="Chỉnh sửa" class=" edit icon"></i></i>
