@@ -20,9 +20,9 @@
                     </div>
                 </div>
             </tr>
-            <tr (click)="selectGroup(group)" *ngFor="let group of groups"  [ngClass]="{positive: group.isSelected}">
+            <tr class="hoverable" (click)="toggleGroup(group, $event)" *ngFor="let group of groups"  [ngClass]="{selected: group.isSelected}">
                 <td class="collapsing">
-                    <div class="ui checkbox" (click)="toggleGroup(group, $event)">
+                    <div class="ui checkbox" (click)="selectGroup(group)">
                         <input type="checkbox" [checked]="group['isSelected']"> <label></label>
                     </div>
                 </td>
@@ -44,9 +44,7 @@
                     </span>
                 </td>
                 <td>
-                    <button class="no-animate ui compact icon button" (click)="toggleEdit(group, $event);">
-                        <i  class="write icon"></i>
-                    </button>
+                    <button class="btn btn-primary" (click)="toggleEdit(group, $event);" data-tooltip="Chỉnh sửa phân luồng"><i class="fa-solid fa-pen-to-square"></i> </button>
                 </td>
             </tr>
         </tbody>

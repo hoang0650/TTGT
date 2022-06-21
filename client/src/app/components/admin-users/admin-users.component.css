@@ -183,3 +183,11 @@ tbody, td, tfoot, th, thead, tr {
 .user-card-avatar {
     text-align: -webkit-right !important;
 }
+
+.hoverable:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.hoverable.selected {
+    background: rgba(0, 0, 0, 0.3);
+}

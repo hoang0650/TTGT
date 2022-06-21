@@ -106,3 +106,12 @@ table {
 .ant-card-bordered {
     border: 0;
 }
+
+tr.hoverable:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+tr.hoverable.selected {
+    background: rgba(0, 0, 0, 0.3);
+}
+

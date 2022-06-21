@@ -65,6 +65,7 @@ export class MainComponent implements OnInit {
   getInfoOfUser() {
     this.mapService.getInfoOfUser().subscribe({
       next: (res:any) => {
+        this.appCom.roles = res.roles || ['guest']
         this.favoriteList = []
         res.favorite.forEach((item:any) => {
           if (item.fType == 'camera') {
