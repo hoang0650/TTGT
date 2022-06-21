@@ -1,5 +1,5 @@
 <div class="table-wrapper">  
-    <button  class="btn btn-success" id="btnAddGroupTop" data-tooltip="Thêm nhóm" data-position="top left" (click)="openEdit()"><i class="add icon"></i> Thêm nhóm mới</button>
+    <button  class="btn btn-success" id="btnAddGroupTop" [disabled]="isUsersLoading" data-tooltip="Thêm nhóm" data-position="top left" (click)="openEdit()"><i class="add icon"></i> Thêm nhóm mới</button>
     <table class="ui unstackable celled padded table">
         <thead>
             <tr>

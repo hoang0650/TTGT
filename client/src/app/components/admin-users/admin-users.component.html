@@ -6,8 +6,8 @@
                     <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10" [nzOffsetBottom]="0" class="user-affix">
                         <nz-card [nzActions]="[actionUnblock, actionBlock, actionEllipsis]" *ngIf="tabIndex==0 && selectedUsers.length > 1" class="user-card" [nzTitle]="selectedUsers.length + ' tài khoản được chọn'">
                             <div class="user-card-body">
-                                <div class="container" *ngFor="let user of selectedUsers" [ngClass]="{loading: user.loading}">
-                                    <div class="row hoverable">
+                                <div class="container hoverable" *ngFor="let user of selectedUsers" [ngClass]="{loading: user.loading}">
+                                    <div class="row">
                                         <div class="col-2 p-0 user-card-avatar">
                                             <img src="{{user.picture}}" class="ui rounded fluid image p-1">
                                         </div>
@@ -42,34 +42,47 @@
                             </div>
                         </nz-card>
 
-                            <nz-card style="width:100%" [nzActions]="[actionDelete]" *ngIf="tabIndex==1 && groupCom?.selectedGroups?.length > 1">
-                                <nz-card-meta
-                                [nzAvatar]="groupTemplate"></nz-card-meta>
-                            </nz-card>
-                        </nz-affix>
+                        <nz-card style="width:100%" [nzActions]="[actionDelete]" *ngIf="tabIndex==1 && groupCom?.selectedGroups?.length > 1" class="user-card" [nzTitle]="groupCom?.selectedGroups.length + ' Nhóm được chọn'">
+                            <div class="user-card-body">
+                                <div class="container hoverable mb-3" *ngFor="let group of groupCom?.selectedGroups">
+                                    <div class="row">
+                                        <div class="col-10">
+                                            <div class="row">
+                                                <span class="d-inline-block">
+                                                    <span class="font-weight-bold">Nhóm: </span>
+                                                    {{group.name}}
+                                                </span>
+                                            </div>
 
-                    <ng-template #groupTemplate>
-                        <h3 class="header"><span>{{groupCom?.selectedGroups.length}}</span> Nhóm được chọn</h3>
-                        <div *ngFor="let group of groupCom?.selectedGroups" [ngClass]="{loading: group.loading}">
-                            <div class="row">
-                                <div class="col-10 d-inline-block">
-                                    <strong>Nhóm:</strong> <span>  {{group.name}}</span> 
-                                </div>                       
-                                <div class="col-2">                                  
-                                    <button class="btn px-2 py-0" data-tooltip="Bỏ chọn" (click)="groupCom?.toggleGroup(group,$event)"><i class="check icon m-0"></i></button>                                
-                                </div>  
+                                            <div class="row">
+                                                <span class="d-inline-block">
+                                                    <span class="font-weight-bold">Số thành viên: </span>
+                                                    {{group.users.length}}
+                                                </span>
+                                            </div>
+
+                                            <div class="row">
+                                                <span class="d-inline-block">
+                                                    <span class="font-weight-bold">Số quyền: </span>
+                                                    {{group.permissionsStats.total - (group.permissionsStats.none|| 0)}}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        
+                                        <div class="col-2 align-self-center">   
+                                            <button class="btn px-2 py-0" data-tooltip="Bỏ chọn" data-position="left center" (click)="groupCom?.toggleGroup(group,$event)"><i class="remove icon m-0"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <strong>Thành viên:</strong><br>
-                            <span>{{group.users.length}} thành viên</span><br>
-                            <strong>Quyền:</strong><br>
-                            <span>{{group.permissionsStats.total - (group.permissionsStats.none|| 0)}} quyền</span><br><br>
-                        </div>
-                    </ng-template>
+                        </nz-card>
+                    </nz-affix>
                                     
 
-                        <ng-template #actionDelete>                  
-                            <i nz-icon (click)="groupCom?.deleteGroups()" ><i nz-tooltip="Xóa nhóm" class="trash icon"></i></i>
-                        </ng-template>
+                    <ng-template #actionDelete>                  
+                        <i nz-icon (click)="groupCom?.deleteGroups()" ><i nz-tooltip="Xóa nhóm" class="trash icon"></i></i>
+                    </ng-template>
 
                     <ng-template #actionEdit>                  
                         <i nz-icon *ngFor="let group of groupCom?.selectedGroups" (click)="groupCom?.toggleEdit(group, $event);"><i nz-tooltip="Chỉnh sửa" class=" edit icon"></i></i>
@@ -96,98 +109,153 @@
                     </ng-template>
 
                     <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10" [nzOffsetBottom]="0" class="user-affix">
-                        <nz-card style="width:100%" [nzActions]="[actionUnblock, actionBlock, actionEllipsis]" *ngIf="tabIndex==0 && selectedUsers.length === 1">
-                            <nz-card-meta
-                            [nzAvatar]="avatarTemplate1"></nz-card-meta>
-                        </nz-card>
-                        <nz-card style="width:100%" [nzActions]="[actionEdit, actionDelete]" *ngIf="tabIndex==1 && groupCom?.selectedGroups?.length === 1">
-                            <nz-card-meta
-                            [nzAvatar]="groupTemplate1"></nz-card-meta>
-                        </nz-card>
-
-                    </nz-affix>
-
-                    <ng-template #avatarTemplate1>
-                        <h4 class="ui header">
-                            <nz-avatar [nzSrc]="selectedUsers[0].picture">
-                            </nz-avatar>
-                            <span style="padding-left: 10px;">{{selectedUsers[0].nickname}}</span> <span *ngIf="selectedUsers[0].blocked" class="ui red tiny label"> <i class="ui lock icon"></i> BỊ KHÓA</span>
-                                <div class="sub header">
-                                    <span>{{selectedUsers[0].email}}</span>
-                                    <i style="padding-left: 10px;" class="{{selectedUsers[0]}} green checkmark icon" *ngIf="selectedUsers[0].email_verified" data-tooltip="Email đã được xác nhận"></i>
-                                    <i style="padding-left: 10px;" class="ui red remove icon" *ngIf="!selectedUsers[0].email_verified" data-tooltip="Email chưa được xác nhận"></i>
-                                </div>
-                            
-                        </h4>
-                        <div [ngClass]="{loading: selectedUsers[0].loading}">
-                            <div class="item">
-                                <div class="ui horizontal label"><i class="wait icon"></i> Khởi tạo</div>
-                                <span>
-                                    <span>{{selectedUsers[0].created_at | amLocale:'vi' | amTimeAgo}}</span>
-                                    <i style="padding-left: 10px;" class="ui grey info circle icon" title="{{selectedUsers[0].created_at | amLocale:'vi' | amDateFormat:'DD/MM/YYYY HH:mm:ss'}}"></i>
-                                </span>
-                            </div>
-                            <div class="item">
-                                <div class="ui horizontal label"><i class="wait icon"></i> Số lần đăng nhập</div>
-                                <span>{{selectedUsers[0].logins_count}}</span>
-                            </div>
-                            <div class="item">
-                                <div class="ui horizontal label"><i class="wait icon"></i> Đăng nhập lần cuối</div>
-                                <span>
-                                    <span>{{selectedUsers[0].last_login | amLocale:'vi' | amTimeAgo }}</span>
-                                    <!-- <i class="ui grey info circle icon" title="{{selectedUsers[0].created_at | amDateFormat:'DD/MM/YYYY HH:mm:ss'}}"></i> -->
-                                </span>
-                            </div>
-                            <div class="item">
-                                <div class="ui horizontal label"><i class="wait icon"></i> IP Đăng nhập lần cuối</div>
-                                <span>{{selectedUsers[0].last_ip}}</span>
-                            </div>
-
-                        </div>
-                    </ng-template>
-
-                    <ng-template #groupTemplate1>
-                        <div *ngFor="let group of groupCom?.selectedGroups" [ngClass]="{loading: group.loading}">
-                            <h3 class="header"> Nhóm: <span>{{group.name}}</span></h3>
-                            <!-- <br> -->
-                            Thành viên:
-                            <accordion [isAnimated]="true" [closeOthers]="true">
-                                <accordion-group>
-                                    <div accordion-heading>
-                                        <span>{{group.users.length}} thành viên</span>
-                                    </div>
-                                    <div class="container">
-                                        <div class="row" *ngFor="let user of group.users">
-                                            <img [src]="user.picture" class="left floated mini ui rounded image">
-                                            <div class="content">
-                                                <div class="header">{{user.username}}</div>
-                                                <span>{{user.email}}</span>
-                                            </div>
+                        <nz-card style="width:100%" [nzActions]="selectedUsers[0]['blocked'] ? [actionUnblock, actionEllipsis] : [actionBlock, actionEllipsis]" *ngIf="tabIndex==0 && selectedUsers.length === 1" class="user-card" nzTitle="Thông tin người dùng">
+                            <div class="user-card-body">
+                                <div class="container" [ngClass]="{loading: selectedUsers[0].loading}">
+                                    <div class="row">
+                                        <div class="col-2 p-0 user-card-avatar">
+                                            <img src="{{selectedUsers[0].picture}}" class="ui rounded fluid image p-1">
                                         </div>
-                                    </div>
-                                </accordion-group>
-                            </accordion>
-                            Quyền:
-                            <accordion [isAnimated]="true" [closeOthers]="true">
-                                <accordion-group>
-                                    <div accordion-heading>
-                                        <span>{{group.permissionsStats.total - (group.permissionsStats.none|| 0)}} quyền</span>
-                                    </div>
-                                    <div *ngFor="let permission of group.permissions | keyvalue">
-                                        <div class="item" *ngIf="permission.value !== 'none'">
-                                            <div class="content">
-                                                <div class="header"><h4>{{groupCom?.permissionToText[$any(permission.key)]}}:</h4>
-                                                    {{groupCom?.roleToText[$any(permission.value)]}}
+                                        <div class="col-8">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <span class="d-inline-block text-truncate font-weight-bold mw-100">
+                                                        {{selectedUsers[0].nickname}} 
+                                                        <i *ngIf="!selectedUsers[0]['blocked']" class="ui {{appMetadataToStar(selectedUsers[0].app_metadata)}} icon position-absolute" title="{{appMetadataToRoleName(selectedUsers[0].app_metadata)}}"></i>
+                                                        <span *ngIf="selectedUsers[0]['blocked']" class="ui red tiny label position-absolute" title="Bị chặn"><i class="lock icon m-0"></i></span>
+                                                    </span>
+                                                </div>
+                                            </div>
 
+                                            <div class="row">
+                                                <div class="col-12 d-inline-block">
+                                                    <span class="d-inline-block text-truncate mw-100">
+                                                        {{selectedUsers[0].email}} 
+                                                    </span>
+                                                    <i class="ui green checkmark icon position-absolute" *ngIf="selectedUsers[0].email_verified" title="Email đã được xác nhận"></i>
+                                                    <i class="ui red remove icon position-absolute" *ngIf="!selectedUsers[0].email_verified" title="Email chưa được xác nhận"></i>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </accordion-group>
-                            </accordion>
-                        </div>
-                        <!-- <span>{{groupCom?.}}</span> -->
-                    </ng-template>
+
+                                    <div class="row">
+                                        <span class="p-0">
+                                            <div class="ui horizontal label">
+                                                <i class="fa-solid fa-calendar-plus"></i> Khởi tạo
+                                            </div>
+                                            <span>{{selectedUsers[0].created_at | amLocale:'vi' | amTimeAgo}}</span>
+                                            <i style="padding-left: 10px;" class="ui grey info circle icon" title="{{selectedUsers[0].created_at | amLocale:'vi' | amDateFormat:'DD/MM/YYYY HH:mm:ss'}}"></i>
+                                        </span>
+                                    </div>
+
+                                    <div class="row">
+                                        <span class="p-0">
+                                            <div class="ui horizontal label">
+                                                <i class="fa-solid fa-stopwatch-20"></i> Số lần đăng nhập
+                                            </div>
+                                            <span>{{selectedUsers[0].logins_count}}</span>
+                                        </span>
+                                    </div>
+
+                                    <div class="row">
+                                        <span class="p-0">
+                                            <div class="ui horizontal label">
+                                                <i class="fa-solid fa-right-to-bracket"></i> Đăng nhập lần cuối
+                                            </div>
+                                            <span>{{selectedUsers[0].last_login | amLocale:'vi' | amTimeAgo }}</span>
+                                        </span>
+                                    </div>
+
+                                    <div class="row">
+                                        <span class="p-0">
+                                            <div class="ui horizontal label">
+                                                <i class="fa-solid fa-location-pin"></i> IP Đăng nhập lần cuối
+                                            </div>
+                                            <span>{{selectedUsers[0].last_ip}}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>                    
+                        </nz-card>
+
+                        <nz-card style="width:100%" [nzActions]="[actionEdit, actionDelete]" *ngIf="tabIndex==1 && groupCom?.selectedGroups?.length === 1" class="user-card" nzTitle="Thông tin nhóm">
+                            <div class="user-card-body">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-10">
+                                            <div class="row">
+                                                <span class="d-inline-block">
+                                                    <span class="font-weight-bold">Tên nhóm: </span>
+                                                    {{groupCom?.selectedGroups[0].name}}
+                                                </span>
+                                            </div>
+
+                                            <div class="row">
+                                                <accordion [isAnimated]="true" [closeOthers]="true">
+                                                    <accordion-group panelClass="customClass">
+                                                        <div accordion-heading>
+                                                            <span>{{groupCom?.selectedGroups[0].users.length}} thành viên</span>
+                                                        </div>
+                                                        <div class="container" *ngIf="groupCom?.selectedGroups[0].users.length > 0">
+                                                            <div class="row hoverable" *ngFor="let user of groupCom?.selectedGroups[0].users">
+                                                                <div class="col-2 p-0 user-card-avatar">
+                                                                    <img src="{{user.picture}}" class="ui rounded fluid image p-1">
+                                                                </div>
+                                                                <div class="col-8">
+                                                                    <div class="row">
+                                                                        <div class="col-12">
+                                                                            <span class="d-inline-block text-truncate font-weight-bold mw-100">
+                                                                                {{user.nickname}} 
+                                                                                <i *ngIf="!user['blocked']" class="ui {{appMetadataToStar(user.app_metadata)}} icon position-absolute" title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
+                                                                                <span *ngIf="user['blocked']" class="ui red tiny label position-absolute" title="Bị chặn"><i class="lock icon m-0"></i></span>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                        
+                                                                    <div class="row">
+                                                                        <div class="col-12 d-inline-block">
+                                                                            <span class="d-inline-block text-truncate mw-100">
+                                                                                {{user.email}} 
+                                                                            </span>
+                                                                            <i class="ui green checkmark icon position-absolute" *ngIf="user.email_verified" title="Email đã được xác nhận"></i>
+                                                                            <i class="ui red remove icon position-absolute" *ngIf="!user.email_verified" title="Email chưa được xác nhận"></i>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="container" *ngIf="groupCom?.selectedGroups[0].users.length <= 0">
+                                                           Không có thành nào trong nhóm cả                           
+                                                        </div>
+                                                    </accordion-group>
+                                                </accordion>
+                                            </div>
+
+                                            <div class="row">
+                                                <accordion [isAnimated]="true" [closeOthers]="true">
+                                                    <accordion-group panelClass="customClass">
+                                                        <div accordion-heading>
+                                                            <span>{{groupCom?.selectedGroups[0].permissionsStats.total - (groupCom?.selectedGroups[0].permissionsStats.none|| 0)}} quyền</span>
+                                                        </div>
+                                                        <div class="container" *ngIf="(groupCom?.selectedGroups[0].permissionsStats.total - (groupCom?.selectedGroups[0].permissionsStats.none|| 0)) > 0">
+                                                            <div class="row" *ngFor="let permission of groupCom?.selectedGroups[0].permissions | keyvalue">
+                                                                <p *ngIf="permission.value !== 'none'"><b>{{groupCom?.permissionToText[$any(permission.key)]}} </b>{{groupCom?.roleToText[$any(permission.value)]}}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="container" *ngIf="(groupCom?.selectedGroups[0].permissionsStats.total - (groupCom?.selectedGroups[0].permissionsStats.none|| 0)) <= 0">
+                                                            Nhóm không có quyền nào cả                    
+                                                         </div>
+                                                    </accordion-group>
+                                                </accordion>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>     
+                        </nz-card>
+
+                    </nz-affix>
                     
                     
                     <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10" [nzOffsetBottom]="0" class="user-affix">

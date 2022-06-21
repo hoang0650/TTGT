@@ -191,3 +191,12 @@ tbody, td, tfoot, th, thead, tr {
 .hoverable.selected {
     background: rgba(0, 0, 0, 0.3);
 }
+
+:host >>> .card.customClass .card-header{
+    background-color: #1890ff;
+    color: #fff;
+}
+
+:host >>> .card.customClass .card-header:hover{
+    background-color: rgba(24, 143, 255, 0.8);
+}

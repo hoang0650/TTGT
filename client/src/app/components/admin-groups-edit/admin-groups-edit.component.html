@@ -12,92 +12,94 @@
 </div>
 
 <div class="modal-body">
-    <div class="ui form">
-        <div class="required field">
-            <label>Tên nhóm</label>
-            <input type="text" placeholder="VD: Đội vận hành và bảo dưỡng đường hầm" [(ngModel)]="group['name']" required="required">
-            
-        </div>
-        <div class="required field">
-            <label>Thông tin nhóm</label>
-            <input type="text" placeholder="VD: Vận hành, bảo dưỡng, giám sát camera trong đường hầm" [(ngModel)]="group['description']"
-                required="required">
-        </div>
+    <form id="groupForm" #groupForm="ngForm">
+        <div class="ui form">
+            <div class="required field">
+                <label>Tên nhóm</label>
+                <input type="text" name="groupName" placeholder="VD: Đội vận hành và bảo dưỡng đường hầm" [(ngModel)]="group['name']" required="required">
+                
+            </div>
+            <div class="required field">
+                <label>Thông tin nhóm</label>
+                <input type="text" name="groupDesc" placeholder="VD: Vận hành, bảo dưỡng, giám sát camera trong đường hầm" [(ngModel)]="group['description']"
+                    required="required">
+            </div>
 
-        <div class="two fields">
-            <div class="field">
-                <label>Thành viên nhóm</label>
-                <div class="ui fluid search selection dropdown" style="margin-left:0px!important">
-                    <input type="hidden">
-                    <i class="dropdown icon"></i>
-                    <div class="default text">Chọn tài khoản để thêm. Gõ để tìm kiếm</div>
-                    <div class="menu">
-                        <div class="item" (click)="addUser(user)" *ngFor="let user of users | orderBy:['name'];trackBy:trackByFn">
-                            <img [src]="user.picture" class="ui avatar image">
-                            <span>{{user.name}}</span>
+            <div class="two fields">
+                <div class="field">
+                    <label>Thành viên nhóm</label>
+                    <div class="ui fluid search selection dropdown" id="usersSelection" style="margin-left:0px!important">
+                        <input type="hidden">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">Chọn tài khoản để thêm. Gõ để tìm kiếm</div>
+                        <div class="menu">
+                            <div class="item" (click)="addUser(user)" *ngFor="let user of users | orderBy:['name'];trackBy:trackByFn">
+                                <img [src]="user.picture" class="ui avatar image">
+                                <span>{{user.name}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui middle aligned selection divided list">
+                        <div class="item" *ngFor="let user of group.users">
+                            <img [src]="user.picture" class="left floated mini ui rounded image">
+                            <div class="right floated content">
+                                <div class="ui icon button" (click)="removeUser(user)"><i class="minus icon"></i></div>
+                            </div>
+                            <div class="content">
+                                <div class="header">{{user.username}}</div>
+                                <span>{{user.email}}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="ui middle aligned selection divided list">
-                    <div class="item" *ngFor="let user of group.users">
-                        <img [src]="user.picture" class="left floated mini ui rounded image">
-                        <div class="right floated content">
-                            <div class="ui icon button" (click)="removeUser(user)"><i class="minus icon"></i></div>
-                        </div>
-                        <div class="content">
-                            <div class="header">{{user.username}}</div>
-                            <span>{{user.email}}</span>
-                        </div>
-                    </div>
+                <div class="field">
+                    <label>Quyền của nhóm</label>
+                    <table class="ui unstackable basic celled table">
+                        <thead>
+                            <tr class="center aligned">
+                                <th></th>
+                                <th>Không quyền</th>
+                                <th>Truy cập</th>
+                                <th>Cập nhật</th>
+                                <th>Quản lý</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let permission of permissions">
+                                <td class="middle aligned"> {{permission.name}}
+                                </td>
+
+                                <td class="collapsing middle center aligned">
+                                    <div class="ui fitted radio checkbox">
+                                        <input type="radio" name="{{permission.id}}" [(ngModel)]="group.permissions[permission.id]" value="none">
+                                        <label></label>
+                                    </div>
+                                </td>
+                                <td class="collapsing middle center aligned">
+                                    <div class="ui  fitted radio checkbox">
+                                        <input type="radio" name="{{permission.id}}" [(ngModel)]="group.permissions[permission.id]" value="read">
+                                        <label></label>
+                                    </div>
+                                </td>
+                                <td class="collapsing middle center aligned">
+                                    <div class="ui  fitted radio checkbox">
+                                        <input type="radio" name="{{permission.id}}" [(ngModel)]="group.permissions[permission.id]" value="update">
+                                        <label></label>
+                                    </div>
+                                </td>
+                                <td class="collapsing middle center aligned">
+                                    <div class="ui  fitted radio checkbox">
+                                        <input type="radio" name="{{permission.id}}" [(ngModel)]="group.permissions[permission.id]" value="manage">
+                                        <label></label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div class="field">
-                <label>Quyền của nhóm</label>
-                <table class="ui unstackable basic celled table">
-                    <thead>
-                        <tr class="center aligned">
-                            <th></th>
-                            <th>Không quyền</th>
-                            <th>Truy cập</th>
-                            <th>Cập nhật</th>
-                            <th>Quản lý</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let permission of permissions">
-                            <td class="middle aligned"> {{permission.name}}
-                            </td>
-
-                            <td class="collapsing middle center aligned">
-                                <div class="ui fitted radio checkbox">
-                                    <input type="radio" name="{{permission.id}}" [(ngModel)]="group.permissions[permission.id]" value="none">
-                                    <label></label>
-                                </div>
-                            </td>
-                            <td class="collapsing middle center aligned">
-                                <div class="ui  fitted radio checkbox">
-                                    <input type="radio" name="{{permission.id}}" [(ngModel)]="group.permissions[permission.id]" value="read">
-                                    <label></label>
-                                </div>
-                            </td>
-                            <td class="collapsing middle center aligned">
-                                <div class="ui  fitted radio checkbox">
-                                    <input type="radio" name="{{permission.id}}" [(ngModel)]="group.permissions[permission.id]" value="update">
-                                    <label></label>
-                                </div>
-                            </td>
-                            <td class="collapsing middle center aligned">
-                                <div class="ui  fitted radio checkbox">
-                                    <input type="radio" name="{{permission.id}}" [(ngModel)]="group.permissions[permission.id]" value="manage">
-                                    <label></label>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
         </div>
-    </div>
+    </form>
 </div>
 <div class="modal-body" *ngIf="isRemoving">
     <div class="ui negative icon message">
@@ -118,7 +120,7 @@
 <div *nzModalFooter>
 
     <button class="ui left floated negative button" [ngClass]="{loading: isRemoving}" type="button" (click)="remove()" *ngIf="!isCreate">Xóa nhóm</button>
-    <button class="ui primary button" type="button" (click)="submit()" *ngIf="isCreate">Tạo</button>
-    <button class="ui primary button" type="button" (click)="update()" *ngIf="!isCreate">Cập nhật</button>
+    <button class="ui primary button" form="groupForm" type="button" (click)="submit()" *ngIf="isCreate" [disabled]="!groupForm['valid']">Tạo</button>
+    <button class="ui primary button" form="groupForm" type="button" (click)="update()" *ngIf="!isCreate" [disabled]="!groupForm['valid']">Cập nhật</button>
     <button class="ui button" type="button" (click)="cancel()">Hủy</button>
 </div>
