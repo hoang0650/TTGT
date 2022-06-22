@@ -72,7 +72,7 @@
                                             </div>
 
                                             <div class="col-4 text-end">
-                                                <button [disabled]="!appCom.checkPermission(['parkings:update'])" class="btn btn-primary" [routerLink]="['.', parking._id, 'update']"><i class="fa-solid fa-pen-to-square"></i></button>
+                                                <button [disabled]="!appCom.checkPermission(['parkings:update'])" class="btn btn-primary" [routerLink]="['.', parking._id, 'update']" data-tooltip="Chỉnh sửa bãi xe" data-position="top right"><i class="fa-solid fa-pen-to-square"></i></button>
                                             </div>
                                         </div>
                 
@@ -127,7 +127,7 @@
                             </div>
 
                             <div class="col-4 text-end">
-                                <button [disabled]="!mapCom.permissions.indexOf('parkings:update')|| !mapCom.permissions.indexOf('parkings:manage')|| !appCom.roles.indexOf('superadmin')" class="btn btn-primary" [routerLink]="['.', parking._id, 'update']"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button [disabled]="!mapCom.permissions.indexOf('parkings:update')|| !mapCom.permissions.indexOf('parkings:manage')|| !appCom.roles.indexOf('superadmin')" class="btn btn-primary" [routerLink]="['.', parking._id, 'update']" data-tooltip="Chỉnh sửa bãi xe" data-position="top right"><i class="fa-solid fa-pen-to-square"></i></button>
                             </div>
                         </div>
 

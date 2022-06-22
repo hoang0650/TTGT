@@ -129,15 +129,7 @@ export class AdminGroupsEditComponent implements OnInit {
     this.groupService.update(this.group._id,this.group).subscribe({
       next: (res) => {
         // console.log('group',this.group);
-        const permissions:any = localStorage.getItem('permissions');
-        this.admin.changePermissions(this.group._id,permissions).subscribe({
-          next: (user:any) => {
 
-          },
-          error: (err) => {
-            this.appCom?.errorHandler(err)
-          }
-        })
         this.modalRef.close("updated")
 
       },

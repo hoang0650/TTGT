@@ -135,10 +135,10 @@ export class MapComponent implements OnInit {
       bounds = L.latLngBounds(bounds)
     } 
 
-    if (bounds.getCenter().distanceTo(curCenter) > 1) {
+    if (bounds.getCenter().distanceTo(curCenter) > 5) {
       this.sideMap?.flyToBounds(bounds, {
         paddingTopLeft: [window.innerWidth >= 992 ? window.innerWidth*0.33 : (window.innerWidth <= 450 ? 0 : 372 ), 0],
-        duration: 1
+        duration: 0.666
       })
     }
   }

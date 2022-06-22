@@ -45,7 +45,6 @@ export class CameraGroupsComponent implements OnInit {
   lastResult:any
   selectedGroup: any;
   error:any;
-  lastCamera: any;
   validateCameraGroup: string[];
   options: any;
   filter:string;
@@ -116,6 +115,7 @@ export class CameraGroupsComponent implements OnInit {
 
     this.cameraClusterLayer.removeLayer(this.markers[camera._id]);
     this.mapCom.markers[camera._id] = this.markers[camera._id]
+    this.mapCom.detectChanges()
   }
 
   deselectCameraById(camera:any) {
@@ -123,6 +123,7 @@ export class CameraGroupsComponent implements OnInit {
     this.markers[camera._id].setIcon(newIcon);
     delete this.mapCom.markers[camera._id]
     this.refreshCluster()
+    this.mapCom.detectChanges()
   }
 
   refreshCluster() {
@@ -147,12 +148,8 @@ export class CameraGroupsComponent implements OnInit {
   }
 
   focusCamera(camera:any) {
-    if (this.lastCamera) {
-      this.deselectCameraById(this.lastCamera);
-    }
     this.selectCameraById(camera);
     this.mapCom.flyToBounds([[camera.loc.coordinates[1], camera.loc.coordinates[0]]])
-    this.lastCamera = camera;
   }
 
 
@@ -312,6 +309,8 @@ export class CameraGroupsComponent implements OnInit {
     this.availableCameras = this.availableCameras.filter((camera:any) => {
       return camera._id != currentCamera._id
     })
+
+    this.mapCom.detectChanges()
   }
 
   removeCameraByIndex(index:number) {
@@ -322,6 +321,7 @@ export class CameraGroupsComponent implements OnInit {
       this.availableCameras = _.cloneDeep(this.availableCameras)
       this.group.cameras.splice(index, 1);
     }
+    this.mapCom.detectChanges()
   }
 
   clickCamera(camera:any) {
@@ -349,19 +349,35 @@ export class CameraGroupsComponent implements OnInit {
 
     group['listCamId'] = listCamId
 
-    this.cameraGroupService.save(group).subscribe({
-      next: (res) => {
-        this.getData();
-
-        this.closeEditor('update');
-        this.inputChange = false;
-        
-      },
-      error: (err) => {
-        this.appCom.errorHandler(err)
-      }
-    })
-
+    if (this.isCreate) {
+      this.cameraGroupService.save(group).subscribe({
+        next: (res) => {
+          this.getData();
+  
+          this.closeEditor('update');
+          this.inputChange = false;
+          
+        },
+        error: (err) => {
+          this.appCom.errorHandler(err)
+        }
+      })  
+    } else {
+      this.cameraGroupService.update(group._id, group).subscribe({
+        next: (res) => {
+          this.getData();
+  
+          this.closeEditor('update');
+          this.inputChange = false;
+          
+        },
+        error: (err) => {
+          this.appCom.errorHandler(err)
+        }
+      })
+  
+    }
+   
   }
 
   cancel() {

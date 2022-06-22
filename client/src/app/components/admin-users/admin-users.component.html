@@ -3,8 +3,8 @@
         <div class="row">
             <div class="col-lg-4 col-md-12 mb-3 order-last">
                 <div class="inner-box">
-                    <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10" [nzOffsetBottom]="0" class="user-affix">
-                        <nz-card [nzActions]="[actionUnblock, actionBlock, actionEllipsis]" *ngIf="tabIndex==0 && selectedUsers.length > 1" class="user-card" [nzTitle]="selectedUsers.length + ' tài khoản được chọn'">
+                    <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10" [nzOffsetBottom]="0" class="user-affix" *ngIf="tabIndex==0 && selectedUsers.length > 1">
+                        <nz-card [nzActions]="[actionUnblock, actionBlock, actionEllipsis]" class="user-card" [nzTitle]="selectedUsers.length + ' tài khoản được chọn'">
                             <div class="user-card-body">
                                 <div class="container hoverable" *ngFor="let user of selectedUsers" [ngClass]="{loading: user.loading}">
                                     <div class="row">
@@ -41,8 +41,10 @@
                                 </div>
                             </div>
                         </nz-card>
+                    </nz-affix>
 
-                        <nz-card style="width:100%" [nzActions]="[actionDelete]" *ngIf="tabIndex==1 && groupCom?.selectedGroups?.length > 1" class="user-card" [nzTitle]="groupCom?.selectedGroups.length + ' Nhóm được chọn'">
+                    <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10" [nzOffsetBottom]="0" class="user-affix" *ngIf="tabIndex==1 && groupCom?.selectedGroups?.length > 1">
+                        <nz-card [nzActions]="[actionDelete]" class="user-card" [nzTitle]="groupCom?.selectedGroups.length + ' Nhóm được chọn'">
                             <div class="user-card-body">
                                 <div class="container hoverable mb-3" *ngFor="let group of groupCom?.selectedGroups">
                                     <div class="row">
@@ -108,8 +110,8 @@
                         </nz-dropdown-menu>
                     </ng-template>
 
-                    <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10" [nzOffsetBottom]="0" class="user-affix">
-                        <nz-card style="width:100%" [nzActions]="selectedUsers[0]['blocked'] ? [actionUnblock, actionEllipsis] : [actionBlock, actionEllipsis]" *ngIf="tabIndex==0 && selectedUsers.length === 1" class="user-card" nzTitle="Thông tin người dùng">
+                    <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10" [nzOffsetBottom]="0" class="user-affix" *ngIf="tabIndex==0 && selectedUsers.length === 1">
+                        <nz-card [nzActions]="selectedUsers[0]['blocked'] ? [actionUnblock, actionEllipsis] : [actionBlock, actionEllipsis]" class="user-card" nzTitle="Thông tin người dùng">
                             <div class="user-card-body">
                                 <div class="container" [ngClass]="{loading: selectedUsers[0].loading}">
                                     <div class="row">
@@ -179,7 +181,12 @@
                             </div>                    
                         </nz-card>
 
-                        <nz-card style="width:100%" [nzActions]="[actionEdit, actionDelete]" *ngIf="tabIndex==1 && groupCom?.selectedGroups?.length === 1" class="user-card" nzTitle="Thông tin nhóm">
+                        
+
+                    </nz-affix>
+
+                    <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10" [nzOffsetBottom]="0" class="user-affix" *ngIf="tabIndex==1 && groupCom?.selectedGroups?.length === 1">
+                        <nz-card [nzActions]="[actionEdit, actionDelete]" class="user-card" nzTitle="Thông tin nhóm">
                             <div class="user-card-body">
                                 <div class="container">
                                     <div class="row">
@@ -254,50 +261,44 @@
                                 </div>
                             </div>     
                         </nz-card>
-
                     </nz-affix>
                     
                     
-                    <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10" [nzOffsetBottom]="0" class="user-affix">
-                        <nz-card *ngIf="selectedUsers.length === 0 && tabIndex==0" class="user-card" nzTitle= 'Thống kê tài khoản'>
-                            <nz-card-meta [nzAvatar]="avatarTemplate2"></nz-card-meta>
-                        </nz-card>
-                        <nz-card *ngIf="groupCom?.selectedGroups.length === 0 && tabIndex==1" class="user-card" nzTitle= 'Thống kê nhóm'>
-                            <nz-card-meta [nzAvatar]="groupTemplate2"></nz-card-meta>
+                    <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10" [nzOffsetBottom]="0" class="user-affix" *ngIf="selectedUsers.length === 0 && tabIndex==0">
+                        <nz-card class="user-card" nzTitle= 'Thống kê tài khoản'>
+                            <div class="container">
+                                <div class="row">
+                                    <p><b>Tài khoản: </b>{{users.length}}</p>
+                                </div>
+                                
+                                <div class="row">
+                                    <p><b>Khách: </b>{{getUserByRole('guest').length}}</p>
+                                </div>
+    
+                                <div class="row">
+                                    <p><b>Người dùng: </b>{{getUserByRole('user').length}}</p>
+                                </div>
+    
+                                <div class="row">
+                                    <p><b>Quản lý: </b>{{getUserByRole('admin').length}}</p>
+                                </div>
+    
+                                <div class="row">
+                                    <p><b>Bị chặn: </b>{{getUserByBlocked(true).length}}</p>
+                                </div>
+                            </div>
                         </nz-card>
                     </nz-affix>
 
-                    <ng-template #avatarTemplate2>
-                        <div class="container">
-                            <div class="row">
-                                <p><b>Tài khoản: </b>{{users.length}}</p>
-                            </div>
-                            
-                            <div class="row">
-                                <p><b>Khách: </b>{{getUserByRole('guest').length}}</p>
-                            </div>
-
-                            <div class="row">
-                                <p><b>Người dùng: </b>{{getUserByRole('user').length}}</p>
-                            </div>
-
-                            <div class="row">
-                                <p><b>Quản lý: </b>{{getUserByRole('admin').length}}</p>
-                            </div>
-
-                            <div class="row">
-                                <p><b>Bị chặn: </b>{{getUserByBlocked(true).length}}</p>
-                            </div>
-                        </div>
-                    </ng-template>
-                    
-                    <ng-template #groupTemplate2>
-                        <div class="container">
-                            <div class="row">
-                                <p><b>Số nhóm: </b>{{groupCom?.groups?.length}}</p>
-                            </div>
-                        </div>       
-                    </ng-template>        
+                    <nz-affix [nzTarget]="usersLayout" [nzOffsetTop]="10" [nzOffsetBottom]="0" class="user-affix" *ngIf="groupCom?.selectedGroups.length === 0 && tabIndex==1">
+                        <nz-card class="user-card" nzTitle= 'Thống kê nhóm'>
+                            <div class="container">
+                                <div class="row">
+                                    <p><b>Số nhóm: </b>{{groupCom?.groups?.length}}</p>
+                                </div>
+                            </div> 
+                        </nz-card>
+                    </nz-affix>               
                 </div>
             </div>
             
