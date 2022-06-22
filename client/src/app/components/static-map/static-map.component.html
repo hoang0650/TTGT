@@ -61,21 +61,27 @@
         </h4>
 
         <div class="ui middle aligned selection divided list">
-            <div [ngClass]="{'active': staticMap['selected']}" class="item" (click)="selectStaticMap(staticMap)" *ngFor="let staticMap of listData | searchFilter: searchText:['staticMapData', 'name']">
-                <div class="left floated content ">
-                    <div *ngIf="!staticMap?.staticMapData?.icon" class="ui simple dropdown label color-picker {{staticMap.color ? staticMap.color : 'black'}}">
-                        <div class="menu ui grid">
-                            <div class="item {{item.key}} four wide column item-color-hover" (click)="changeColorStaticMap(staticMap, item.key);$event.stopPropagation()" *ngFor="let item of listColors | keyvalue"></div>
+            <div class="ui middle aligned selection divided list">
+                <div class="container item" id="{{staticMap._id}}" [ngClass]="{'active': staticMap['selected']}" (click)="selectStaticMap(staticMap)" *ngFor="let staticMap of listData | searchFilter: searchText:['staticMapData', 'name']">
+                    <div class="row">
+                        <div class="col-2 text-end">
+                            <div *ngIf="!staticMap?.staticMapData?.icon" class="ui simple dropdown label color-picker {{staticMap.color ? staticMap.color : 'black'}}">
+                                <div class="menu ui grid">
+                                    <div class="item {{item.key}} four wide column item-color-hover" (click)="changeColorStaticMap(staticMap, item.key);$event.stopPropagation()" *ngFor="let item of listColors | keyvalue"></div>
+                                </div>
+                            </div>
+                            <img *ngIf="staticMap?.staticMapData?.icon" class="ui fluid image" style="max-width:35px" src="{{staticMap.staticMapData.icon.data.iconUrl}}">
+                        </div>
+                        <div class="col-8 align-self-center">
+                            <span><b>{{staticMap.staticMapData.name}}</b></span>
+                            <br>
+                            <span>{{staticMap.staticMapData.description}}</span>
+                        </div>
+    
+                        <div class="col-2 text-end">
+                            <button [disabled]="!appCom.checkPermission(['staticmaps:update'])" class="btn btn-primary" [routerLink]="['.', staticMap.staticMapData._id, 'update']" data-tooltip="Chỉnh sửa lớp thông tin"><i class="fa-solid fa-pen-to-square"></i> </button>
                         </div>
                     </div>
-                    <img *ngIf="staticMap?.staticMapData?.icon" class="ui avatar image" src="{{staticMap.staticMapData.icon.data.iconUrl}}">
-                </div>
-                <div class="right floated content ">
-                    <button [disabled]="!appCom.checkPermission(['staticmaps:update'])" class="btn btn-primary" [routerLink]="['.', staticMap.staticMapData._id, 'update']" data-tooltip="Chỉnh sửa lớp thông tin"><i class="fa-solid fa-pen-to-square"></i> </button>
-                </div>
-                <div class="content">
-                    <span class="header"> {{staticMap.staticMapData.name}} </span>
-                    <span> {{staticMap.staticMapData.description}} </span>
                 </div>
             </div>
         </div>

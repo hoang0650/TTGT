@@ -63,14 +63,18 @@
         </h4>
 
         <div class="ui middle aligned selection divided list">
-            <div class="item" id="{{roadevent._id}}" [ngClass]="{'active': roadevent._id === choosedRoadevent?._id}" *ngFor="let roadevent of (roadevents | searchFilter: filter: ['featureCollection', 'properties', 'name'])"
-                (click)="selectRoadevent(roadevent)">
-                <div class="left floated content">
-                    <span class="header">{{roadevent.featureCollection.properties.name}}</span>
-                    <span>{{roadevent.featureCollection.properties.desc}}</span>
-                </div>
-                <div class="right floated content ">
-                    <button [disabled]="!appCom.checkPermission(['roadevents:update'])" class="btn btn-primary" [routerLink]="['.', roadevent._id, 'update']" data-tooltip="Chỉnh sửa phân luồng"><i class="fa-solid fa-pen-to-square"></i> </button>
+            <div class="container item" id="{{roadevent._id}}" [ngClass]="{'active': roadevent._id === choosedRoadevent?._id}" *ngFor="let roadevent of (roadevents | searchFilter: filter: ['featureCollection', 'properties', 'name'])"
+            (click)="selectRoadevent(roadevent)">
+                <div class="row">
+                    <div class="col-10 align-self-center">
+                        <span><b>{{roadevent.featureCollection.properties.name}}</b></span>
+                        <br>
+                        <span>{{roadevent.featureCollection.properties.desc}}</span>
+                    </div>
+
+                    <div class="col-2 text-end">
+                        <button [disabled]="!appCom.checkPermission(['roadevents:update'])" class="btn btn-primary" [routerLink]="['.', roadevent._id, 'update']" data-tooltip="Chỉnh sửa phân luồng"><i class="fa-solid fa-pen-to-square"></i> </button>
+                    </div>
                 </div>
             </div>
         </div>
