@@ -32,12 +32,12 @@
 					<br>Kiểm tra tình trạng giao thông.<br>
 					Phân luồng, cảnh báo giao thông.
 				</p>
-				
 				<a (click)="login()" class="btn btn-main-md" style="color: white;">Đăng ký ngay</a>
 			</div>
 		</div>
 	</div>
 </section>
+				
 
 <section class="section pt-0 position-relative pull-top">
 	<div class="container">
@@ -52,7 +52,7 @@
 							Hiện tại chưa có cảnh báo nào
 						</div>
 						<div [routerLink]="['/map']" [queryParams]="{type:'event', id: event._id}" *ngFor="let event of listEvent | orderBy:['createdAt']:['desc']">
-							<div class="ui large feed">
+							<div class="ui large feed hoverable">
 								<div class="event" [ngClass]="{'inverted': !isScrolled}">
 									<div class="label event-icon">
 										<i class="circle icon {{event.color}}"></i>
@@ -81,7 +81,7 @@
 					<h3 class="mt-4 text-capitalize h5 ">Tin tức - Sự kiện</h3>
 					<div class="regular text-muted" [ngClass]="{'scroll-contain': isScrolled, 'default-contain': !isScrolled}">
 						<div scroll-only-this="scroll-only-this"  class="ui relaxed divided list">
-							<a *ngFor="let content of contents" class="text-primary" href="{{content.url}}" target="_blank" >{{content.title}}<nz-divider style="margin-top: 5px;"></nz-divider></a>
+							<a *ngFor="let content of contents" class="text-primary item limit-character hoverable" href="{{content.url}}" target="_blank" >{{content.title}}</a>
 						</div>
 					</div>
 					<nz-divider nzType="vertical"></nz-divider>
@@ -98,14 +98,12 @@
 									Bạn chưa quan tâm camera nào cả
 								</div>
 								
-								<div class="regular text-muted" [ngClass]="{'scroll-contain': isScrolled, 'default-contain': !isScrolled}">
-									<form nz-form scroll-only-this="scroll-only-this"  class="ui relaxed divided list" *ngFor="let camera of favoriteList" [routerLink]="['/map']" [queryParams]="{type:'camera', id: camera.fId}">
-										<!-- <nz-form-item> -->
-											<p>{{camera.fName}}</p>
-											<img nz-image width="90%" nzSrc="{{backend}}api/snapshot/{{camera.fId}}" (error)="imageError($event)">
-											<nz-divider></nz-divider>
-
-										<!-- </nz-form-item> -->
+								<div class="regular text-muted hoverable" [ngClass]="{'scroll-contain': isScrolled, 'default-contain': !isScrolled}">
+									<form nz-form scroll-only-this="scroll-only-this"  >
+											<div class="ui relaxed divided list" *ngFor="let camera of favoriteList" [routerLink]="['/map']" [queryParams]="{type:'camera', id: camera.fId}">
+												<p>{{camera.fName}}</p>
+												<img nz-image width="90%" nzSrc="{{backend}}api/snapshot/{{camera.fId}}" (error)="imageError($event)">
+											</div>
 									</form>
 								</div>
 							</div>
@@ -189,20 +187,7 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="content-block">
-					<!-- Heading -->
-					<!-- <h2>Watch Our Promo Video</h2> -->
-					<!-- Promotional Speech -->
-					<!-- <p>Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur arcu erat, accumsan id imperdiet et,
-						porttitor at sem. Vivamus </p> -->
-					<!-- Popup Video -->
-					<!-- <a data-fancybox href="https://www.youtube.com/watch?v=ZNtxPUZhKCQ">
-						<i class="ti-control-play video"></i>
-					</a> -->
-					<!-- <iframe width="560" height="350"
-						src="https://www.youtube-nocookie.com/embed/ZNtxPUZhKCQ">
-					</iframe> -->
-					<iframe width="100%" height="350" src="https://www.youtube.com/embed/ZNtxPUZhKCQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-			
+					<iframe width="100%" height="350" src="https://www.youtube.com/embed/ZNtxPUZhKCQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>			
 				</div>
 			</div>
 		</div>
@@ -221,13 +206,11 @@
 				<li class="list-inline-item">
 				  	<a href="https://www.facebook.com/FPTInformationSystem/" target="_blank">
 					  <i class="ti-facebook"></i>
-					  <!-- <i class="ti-facebook" nz-icon nzType="facebook" nzTheme="outline"></i> -->
 					</a>
 				</li>
 				<li class="list-inline-item">
 				  	<a href="https://www.linkedin.com/company/fptis/" target="_blank">
 					  <i class="ti-linkedin"></i>
-					  <!-- <i class="ti-twitter" nz-icon nzType="twitter" nzTheme="outline"></i> -->
 					</a>
 				</li>
 			  </ul>
