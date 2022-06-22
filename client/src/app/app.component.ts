@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import 'leaflet-sidebar-v2';
 import 'leaflet-rotatedmarker';
 import { AuthorizationService } from './services/authorization.service';
@@ -24,7 +24,7 @@ export class AppComponent {
   loginTry = 0;
   permissions:any = {}
 
-  constructor(private groupService: GroupService,public auth:AuthorizationService, public authservice:AuthService, public admin:AdminService, private router:Router, private nzMessage:NzMessageService, authGuard:AuthGuard){
+  constructor(private groupService: GroupService,public auth:AuthorizationService, public authservice:AuthService, public admin:AdminService, private router:Router, private nzMessage:NzMessageService, authGuard:AuthGuard, private cdRef:ChangeDetectorRef){
     authGuard.setComponent(this)
   }
   
@@ -57,7 +57,7 @@ export class AppComponent {
               }
             },
             error: (err:any) => {
-              this.permissions = []
+              this.permissions = {}
             }
           });
           clearInterval(this.loginInterval)
@@ -76,12 +76,9 @@ export class AppComponent {
   
 
   getRoles() {
-    this.admin.getUser(this.profile.sub).subscribe({
+    this.admin.getUserInfo().subscribe({
       next: (data:any) => {
-        this.roles = data.users.app_metadata.roles
-        
-        const accessToken:any = localStorage.getItem('profile');        
-        const profile = JSON.parse(accessToken);
+        this.roles = data.roles
       }
     })
   }

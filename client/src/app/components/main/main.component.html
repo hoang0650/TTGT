@@ -98,9 +98,9 @@
 									Bạn chưa quan tâm camera nào cả
 								</div>
 								
-								<div class="regular text-muted hoverable" [ngClass]="{'scroll-contain': isScrolled, 'default-contain': !isScrolled}">
-									<form nz-form scroll-only-this="scroll-only-this"  >
-											<div class="ui relaxed divided list" *ngFor="let camera of favoriteList" [routerLink]="['/map']" [queryParams]="{type:'camera', id: camera.fId}">
+								<div class="regular text-muted" [ngClass]="{'scroll-contain': isScrolled, 'default-contain': !isScrolled}">
+									<form nz-form scroll-only-this="scroll-only-this">
+											<div class="ui relaxed divided list hoverable" *ngFor="let camera of favoriteList" [routerLink]="['/map']" [queryParams]="{type:'camera', id: camera.fId}">
 												<p>{{camera.fName}}</p>
 												<img nz-image width="90%" nzSrc="{{backend}}api/snapshot/{{camera.fId}}" (error)="imageError($event)">
 											</div>
