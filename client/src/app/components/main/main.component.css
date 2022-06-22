@@ -74,6 +74,7 @@ ul.app-badge li a img {
   height: auto;
 }
 
+
 @media (max-width: 400px) {
   ul.app-badge li {
     margin-bottom: 10px;
@@ -154,6 +155,14 @@ a:focus,
 a:hover {
   color: #2e7eed;
   text-decoration: none;
+}
+
+.hoverable:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.hoverable.selected {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .bg-gray {
