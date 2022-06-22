@@ -396,6 +396,9 @@ export class MapInformationComponent implements OnInit, OnDestroy {
   }
 
   createNewEventMarker(latlng:any) {
+    if (this.chosenMarkers['incident']) {
+      delete this.chosenMarkers['incident']
+    }
     if (!this.newCreateEvent) {
       var icon = this.markerService.jamIcon['congestion']
       icon.className = 'creEventMarker';
@@ -523,6 +526,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
           this.markers['incidents']?.addLayer(marker)
           marker.openPopup()
           this.nzMessage.success('Đã tạo cảnh báo mới, chờ quản trị viên duyệt')
+          this.setVisible('incidents', false)
         },
         error: () => {
           this.nzMessage.error('Tạo cảnh báo mới thất bại, hãy thử lại')
@@ -568,9 +572,8 @@ export class MapInformationComponent implements OnInit, OnDestroy {
       this.mapCom.flyToBounds([[event.loc.coordinates[1], event.loc.coordinates[0]]]);
     }
     
-    this.chosenMarkers['incident'] = event._id
+    this.chosenMarkers['incident'] = event
     this.location.replaceState(`./map?type=event&id=${event._id}`)
-    this.incidents[event._id].openPopup()
     this.cdRef.detectChanges()
   }
 
@@ -708,6 +711,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
             }
             this.setCurrentMode('cameras')
             this.chosenMarkers['camera'] = camera;
+            this.location.replaceState(`./map?type=camera&id=${camera._id}`)
             this.cdRef.detectChanges()
           }
         })
@@ -717,6 +721,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
             this.setCurrentMode('parkings')
             this.mapCom.flyToBounds([[parking.loc.coordinates[1], parking.loc.coordinates[0]]])
             this.chosenMarkers['parking'] = parking;
+            this.location.replaceState(`./map?type=parking&id=${parking._id}`)
             this.cdRef.detectChanges()
           }
         })
@@ -727,8 +732,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
             this.chooseIncident(event)
             this.setCurrentMode('incidents')
             this.chosenMarkers['incident'] = event;
-            
-            
+            this.location.replaceState(`./map?type=event&id=${event._id}`)
             this.cdRef.detectChanges()
           }
         })
@@ -887,11 +891,14 @@ export class MapInformationComponent implements OnInit, OnDestroy {
     this.shareLink = ""
   }
 
-  setVisible(mode:string) {
-    this.chosenMarkers = {}
-    this.location.replaceState(`./map`)
-    
-    this.markers[mode]['hidden'] = !this.markers[mode]['hidden']
+  setVisible(mode:string, hidden?:boolean) {
+    if (typeof hidden !== 'undefined') {
+      this.markers[mode]['hidden'] = hidden
+    } else {
+      this.chosenMarkers = {}
+      this.location.replaceState(`./map`)
+      this.markers[mode]['hidden'] = !this.markers[mode]['hidden']
+    }
   }
 
   setCurrentMode(mode?:string) {

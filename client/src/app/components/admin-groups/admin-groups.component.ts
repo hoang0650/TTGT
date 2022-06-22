@@ -100,6 +100,7 @@ export class AdminGroupsComponent implements OnInit {
 
   getGroup(){
     this.groups = [];
+    this.selectedGroups = []
     this.groupsService.query().subscribe({
       next: (groups:any) => {
         groups.forEach((group:any)=>{

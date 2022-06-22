@@ -295,7 +295,7 @@
     </div>
 
     <div [hidden]="!(currentMode == 'incidents')">
-        <div class="ui segment"  [hidden]="!markers['incidents']?.['hidden']">
+        <div class="ui segment" [hidden]="!markers['incidents']?.['hidden']">
             <h4 class="ui center aligned header">
                 <div class="content">
                     Đang ẩn cảnh báo
@@ -304,32 +304,34 @@
         </div>
 
 
-        <div class="ui segment"  [hidden]="listEvent.length > 0 || markers['incidents']?.['hidden']">
-            <h4 class="ui center aligned header">
-                <div class="content">
-                    Không có cảnh báo nào
-                </div>
-            </h4>
-        </div>
+        <div [hidden]="markers['incidents']?.['hidden']">
+            <div class="ui segment"  [hidden]="listEvent.length > 0">
+                <h4 class="ui center aligned header">
+                    <div class="content">
+                        Không có cảnh báo nào
+                    </div>
+                </h4>
+            </div>
 
 
-        <div *ngIf="listEvent.length > 0">
-            <div class="ui segment incident" [ngClass]="{'active-incident': event._id == chosenMarkers['incident']}" *ngFor="let event of listEvent | orderBy:['createdAt']:['desc']">
-                <div class="content">
-                    <div class="ui large feed">
-                        <div id="event-{{event._id}}" class="event" (click)="chooseIncident(event)">
-                            <div class="label event-icon">
-                                <i class="circle icon {{listEventType[event.type].color}}"></i>
-                            </div>
-                            <div class="content">
-                                <div class="summary">
-                                    <a class="user">{{event.desc[0]}}</a>
-                                    <div class="date">
-                                        <span>{{event.createdAt | amLocale:'vi' | amTimeAgo}}</span>
-                                    </div>
+            <div *ngIf="listEvent.length > 0">
+                <div class="ui segment incident" [ngClass]="{'active-incident': event._id == chosenMarkers['incident']}" *ngFor="let event of listEvent | orderBy:['createdAt']:['desc']">
+                    <div class="content">
+                        <div class="ui large feed">
+                            <div id="event-{{event._id}}" class="event" (click)="chooseIncident(event)">
+                                <div class="label event-icon">
+                                    <i class="circle icon {{listEventType[event.type].color}}"></i>
                                 </div>
-                                <div class="extra text">
-                                    {{event.desc[1]}}
+                                <div class="content">
+                                    <div class="summary">
+                                        <a class="user">{{event.desc[0]}}</a>
+                                        <div class="date">
+                                            <span>{{event.createdAt | amLocale:'vi' | amTimeAgo}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="extra text">
+                                        {{event.desc[1]}}
+                                    </div>
                                 </div>
                             </div>
                         </div>

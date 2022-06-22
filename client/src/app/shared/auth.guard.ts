@@ -66,7 +66,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
           this.router.navigate(['unauthorized']);
         }
       })
-
+      
       this.adminService.getUserInfo().subscribe({
         next: (userInfo:any) => {
           if (userInfo) {
@@ -79,11 +79,13 @@ export class AuthGuard implements CanActivate, CanActivateChild {
                 this.appCom.roles = userInfo['roles'] || ['guest']
                 if (this.appCom?.roles.includes("superadmin")) {
                   obs.next(true)
+                  console.log("1."+state.url);
                   this.router.navigate([state.url])
                 }
               }
               if (this.checkRoles(allowedRoles) && this.checkPermission(allowedPermissions)) {
                 obs.next(true)
+                console.log("2."+state.url);
                 this.router.navigate([state.url])
               }
 

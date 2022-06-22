@@ -31,7 +31,6 @@
               <li [hidden]="!(appCom.checkPermission(['parkings:read']))">
                 <a class="dropdown-item" [routerLink]="['/map/parkings']" [ngClass]="{'active': isActive('/map/parkings')}" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">Bãi đỗ xe</a>
               </li>
-              <nz-divider class="ant-divider-inner-text" nzPlain nzText="Thông tin"></nz-divider>
               <li [hidden]="!(appCom.checkPermission(['roadevents:read']))">
                 <a class="dropdown-item" [routerLink]="['/map/roadevents']" [ngClass]="{'active': isActive('/map/roadevents')}" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">Phân luồng giao thông</a>
               </li>
