@@ -3,8 +3,5 @@ build:
     web: client/Dockerfile 
     api: backend/Dockerfile 
 run: 
-  web:
-    command:
-      - npm start
-    image: web
+  web: npm start
   api: npm start
