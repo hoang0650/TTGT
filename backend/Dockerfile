@@ -6,16 +6,16 @@ LABEL maintainer="hoangph23 <hoangph23@fpt.com.vn>"
 # RUN npm install
 # Then run npm start
 
-RUN mkdir /source
-WORKDIR /source
+RUN mkdir /ttgt-backend
+WORKDIR /ttgt-backend
 
-ADD package.json /source
+ADD package.json /ttgt-backend
 RUN npm install
 
-ARG MDB_CONNECT=mongodb+srv://hoang0650:Kobiet123@cluster0.jz1sw.mongodb.net/Stis?retryWrites=true&w=majority
+ARG MDB_CONNECT="mongodb+srv://hoang0650:Kobiet123@cluster0.jz1sw.mongodb.net/Stis?retryWrites=true&w=majority"
 ENV MDB_CONNECT ${MDB_CONNECT}
 
-ADD . /source
+ADD . /ttgt-backend
 ARG PORT=3000
 ENV PORT ${PORT}
 

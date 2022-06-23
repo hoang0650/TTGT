@@ -6,14 +6,14 @@ LABEL maintainer="hoangph23 <hoangph23@fpt.com.vn>"
 # RUN npm install
 # Then run npm start
 
-RUN mkdir /source
-WORKDIR /source
+RUN mkdir /ttgt-client
+WORKDIR /ttgt-client
 
-ADD package.json /source
+ADD package.json /ttgt-client
 RUN npm install --ignore-scripts
 
 
-ADD . /source
+ADD . /ttgt-client
 ARG PORT=9000
 ENV PORT ${PORT}
 
