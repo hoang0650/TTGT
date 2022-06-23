@@ -16,7 +16,7 @@ RUN npm install --ignore-scripts
 ADD . /ttgt-client
 ARG PORT=9000
 ENV PORT ${PORT}
-ENV NODE_OPTIONS=--max_old_space_size=512
+ENV NODE_OPTIONS=--max_old_space_size=256
 
 CMD [ "npm", "start"]
 EXPOSE ${PORT}

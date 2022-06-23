@@ -1,1 +1,0 @@
-docker build -t ttgt-backend -f Dockerfile . && docker run ttgt-backend
