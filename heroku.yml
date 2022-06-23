@@ -1,0 +1,7 @@
+build: 
+  docker: 
+    web: client/Dockerfile 
+    api: backend/Dockerfile 
+run: 
+  web: npm start
+  api: npm start
