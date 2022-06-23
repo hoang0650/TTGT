@@ -8,3 +8,11 @@ services:
     build:
       context: ../backend
       dockerfile: Dockerfile
+
+  client:
+    image: tgtt-client
+    ports: 
+      - 9000:9000
+    build:
+      context: ../client
+      dockerfile: Dockerfile
