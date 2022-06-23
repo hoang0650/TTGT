@@ -5,6 +5,6 @@ build:
 run: 
   web:
     command:
-        - npm start
-        image: web
+      - npm start
+      image: web
   api: npm start
