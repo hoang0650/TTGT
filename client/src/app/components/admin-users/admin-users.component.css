@@ -161,7 +161,7 @@ tbody, td, tfoot, th, thead, tr {
     }
 
     ::ng-deep .user-affix > .ant-affix {
-        width: 31% !important
+        width: calc(33% - 17px) !important
     }
 }
 
@@ -172,7 +172,7 @@ tbody, td, tfoot, th, thead, tr {
     }
 
     ::ng-deep .user-affix > .ant-affix {
-        width: 98% !important
+        width: calc(100% - 17px) !important
     }
 }
 

@@ -16,7 +16,7 @@
                             <div class="map-navigate">
                                 <button class="btn btn-block rounded-pill m-0 mx-2" [ngClass]="{'btn-primary': !markers['cameras']?.['hidden'] && currentMode != 'cameras', 'btn-danger':markers['cameras']?.['hidden'], 'btn-success':!markers['cameras']?.['hidden'] && currentMode == 'cameras'}" 
                                     (click)="currentMode != 'cameras' ? setCurrentMode('cameras') : setVisible('cameras')" 
-                                    [attr.data-tooltip]="currentMode != 'cameras' ? 'Camera' : (markers['cameras']?.['hidden'] ? 'Ẩn camera' : 'Hiện camera')" data-position="top center">
+                                    [attr.data-tooltip]="currentMode != 'cameras' ? 'Camera' : (markers['cameras']?.['hidden'] ? 'Ẩn camera' : 'Hiện camera')" data-position="top left">
                                     <i class="fa-solid fa-camera" *ngIf="currentMode != 'cameras'"></i>
                                     <i class="fa-solid fa-eye" *ngIf="currentMode == 'cameras' && !markers['cameras']?.['hidden']"></i>
                                     <i class="fa-solid fa-eye-slash" *ngIf="currentMode == 'cameras' && markers['cameras']?.['hidden']"></i>
@@ -48,7 +48,7 @@
 
                                 <button class="btn btn-block rounded-pill m-0 mx-2" [ngClass]="{'btn-primary': !markers['incidents']?.['hidden'] && currentMode != 'incidents', 'btn-danger':markers['incidents']?.['hidden'], 'btn-success':!markers['incidents']?.['hidden'] && currentMode == 'incidents'}" 
                                     (click)="currentMode != 'incidents' ? setCurrentMode('incidents') : setVisible('incidents')" 
-                                    [attr.data-tooltip]="currentMode != 'incidents' ? 'Cảnh báo' : (markers['incidents']?.['hidden'] ? 'Ẩn cảnh báo' : 'Hiện cảnh báo')" data-position="top center">
+                                    [attr.data-tooltip]="currentMode != 'incidents' ? 'Cảnh báo' : (markers['incidents']?.['hidden'] ? 'Ẩn cảnh báo' : 'Hiện cảnh báo')" data-position="top right">
                                     <i class="fa-solid fa-triangle-exclamation" *ngIf="currentMode != 'incidents'"></i>
                                     <i class="fa-solid fa-eye" *ngIf="currentMode == 'incidents' && !markers['incidents']?.['hidden']"></i>
                                     <i class="fa-solid fa-eye-slash" *ngIf="currentMode == 'incidents' && markers['incidents']?.['hidden']"></i>

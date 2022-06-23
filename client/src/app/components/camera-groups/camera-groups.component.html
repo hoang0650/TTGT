@@ -49,7 +49,7 @@
         <div class="ui middle aligned selection divided list">
             <div class="item" [ngClass]="{active: cameraGroup.isSelected}" *ngFor="let cameraGroup of cameraGroups | searchFilter:filter:['name']" (click)="clickGroup(cameraGroup)">
                 <div class="left floated content ">
-                    <button class="ui icon button" (click)="editGroup(cameraGroup)"><i class="ui write icon"></i></button>
+                    <button class="btn btn-primary" (click)="editGroup(cameraGroup);" data-tooltip="Chỉnh sửa nhóm camera" data-position="top left"><i class="fa-solid fa-pen-to-square"></i> </button>
                 </div>
                 <div class="right floated content ">
                     <span class="ui horizontal label"> {{cameraGroupCounts[cameraGroup._id]?.length || 0}} </span>
@@ -59,10 +59,16 @@
                     <span>{{cameraGroup.description}}</span>
                 </div>
             </div>
+
+            <h4 class="ui center aligned header" *ngIf="cameraGroups?.length <= 0">
+                <div class="content">
+                    Không có nhóm camera nào
+                </div>
+            </h4>
         </div>
     </div>
 
-    <div class="ui segment"  *ngIf="group">
+    <div class="ui segment" *ngIf="group">
         <form name="cameraGroupForm" #cameraGroupForm="ngForm">
             <div class="container">
                 <h3>Thông tin nhóm</h3>
@@ -88,7 +94,7 @@
                             <i class="dropdown icon"></i>
                             <div class="default text">Chọn camera để thêm. Gõ để tìm kiếm</div>
                             <div class="menu">
-                                <div class="item" (click)="addCamera(camera)" *ngFor="let camera of availableCameras | orderBy:['id'];trackBy:trackByFn">
+                                <div class="item" (click)="addCamera(camera)" *ngFor="let camera of availableCameras | orderBy:['id']">
                                     <i class="large lock middle aligned icon " [ngClass]="(camera.publish)? 'unlock': 'lock'"></i>
                                     <span class="content"> {{[camera.id, camera.name].join(' - ')}} </span>
                                 </div>
@@ -96,9 +102,9 @@
                         </div>
 
                         <div class="ui middle aligned selection divided list">
-                            <div class="item" *ngFor="let camera of group.cameras; index as i" (click)="clickCamera(camera)">
+                            <div class="item" *ngFor="let camera of group.cameras" (click)="clickCamera(camera)">
                                 <div class="right floated content ">
-                                    <button class="ui mini icon button" (click)="removeCameraByIndex(i)"><i class="minus icon"></i></button>
+                                    <button class="ui mini icon button" (click)="removeCamera(camera)"><i class="minus icon"></i></button>
                                 </div>
 
                                 <i class="large lock middle aligned icon " [ngClass]="(camera.publish)? 'unlock': 'lock'"></i>
@@ -114,15 +120,13 @@
                         <div class="ui negative icon message"  *ngIf="isRemoving">
                             <i class="warning icon"></i>
                             <div class="header">
-                                Bạn đang xóa nhóm camera
+                                Bạn chắc chắn muôn xóa nhóm camera này?
                             </div>
                             <div class="container">
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <button class="btn btn-danger" type="button" (click)="confirmRemove(group)">Xóa</button>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <button class="btn btn-secondary" type="button" (click)="abortRemove()">Hủy</button>
+                                    <div class="col-md-12 text-end">
+                                        <button class="btn btn-danger mx-1" type="button" (click)="confirmRemove(group)">Xóa</button>
+                                        <button class="btn btn-secondary mx-1" type="button" (click)="abortRemove()">Hủy</button>
                                     </div>
                                 </div>                                     
                             </div>                                      

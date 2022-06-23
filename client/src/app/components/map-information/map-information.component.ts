@@ -211,6 +211,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
   toggleParkingActive() {
       
     this.markers['parkings'] = L.markerClusterGroup({
+      zoomToBoundsOnClick:false,
       disableClusteringAtZoom: 16,
       maxClusterRadius: 64,
       removeOutsideVisibleBounds: true,
@@ -227,6 +228,8 @@ export class MapInformationComponent implements OnInit, OnDestroy {
         
         return icon;
       },
+    }).on("clusterclick", (cluster:any) => {
+      this.mapCom.flyToBounds(cluster.layer.getBounds())
     })
 
     this.listParking.forEach((parking:any) => {
@@ -236,6 +239,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
 
   toggleCameraActive() {   
     this.markers['cameras'] = L.markerClusterGroup({
+      zoomToBoundsOnClick: false,
       disableClusteringAtZoom: 16,
       maxClusterRadius: 64,
       removeOutsideVisibleBounds: true,
@@ -256,6 +260,8 @@ export class MapInformationComponent implements OnInit, OnDestroy {
         
         return icon;
       },
+    }).on("clusterclick", (cluster:any) => {
+      this.mapCom.flyToBounds(cluster.layer.getBounds())
     })
 
     this.listCamera.forEach((camera:any) => {

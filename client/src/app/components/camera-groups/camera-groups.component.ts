@@ -59,14 +59,33 @@ export class CameraGroupsComponent implements OnInit {
     this.isRemoving = false;
     this.validateCameraGroup = ['name'];
     this.error = {}
+    this.availableCameras = []
 
     
     this.cameraClusterLayer = L.markerClusterGroup({
+      zoomToBoundsOnClick: false,
       disableClusteringAtZoom: 16,
       maxClusterRadius: 64,
       removeOutsideVisibleBounds: true,
       animateAddingMarkers: true,
-      animate: true
+      animate: true,
+      iconCreateFunction:(cluster) => {
+        var markers = cluster.getAllChildMarkers();
+        var icon = L.divIcon({
+          className: "modify-marker good normal",
+          iconSize: [32, 32],
+          iconAnchor: [16, 16],
+          html: `<div class="marker-background"></div>` +
+                `<div class="circle-cluster">${markers.length}</div>` +
+                `<div class="marker-icon"></div>` +
+                `<div class="marker-content"></div>`
+        });
+        
+        
+        return icon;
+      },
+    }).on("clusterclick", (cluster:any) => {
+      this.mapCom.flyToBounds(cluster.layer.getBounds())
     })
 
     this.mapCom.geoLayer = this.cameraClusterLayer
@@ -121,8 +140,18 @@ export class CameraGroupsComponent implements OnInit {
   deselectCameraById(camera:any) {
     var newIcon = L.divIcon(this.markerModify.deSelectedMarker(this.markers[camera._id].options.icon.options));
     this.markers[camera._id].setIcon(newIcon);
+    
+    
     delete this.mapCom.markers[camera._id]
     this.refreshCluster()
+
+    if (this.group) {
+      this.group.cameras.forEach((cameraGroup:any) => {
+        this.cameraClusterLayer.removeLayer(this.markers[cameraGroup._id]);
+      })
+    }
+  
+  
     this.mapCom.detectChanges()
   }
 
@@ -148,13 +177,7 @@ export class CameraGroupsComponent implements OnInit {
   }
 
   focusCamera(camera:any) {
-    this.selectCameraById(camera);
     this.mapCom.flyToBounds([[camera.loc.coordinates[1], camera.loc.coordinates[0]]])
-  }
-
-
-  selectCamera(camera:any) {
-    this.selectCameraById(camera._id);
   }
 
   setMarkerForCamera(camera:any) {
@@ -175,14 +198,21 @@ export class CameraGroupsComponent implements OnInit {
 
     marker.on("click", () => {
       if (this.group) {
-        if (this.group.cameras.includes(camera)) {
+        var flag = false
+        this.group.cameras.forEach((cameraGroup:any) => {
+          if (cameraGroup._id == camera._id) {
+            flag = true
+            return
+          }
+        })
+
+        if (flag) {
           this.group.cameras = this.group.cameras.filter((item:any) => {
-            return item !== camera
+            return item._id !== camera._id
           })
-          this.deselectCameraById(camera)
+          this.removeCamera(camera)
         } else {
           this.addCamera(camera)
-          this.selectCameraById(camera)
         }
       }
     })
@@ -268,7 +298,7 @@ export class CameraGroupsComponent implements OnInit {
     this.group = _.cloneDeep(group);
 
     this.availableCameras = _.cloneDeep(this.cameras);
-
+    
     this.group.cameras.forEach((currentCamera:any) => {
         this.availableCameras.forEach((camera:any, index:number, cameras:any) =>{
             if (camera._id === currentCamera._id) {
@@ -277,6 +307,7 @@ export class CameraGroupsComponent implements OnInit {
             }
         });
     });
+    this.availableCameras = _.cloneDeep(this.availableCameras);
   }
 
   createGroup() {
@@ -310,17 +341,19 @@ export class CameraGroupsComponent implements OnInit {
       return camera._id != currentCamera._id
     })
 
+    this.selectCameraById(currentCamera)
+
     this.mapCom.detectChanges()
   }
 
-  removeCameraByIndex(index:number) {
-    if (this.group.cameras[index]) {
-      this.availableCameras.push(this.group.cameras[index]);
-      this.deselectCameraById(this.group.cameras[index])
-      
-      this.availableCameras = _.cloneDeep(this.availableCameras)
-      this.group.cameras.splice(index, 1);
-    }
+  removeCamera(currentCamera:any) {
+    this.availableCameras.push(currentCamera)
+
+    this.group.cameras = this.group.cameras.filter((camera:any) => {
+      return camera._id != currentCamera._id
+    })
+
+    this.deselectCameraById(currentCamera)
     this.mapCom.detectChanges()
   }
 

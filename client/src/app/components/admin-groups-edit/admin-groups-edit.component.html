@@ -104,16 +104,17 @@
 <div class="modal-body" *ngIf="isRemoving">
     <div class="ui negative icon message">
         <i class="warning icon"></i>
-        <div class="content">
-            <div class="header">
-                Bạn đang xóa nhóm
-            </div>
-            <p>Một khi bạn xóa nhóm, tất cả quyền của các tài khoản có trong nhóm sẽ bị vô hiệu.</p>
-            <p>Việc này có ảnh hưởng lớn và không thể phục hồi.</p>
-            <p>Bạn có chắc chắn muốn xóa?</p>
+        <div class="header">
+            Bạn chắc chắn muôn xóa nhóm này?
         </div>
-        <button class="ui negative button" type="button" (click)="deleteGroups()">Xóa nhóm</button>
-        <button class="ui button" type="button" (click)="abortRemove()">Không xóa</button>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-end">
+                    <button class="btn btn-danger mx-1" type="button" (click)="deleteGroups()">Xóa</button>
+                    <button class="btn btn-secondary mx-1" type="button" (click)="abortRemove()">Hủy</button>
+                </div>
+            </div>                                     
+        </div>     
     </div>
 
 </div>
