@@ -17,5 +17,5 @@ ADD . /ttgt-client
 ARG PORT=9000
 ENV PORT ${PORT}
 
-ENTRYPOINT ["npm", "start"]
+ENTRYPOINT npm start
 EXPOSE ${PORT}
