@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   backend:
-    image: tgtt-backend
+    image: ttgt-backend
     ports: 
       - 3000:3000
     build:
@@ -10,7 +10,7 @@ services:
       dockerfile: Dockerfile
 
   client:
-    image: tgtt-client
+    image: ttgt-client
     ports: 
       - 9000:9000
     build:
