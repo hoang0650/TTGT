@@ -19,5 +19,5 @@ ADD . /ttgt-backend
 ARG PORT=3000
 ENV PORT ${PORT}
 
-ENTRYPOINT npm start
+CMD [ "npm", "start"]
 EXPOSE ${PORT}
