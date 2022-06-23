@@ -2,8 +2,9 @@ version: '3.5'
 
 services:
   backend:
-    network_mode: host
     image: tgtt-backend
+    ports: 
+      - 3000:3000
     build:
       context: ../backend
       dockerfile: Dockerfile
