@@ -31,7 +31,7 @@
 - [NodeJS](https://nodejs.org/en/)
 - [MongoDB](https://www.mongodb.com/)
 - [Auth0](https://auth0.com/)
-- và các công nghệ khác
+- và các công nghệ khác.
 
 ## 👤 Phía người dùng
 
