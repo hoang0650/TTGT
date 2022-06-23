@@ -3,5 +3,8 @@ build:
     web: client/Dockerfile 
     api: backend/Dockerfile 
 run: 
-  web: ng serve --host 0.0.0.0 --port 9000 --proxy-config proxy.conf.json
+  web:
+    command:
+        - npm start
+        image: web
   api: npm start
