@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import 'leaflet-sidebar-v2';
 import 'leaflet-rotatedmarker';
 import { AuthorizationService } from './services/authorization.service';
 import {AuthService} from '@auth0/auth0-angular';
