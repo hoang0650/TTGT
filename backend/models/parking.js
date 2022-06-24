@@ -38,13 +38,5 @@ ParkingSchema.plugin(mongooseToCsvQuotes, {
     }
 });
 
-
-// ParkingSchema.statics.load = function(id, cb) {
-//     console.log("Statics load");
-//     console.log(id);
-//     this.findOne({ _id: id}).exec(cb);
-
-// };
-
 const Parking = mongoose.model('Parking', ParkingSchema);
 module.exports = Parking
