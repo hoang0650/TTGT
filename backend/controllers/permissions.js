@@ -45,19 +45,6 @@ function getPermissions(req,res,next){
     }
 }
 
-// function checkPermissions(permissions){
-//     return (req,res,next)=>{
-//         const userPermissions = req.user['https://hoang0650.com/app_metadata'].permissions;
-//         userPermissions.permissions = req.body.permissions;
-//         console.log('userPermissions',userPermissions.permissions);
-//         if(!req.body.permissions){
-//             return res.status(401).json({err:'You have no permissions!!!'});
-//         }
-//         const checker = _.isEqual(req.body.permissions, permissions);
-//         if(checker) next();
-//     };
-// };
-
 function checkRoles(allowedRoles){
     return (req,res,next) =>{
         

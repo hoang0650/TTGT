@@ -52,7 +52,6 @@ function create(req, res) {
         return res.status(500).end();
     }
     const camGroup = new CameraGroup(req.body);
-    console.log(req.body);
     camGroup.status = 'created';
     camGroup.save().then(cg => {
         pushGroupToCam(req.body.listCamId, cg).then(() => res.status(200).json(cg), err => res.status(500).send(err));

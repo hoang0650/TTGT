@@ -128,10 +128,7 @@ export class AdminGroupsEditComponent implements OnInit {
   update(){
     this.groupService.update(this.group._id,this.group).subscribe({
       next: (res) => {
-        // console.log('group',this.group);
-
         this.modalRef.close("updated")
-
       },
       error: (err) => {
         this.appCom?.errorHandler(err)
@@ -148,7 +145,6 @@ export class AdminGroupsEditComponent implements OnInit {
   }
   
   confirmRemove(action:string) {
-    // console.log(this.group._id);
     if(action=='delete'){
       this.groupService.delete(this.group._id,action).subscribe({
         next: (res:any) => {

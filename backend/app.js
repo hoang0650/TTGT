@@ -104,7 +104,6 @@ function checkAuth(req, res, next) {
   req.user.app_metadata = {
     roles: roles
   };
-  console.log(roles);
 
   if (roles && roles.length > 0) {
     const apiAccess = roleAccessApi[roles];

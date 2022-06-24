@@ -27,6 +27,7 @@ const management = new ManagementClient({
 // }
 
 function getUsers(req, res) {
+  const userId = req.user.sub
   const params = {
     search_engine: "v3",
     q: `NOT app_metadata.roles:"superadmin"`,
@@ -35,7 +36,8 @@ function getUsers(req, res) {
   management
     .getUsers(params)
     .then((users) => {
-      res.status(200).json({ users })
+      var newUsers = users.filter((user) => user.user_id != userId)
+      res.status(200).json({ users:newUsers })
     })
     .catch((err) => {
       console.log("error", err);

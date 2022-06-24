@@ -60,8 +60,6 @@ function findAll (req, res) {
                 return res.status(404).end();
             }
 
-            // console.log(result.rows);
-
             const results = result.rows.map(d => {
                 if (d.geojson) {
                     d.geojson = fullGeoJSON(JSON.parse(d.geojson));
@@ -98,7 +96,6 @@ function update (req, res) {
                 return res.status(404).end();
             }
 
-            // console.log(result.rows);
             const theGeom = result.rows[0].data;
 
             client.query(query, [id, theGeom], function (err) {
