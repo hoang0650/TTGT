@@ -124,9 +124,13 @@ table {
 }
 
 ::ng-deep .ant-tabs-tab-btn {
-    padding: 16px;
+    padding: 8px;
     font-size: 19.5px;
     font-weight: bold;
+}
+
+::ng-deep .ant-card-head-title{
+    padding: 8px 0;
 }
 
 .users-layout {

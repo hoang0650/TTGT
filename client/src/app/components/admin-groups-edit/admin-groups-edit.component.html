@@ -14,20 +14,29 @@
 <div class="modal-body">
     <form id="groupForm" #groupForm="ngForm">
         <div class="ui form">
-            <div class="required field">
-                <label>Tên nhóm</label>
-                <input type="text" name="groupName" placeholder="VD: Đội vận hành và bảo dưỡng đường hầm" [(ngModel)]="group['name']" required="required">
-                
-            </div>
-            <div class="required field">
-                <label>Thông tin nhóm</label>
-                <input type="text" name="groupDesc" placeholder="VD: Vận hành, bảo dưỡng, giám sát camera trong đường hầm" [(ngModel)]="group['description']"
-                    required="required">
-            </div>
-
+           
+                <!-- <div class="required field">
+                    <label>Tên nhóm</label>
+                    <input  type="text" name="groupName" placeholder="VD: Đội vận hành và bảo dưỡng đường hầm" [(ngModel)]="group['name']" required="required">
+                    
+                </div>
+                <div class="required field">
+                    <label>Thông tin nhóm</label>
+                    <input type="text" name="groupDesc" placeholder="VD: Vận hành, bảo dưỡng, giám sát camera trong đường hầm" [(ngModel)]="group['description']"
+                        required="required">
+                </div> -->
             <div class="two fields">
                 <div class="field">
-                    <label>Thành viên nhóm</label>
+                    <div class="required field">
+                        <label>Tên nhóm</label>
+                        <input  type="text" name="groupName" placeholder="VD: Đội vận hành và bảo dưỡng đường hầm" [(ngModel)]="group['name']" required="required">
+                    </div>
+                    <div class="required field" style="margin-top: 7px;">
+                        <label>Thông tin nhóm</label>
+                        <input type="text" name="groupDesc" placeholder="VD: Vận hành, bảo dưỡng, giám sát camera trong đường hầm" [(ngModel)]="group['description']"
+                            required="required">
+                    </div>
+                    <label style="margin-top: 7px;">Thành viên nhóm</label>
                     <div class="ui fluid search selection dropdown" id="usersSelection" style="margin-left:0px!important">
                         <input type="hidden">
                         <i class="dropdown icon"></i>
@@ -53,50 +62,51 @@
                     </div>
                 </div>
                 <div class="field">
-                    <label>Quyền của nhóm</label>
-                    <table class="ui unstackable basic celled table">
-                        <thead>
-                            <tr class="center aligned">
-                                <th></th>
-                                <th>Không quyền</th>
-                                <th>Truy cập</th>
-                                <th>Cập nhật</th>
-                                <th>Quản lý</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let permission of permissions">
-                                <td class="middle aligned"> {{permission.name}}
-                                </td>
-
-                                <td class="collapsing middle center aligned">
-                                    <div class="ui fitted radio checkbox">
-                                        <input type="radio" name="{{permission.id}}" [(ngModel)]="group.permissions[permission.id]" value="none">
-                                        <label></label>
-                                    </div>
-                                </td>
-                                <td class="collapsing middle center aligned">
-                                    <div class="ui  fitted radio checkbox">
-                                        <input type="radio" name="{{permission.id}}" [(ngModel)]="group.permissions[permission.id]" value="read">
-                                        <label></label>
-                                    </div>
-                                </td>
-                                <td class="collapsing middle center aligned">
-                                    <div class="ui  fitted radio checkbox">
-                                        <input type="radio" name="{{permission.id}}" [(ngModel)]="group.permissions[permission.id]" value="update">
-                                        <label></label>
-                                    </div>
-                                </td>
-                                <td class="collapsing middle center aligned">
-                                    <div class="ui  fitted radio checkbox">
-                                        <input type="radio" name="{{permission.id}}" [(ngModel)]="group.permissions[permission.id]" value="manage">
-                                        <label></label>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        <label>Quyền của nhóm</label>
+                        <table class="ui unstackable basic celled table" style="margin-top: 2px;">
+                            <thead>
+                                <tr class="center aligned">
+                                    <th></th>
+                                    <th>Không quyền</th>
+                                    <th>Truy cập</th>
+                                    <th>Cập nhật</th>
+                                    <th>Quản lý</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let permission of permissions">
+                                    <td class="middle aligned"> {{permission.name}}
+                                    </td>
+    
+                                    <td class="collapsing middle center aligned">
+                                        <div class="ui fitted radio checkbox">
+                                            <input type="radio" name="{{permission.id}}" [(ngModel)]="group.permissions[permission.id]" value="none">
+                                            <label></label>
+                                        </div>
+                                    </td>
+                                    <td class="collapsing middle center aligned">
+                                        <div class="ui  fitted radio checkbox">
+                                            <input type="radio" name="{{permission.id}}" [(ngModel)]="group.permissions[permission.id]" value="read">
+                                            <label></label>
+                                        </div>
+                                    </td>
+                                    <td class="collapsing middle center aligned">
+                                        <div class="ui  fitted radio checkbox">
+                                            <input type="radio" name="{{permission.id}}" [(ngModel)]="group.permissions[permission.id]" value="update">
+                                            <label></label>
+                                        </div>
+                                    </td>
+                                    <td class="collapsing middle center aligned">
+                                        <div class="ui  fitted radio checkbox">
+                                            <input type="radio" name="{{permission.id}}" [(ngModel)]="group.permissions[permission.id]" value="manage">
+                                            <label></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                 </div>
+                
             </div>
         </div>
     </form>

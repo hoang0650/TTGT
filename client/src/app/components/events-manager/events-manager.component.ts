@@ -311,7 +311,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
   updateEvent(event:any) {
     this.eventService.updateEvent(event._id, event).subscribe({
       next: () => {
-        this.getAllType();
+        event['tmpStatus'] = 'updated'
       },
       error: (err) => {
         this.appCom.errorHandler(err)

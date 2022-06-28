@@ -91,15 +91,6 @@ function findAll(req, res) {
         .exec((err, camera) => (err) && res.status(500).end() || res.status(200).json(camera));
 }
 
-function exportToCsv(req, res) {
-    const query = { status: { $ne: 'deleted' } };
-    const filename = 'ttgt_camera-giao-thong.csv';
-    res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
-    res.setHeader('content-type', 'text/csv');
-    Camera.findAndStreamCsv(query).pipe(res);    
-};
-
-
 
 function getAllCameraByType(req, res) {
     Camera.find({ type: req.params.type, status: { $ne: 'deleted' } })
@@ -244,30 +235,23 @@ function convertCameras() {
 
 // const json2xls = require('json2xls');
 // const fs = require('fs');
+function exportToCsv(req, res) {
+    const query = { status: { $ne: 'deleted' } };
+    const filename = 'ttgt_camera-giao-thong.csv';
+    res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
+    res.setHeader('content-type', 'text/csv');
+    Camera.findAndStreamCsv(query).pipe(res);    
+};
+
 
 function exportCameraData(req, res) {
 
     convertCameras().then((cameras) => {
 
-        // const xls = json2xls(cameras);
-        // fs.writeFileSync('cameraexport.xlsx', xls, 'binary');
-
-        // res.writeHead(200, { 'Content-Type': response.headers['content-type'] });
-        // res.status(200).end(xls);
-
-        // const workbook = XLSX.readFile('camera.xlsx');
-        // const firstSheet = workbook.SheetNames[0];
-        // const worksheet = workbook.Sheets[firstSheet];
-        // const cellStart = 'A1';
-        // for (const cell in worksheet) {
-        //     if (worksheet[cell].v === 'insert here') {
-        //         cellStart = cell;
-        //     }
-        // }
-        // const ws = XLSX.utils.json_to_sheet(cameras);
-        // const wb = { Sheets:{'cameras': ws}, SheetNames:['cameras']};
-        // const excelBuffer = XLSX.write(wb, {bookType:'xlsx',type:'array'});
-        // saveExcelFile(excelBuffer,'cameras');
+        const ws = XLSX.utils.json_to_sheet(cameras);
+        const wb = { Sheets:{'cameras': ws}, SheetNames:['cameras']};
+        const excelBuffer = XLSX.write(wb, {bookType:'xlsx',type:'array'});
+        saveExcelFile(excelBuffer,'cameras');
         res.status(200).end(ws);    
 
     }, () => res.status(500).end());
@@ -275,11 +259,10 @@ function exportCameraData(req, res) {
 }
 
 function saveExcelFile(buffer, fileName) {
-    const data = new Blob([buffer], {type: this.fileType});
-    fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-    fileExtension = '.xlsx';
-    FileSaver.saveAs(data, fileName + this.fileExtension);
-  }
+    const data = new Blob([buffer], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'});
+    FileSaver.saveAs(data, fileName + '.xlsx');
+}
+
 
 
 

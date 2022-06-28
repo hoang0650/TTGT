@@ -16,7 +16,6 @@
                                                 <div class="col-12">
                                                     <span class="d-inline-block text-truncate font-weight-bold mw-100">
                                                         {{user.nickname}} 
-                                                        <i *ngIf="!user['blocked']" class="ui {{appMetadataToStar(user.app_metadata)}} icon position-absolute" title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
                                                         <span *ngIf="user['blocked']" class="ui red tiny label position-absolute" title="Bị chặn"><i class="lock icon m-0"></i></span>
                                                     </span>
                                                 </div>
@@ -123,7 +122,7 @@
                                                 <div class="col-12">
                                                     <span class="d-inline-block text-truncate font-weight-bold mw-100">
                                                         {{selectedUsers[0].nickname}} 
-                                                        <i *ngIf="!selectedUsers[0]['blocked']" class="ui {{appMetadataToStar(selectedUsers[0].app_metadata)}} icon position-absolute" title="{{appMetadataToRoleName(selectedUsers[0].app_metadata)}}"></i>
+                                                        <!-- <i *ngIf="!selectedUsers[0]['blocked']" class="ui {{appMetadataToStar(selectedUsers[0].app_metadata)}} icon position-absolute" title="{{appMetadataToRoleName(selectedUsers[0].app_metadata)}}"></i> -->
                                                         <span *ngIf="selectedUsers[0]['blocked']" class="ui red tiny label position-absolute" title="Bị chặn"><i class="lock icon m-0"></i></span>
                                                     </span>
                                                 </div>
@@ -247,7 +246,7 @@
                                                         </div>
                                                         <div class="container" *ngIf="(groupCom?.selectedGroups[0].permissionsStats.total - (groupCom?.selectedGroups[0].permissionsStats.none|| 0)) > 0">
                                                             <div class="row" *ngFor="let permission of groupCom?.selectedGroups[0].permissions | keyvalue">
-                                                                <p *ngIf="permission.value !== 'none'"><b>{{groupCom?.permissionToText[$any(permission.key)]}} </b>{{groupCom?.roleToText[$any(permission.value)]}}</p>
+                                                                <p *ngIf="permission.value !== 'none'"><b>{{groupCom?.permissionToText[$any(permission.key)]}}: </b>{{groupCom?.roleToText[$any(permission.value)]}}</p>
                                                             </div>
                                                         </div>
                                                         <div class="container" *ngIf="(groupCom?.selectedGroups[0].permissionsStats.total - (groupCom?.selectedGroups[0].permissionsStats.none|| 0)) <= 0">
@@ -309,28 +308,23 @@
                         <div class="table-wrapper">
                             <table class="ui unstackable celled padded table">                            
                                 <thead>
-                                    <tr>
+                                    <tr class="center aligned">
                                         <th></th>
-                                        <th colspan="1"> Tài khoản</th>
-                                        <th colspan="1" class="d-none d-xl-table-cell"> Đăng nhập lần cuối</th>
-                                        <th colspan="1" class="d-none d-md-table-cell"> Khách</th>
-                                        <th colspan="1" class="d-none d-md-table-cell"> Người dùng</th>
-                                        <th colspan="1" class="d-none d-md-table-cell"> Quản lý</th>
+                                        <th> Tài khoản</th>
+                                        <th> Đăng nhập lần cuối</th>
+                                        <th> Quyền</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="collapsing">
-                                        
+                                        <td class="collapsing">                                       
                                         </td>
                                         <td>
                                             <div class="ui fluid left icon input">
                                                 <input type="text" placeholder="Tìm nhanh theo tài khoản" [(ngModel)]="searchnickname">
                                                 <i class="filter icon"></i>
-                                            </div>
-                                            
-                                        </td>
-                                        
+                                            </div>                                       
+                                        </td>                                    
                                     </tr>
 
 
@@ -359,7 +353,7 @@
                                                             <div class="col-12">
                                                                 <span class="d-inline-block text-truncate font-weight-bold mw-100">
                                                                     {{user.nickname}} 
-                                                                    <i *ngIf="!user['blocked']" class="ui {{appMetadataToStar(user.app_metadata)}} icon position-absolute" title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
+                                                                    <!-- <i *ngIf="!user['blocked']" class="ui {{appMetadataToStar(user.app_metadata)}} icon position-absolute" title="{{appMetadataToRoleName(user.app_metadata)}}"></i> -->
                                                                     <span *ngIf="user['blocked']" class="ui red tiny label position-absolute" title="Bị chặn"><i class="lock icon m-0"></i></span>
                                                                 </span>
                                                             </div>
@@ -394,16 +388,12 @@
                                             </div>   
                                         </td>
                                         <td class="collapsing center aligned d-none d-md-table-cell">
-                                            <i *ngIf="!user.app_metadata || (user.app_metadata && user.app_metadata.roles.indexOf('guest') >-1)" class="big {{appMetadataToStar(user.app_metadata)}} icon"
-                                                title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
-                                        </td>
-                                        <td class="collapsing center aligned d-none d-md-table-cell">
-                                            <i *ngIf="user.app_metadata && user.app_metadata.roles.indexOf('user') >-1 " class="big {{appMetadataToStar(user.app_metadata)}} icon"
-                                                title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
-                                        </td>
-                                        <td class="collapsing center aligned d-none d-md-table-cell">
-                                            <i *ngIf="user.app_metadata && user.app_metadata.roles.indexOf('admin') >-1 " class="big {{appMetadataToStar(user.app_metadata)}} icon"
-                                                title="{{appMetadataToRoleName(user.app_metadata)}}"></i>
+                                            <i *ngIf="!user.app_metadata || (user.app_metadata && user.app_metadata.roles.indexOf('guest') >-1)"
+                                                title="{{appMetadataToRoleName(user.app_metadata)}}">Khách</i>
+                                            <i *ngIf="user.app_metadata && user.app_metadata.roles.indexOf('user') >-1"
+                                                title="{{appMetadataToRoleName(user.app_metadata)}}">Người dùng</i>
+                                            <i *ngIf="user.app_metadata && user.app_metadata.roles.indexOf('admin') >-1"
+                                                title="{{appMetadataToRoleName(user.app_metadata)}}">Quản lý</i>
                                         </td>
                                     </tr>
                                 </tbody>                       
