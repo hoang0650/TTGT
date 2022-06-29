@@ -56,7 +56,8 @@ export class EventService {
 
   streamEvent() {
     return new Observable<any>((obs) => {
-      const eventSource = new EventSource(`${this.Root_Url}/stream`)
+      let token =  JSON.parse(localStorage.getItem('id_token') || "")
+      const eventSource = new EventSource(`${this.Root_Url}/stream?token=${token}`)
 
       eventSource.onmessage = event => {
         this._zone.run(() => {

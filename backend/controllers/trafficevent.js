@@ -231,7 +231,6 @@ function findAllApproved (req, res) {
 };
 
 function streamEvent (req, res) {
-    console.log("hello");
     res.writeHead(200, {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',

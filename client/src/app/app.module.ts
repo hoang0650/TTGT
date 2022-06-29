@@ -225,7 +225,6 @@ export function tokenGetters() {
           'http://localhost:3000/api/stats/events',
           'http://localhost:3000/api/stats/events/*',
           'http://localhost:3000/api/event/*',
-          'http://localhost:3000/api/event/stream',
           'http://localhost:3000/api/event',
           'http://localhost:3000/api/news',
           'http://localhost:3000/api/news/*',

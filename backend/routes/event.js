@@ -8,6 +8,7 @@ const {getByBboxx,getByTilee,alls} = require('../controllers/capevents.js');
 const {checkRoles,checkPermissions} = require('../controllers/permissions');
 
 // traffic event
+router.get('/stream', streamEvent)
 router.get('/traffic/:bbox/geojson', checkRoles(['user', 'admin']),
 checkPermissions(['trafficevents:read']), 
 getByBbox);
@@ -42,7 +43,7 @@ router.post('/', createOnTtgt); //api create by thongtingiaothong
 router.get('/', findAllApproved);
 router.get('/:id', findById);
 
-router.get('/stream', streamEvent)
+
 
 // capevent
 router.get('/:bbox/geojson', getByBboxx);

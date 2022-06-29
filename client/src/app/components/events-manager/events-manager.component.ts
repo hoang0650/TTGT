@@ -139,8 +139,12 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
 
     this.eventService.streamEvent().subscribe({
       next: (data) => {
-        console.log(data);
-        
+        let newEvent = JSON.parse(data.data).data
+        if (!this.isLoadingStatus) {
+          newEvent.color = this.listEventType[newEvent.type].color;
+          this.listEvents.push(newEvent)
+          this.filterListEvent()
+        }
       }
     })
   }
