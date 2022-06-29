@@ -101,31 +101,21 @@ function createOnTtgt (req, res) {
 };
 
 function updateEvent (req, res) {
+    console.log("hello");
     if (req.body._id) {
         delete req.body._id;
     }
     const requestTE = new TrafficEvent(req.body);
     const tevt = req.body.tevt;
     requestTE.origins = tevt.origins;
-    if (tevt.status === 'approved') {
+    if (tevt.status === 'approved' || tevt.status === 'created') {
         tevt.status = 'updated';
         tevt.history.push(eventHistory('update', req.user.name));
         tevt.save().then(() => {
-            const listReferences = [];
-            if (tevt.references.length > 0) {
-                tevt.references.forEach(function (reference) {
-                    listReferences.push(reference);
-                }, this);
-            }
-            listReferences.push(tevt);
-            requestTE.references = listReferences;
-            if (!config.trafficEventType[requestTE.type]) {
-                return res.status(500).end();
-            }
             requestTE.createdAt = new Date();
             requestTE.creator = {
                 source: 'TTGT',
-                name: req.user.name
+                name: req.user['https://hoang0650.com/name']
             };
             requestTE.history = [eventHistory('create', req.user.name)];
             requestTE.status = 'created';
@@ -142,7 +132,7 @@ function updateEvent (req, res) {
 function approveEvent (req, res) {
     const requestTE = new TrafficEvent(req.body);
     const tevt = req.body.tevt;
-    if (tevt.status === 'created') {
+    if (tevt.status === 'created' || tevt.status === 'updated') {
         delete requestTE._id;
         if (requestTE.loc) {
             tevt.loc = requestTE.loc;

@@ -20,17 +20,10 @@
                             </div>
                             
                             <div class="col-7 mb-3 pl-3">
-                                <div class="btn-group">
-                                    <button class="btn btn-success" [disabled]="isLoadingStatus" (click)="refresh()">
-                                        <i nz-icon><i class="refresh icon"></i></i>
-                                        Làm mới
-                                    </button>
-                                    <button class="btn btn-primary" [disabled]="isLoadingStatus" (click)="refresh()">
-                                        <i nz-icon><i class="undo icon"></i></i>
-                                        Đăng lại
-                                    </button>
-
-                                </div>
+                                <button class="btn btn-primary" [disabled]="isLoadingStatus" (click)="refresh()">
+                                    <i nz-icon><i class="refresh icon"></i></i>
+                                    Làm mới
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -53,7 +46,7 @@
             </h4>
         </div>
 
-        <div class="ui segment incident"  [ngClass]="{'active-incident': event._id == chooseEventId}"  *ngFor="let event of listEvents | filter:filter | orderBy:['createdAt']:['desc']">
+        <div class="ui segment incident" id="incident_{{event._id}}" [ngClass]="{'active-incident': event._id == chooseEventId}"  *ngFor="let event of listEvents | filter:filter | orderBy:['createdAt']:['desc']">
             <div class="content">
                 <div class="ui large feed">
                     <div class="event"

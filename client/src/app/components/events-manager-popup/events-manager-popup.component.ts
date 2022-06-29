@@ -13,6 +13,7 @@ export class EventsManagerPopupComponent implements OnInit {
   constructor(public eventManager:EventsManagerComponent, public cdRef:ChangeDetectorRef) { }
 
   ngOnInit(): void {
+   
   }
 
   closePopup() {

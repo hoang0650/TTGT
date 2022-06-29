@@ -579,6 +579,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
     }
     
     this.chosenMarkers['incident'] = event
+    this.incidents[event._id].openPopup()
     this.location.replaceState(`./map?type=event&id=${event._id}`)
     this.cdRef.detectChanges()
   }
