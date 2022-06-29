@@ -16,4 +16,16 @@ tbody, td, tfoot, th, thead, tr {
     border-color: inherit;
     border-style: none;
     border-width: 0;
+    padding: 0;
+    width: 20%;
+    height: 14%;
 }
+
+.ui.table>tbody>tr>td, .ui.table>tr>td {
+    padding: .4em .6em;
+}
+
+.ui.checkbox {
+    padding-bottom: 35px !important;  
+}
+

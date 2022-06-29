@@ -156,7 +156,16 @@ tbody, td, tfoot, th, thead, tr {
     border-color: inherit;
     border-style: none;
     border-width: 0;
+    
 }
+
+.ui.table>tbody>tr>td, .ui.table>tr>td {
+    padding: .2em .4em;
+}
+
+/* .ui.checkbox {
+    padding-left: 30px !important;  
+} */
 
 @media (min-width:992px) {
     .user-card-body {
