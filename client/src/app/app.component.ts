@@ -85,8 +85,7 @@ export class AppComponent {
   getIdToken() {
     this.authservice.getAccessTokenSilently().subscribe({
       next: (token:string) => {
-        this.idToken = token
-        
+        this.idToken = token       
         localStorage.setItem('id_token',JSON.stringify(this.idToken));
       }
     })

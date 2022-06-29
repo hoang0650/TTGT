@@ -3,7 +3,7 @@ const router = express.Router();
 const TrafficEventSetting = require('../models/trafficevent');
 const {createOnTtgt,updateEvent,approveEvent,rejectEvent,expireEvent, 
 findAllApproved,findAllWithoutCondition,findById,getAllByDateToManage,
-sortByLocation,getAllType,getByTile,getByBbox,all, streamEvent} = require('../controllers/trafficevent');
+sortByLocation,getAllType,getByTile,getByBbox,all} = require('../controllers/trafficevent');
 const {getByBboxx,getByTilee,alls} = require('../controllers/capevents.js');
 const {checkRoles,checkPermissions} = require('../controllers/permissions');
 
@@ -42,7 +42,6 @@ router.post('/', createOnTtgt); //api create by thongtingiaothong
 router.get('/', findAllApproved);
 router.get('/:id', findById);
 
-router.get('/stream', streamEvent)
 
 // capevent
 router.get('/:bbox/geojson', getByBboxx);

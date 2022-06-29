@@ -1,14 +1,14 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ConfigureService } from './configure.service';
-import { Observable } from 'rxjs';
+
 @Injectable({
   providedIn: 'root'
 })
 export class EventService {
 
   readonly Root_Url = this.configure.backend+'api/event';
-  constructor(private http:HttpClient, private configure:ConfigureService, private _zone:NgZone) { }
+  constructor(private http:HttpClient, private configure:ConfigureService) { }
 
   delete(cameraId:string){
     return this.http.delete(`${this.Root_Url}/${cameraId}`)
@@ -54,21 +54,4 @@ export class EventService {
     return this.http.put(`${this.Root_Url}/${id}/expire`,data);
   }
 
-  streamEvent() {
-    return new Observable<any>((obs) => {
-      const eventSource = new EventSource(`${this.Root_Url}/stream`)
-
-      eventSource.onmessage = event => {
-        this._zone.run(() => {
-          obs.next(event)
-        })
-      }
-
-      eventSource.onerror = event => {
-        this._zone.run(() => {
-          obs.error(event)
-        })
-      }
-    })
-  }
 }

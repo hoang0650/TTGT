@@ -136,13 +136,6 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
     $(".ui.dropdown").dropdown()
     this.refresh()
     this.mapCom.toggleLayout(true)
-
-    this.eventService.streamEvent().subscribe({
-      next: (data) => {
-        console.log(data);
-        
-      }
-    })
   }
 
   ngOnDestroy(): void {

@@ -12,6 +12,17 @@ const queryEventInTime = function () {
         $gte: new Date(new Date() - 30 * 60 * 1000) //30 phut
     };
 };
+
+function checkExpireTime(){
+    return{
+        $lte: new Date(new Date() - 30 * 60 * 1000),
+        $gte: new Date(new Date() - 60 * 60 * 1000) 
+    }
+}
+
+
+
+
 const query = function () {
     return {
         status: 'approved',
@@ -34,6 +45,7 @@ const getTrafficEventByBbox = bbox => TrafficEvent.find({
         $geoWithin: { $box: [[bbox[0], bbox[1]], [bbox[2], bbox[3]]] }
     }
 }).exec();
+
 const processEvent = (events) => {
     const results = events;
     results = results.map((o) => {
@@ -192,6 +204,8 @@ function expireEvent (req, res) {
     }
 };
 
+
+
 function findAllApproved (req, res) {
     TrafficEvent.aggregate(
         [
@@ -230,27 +244,16 @@ function findAllApproved (req, res) {
     });
 };
 
-function streamEvent (req, res) {
-    console.log("hello");
-    res.writeHead(200, {
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        Connection: 'keep-alive'
-    })
 
-    
-    Stream.on('push', (event, data) => {
-        res.write("data: "+JSON.stringify(data)+"\n\n")
-    })
-};
 
 function findAllWithoutCondition (req, res) {
     TrafficEvent.aggregate(
         [
             {
                 $match: {
-                    createdAt: queryEventInTime(),
-                    status: { $nin: ['expired', 'updated'] }
+                    createdAt: checkExpireTime(),
+                    // status: { $nin: [ 'updated'] }
+                    //created, approved, expired, rejected, updated
                 }
             },
             {
@@ -392,4 +395,4 @@ function all (req, res) {
 
 module.exports = {createOnTtgt,updateEvent,approveEvent,rejectEvent,
 expireEvent, findAllApproved,findAllWithoutCondition,findById,getAllByDateToManage,
-sortByLocation,getAllType,getByTile,getByBbox,all, streamEvent}
+sortByLocation,getAllType,getByTile,getByBbox,all}
