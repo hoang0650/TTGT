@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { EventsManagerComponent } from '../events-manager/events-manager.component';
 
 @Component({
@@ -8,8 +8,9 @@ import { EventsManagerComponent } from '../events-manager/events-manager.compone
 })
 export class EventsManagerPopupComponent implements OnInit {
   event: any;
+  isEdit?: boolean;
 
-  constructor(public eventManager:EventsManagerComponent) { }
+  constructor(public eventManager:EventsManagerComponent, public cdRef:ChangeDetectorRef) { }
 
   ngOnInit(): void {
   }

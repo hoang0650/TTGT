@@ -36,7 +36,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
 
 
   constructor(public mapCom:MapComponent, private eventService:EventService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, public appCom:AppComponent) {
-    this.status = "created"
+    this.status = "all"
     this.filter = {status:this.status}
     this.markers = {}
     this.isLoadingStatus = false;
@@ -136,6 +136,13 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
     $(".ui.dropdown").dropdown()
     this.refresh()
     this.mapCom.toggleLayout(true)
+
+    this.eventService.streamEvent().subscribe({
+      next: (data) => {
+        console.log(data);
+        
+      }
+    })
   }
 
   ngOnDestroy(): void {
@@ -143,6 +150,21 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
     this.mapCom.toggleLayout(false)
   }
   
+  createNewMarkerEvent(event:any) {
+    return L.marker([event.loc.coordinates[1], event.loc.coordinates[0]], {
+      zIndexOffset: 1000,
+      icon: L.divIcon(this.jamIcon[event.type]),
+      draggable: true
+    })
+    // return {
+    //   lat: event.loc.coordinates[1],
+    //   lng: event.loc.coordinates[0],
+    //   zIndexOffset: 1000,
+    //   icon: jamIcon[event.type],
+    //   draggable: false,
+    //   event: event
+    // };
+  };
 
   createMarkerEvent(event:any) {
     return L.marker([event.loc.coordinates[1], event.loc.coordinates[0]], {
@@ -230,8 +252,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
 
       var marker = this.createTrafficEventMarker(latlng, trafficEvent.type).bindPopup(popup).on({
         popupopen: () => {
-          // this.sidebar?.open("incidents")
-          // this.chooseIncident(trafficEvent)
+
         }
       })
 
@@ -286,6 +307,19 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
     this.markers[event._id].openPopup()
   };
 
+  editEvent(event:any) {
+    
+    var popup = L.popup({
+      closeButton:false,
+      className:'stis-create-incident-popup'
+    }).setContent(this.createCustomPopup(event, true))
+
+    this.mapCom.geoLayer = this.createNewMarkerEvent(event).bindPopup(popup)
+    this.mapCom.geoLayer.openPopup()
+
+    this.markers[event._id].hidden = true
+  }
+
   approveEvent(event:any) {
     this.eventService.approveEvent(event._id, event).subscribe({
       next: () => {
@@ -330,21 +364,48 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
     })
   };
 
-  createCustomPopup(trafficEvent?:any, isNew=false) { 
-    if( this.component && isNew) {
+  createCustomPopup(trafficEvent?:any, isEdit=false) { 
+    if( this.component) {
       this.component?.destroy()
     }
     const factory = this.componentFactoryResolver.resolveComponentFactory(EventsManagerPopupComponent);
-    if (isNew) {
-      var component = factory.create(this.injector);
-      component.instance.event = trafficEvent
-      component.changeDetectorRef.detectChanges();
-      return component.location.nativeElement
-    } else {
-      this.component = factory.create(this.injector);
-      this.component.instance.event = trafficEvent
-      this.component.changeDetectorRef.detectChanges();
-      return this.component.location.nativeElement
+
+    var component = factory.create(this.injector);
+    component.instance.event = trafficEvent
+    component.instance.isEdit = isEdit
+    component.changeDetectorRef.detectChanges();
+    return component.location.nativeElement
+
+  }
+
+  chooseTypeEvent(type:string, event:any) {
+    var eventType = this.listEventType[type];
+    if (eventType) {
+      event.desc[1] = eventType.name;
+      var icon = this.jamIcon[type]
+      icon.className = 'creEventMarker';
+      icon.iconSize = [33.5, 40]
+      icon.iconAnchor = [0, 0]
+      this.mapCom.geoLayer.setIcon(L.divIcon(icon))
     }
+  }
+
+  previewImage(event:any) {
+    var imageUpload:any = document.getElementById('imageUpload');
+    if (imageUpload != null && typeof (FileReader) !== 'undefined') {
+      var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
+      var file = imageUpload.files[0];
+      if (regex.test(file.name.toLowerCase())) {
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (e:any) => {
+          event['snapshot'] = e.currentTarget.result
+        };     
+      }
+    }
+  }
+
+  removeEventImage(event:any) {
+    delete event['snapshot'];
   }
 }

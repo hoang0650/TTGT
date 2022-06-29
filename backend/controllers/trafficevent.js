@@ -3,6 +3,9 @@ const {Setting} = require('../models/setting');
 const utils = require('./util');
 const config = require('../config/configure');
 const geohash = require('ngeohash');
+var EventEmitter = require('events'); 
+
+const Stream = new EventEmitter();
 
 const queryEventInTime = function () {
     return {
@@ -87,7 +90,10 @@ function createOnTtgt (req, res) {
                 tevt.history = [eventHistory('create')];
             }
             tevt.status = 'created';
-            tevt.save().then(tevt => res.status(200).send(tevt),
+            tevt.save().then(tevt =>{
+                Stream.emit('push', 'newEvent', {data:tevt})
+                res.status(200).send(tevt)
+            } ,
                 err => res.status(500).send(err));
         }
     });
@@ -222,6 +228,20 @@ function findAllApproved (req, res) {
             }
         });
     });
+};
+
+function streamEvent (req, res) {
+    console.log("hello");
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        Connection: 'keep-alive'
+    })
+
+    
+    Stream.on('push', (event, data) => {
+        res.write("data: "+JSON.stringify(data)+"\n\n")
+    })
 };
 
 function findAllWithoutCondition (req, res) {
@@ -372,4 +392,4 @@ function all (req, res) {
 
 module.exports = {createOnTtgt,updateEvent,approveEvent,rejectEvent,
 expireEvent, findAllApproved,findAllWithoutCondition,findById,getAllByDateToManage,
-sortByLocation,getAllType,getByTile,getByBbox,all}
+sortByLocation,getAllType,getByTile,getByBbox,all, streamEvent}

@@ -39,58 +39,61 @@
         </div>
     </div>
 
-    <div class="ui segment" *ngIf="listEventsForFilter.length == 0">
-        <h4 class="ui center aligned header">
-            <div class="content" *ngIf="isLoadingStatus">
-                <nz-spin nzSimple></nz-spin>
-                Đang tải...
-            </div>
-            <div class="content" *ngIf="!isLoadingStatus && listEventsForFilter.length == 0">
-                Không có cảnh báo {{statusList[status].name.toLowerCase() == 'tất cả' ? 'nào' : statusList[status].name.toLowerCase()}}
-            </div>
-        </h4>
-    </div>
 
-    <div class="ui segment incident"  [ngClass]="{'active-incident': event._id == chooseEventId}"  *ngFor="let event of listEvents | filter:filter | orderBy:['createdAt']">
-        <div class="content">
-            <div class="ui large feed">
-                <div class="event"
-                    (click)="chooseEvent(event)">
-                    <div class="label event-icon">
-                        <i class="circle icon {{event.color}}"></i>
-                    </div>
-                    <div class="content">
-                        <div class="summary">
-                            <a class="user">{{event.desc[0]}}</a>
-                            <div class="date">
-                                <span>{{event.createdAt | amLocale:'vi' | amTimeAgo}}</span>
-                            </div>
+    <div class="ui segments">
+        <div class="ui segment" *ngIf="listEventsForFilter.length == 0">
+            <h4 class="ui center aligned header">
+                <div class="content" *ngIf="isLoadingStatus">
+                    <nz-spin nzSimple></nz-spin>
+                    Đang tải...
+                </div>
+                <div class="content" *ngIf="!isLoadingStatus && listEventsForFilter.length == 0">
+                    Không có cảnh báo {{statusList[status].name.toLowerCase() == 'tất cả' ? 'nào' : statusList[status].name.toLowerCase()}}
+                </div>
+            </h4>
+        </div>
+
+        <div class="ui segment incident"  [ngClass]="{'active-incident': event._id == chooseEventId}"  *ngFor="let event of listEvents | filter:filter | orderBy:['createdAt']:['desc']">
+            <div class="content">
+                <div class="ui large feed">
+                    <div class="event"
+                        (click)="chooseEvent(event)">
+                        <div class="label event-icon">
+                            <i class="circle icon {{event.color}}"></i>
                         </div>
-                        <div class="extra text">
-                            {{event.desc[1]}}
-                        </div>
-                        <div class="extra text">
-                            <div class="ui label">
-                                <i class="user icon"></i> Người đăng: {{event.creator.name}}
+                        <div class="content">
+                            <div class="summary">
+                                <a class="user">{{event.desc[0]}}</a>
+                                <div class="date">
+                                    <span>{{event.createdAt | amLocale:'vi' | amTimeAgo}}</span>
+                                </div>
                             </div>
-                            <div *ngIf="!event['tmpStatus']" class="ui label float right {{statusList[event.status].color}}">
-                                <i class="{{statusList[event.status].icon}} icon"></i>{{statusList[event.status].name}}
+                            <div class="extra text">
+                                {{event.desc[1]}}
                             </div>
-                            <div *ngIf="event['tmpStatus']" class="ui label float right {{statusList[event.tmpStatus].color}}">
-                                <i class="{{statusList[event.tmpStatus].icon}} icon"></i>{{statusList[event.tmpStatus].name}}
+                            <div class="extra text">
+                                <div class="ui label">
+                                    <i class="user icon"></i> Người đăng: {{event.creator.name}}
+                                </div>
+                                <div *ngIf="!event['tmpStatus']" class="ui label float right {{statusList[event.status].color}}">
+                                    <i class="{{statusList[event.status].icon}} icon"></i>{{statusList[event.status].name}}
+                                </div>
+                                <div *ngIf="event['tmpStatus']" class="ui label float right {{statusList[event.tmpStatus].color}}">
+                                    <i class="{{statusList[event.tmpStatus].icon}} icon"></i>{{statusList[event.tmpStatus].name}}
+                                </div>
                             </div>
-                        </div>
-                        <div class="extra text" [hidden]="!(appCom.checkPermission(['trafficevents:update']))" *ngIf="event._id == chooseEventId && event.status != 'rejected' && !(event['tmpStatus'] == 'expired')">
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <button *ngIf="event.status == 'created' && !event['tmpStatus']" data-tooltip="Duyệt" data-position="top center" (click)="approveEvent(event);$event.stopPropagation()"
-                                    class="btn btn-success"><i class="checkmark icon"></i></button>
-                                <button *ngIf="event.status == 'created' && !event['tmpStatus']" data-tooltip="Không duyệt" data-position="top center" (click)="rejectEvent(event);$event.stopPropagation()"
-                                    class="btn btn-danger"><i class="remove icon"></i></button>
-                                <button *ngIf="event.status == 'approved' || event['tmpStatus']  == 'approved'" data-tooltip="Dừng cảnh báo" data-position="top center" (click)="expireEvent(event);$event.stopPropagation()"
-                                    class="btn btn-danger"><i class="times icon"></i></button>
-                                <button *ngIf="event.status == 'approved' || event['tmpStatus']  == 'approved'" data-tooltip="Cập nhật" data-position="top center" (click)="updateEvent (event);$event.stopPropagation()"
-                                    class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></button>
-                              </div>
+                            <div class="extra text" [hidden]="!(appCom.checkPermission(['trafficevents:update']))" *ngIf="event._id == chooseEventId && event.status != 'rejected' && !(event['tmpStatus'] == 'expired')">
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button *ngIf="event.status == 'created' && !event['tmpStatus']" data-tooltip="Duyệt" data-position="top center" (click)="approveEvent(event);$event.stopPropagation()"
+                                        class="btn btn-success"><i class="checkmark icon"></i></button>
+                                    <button *ngIf="event.status == 'created' && !event['tmpStatus']" data-tooltip="Không duyệt" data-position="top center" (click)="rejectEvent(event);$event.stopPropagation()"
+                                        class="btn btn-danger"><i class="remove icon"></i></button>
+                                    <button *ngIf="event.status == 'approved' || event['tmpStatus']  == 'approved'" data-tooltip="Dừng cảnh báo" data-position="top center" (click)="expireEvent(event);$event.stopPropagation()"
+                                        class="btn btn-danger"><i class="times icon"></i></button>
+                                    <button *ngIf="event.status != 'rejected' || event['tmpStatus']  == 'rejected'" data-tooltip="Cập nhật" data-position="top center" (click)="editEvent(event);$event.stopPropagation()"
+                                        class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

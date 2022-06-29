@@ -1,4 +1,5 @@
-<h3 class="ui header center aligned">Thông tin cảnh báo</h3>
+<div *ngIf="!isEdit">
+    <h3 class="ui header center aligned">Thông tin cảnh báo</h3>
     <form class="ui form stis-notice-popup" #popupForm="ngForm">
         <div class="field">
             <select class="ui dropdown" disabled required="required" name="eventType" [(ngModel)]="event['type']">
@@ -25,3 +26,40 @@
             <button class="ui button red" type="button" (click)="closePopup()">Đóng</button>
         </div>
     </form>
+</div>
+
+<div *ngIf="isEdit">
+<h3 class="ui header center aligned">Chỉnh sửa cảnh báo</h3>
+    <form class="ui form stis-notice-popup" #popupForm="ngForm">
+        <div class="field">
+            <select class="ui dropdown" required="required" name="eventType" [(ngModel)]="event['type']" (change)="eventManager.chooseTypeEvent(event['type'], event)">
+                <option value="{{type.key}}" hidden="hidden" *ngFor="let type of eventManager.listEventType | keyvalue">{{$any(type.value).name}}</option>
+            </select>
+        </div>
+        <div class="field">
+            <input type="text" name="place" placeholder="Vị trí" required [(ngModel)]="event['desc'][0]" (keyup)="cdRef.detectChanges()">
+        </div>
+        <div class="field">
+            <input type="text" name="status" placeholder="Tình trạng" required [(ngModel)]="event['desc'][1]" (keyup)="cdRef.detectChanges()">
+        </div>
+        <div class="field">
+            <textarea placeholder="Thông tin thêm" name="description" [(ngModel)]="event['desc'][2]" (keyup)="cdRef.detectChanges()"
+                rows="2"></textarea>
+        </div>
+        <div class="field">
+            <label>Hình ảnh</label>
+            <div class="contain-image-event" *ngIf="event['snapshot']">
+                <img [src]="event['snapshot']">
+                <div class="remove-image-event-icon" (click)="eventManager.removeEventImage(event)"><i class="trash icon"></i></div>
+            </div>
+            <input name="image" id="imageUpload" type="file" accept="image/*" (change)="eventManager.previewImage(event)" *ngIf="!event['snapshot']">
+        </div>
+        <div class="field">
+            <div><b>*</b> Cầm kéo để thay đổi</div>
+        </div>
+        <div class="field align-button">
+            <!-- <button class="ui button red" type="reset" (click)="map.cancelEvent()">Hủy</button>
+            <button class="ui button blue" [disabled]="!popupForm.valid" (click)="map.submitEvent(map.event)">Đăng</button> -->
+        </div>
+    </form>
+</div>
