@@ -244,7 +244,18 @@ function findAllApproved (req, res) {
     });
 };
 
+function streamEvent (req, res) {
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        Connection: 'keep-alive'
+    })
 
+    
+    Stream.on('push', (event, data) => {
+        res.write("data: "+JSON.stringify(data)+"\n\n")
+    })
+};
 
 function findAllWithoutCondition (req, res) {
     TrafficEvent.aggregate(
@@ -395,4 +406,4 @@ function all (req, res) {
 
 module.exports = {createOnTtgt,updateEvent,approveEvent,rejectEvent,
 expireEvent, findAllApproved,findAllWithoutCondition,findById,getAllByDateToManage,
-sortByLocation,getAllType,getByTile,getByBbox,all}
+sortByLocation,getAllType,getByTile,getByBbox,all,streamEvent}
