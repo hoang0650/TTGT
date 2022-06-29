@@ -13,17 +13,24 @@
                 <div  class="affix-header">
                     <div class="container">
                         <div class="row">
-                            <div class="col-md-8 mb-3">
+                            <div class="col-sm-5 mb-3">
                                 <select class="form-select" aria-label="Example select with button addon" [(ngModel)]="status" (change)="refresh()">
                                     <option *ngFor="let statusData of statusListArray" value="{{statusData.id}}">{{statusData.name}} </option>
                                 </select>
                             </div>
                             
-                            <div class="col-md-4 mb-3">
-                                <button class="btn btn-primary" [disabled]="isLoadingStatus" (click)="refresh()">
-                                    <i nz-icon><i class="refresh icon"></i></i>
-                                    Làm mới
-                                </button>
+                            <div class="col-7 mb-3 pl-3">
+                                <div class="btn-group">
+                                    <button class="btn btn-success" [disabled]="isLoadingStatus" (click)="refresh()">
+                                        <i nz-icon><i class="refresh icon"></i></i>
+                                        Làm mới
+                                    </button>
+                                    <button class="btn btn-primary" [disabled]="isLoadingStatus" (click)="refresh()">
+                                        <i nz-icon><i class="undo icon"></i></i>
+                                        Đăng lại
+                                    </button>
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -81,6 +88,8 @@
                                     class="btn btn-danger"><i class="remove icon"></i></button>
                                 <button *ngIf="event.status == 'approved' || event['tmpStatus']  == 'approved'" data-tooltip="Dừng cảnh báo" data-position="top center" (click)="expireEvent(event);$event.stopPropagation()"
                                     class="btn btn-danger"><i class="times icon"></i></button>
+                                <button *ngIf="event.status == 'approved' || event['tmpStatus']  == 'approved'" data-tooltip="Cập nhật" data-position="top center" (click)="updateEvent (event);$event.stopPropagation()"
+                                    class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></button>
                               </div>
                         </div>
                     </div>

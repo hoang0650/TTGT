@@ -100,7 +100,6 @@ function checkAuth(req, res, next) {
     return next();
   }
   const roles = req.user['https://hoang0650.com/roles'];
-  console.log('req.body',req.body);
   req.user.app_metadata = {
     roles: roles
   };

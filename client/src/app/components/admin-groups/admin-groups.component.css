@@ -6,112 +6,17 @@
     box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
 }
 
-.table-title {
-    padding-bottom: 15px;
-    background: #1890ff;
-    color: #fff;
-    padding: 16px 30px;
-    margin: -20px -25px 10px;
-    border-radius: 3px 3px 0 0;
+tbody, td, tfoot, th, thead, tr {
+    border-color: inherit;
+    border-style: none;
+    border-width: 0;
 }
 
-.row {
-    
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    margin-right: -15px;
-    margin-left: -15px;
-}
-
-
-
-.btn:not(:disabled):not(.disabled) {
-    cursor: pointer;
-}
-.table-title .btn {
-    color: #566787;
-    float: right;
-    font-size: 13px;
-    background: #fff;
-    border: none;
-    min-width: 50px;
-    border-radius: 2px;
-    border: none;
-    outline: none !important;
-    margin-left: 10px;
-}
-
-.table {
-    width: 100%;
-    margin-bottom: 1rem;
-    color: #212529;
-}
-table {
-    border-collapse: collapse;
-} ::after, ::before {
-    box-sizing: border-box;
-}
-
-table {
-    display: table;
-    border-collapse: separate;
-    box-sizing: border-box;
-    text-indent: initial;
-    border-spacing: 2px;
-    border-color: grey;
-}
-
-
-/* ::ng-deep .ant-table-placeholder.ng-star-inserted {
-    display: none;
-}
-
-::ng-deep nz-card.user-card > div.ant-card-head.ng-star-inserted{
-    background-color: #1890ff;
-    color: white;
-    font-weight: bold;
-    font-size: 19.5px;
-} */
-
-.ant-divider-inner-text {
-    color: blue !important;
-    font-weight: bold !important;
-    opacity: 0.5 !important;
-}
-
-
-/* ::ng-deep .user-tabset > nz-tabs-nav {
-    margin: 0 !important;
-}
-
-::ng-deep .ant-tabs-tab {
-    border: 0 !important;
-    padding: 0 !important;
-}
-
-::ng-deep .ant-tabs-tab-btn {
-    padding: 16px;
-    font-size: 19.5px;
-    font-weight: bold;
-} */
-
-.users-layout {
-    background: #f0f2f5;
-    max-height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-.ant-card-bordered {
-    border: 0;
-}
-
-tr.hoverable:hover {
+.hoverable:hover {
     background: rgba(0, 0, 0, 0.1);
 }
 
-tr.hoverable.selected {
+.hoverable.selected {
     background: rgba(0, 0, 0, 0.3);
 }
 

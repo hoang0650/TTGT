@@ -6,7 +6,7 @@ const geohash = require('ngeohash');
 
 const queryEventInTime = function () {
     return {
-        $gte: new Date(new Date() - 10 * 60 * 1000) //30 phut
+        $gte: new Date(new Date() - 30 * 60 * 1000) //30 phut
     };
 };
 const query = function () {
