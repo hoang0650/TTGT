@@ -20,15 +20,13 @@
     border-radius: 3px 3px 0 0;
 }
 
-.row {
-    
+.row {   
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     margin-right: -15px;
     margin-left: -15px;
 }
-
 
 .btn:not(:disabled):not(.disabled) {
     cursor: pointer;
@@ -69,12 +67,12 @@
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
-
 .table {
     width: 100%;
     margin-bottom: 1rem;
     color: #212529;
 }
+
 table {
     border-collapse: collapse;
 } ::after, ::before {
@@ -159,9 +157,9 @@ tbody, td, tfoot, th, thead, tr {
     
 }
 
-.ui.table>tbody>tr>td, .ui.table>tr>td {
+/* .ui.table>tbody>tr>td, .ui.table>tr>td {
     padding: .2em .4em;
-}
+} */
 
 /* .ui.checkbox {
     padding-left: 30px !important;  
