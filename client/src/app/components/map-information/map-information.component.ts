@@ -6,6 +6,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { AppComponent } from 'src/app/app.component';
 import { CameraService } from 'src/app/services/camera.service';
 import { ConfigureService } from 'src/app/services/configure.service';
+import { EventService } from 'src/app/services/event.service';
 import { MapService } from 'src/app/services/map.service';
 import { MarkerService } from 'src/app/services/marker.service';
 import { ParkingService } from 'src/app/services/parking.service';
@@ -370,6 +371,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
 
   incidents:any = {};
   toggleIncidentMarkers() {
+    this.markers['incidents'] = L.layerGroup()
     this.listEvent.forEach((trafficEvent:any) => {
       var latlng = [trafficEvent.loc.coordinates[1], trafficEvent.loc.coordinates[0]]
       
@@ -390,6 +392,40 @@ export class MapInformationComponent implements OnInit, OnDestroy {
     
   }
   
+  streamEvent() {
+    this.mapService.streamEvent().subscribe({
+      next: (data:any) => {
+        console.log(data);
+        
+        if (this.listEventType) {
+          
+          if (data.type && data.data) {
+            console.log(this.listEvent);
+            
+            let newEvent = data.data
+            newEvent.color = this.listEventType[newEvent.type].color;
+
+            if (data.type == "updatedEvent") {
+              this.listEvent = this.listEvent.filter((event:any) => {
+                return event._id != data.previousEventId && event._id != newEvent._id
+              })
+            } else if (data.type == "approvedEvent" || data.type == "rejectedEvent" || data.type == "expiredEvent") {
+              this.listEvent = this.listEvent.filter((event:any) => {
+                return event._id != newEvent._id
+              })
+              if (data.type == "approvedEvent") {
+                this.listEvent.push(newEvent)
+              }
+            } 
+
+            this.toggleIncidentMarkers()
+            console.log(this.listEvent);
+          }
+        }
+      }
+    })
+  }
+
   createTrafficEventMarker(latlng:any, type:string) {
     var icon = this.markerService.jamIcon[type]
     icon.iconSize = [33.5, 40]
@@ -409,7 +445,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
       var icon = this.markerService.jamIcon['congestion']
       icon.className = 'creEventMarker';
       icon.iconSize = [33.5, 40]
-      icon.iconAnchor = [0, 0]
+      icon.iconAnchor = [24.75, 54.75]
       
       this.event['createdBy'] = this.userInfo.nickname;
       this.event['type'] = this.listEventType.congestion.type;
@@ -468,6 +504,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
         this.listEvent = res
         if (this.listEvent.length > 0) {
           this.toggleIncidentMarkers()
+          this.streamEvent()
         }
         this.checkParam()
       },
@@ -482,7 +519,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
     this.mapService.getAllType().subscribe({
       next: (res) => {
         this.listEventType = res;
-        this.markers['incidents'] = L.layerGroup()
+
         this.sideMap?.on({
           contextmenu: (event:any) => {
             this.createNewEventMarker(event.latlng)

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
+import { Observable } from 'rxjs';
 import { ConfigureService } from './configure.service';
 
 @Injectable({
@@ -8,7 +9,7 @@ import { ConfigureService } from './configure.service';
 export class MapService {
 
   readonly Root_Url = this.configure.backend+'api';;
-  constructor(private http:HttpClient, private configure:ConfigureService) { }
+  constructor(private http:HttpClient, private configure:ConfigureService, private _zone:NgZone) { }
 
   set(key:any,value:any){
     return localStorage[key] = value;
@@ -70,6 +71,27 @@ export class MapService {
 
   getViaroute(){
     return this.http.get(`${this.Root_Url}/v1/routing/viaroute`);
+  }
+
+  streamEvent() {
+    return new Observable<any>((obs) => {
+      let token =  JSON.parse(localStorage.getItem('id_token') || "")
+      const eventSource = new EventSource(`${this.Root_Url}/event/stream?token=${token}`)
+
+      eventSource.onmessage = event => {
+        this._zone.run(() => {
+          let data = JSON.parse(event.data)
+
+          obs.next(data)
+        })
+      }
+
+      eventSource.onerror = event => {
+        this._zone.run(() => {
+          obs.error(event)
+        })
+      }
+    })
   }
 
   // roadTranlate service

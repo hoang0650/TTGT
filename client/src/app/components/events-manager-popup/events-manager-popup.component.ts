@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import _ from 'lodash';
 import { EventsManagerComponent } from '../events-manager/events-manager.component';
 
 @Component({
@@ -8,12 +9,18 @@ import { EventsManagerComponent } from '../events-manager/events-manager.compone
 })
 export class EventsManagerPopupComponent implements OnInit {
   event: any;
+  tmpEvent: any;
   isEdit?: boolean;
 
   constructor(public eventManager:EventsManagerComponent, public cdRef:ChangeDetectorRef) { }
 
   ngOnInit(): void {
    
+  }
+
+  openEditor() {
+    this.tmpEvent = _.cloneDeep(this.event)
+    this.isEdit = true
   }
 
   closePopup() {

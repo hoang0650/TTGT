@@ -114,6 +114,18 @@ nz-layout {
     position: absolute;
 }
 
+.circle-cluster.red {
+    background: #db2828;
+}
+
+.circle-cluster.blue {
+    background: #2185d0;
+}
+
+.circle-cluster.green {
+    background: #21ba45;
+}
+
 .marker-parking {
     width: 33.5px;
     height: 40px;
@@ -131,8 +143,7 @@ nz-layout {
 .marker-jam-incident {
     width: 50.25px;
     height: 60px;
-    margin-top: -54.75px;
-    margin-left: -24.75px;
+
     background-image: url(assets/images/markers/jam-incident.png);
     background-size: 50.25px 60px;
 }
@@ -140,8 +151,7 @@ nz-layout {
 .marker-jam-moderate {
     width: 50.25px;
     height: 60px;
-    margin-top: -54.75px;
-    margin-left: -24.75px;
+
     background-image: url(assets/images/markers/jam-moderate.png);
     background-size: 50.25px 60px;
 }
@@ -149,8 +159,7 @@ nz-layout {
 .marker-jam-extreme {
     width: 50.25px;
     height: 60px;
-    margin-top: -54.75px;
-    margin-left: -24.75px;
+
     background-image: url(assets/images/markers/jam-extreme.png);
     background-size: 50.25px 60px;
 }
@@ -158,8 +167,7 @@ nz-layout {
 .marker-jam-normal {
     width: 50.25px;
     height: 60px;
-    margin-top: -54.75px;
-    margin-left: -24.75px;
+
     background-image: url(assets/images/markers/jam-normal.png);
     background-size: 50.25px 60px;
 }
@@ -167,8 +175,7 @@ nz-layout {
 .marker-jam-flood {
     width: 50.25px;
     height: 60px;
-    margin-top: -54.75px;
-    margin-left: -24.75px;
+
     background-image: url(assets/images/markers/jam-flood.png);
     background-size: 50.25px 60px;
 }

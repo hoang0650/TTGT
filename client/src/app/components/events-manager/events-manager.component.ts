@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, ComponentFactoryResolver, Injector, OnDestroy, OnInit } from '@angular/core';
 import L from 'leaflet';
 import _ from 'lodash';
+import { Subscription } from 'rxjs';
 import { AppComponent } from 'src/app/app.component';
 import { EventService } from 'src/app/services/event.service';
 import { EventsManagerPopupComponent } from '../events-manager-popup/events-manager-popup.component';
@@ -33,6 +34,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
   selectedEvent: any;
   sidebar: any;
   component: any;
+  subscriptions = new Subscription();
 
 
   constructor(public mapCom:MapComponent, private eventService:EventService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, public appCom:AppComponent, private cdRef:ChangeDetectorRef) {
@@ -72,7 +74,13 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
         name: 'Hết hạn',
         icon: 'hourglass end',
         color: 'red'
-      }
+      },
+      editing: {
+        id: 'editing',
+        name: 'Đang sửa',
+        icon: 'pen',
+        color: 'blue'
+      },
     };
 
     this.statusListArray = [
@@ -102,31 +110,37 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
       normal: {
         html: '<div class="marker-jam-normal"></div>',
         iconSize: null,
+        iconAnchor: [24.75, 54.75],
         popupAnchor: [0, -52.5]
       },
       congestion: {
         html: '<div class="marker-jam-moderate"></div>',
         iconSize: null,
-        popupAnchor: [0, -52.5]
+        iconAnchor: [24.75, 54.75],
+        popupAnchor: [0, -52.5],
       },
       incident: {
         html: '<div class="marker-jam-incident"></div>',
         iconSize: null,
+        iconAnchor: [24.75, 54.75],
         popupAnchor: [0, -52.5]
       },
       jam: {
         html: '<div class="marker-jam-extreme"></div>',
         iconSize: null,
+        iconAnchor: [24.75, 54.75],
         popupAnchor: [0, -52.5]
       },
       flood: {
         html: '<div class="marker-jam-flood"></div>',
         iconSize: null,
+        iconAnchor: [24.75, 54.75],
         popupAnchor: [0, -52.5]
       },
       default: {
         html: '<div class="marker-jam-default"></div>',
         iconSize: null,
+        iconAnchor: [24.75, 54.75],
         popupAnchor: [0, -52.5]
       }
     };
@@ -141,11 +155,22 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
     this.refresh()
     this.mapCom.toggleLayout(true)
 
-    this.eventService.streamEvent().subscribe({
+    this.subscriptions.add(this.receiveEventStream())
+  }
+
+  ngOnDestroy(): void {
+    this.mapCom.removeLayers()
+    this.mapCom.toggleLayout(false)
+    this.subscriptions.unsubscribe()
+  }
+
+  receiveEventStream() {
+    return this.eventService.streamEvent().subscribe({
       next: (data:any) => {
         if (!this.isLoadingStatus) {
           
           if (data.type && data.data) {
+            
             let newEvent = data.data
             newEvent.color = this.listEventType[newEvent.type].color;
 
@@ -166,16 +191,16 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
       }
     })
   }
-
-  ngOnDestroy(): void {
-    this.mapCom.removeLayers()
-    this.mapCom.toggleLayout(false)
-  }
   
   createNewMarkerEvent(event:any) {
+    var icon = this.jamIcon[event.type]
+
+    
+    icon.html +=  `<div class="circle-cluster blue"><i class="pen icon m-0 mt-1"></i></div>`
+
     return L.marker([event.loc.coordinates[1], event.loc.coordinates[0]], {
       zIndexOffset: 1000,
-      icon: L.divIcon(this.jamIcon[event.type]),
+      icon: L.divIcon(icon),
       draggable: true
     })
     // return {
@@ -189,9 +214,11 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
   };
 
   createMarkerEvent(event:any) {
+    var icon = this.jamIcon[event.type]
+    icon.html +=  `<div class="circle-cluster ${this.statusList[event.status].color}"><i class="${this.statusList[event.status].icon} icon m-0 mt-1"></i></div>`
     return L.marker([event.loc.coordinates[1], event.loc.coordinates[0]], {
       zIndexOffset: 1000,
-      icon: L.divIcon(this.jamIcon[event.type]),
+      icon: L.divIcon(icon),
       draggable: false
     })
     // return {
@@ -334,13 +361,14 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
       this.markers[this.chooseEventId].zIndexOffset = 1000;
     }
     this.chooseEventId = event._id;
-    this.sideMap.flyTo([event.loc.coordinates[1], event.loc.coordinates[0]]);
+    this.mapCom.flyToBounds([event.loc.coordinates[1], event.loc.coordinates[0]]);
     this.markers[event._id].openPopup()
   };
 
   editEventId?:string;
   editEvent(event:any) {
     this.editEventId = event._id
+    event.tmpStatus = 'editing'
     var eventEdit = _.cloneDeep(event)
     var popup = L.popup({
       closeButton:false,
@@ -355,7 +383,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
     })
 
     this.markers[event._id].hidden = true
-
+    this.mapCom.detectChanges()
     setTimeout(() => {
       this.markers['edit'].openPopup()
     }, 300)
