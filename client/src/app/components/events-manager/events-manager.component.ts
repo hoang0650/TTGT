@@ -92,6 +92,10 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
         id: 'rejected',
         name: 'Không duyệt',
       },
+      {
+        id: 'expired',
+        name: 'Hết hạn',
+      },
     ]
 
     this.jamIcon = {
@@ -140,18 +144,23 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
     this.eventService.streamEvent().subscribe({
       next: (data:any) => {
         if (!this.isLoadingStatus) {
-          if (data.type == "newEvent") {
+          console.log(data);
+          
+          if (data.type && data.data) {
             let newEvent = data.data
             newEvent.color = this.listEventType[newEvent.type].color;
+
+            if (data.type == "updatedEvent") {
+              this.listEvents = this.listEvents.filter((event:any) => {
+                return event._id != data.previousEventId && event._id != newEvent._id
+              })
+            } else if (data.type == "approvedEvent" || data.type == "rejectedEvent" || data.type == "expiredEvent") {
+              this.listEvents = this.listEvents.filter((event:any) => {
+                return event._id != newEvent._id
+              })
+            } 
+
             this.listEvents.push(newEvent)
-            this.filterListEvent()
-          } else if (data.type == "updatedEvent") {
-            let newEvent = data.data
-            newEvent.color = this.listEventType[newEvent.type].color;
-            this.listEvents.push(newEvent)
-            this.listEvents = this.listEvents.filter((event:any) => {
-              return event._id != data.previousEventId
-            })
             this.filterListEvent()
           }
         }
@@ -392,6 +401,8 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
         }
         newEvent.color = this.listEventType[newEvent.type].color;
         this.listEvents.push(newEvent)
+        console.log("frontend: "+newEvent._id);
+        
         this.filterListEvent()
 
         delete this.markers['edit']

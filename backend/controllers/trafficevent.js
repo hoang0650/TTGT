@@ -120,7 +120,7 @@ function updateEvent (req, res) {
     const requestTE = new TrafficEvent(req.body);
     const tevt = req.body.tevt;
     requestTE.origins = tevt.origins;
-    if (tevt.status === 'approved' || tevt.status === 'created') {
+    if (tevt.status === 'approved' || tevt.status === 'created'  || tevt.status === 'expired') {
         tevt.status = 'updated';
         tevt.history.push(eventHistory('update', req.user.name));
         tevt.save().then(() => {
@@ -147,7 +147,7 @@ function updateEvent (req, res) {
 function approveEvent (req, res) {
     const requestTE = new TrafficEvent(req.body);
     const tevt = req.body.tevt;
-    if (tevt.status === 'created' || tevt.status === 'updated') {
+    if (tevt.status === 'created') {
         delete requestTE._id;
         if (requestTE.loc) {
             tevt.loc = requestTE.loc;
@@ -168,6 +168,7 @@ function approveEvent (req, res) {
         };
         tevt.history.push(eventHistory('approve', req.user.name));
         tevt.save().then(result => {
+                Stream.emit('push', 'approvedEvent', {type: 'approvedEvent',data:result})
                 res.status(200).send(result)
             }, err => {
             res.status(500).send(err);
@@ -182,7 +183,10 @@ function rejectEvent (req, res) {
     if (tevt.status === 'created') {
         tevt.status = 'rejected';
         tevt.history.push(eventHistory('reject', req.user.name));
-        tevt.save().then(e => res.status(200).send(e), err => res.status(500).send(err));
+        tevt.save().then(e => {
+            Stream.emit('push', 'rejectedEvent', {type: 'rejectedEvent',data:e})
+            res.status(200).send(e)
+        }, err => res.status(500).send(err));
     } else {
         res.status(500).end();
     }
@@ -193,7 +197,10 @@ function expireEvent (req, res) {
     if (tevt.status === 'approved') {
         tevt.status = 'expired';
         tevt.history.push(eventHistory('expire', req.user.name));
-        tevt.save().then(e => res.status(200).send(e), err => res.status(500).send(err));
+        tevt.save().then(e => {
+            Stream.emit('push', 'rejectedEvent', {type: 'expiredEvent',data:e})
+            res.status(200).send(e)
+        }, err => res.status(500).send(err));
     } else {
         res.status(500).end();
     }
@@ -248,7 +255,6 @@ function streamEvent (req, res) {
 
     
     Stream.on('push', (event, data) => {
-        console.log(event);
         res.write("data: "+JSON.stringify(data)+"\n\n")
     })
 };
@@ -273,7 +279,7 @@ function findAllWithoutCondition (req, res) {
             {
                 $match: {
                     createdAt: queryEventInTime(),
-                    status: { $nin: [ 'updated', 'rejected'] }
+                    status: { $nin: [ 'updated'] }
                     //created, approved, expired, rejected, updated
                 }
             },
@@ -302,7 +308,7 @@ function findAllWithoutCondition (req, res) {
                         {
                             $match: {
                                 createdAt: checkExpireTime(),
-                                status: { $nin: [ 'updated', 'rejected'] }
+                                status: { $nin: [ 'updated'] }
                                 //created, approved, expired, rejected, updated
                             }
                         },
