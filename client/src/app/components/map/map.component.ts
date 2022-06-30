@@ -171,4 +171,8 @@ export class MapComponent implements OnInit {
   detectChanges() {
     this.cdRef.detectChanges()
   }
+
+  scrollTo(el: HTMLElement) {
+    el.scrollIntoView({behavior: 'smooth'});
+  }
 }

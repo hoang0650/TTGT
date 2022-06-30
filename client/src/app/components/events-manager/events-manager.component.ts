@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, Injector, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ComponentFactoryResolver, Injector, OnDestroy, OnInit } from '@angular/core';
 import L from 'leaflet';
 import _ from 'lodash';
 import { AppComponent } from 'src/app/app.component';
@@ -35,7 +35,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
   component: any;
 
 
-  constructor(public mapCom:MapComponent, private eventService:EventService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, public appCom:AppComponent) {
+  constructor(public mapCom:MapComponent, private eventService:EventService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, public appCom:AppComponent, private cdRef:ChangeDetectorRef) {
     this.status = "all"
     this.filter = {status:this.status}
     this.markers = {}
@@ -77,6 +77,10 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
 
     this.statusListArray = [
       {
+        id: 'all',
+        name: 'Tất cả'
+      },
+      {
         id: 'created',
         name: 'Mới',
       },
@@ -87,10 +91,6 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
       {
         id: 'rejected',
         name: 'Không duyệt',
-      },
-      {
-        id: 'all',
-        name: 'Tất cả'
       },
     ]
 
@@ -196,7 +196,16 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
       }).setContent(this.createCustomPopup(event))
 
 
-      this.markers[event._id].bindPopup(popup)
+      this.markers[event._id].bindPopup(popup).on({
+        popupopen: () => {        
+          this.chooseEventId = event._id
+          this.cdRef.detectChanges()
+          document.getElementById("incident_"+event._id)?.scrollIntoView({
+            behavior:'smooth',
+            block: 'end'
+          })
+        }
+      })
 
     });
   };
@@ -256,7 +265,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
 
       var marker = this.createTrafficEventMarker(latlng, trafficEvent.type).bindPopup(popup).on({
         popupopen: () => {
-
+          this.chooseEventId = trafficEvent._id
         }
       })
 
@@ -311,17 +320,27 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
     this.markers[event._id].openPopup()
   };
 
+  editEventId?:string;
   editEvent(event:any) {
-    
+    this.editEventId = event._id
+    var eventEdit = _.cloneDeep(event)
     var popup = L.popup({
       closeButton:false,
       className:'stis-create-incident-popup'
-    }).setContent(this.createCustomPopup(event, true))
+    }).setContent(this.createCustomPopup(eventEdit, true))
 
-    this.mapCom.geoLayer = this.createNewMarkerEvent(event).bindPopup(popup)
-    this.mapCom.geoLayer.openPopup()
+    this.markers['edit'] = this.createNewMarkerEvent(eventEdit).bindPopup(popup).on({
+      dragend: (event) => {
+        var latlng = event.target._latlng
+        eventEdit['loc'] = {type:"Point", coordinates: [latlng.lng, latlng.lat]}
+      }
+    })
 
     this.markers[event._id].hidden = true
+
+    setTimeout(() => {
+      this.markers['edit'].openPopup()
+    }, 100)
   }
 
   approveEvent(event:any) {
@@ -348,8 +367,24 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
 
   updateEvent(event:any) {
     this.eventService.updateEvent(event._id, event).subscribe({
-      next: () => {
-        event['tmpStatus'] = 'updated'
+      next: (newEvent:any) => {
+       
+        
+        var idx = -1
+        this.listEvents.forEach((oldEvent:any, index:number) => {
+          if (event._id == oldEvent._id) {
+            idx = index
+            return
+          }
+        })
+        if (idx >= 0) {
+          this.listEvents.splice(idx, 1)
+        }
+        newEvent.color = this.listEventType[newEvent.type].color;
+        this.listEvents.push(newEvent)
+        this.filterListEvent()
+
+        delete this.markers['edit']
       },
       error: (err) => {
         this.appCom.errorHandler(err)
@@ -390,7 +425,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
       icon.className = 'creEventMarker';
       icon.iconSize = [33.5, 40]
       icon.iconAnchor = [0, 0]
-      this.mapCom.geoLayer.setIcon(L.divIcon(icon))
+      this.markers['edit'].setIcon(L.divIcon(icon))
     }
   }
 

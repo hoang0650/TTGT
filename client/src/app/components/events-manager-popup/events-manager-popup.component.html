@@ -58,8 +58,8 @@
             <div><b>*</b> Cầm kéo để thay đổi</div>
         </div>
         <div class="field align-button">
-            <!-- <button class="ui button red" type="reset" (click)="map.cancelEvent()">Hủy</button>
-            <button class="ui button blue" [disabled]="!popupForm.valid" (click)="map.submitEvent(map.event)">Đăng</button> -->
+            <!-- <button class="ui button red" type="reset" (click)="map.cancelEvent()">Hủy</button> -->
+            <button class="ui button blue" [disabled]="!popupForm.valid" (click)="eventManager.updateEvent(event)">Đăng</button>
         </div>
     </form>
 </div>
