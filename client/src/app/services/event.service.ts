@@ -62,7 +62,9 @@ export class EventService {
 
       eventSource.onmessage = event => {
         this._zone.run(() => {
-          obs.next(event)
+          let data = JSON.parse(event.data)
+
+          obs.next(data)
         })
       }
 

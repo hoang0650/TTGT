@@ -15,7 +15,7 @@ const queryEventInTime = function () {
 
 function checkExpireTime(){
     return{
-        $lte: new Date(new Date() - 30 * 60 * 1000),
+        $lt: new Date(new Date() - 30 * 60 * 1000),
         $gte: new Date(new Date() - 60 * 60 * 1000) 
     }
 }
@@ -103,7 +103,7 @@ function createOnTtgt (req, res) {
             }
             tevt.status = 'created';
             tevt.save().then(tevt =>{
-                Stream.emit('push', 'newEvent', {data:tevt})
+                Stream.emit('push', 'newEvent', {type:'newEvent', data:tevt})
                 res.status(200).send(tevt)
             } ,
                 err => res.status(500).send(err));
@@ -113,7 +113,7 @@ function createOnTtgt (req, res) {
 };
 
 function updateEvent (req, res) {
-    console.log("hello");
+    const oldId = req.body._id
     if (req.body._id) {
         delete req.body._id;
     }
@@ -131,7 +131,10 @@ function updateEvent (req, res) {
             };
             requestTE.history = [eventHistory('create', req.user.name)];
             requestTE.status = 'created';
-            requestTE.save().then(evt => res.status(200).send(evt),
+            requestTE.save().then(evt => {
+                Stream.emit('push', 'updatedEvent', {type: 'updatedEvent', previousEventId: oldId,data:evt})
+                res.status(200).send(evt)
+            },
                 () => res.status(500).send('requestTE'));
         }, () => {
             res.status(500).send('tevt');
@@ -164,7 +167,9 @@ function approveEvent (req, res) {
             name: req.user.name
         };
         tevt.history.push(eventHistory('approve', req.user.name));
-        tevt.save().then(result => res.status(200).send(result), err => {
+        tevt.save().then(result => {
+                res.status(200).send(result)
+            }, err => {
             res.status(500).send(err);
         });
     } else {
@@ -243,17 +248,32 @@ function streamEvent (req, res) {
 
     
     Stream.on('push', (event, data) => {
+        console.log(event);
+        res.write("data: "+JSON.stringify(data)+"\n\n")
+    })
+};
+
+function streamApprovedEvent (req, res) {
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        Connection: 'keep-alive'
+    })
+
+    
+    Stream.on('push', (event, data) => {
         res.write("data: "+JSON.stringify(data)+"\n\n")
     })
 };
 
 function findAllWithoutCondition (req, res) {
+    var final_tevts = []
     TrafficEvent.aggregate(
         [
             {
                 $match: {
-                    createdAt: checkExpireTime(),
-                    // status: { $nin: [ 'updated'] }
+                    createdAt: queryEventInTime(),
+                    status: { $nin: [ 'updated', 'rejected'] }
                     //created, approved, expired, rejected, updated
                 }
             },
@@ -275,10 +295,49 @@ function findAllWithoutCondition (req, res) {
             if (err) {
                 return res.status(500).end();
             } else {
-                res.status(200).json(tevts);
+                final_tevts = final_tevts.concat(tevts)
+
+                TrafficEvent.aggregate(
+                    [
+                        {
+                            $match: {
+                                createdAt: checkExpireTime(),
+                                status: { $nin: [ 'updated', 'rejected'] }
+                                //created, approved, expired, rejected, updated
+                            }
+                        },
+                        {
+                            $group: {
+                                _id: '$origins',
+                                tevtId: { $last: '$_id' }
+                            }
+                        }
+                    ]
+                ).exec((err, tevtIds) => {
+                    const listId = [];
+                    tevtIds.forEach(function (tevtId) {
+                        listId.push(tevtId.tevtId);
+                    }, this);
+                    TrafficEvent.find({
+                        _id: { $in: listId }
+                    }).populate('references').exec((err, expired_tevts) => {
+                        if (err) {
+                            return res.status(500).end();
+                        } else {
+                            expired_tevts.forEach((tevt) => {
+                                tevt.status = "expired"
+                            })
+
+                            final_tevts = final_tevts.concat(expired_tevts)
+                            res.status(200).json(final_tevts);
+                        }
+                    });
+                });
             }
         });
     });
+
+    
 };
 
 function findById (req, res) {

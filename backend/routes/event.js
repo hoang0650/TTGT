@@ -9,6 +9,7 @@ const {checkRoles,checkPermissions} = require('../controllers/permissions');
 
 // traffic event
 router.get('/stream', streamEvent)
+router.get('/streamApproved', streamEvent)
 router.get('/traffic/:bbox/geojson', checkRoles(['user', 'admin']),
 checkPermissions(['trafficevents:read']), 
 getByBbox);

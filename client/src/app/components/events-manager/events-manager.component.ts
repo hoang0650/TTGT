@@ -138,12 +138,22 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
     this.mapCom.toggleLayout(true)
 
     this.eventService.streamEvent().subscribe({
-      next: (data) => {
-        let newEvent = JSON.parse(data.data).data
+      next: (data:any) => {
         if (!this.isLoadingStatus) {
-          newEvent.color = this.listEventType[newEvent.type].color;
-          this.listEvents.push(newEvent)
-          this.filterListEvent()
+          if (data.type == "newEvent") {
+            let newEvent = data.data
+            newEvent.color = this.listEventType[newEvent.type].color;
+            this.listEvents.push(newEvent)
+            this.filterListEvent()
+          } else if (data.type == "updatedEvent") {
+            let newEvent = data.data
+            newEvent.color = this.listEventType[newEvent.type].color;
+            this.listEvents.push(newEvent)
+            this.listEvents = this.listEvents.filter((event:any) => {
+              return event._id != data.previousEventId
+            })
+            this.filterListEvent()
+          }
         }
       }
     })
@@ -340,7 +350,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
 
     setTimeout(() => {
       this.markers['edit'].openPopup()
-    }, 100)
+    }, 300)
   }
 
   approveEvent(event:any) {

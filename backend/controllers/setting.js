@@ -354,7 +354,7 @@ function getFirstSetting (req, res) {
 
 function getImageError (req, res) {
     Setting.find({
-        status: 'updated'
+        status: 'applied'
     }).sort({ 'createdAt': -1 }).limit(1).exec().then(st => {
         if (st && st.length > 0) {
             var setting = st[0];
