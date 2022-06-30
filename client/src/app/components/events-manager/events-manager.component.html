@@ -13,7 +13,7 @@
                 <div  class="affix-header">
                     <div class="container">
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-6 mb-3">
                                 <select class="form-select" aria-label="Example select with button addon" [(ngModel)]="status" (change)="refresh()">
                                     <option *ngFor="let statusData of statusListArray" value="{{statusData.id}}">{{statusData.name}} </option>
                                 </select>
@@ -55,18 +55,18 @@
                             <i class="circle icon {{event.color}}"></i>
                         </div>
                         <div class="content">
-                            <div class="summary">
+                            <div class="summary text-truncate">
                                 <a class="user">{{event.desc[0]}}</a>
                                 <div class="date">
                                     <span>{{event.createdAt | amLocale:'vi' | amTimeAgo}}</span>
                                 </div>
                             </div>
-                            <div class="extra text">
+                            <div class="extra text text-truncate">
                                 {{event.desc[1]}}
                             </div>
-                            <div class="extra text">
+                            <div class="extra text text-truncate">
                                 <div class="ui label">
-                                    <i class="user icon"></i> Người đăng: {{event.creator.name}}
+                                    <i class="user icon" title="Người dùng"></i> {{event.creator.name}}
                                 </div>
                                 <div *ngIf="!event['tmpStatus']" style="float: right;" class="ui label float right {{statusList[event.status].color}}">
                                     <i class="{{statusList[event.status].icon}} icon"></i>{{statusList[event.status].name}}
@@ -75,7 +75,7 @@
                                     <i class="{{statusList[event.tmpStatus].icon}} icon"></i>{{statusList[event.tmpStatus].name}}
                                 </div>
                             </div>
-                            <div class="extra text" [hidden]="!(appCom.checkPermission(['trafficevents:update']))" *ngIf="event._id == chooseEventId && event.status != 'rejected' && !(event['tmpStatus'] == 'expired')">
+                            <div class="extra text text-truncate" [hidden]="!(appCom.checkPermission(['trafficevents:update']))" *ngIf="event._id == chooseEventId && event.status != 'rejected' && !(event['tmpStatus'] == 'expired')">
                                 <div class="btn-group" role="group" aria-label="Basic example">
                                     <button *ngIf="event.status == 'created' && !event['tmpStatus']" data-tooltip="Duyệt" data-position="top center" (click)="approveEvent(event);$event.stopPropagation()"
                                         class="btn btn-success"><i class="checkmark icon"></i></button>
