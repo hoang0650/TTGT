@@ -144,7 +144,6 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
     this.eventService.streamEvent().subscribe({
       next: (data:any) => {
         if (!this.isLoadingStatus) {
-          console.log(data);
           
           if (data.type && data.data) {
             let newEvent = data.data
@@ -387,21 +386,6 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
   updateEvent(event:any) {
     this.eventService.updateEvent(event._id, event).subscribe({
       next: (newEvent:any) => {
-       
-        
-        var idx = -1
-        this.listEvents.forEach((oldEvent:any, index:number) => {
-          if (event._id == oldEvent._id) {
-            idx = index
-            return
-          }
-        })
-        if (idx >= 0) {
-          this.listEvents.splice(idx, 1)
-        }
-        newEvent.color = this.listEventType[newEvent.type].color;
-        this.listEvents.push(newEvent)
-        console.log("frontend: "+newEvent._id);
         
         this.filterListEvent()
 
