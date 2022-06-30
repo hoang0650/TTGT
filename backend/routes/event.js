@@ -19,7 +19,6 @@ getByTile);
 router.get('/traffic/geojson', checkRoles(['user', 'admin']),
 checkPermissions(['trafficevents:read']), 
 all);
-
 router.get('/getallbydatetomanage', checkRoles(['user', 'admin']),
 checkPermissions(['trafficevents:read']), 
 getAllByDateToManage);

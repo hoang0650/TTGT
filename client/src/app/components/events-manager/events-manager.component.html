@@ -68,10 +68,10 @@
                                 <div class="ui label">
                                     <i class="user icon"></i> Người đăng: {{event.creator.name}}
                                 </div>
-                                <div *ngIf="!event['tmpStatus']" class="ui label float right {{statusList[event.status].color}}">
+                                <div *ngIf="!event['tmpStatus']" style="float: right;" class="ui label float right {{statusList[event.status].color}}">
                                     <i class="{{statusList[event.status].icon}} icon"></i>{{statusList[event.status].name}}
                                 </div>
-                                <div *ngIf="event['tmpStatus']" class="ui label float right {{statusList[event.tmpStatus].color}}">
+                                <div *ngIf="event['tmpStatus']" style="float: right;" class="ui label float right {{statusList[event.tmpStatus].color}}">
                                     <i class="{{statusList[event.tmpStatus].icon}} icon"></i>{{statusList[event.tmpStatus].name}}
                                 </div>
                             </div>
