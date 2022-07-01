@@ -428,8 +428,6 @@ export class MapInformationComponent implements OnInit, OnDestroy {
 
   createTrafficEventMarker(latlng:any, type:string) {
     var icon = this.markerService.jamIcon[type]
-    icon.iconSize = [33.5, 40]
-    icon.iconAnchor = [0, 0]
 
     return L.marker(latlng, {
       icon: L.divIcon(icon),
@@ -489,9 +487,6 @@ export class MapInformationComponent implements OnInit, OnDestroy {
     if (eventType) {
       this.event.desc[1] = eventType.name;
       var icon = this.markerService.jamIcon[type]
-      icon.className = 'creEventMarker';
-      icon.iconSize = [33.5, 40]
-      icon.iconAnchor = [0, 0]
       this.newCreateEvent.setIcon(L.divIcon(icon))
 
       this.component.changeDetectorRef.detectChanges()

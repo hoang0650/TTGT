@@ -34,3 +34,19 @@
 ::ng-deep .stis-create-incident-popup .ui.card {
     border-radius: 0;
 }
+
+::ng-deep .remove-image-event-icon {
+    position: absolute;
+    top: 0px;
+    font-size: 200%;
+    right: 0px;
+    cursor: pointer;
+    opacity: 0.5;
+    text-shadow: 1px 1px 1px black;
+    color: white;
+}
+
+::ng-deep .remove-image-event-icon i.icon {
+    display: inline;
+    margin-right: 5px;
+}

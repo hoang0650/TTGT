@@ -103,45 +103,44 @@ export class MarkerService {
   }
 
   // event maker
-  jamIcon:any = 
-  {
+  jamIcon:any = {
     normal: {
-      type: 'div',
       html: '<div class="marker-jam-normal"></div>',
       iconSize: null,
+      iconAnchor: [24.75, 54.75],
       popupAnchor: [0, -52.5]
-  },
+    },
     congestion: {
-      type: 'div',
       html: '<div class="marker-jam-moderate"></div>',
       iconSize: null,
-      popupAnchor: [0, -52.5]
-  },
+      iconAnchor: [24.75, 54.75],
+      popupAnchor: [0, -52.5],
+    },
     incident: {
-      type: 'div',
       html: '<div class="marker-jam-incident"></div>',
       iconSize: null,
+      iconAnchor: [24.75, 54.75],
       popupAnchor: [0, -52.5]
-  },
+    },
     jam: {
-      type: 'div',
       html: '<div class="marker-jam-extreme"></div>',
       iconSize: null,
+      iconAnchor: [24.75, 54.75],
       popupAnchor: [0, -52.5]
-  },
+    },
     flood: {
-      type: 'div',
       html: '<div class="marker-jam-flood"></div>',
       iconSize: null,
+      iconAnchor: [24.75, 54.75],
       popupAnchor: [0, -52.5]
-  },
+    },
     default: {
-      type: 'div',
       html: '<div class="marker-jam-default"></div>',
       iconSize: null,
+      iconAnchor: [24.75, 54.75],
       popupAnchor: [0, -52.5]
     }
-  }
+  };
 
   eventMaker(type:any){
     return this.jamIcon[type];

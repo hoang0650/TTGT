@@ -124,6 +124,8 @@ export class AppComponent {
       this.authservice.logout({
         returnTo: "http://localhost:9000/home?message=blocked"
       })
+    } else if (err?.status == 413) {
+      this.nzMessage.error("File tải lên quá lớn")
     } else {
       this.nzMessage.error("Lỗi không xác định")
     }

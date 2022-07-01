@@ -151,7 +151,6 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    $(".ui.dropdown").dropdown()
     this.refresh()
     this.mapCom.toggleLayout(true)
 
@@ -175,6 +174,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
             newEvent.color = this.listEventType[newEvent.type].color;
 
             if (data.type == "updatedEvent") {
+              delete this.markers[data.previousEventId]
               this.listEvents = this.listEvents.filter((event:any) => {
                 return event._id != data.previousEventId && event._id != newEvent._id
               })
@@ -183,6 +183,12 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
                 return event._id != newEvent._id
               })
             } 
+
+           
+            delete this.markers[newEvent._id]
+            if (newEvent.status == this.status || this.status == 'all') {
+              this.drawMarker(newEvent)
+            }
 
             this.listEvents.push(newEvent)
             this.filterListEvent()
@@ -231,24 +237,72 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
     // };
   };
 
-  drawMarker(listEvents:any) {
+  drawMarker(event:any) {
+    if (this.markers[event._id]) {
+      delete  this.markers[event._id]
+    }
+
+    this.markers[event._id] = this.createMarkerEvent(event);
+    var popupComponent = this.createCustomPopup(event)
+    var popup = L.popup({
+      closeButton:false,
+      className:'stis-create-incident-popup'
+    }).setContent(popupComponent.location.nativeElement)
+    
+    event.popupComponent = popupComponent
+
+    this.markers[event._id].bindPopup(popup).on({
+      popupopen: () => {        
+        
+        this.chooseEventId = event._id
+        this.cdRef.detectChanges()
+        document.getElementById("incident_"+event._id)?.scrollIntoView({
+          behavior:'smooth',
+          block: 'end'
+        })
+
+        setTimeout(() => $(".ui.dropdown").dropdown(), 250)
+      },
+      dragend: (target:any) => {
+        if (event.popupComponent.instance.tmpEvent) {
+          var latlng = target.target._latlng
+          event.popupComponent.instance.tmpEvent.loc.coordinates[1] = latlng.lat
+          event.popupComponent.instance.tmpEvent.loc.coordinates[0] = latlng.lng
+        }
+      }
+    })
+  }
+
+  drawMarkers(listEvents:any) {
     this.removeMarkers()
     listEvents.forEach((event:any) => {
       this.markers[event._id] = this.createMarkerEvent(event);
+      var popupComponent = this.createCustomPopup(event)
       var popup = L.popup({
         closeButton:false,
         className:'stis-create-incident-popup'
-      }).setContent(this.createCustomPopup(event))
+      }).setContent(popupComponent.location.nativeElement)
 
+      event.popupComponent = popupComponent
 
       this.markers[event._id].bindPopup(popup).on({
         popupopen: () => {        
+          
           this.chooseEventId = event._id
           this.cdRef.detectChanges()
           document.getElementById("incident_"+event._id)?.scrollIntoView({
             behavior:'smooth',
             block: 'end'
           })
+
+          setTimeout(() => $(".ui.dropdown").dropdown(), 250)
+        },
+        dragend: (target:any) => {
+          if (event.popupComponent.instance.tmpEvent) {
+            var latlng = target.target._latlng
+            event.popupComponent.instance.tmpEvent.loc.coordinates[1] = latlng.lat
+            event.popupComponent.instance.tmpEvent.loc.coordinates[0] = latlng.lng
+          }
         }
       })
 
@@ -264,8 +318,6 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
 
     if (this.listEvents) {
       this.listEventsForFilter = _.filter(this.listEvents, this.filter);
-      
-      this.drawMarker(this.listEventsForFilter);
     }
   };
 
@@ -280,6 +332,8 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
         })
         this.isLoadingStatus = false
         this.filterListEvent()
+          
+        this.drawMarkers(this.listEventsForFilter);
       },
       error: (err) => {
         this.appCom.errorHandler(err)
@@ -295,28 +349,6 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
       this.mapCom.markers = {}
       this.markers = this.mapCom.markers
     }
-  }
-
-  drawMarkers() {
-    this.removeMarkers()
-    
-    this.listEvents.forEach((trafficEvent:any) => {
-      var latlng = [trafficEvent.loc.coordinates[1], trafficEvent.loc.coordinates[0]]
-      
-      var popup = L.popup({
-        closeButton:false,
-        className:'stis-create-incident-popup'
-      }).setContent(this.createCustomPopup(trafficEvent))
-
-      var marker = this.createTrafficEventMarker(latlng, trafficEvent.type).bindPopup(popup).on({
-        popupopen: () => {
-          this.chooseEventId = trafficEvent._id
-        }
-      })
-
-      this.sideMap?.addLayer(marker)
-      this.markers[trafficEvent._id] = marker
-    }) 
   }
 
   createTrafficEventMarker(latlng:any, type:string) {
@@ -361,36 +393,21 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
       this.markers[this.chooseEventId].zIndexOffset = 1000;
     }
     this.chooseEventId = event._id;
-    this.mapCom.flyToBounds([event.loc.coordinates[1], event.loc.coordinates[0]]);
+    this.mapCom.flyToBounds([[event.loc.coordinates[1], event.loc.coordinates[0]]]);
     this.markers[event._id].openPopup()
   };
 
-  editEventId?:string;
   editEvent(event:any) {
-    this.editEventId = event._id
-    event.tmpStatus = 'editing'
-    var eventEdit = _.cloneDeep(event)
-    var popup = L.popup({
-      closeButton:false,
-      className:'stis-create-incident-popup'
-    }).setContent(this.createCustomPopup(eventEdit, true))
-
-    this.markers['edit'] = this.createNewMarkerEvent(eventEdit).bindPopup(popup).on({
-      dragend: (event) => {
-        var latlng = event.target._latlng
-        eventEdit['loc'] = {type:"Point", coordinates: [latlng.lng, latlng.lat]}
-      }
-    })
-
-    this.markers[event._id].hidden = true
+    event.popupComponent.instance.openEditor()
+    this.markers[event._id].openPopup()
     this.mapCom.detectChanges()
-    setTimeout(() => {
-      this.markers['edit'].openPopup()
-    }, 300)
   }
 
   approveEvent(event:any) {
-    this.eventService.approveEvent(event._id, event).subscribe({
+    var updateEvent = _.cloneDeep(event)
+    delete updateEvent['popupComponent']
+
+    this.eventService.approveEvent(updateEvent._id, updateEvent).subscribe({
       next: () => {
         event['tmpStatus'] = 'approved'
       },
@@ -401,7 +418,9 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
   };
 
   rejectEvent(event:any) {
-    this.eventService.rejectEvent(event._id, event).subscribe({
+    var updateEvent = _.cloneDeep(event)
+    delete updateEvent['popupComponent']
+    this.eventService.rejectEvent(updateEvent._id, updateEvent).subscribe({
       next: () => {
         event['tmpStatus'] = 'rejected'
       },
@@ -412,12 +431,12 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
   };
 
   updateEvent(event:any) {
-    this.eventService.updateEvent(event._id, event).subscribe({
+    var updateEvent = _.cloneDeep(event)
+    delete updateEvent['popupComponent']
+    this.eventService.updateEvent(updateEvent._id, updateEvent).subscribe({
       next: (newEvent:any) => {
-        
         this.filterListEvent()
-
-        delete this.markers['edit']
+        this.drawMarkers(this.listEventsForFilter);
       },
       error: (err) => {
         this.appCom.errorHandler(err)
@@ -426,7 +445,9 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
   };
 
   expireEvent(event:any) {
-    this.eventService.expireEvent(event._id, event).subscribe({
+    var updateEvent = _.cloneDeep(event)
+    delete updateEvent['popupComponent']
+    this.eventService.expireEvent(updateEvent._id, updateEvent).subscribe({
       next: () => {
         event['tmpStatus'] = 'expired'
       },
@@ -446,38 +467,33 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
     component.instance.event = trafficEvent
     component.instance.isEdit = isEdit
     component.changeDetectorRef.detectChanges();
-    return component.location.nativeElement
+    return component
 
   }
 
-  chooseTypeEvent(type:string, event:any) {
-    var eventType = this.listEventType[type];
+  chooseTypeEvent(event:any) {
+    var eventType = this.listEventType[event.type];
     if (eventType) {
-      event.desc[1] = eventType.name;
-      var icon = this.jamIcon[type]
-      icon.className = 'creEventMarker';
-      icon.iconSize = [33.5, 40]
-      icon.iconAnchor = [0, 0]
-      this.markers['edit'].setIcon(L.divIcon(icon))
+      var icon = this.jamIcon[event.type]
+      
+      icon.html +=  `<div class="circle-cluster ${this.statusList[event.tmpStatus].color}"><i class="${this.statusList[event.tmpStatus].icon} icon m-0 mt-1"></i></div>`
+      this.markers[event._id].setIcon(L.divIcon(icon))
     }
+    
+    this.cdRef.detectChanges();
   }
 
-  previewImage(event:any) {
-    var imageUpload:any = document.getElementById('imageUpload');
-    if (imageUpload != null && typeof (FileReader) !== 'undefined') {
-      var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
-      var file = imageUpload.files[0];
-      if (regex.test(file.name.toLowerCase())) {
-        var reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = (e:any) => {
-          event['snapshot'] = e.currentTarget.result
-        };     
+  setDraggable(event:any, active:boolean) {
+    if (this.markers[event._id]) {
+      setTimeout(() => $(".ui.dropdown").dropdown(), 150)
+      if (active) {
+        this.markers[event._id].dragging.enable()
+        this.chooseTypeEvent(event)
+      } else {
+        this.markers[event._id].dragging.disable()
+        this.chooseTypeEvent(event)
+        this.markers[event._id].setLatLng([event.loc.coordinates[1], event.loc.coordinates[0]])
       }
     }
-  }
-
-  removeEventImage(event:any) {
-    delete event['snapshot'];
   }
 }
