@@ -9,7 +9,8 @@ const EventSchema = new Schema({
     createdAt: Date,
     creator: {
         source: {type: String, required: true},
-        name: String
+        name: String,
+        user_id:String
     },
     approvedBy: {
         source: {type: String},

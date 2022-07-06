@@ -91,9 +91,20 @@ export class AppComponent {
     })
   }
 
+  checkRoles(roles:string[]) {
+    var ok = false;
+    roles.forEach((role:string) => {
+      if (this.roles.includes(role)) {
+        ok = true
+        return
+      }
+    })
+    return ok
+  }
+
   checkPermission(permissions:string[]) {
-    if (this.roles.includes("superadmin")) {
-      return true
+    if(this.roles.includes('superadmin')){
+      return true;
     }
 
     var permissionAction = ['none', 'read', 'update', 'manage']

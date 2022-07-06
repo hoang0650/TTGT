@@ -1,23 +1,12 @@
-import { Location } from '@angular/common';
-import { ChangeDetectorRef, Component, ComponentFactoryResolver, HostListener, Injector, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
 import L from 'leaflet';
 import _ from 'lodash';
 import 'leaflet-draw'
 import 'leaflet.markercluster';
-import { CameraService } from 'src/app/services/camera.service';
 import { ConfigureService } from 'src/app/services/configure.service';
-import { GeocodingService } from 'src/app/services/geocoding.service';
-import { MapService } from 'src/app/services/map.service';
-import { MarkerService } from 'src/app/services/marker.service';
-import { ParkingService } from 'src/app/services/parking.service';
-import { RoadEventsService } from 'src/app/services/road-events.service';
-import { StaticMapService } from 'src/app/services/static-map.service';
 
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { slidingMapLayout, slidingMapLayoutButton } from 'src/app/animations';
-import { NzModalService } from 'ng-zorro-antd/modal';
-import { MessageService } from 'src/app/services/message.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-map',
@@ -54,7 +43,8 @@ export class MapComponent implements OnInit {
   }
 
   componentRef:any
-
+  subscriptions = new Subscription();
+  
   constructor(public configure:ConfigureService, private cdRef:ChangeDetectorRef) {
     
   }
@@ -66,7 +56,8 @@ export class MapComponent implements OnInit {
   initMap(event:L.Map) {
     this.sideMap = event as L.DrawMap
     this.sideMap.on({
-      dblclick: (event) => {
+      click: (event) => {
+        console.log(event);
         
       }
     })
@@ -162,6 +153,8 @@ export class MapComponent implements OnInit {
     this.markers = {}
     this.geoLayer = L.geoJSON()
     this.componentRef = null
+    this.subscriptions.unsubscribe()
+    this.subscriptions = new Subscription()
   }
 
   trackByFn(index:any) {

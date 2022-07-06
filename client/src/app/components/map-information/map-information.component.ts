@@ -2,11 +2,12 @@ import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, ComponentFactoryResolver, Injector, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import L from 'leaflet';
+import _ from 'lodash';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { Subscription } from 'rxjs';
 import { AppComponent } from 'src/app/app.component';
 import { CameraService } from 'src/app/services/camera.service';
 import { ConfigureService } from 'src/app/services/configure.service';
-import { EventService } from 'src/app/services/event.service';
 import { MapService } from 'src/app/services/map.service';
 import { MarkerService } from 'src/app/services/marker.service';
 import { ParkingService } from 'src/app/services/parking.service';
@@ -58,8 +59,11 @@ export class MapInformationComponent implements OnInit, OnDestroy {
   isShare: boolean;
   currentMode?:string;
   dividerText?:string;
+  statusList:any;
+
+  subscriptions = new Subscription();
   
-  constructor(public mapCom:MapComponent, private configure:ConfigureService, private staticMapService:StaticMapService, private markerService:MarkerService, private roadEventService:RoadEventsService, route:ActivatedRoute, private location:Location, private mapService:MapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cameraService:CameraService, private parkingService:ParkingService, private cdRef:ChangeDetectorRef, private nzMessage:NzMessageService, private appCom:AppComponent) {
+  constructor(public mapCom:MapComponent, private configure:ConfigureService, private staticMapService:StaticMapService, private markerService:MarkerService, private roadEventService:RoadEventsService, route:ActivatedRoute, private location:Location, private mapService:MapService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, private cameraService:CameraService, private parkingService:ParkingService, private cdRef:ChangeDetectorRef, private nzMessage:NzMessageService, public appCom:AppComponent) {
     this.setCurrentMode("incidents")
     this.listEvent = []
     this.listCamera = []
@@ -82,6 +86,44 @@ export class MapInformationComponent implements OnInit, OnDestroy {
 
     this.sideMap = mapCom.sideMap
     this.markers = mapCom.markers
+
+    this.statusList = {
+      all: {
+        id: 'all',
+        name: 'Tất cả'
+      },
+      created: {
+        id: 'created',
+        name: 'Mới',
+        icon: 'star',
+        color: 'blue'
+      },
+      approved: {
+        id: 'approved',
+        name: 'Đã duyệt',
+        icon: 'check',
+        color: 'green'
+  
+      },
+      rejected: {
+        id: 'rejected',
+        name: 'Không duyệt',
+        icon: 'remove',
+        color: 'red'
+      },
+      expired: {
+        id: 'expired',
+        name: 'Hết hạn',
+        icon: 'hourglass end',
+        color: 'red'
+      },
+      editing: {
+        id: 'editing',
+        name: 'Đang sửa',
+        icon: 'pen',
+        color: 'blue'
+      },
+    };
   }
 
  
@@ -93,6 +135,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.mapCom.removeLayers()
     this.mapCom.toggleLayout(false)
+    this.subscriptions.unsubscribe()
   }
 
 
@@ -373,14 +416,12 @@ export class MapInformationComponent implements OnInit, OnDestroy {
   toggleIncidentMarkers() {
     this.markers['incidents'] = L.layerGroup()
     this.listEvent.forEach((trafficEvent:any) => {
-      var latlng = [trafficEvent.loc.coordinates[1], trafficEvent.loc.coordinates[0]]
-      
       var popup = L.popup({
         closeButton:false,
         className:'stis-create-incident-popup'
       }).setContent(this.createCustomPopup(trafficEvent))
 
-      var marker = this.createTrafficEventMarker(latlng, trafficEvent.type).bindPopup(popup).on({
+      var marker = this.createTrafficEventMarker(trafficEvent).bindPopup(popup).on({
         popupopen: () => {
           this.chooseIncident(trafficEvent, true)
         }
@@ -392,46 +433,82 @@ export class MapInformationComponent implements OnInit, OnDestroy {
     
   }
   
-  streamEvent() {
-    this.mapService.streamEvent().subscribe({
+  receiveEventStream() {
+    return this.mapService.streamEvent().subscribe({
       next: (data:any) => {
-        console.log(data);
-        
         if (this.listEventType) {
+          console.log(data.data);
           
           if (data.type && data.data) {
-            console.log(this.listEvent);
             
             let newEvent = data.data
             newEvent.color = this.listEventType[newEvent.type].color;
-
+            
             if (data.type == "updatedEvent") {
               this.listEvent = this.listEvent.filter((event:any) => {
                 return event._id != data.previousEventId && event._id != newEvent._id
               })
-            } else if (data.type == "approvedEvent" || data.type == "rejectedEvent" || data.type == "expiredEvent") {
+            } else if (data.type == "approvedEvent" || data.type == "rejectedEvent" || data.type == "expiredEvent" || data.type == "createdEvent") {
               this.listEvent = this.listEvent.filter((event:any) => {
                 return event._id != newEvent._id
               })
-              if (data.type == "approvedEvent") {
-                this.listEvent.push(newEvent)
-              }
+            } 
+            
+            if (this.incidents[newEvent._id]) {
+              this.markers['incidents'].removeLayer(this.incidents[newEvent._id])
+              delete this.incidents[newEvent._id]
             } 
 
-            this.toggleIncidentMarkers()
-            console.log(this.listEvent);
+
+
+            if (newEvent.status == 'approved' || newEvent.status == "created" || newEvent['creator']['user_id'] == this.appCom.profile.sub) {
+              this.drawIncidentMarker(newEvent)
+              this.listEvent.push(newEvent)
+              this.listEvent = _.cloneDeep(this.listEvent)
+            }
           }
         }
       }
     })
   }
 
-  createTrafficEventMarker(latlng:any, type:string) {
-    var icon = this.markerService.jamIcon[type]
+  drawIncidentMarker(trafficEvent:any) {
+    if (this.incidents[trafficEvent._id]) {
+      this.markers['incidents'].removeLayer(this.incidents[trafficEvent._id])
+      delete this.incidents[trafficEvent._id]
+    }
+      
+    var popup = L.popup({
+      closeButton:false,
+      className:'stis-create-incident-popup'
+    }).setContent(this.createCustomPopup(trafficEvent))
 
-    return L.marker(latlng, {
+    var marker = this.createTrafficEventMarker(trafficEvent).bindPopup(popup).on({
+      popupopen: () => {
+        this.chooseIncident(trafficEvent, true)
+      }
+    })
+    
+    this.incidents[trafficEvent._id] = marker
+    this.markers['incidents'].addLayer(marker)
+  }
+
+  createTrafficEventMarker(event:any) {
+    var icon = _.cloneDeep(this.markerService.jamIcon[event.type])
+    if (event['creator']['user_id'] == this.appCom.profile.sub) {
+      icon.html +=  `<div class="circle-cluster ${this.statusList[event.status].color}"><i class="${this.statusList[event.status].icon} icon m-auto"></i></div>`
+      
+      icon.className = 'creEventMarker';
+      if (this.statusList[event.status].color == 'blue' || this.statusList[event.status].color == 'red') {
+        icon.className += ' opacity';
+      }
+    }
+    
+   
+    return L.marker([event.loc.coordinates[1], event.loc.coordinates[0]], {
+      zIndexOffset: 1000,
       icon: L.divIcon(icon),
-      draggable: false,
+      draggable: false
     })
   }
 
@@ -441,9 +518,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
     }
     if (!this.newCreateEvent) {
       var icon = this.markerService.jamIcon['congestion']
-      icon.className = 'creEventMarker';
-      icon.iconSize = [33.5, 40]
-      icon.iconAnchor = [24.75, 54.75]
+      icon.className = 'creEventMarker opacity';
       
       this.event['createdBy'] = this.userInfo.nickname;
       this.event['type'] = this.listEventType.congestion.type;
@@ -496,10 +571,11 @@ export class MapInformationComponent implements OnInit, OnDestroy {
   getAllEvent() {
     this.mapService.getAllEvent().subscribe({
       next: (res) => {
+        
         this.listEvent = res
         if (this.listEvent.length > 0) {
           this.toggleIncidentMarkers()
-          this.streamEvent()
+          this.subscriptions.add(this.receiveEventStream())
         }
         this.checkParam()
       },
@@ -523,7 +599,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
             setTimeout(() => {
               $(".ui.dropdown").dropdown()
               this.component?.changeDetectorRef.detectChanges()
-            }, 300)
+            }, 100)
           }
         })
 
@@ -555,7 +631,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
             className:'stis-create-incident-popup'
           }).setContent(this.createCustomPopup(trafficEvent))
 
-          var marker = this.createTrafficEventMarker(latlng, trafficEvent.type).bindPopup(popup).on({
+          var marker = this.createTrafficEventMarker(trafficEvent).bindPopup(popup).on({
             popupopen: () => {
               this.chooseIncident(trafficEvent, true)
             }
@@ -564,7 +640,7 @@ export class MapInformationComponent implements OnInit, OnDestroy {
           this.markers['incidents']?.addLayer(marker)
           marker.openPopup()
           this.nzMessage.success('Đã tạo cảnh báo mới, chờ quản trị viên duyệt')
-          this.setVisible('incidents', false)
+          // this.setVisible('incidents', false)
         },
         error: () => {
           this.nzMessage.error('Tạo cảnh báo mới thất bại, hãy thử lại')
@@ -963,5 +1039,10 @@ export class MapInformationComponent implements OnInit, OnDestroy {
     } else {
       this.mapCom.toggleLayout(false)
     }
+  }
+
+  incidentMode:string = 'approved';
+  setIncidentMode(mode:string) {
+    this.incidentMode = mode
   }
 }

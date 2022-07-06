@@ -11,10 +11,10 @@
           <li class="nav-item" [ngClass]="{'active': isActive('/home')}">
             <a class="nav-link" aria-current="page" [routerLink]="['/home']" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">Giới thiệu</a>
           </li>
-          <li class="nav-item" [hidden]="!(roles.includes('superadmin') || roles.includes('admin') || roles.includes('user') && appCom.checkPermission(['cameras:read','parkings:read','roadevents:read','roadworks:read','staticmaps:read','trafficevents:read']))" [ngClass]="{'active': isActive('/map')}">
+          <li class="nav-item" [hidden]="!(appCom.checkRoles(['user', 'admin']) && appCom.checkPermission(['cameras:read','parkings:read','roadevents:read','roadworks:read','staticmaps:read','trafficevents:read']))" [ngClass]="{'active': isActive('/map')}">
             <a class="nav-link" aria-current="page" [routerLink]="['/map']" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">Bản đồ</a>
           </li>
-          <li class="nav-item dropdown" [hidden]="!(roles.includes('superadmin')|| roles.includes('admin') || roles.includes('user') && appCom.checkPermission(['cameras:read','parkings:read','roadevents:read','roadworks:read','staticmaps:read','trafficevents:read']))" [ngClass]="{'active': isActiveList(['/map/events', '/map/cameras', '/map/roadworks', '/map/parkings', '/map/roadevents', '/map/staticmaps'])}">
+          <li class="nav-item dropdown" [hidden]="!(appCom.checkRoles(['user', 'admin']) && appCom.checkPermission(['cameras:read','parkings:read','roadevents:read','roadworks:read','staticmaps:read','trafficevents:read']))" [ngClass]="{'active': isActiveList(['/map/events', '/map/cameras', '/map/roadworks', '/map/parkings', '/map/roadevents', '/map/staticmaps'])}">
             <a class="nav-link dropdown" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Quản lý
             </a>
@@ -40,22 +40,22 @@
             </ul>
             
           </li>
-          <li class="nav-item dropdown" [hidden]="!(roles.includes('superadmin') || roles.includes('admin') && appCom.checkPermission(['settings:update','settings:manage']))" [ngClass]="{'active': isActiveList(['/config/*', '/users', '/groups'])}">
+          <li class="nav-item dropdown" [hidden]="!(appCom.checkRoles(['superadmin', 'admin']) && appCom.checkPermission(['settings:update','settings:manage']))" [ngClass]="{'active': isActiveList(['/config/*', '/users', '/groups'])}">
             <a class="nav-link dropdown" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Quản trị
             </a>
             
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li [hidden]="!appCom.checkPermission(['settings:update'])">
-                <a class="dropdown-item"  [ngClass]="{'active': isActive('/config')}" [routerLink]="['/config']" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">Cấu hình</a>
+                <a class="dropdown-item" [ngClass]="{'active': isActive('/config')}" [routerLink]="['/config']" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">Cấu hình</a>
               </li>
               <li [hidden]="!appCom.checkPermission(['settings:manage'])">
-                <a class="dropdown-item"  [ngClass]="{'active': isActive('/users')}" [routerLink]="['/users']" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">Người dùng</a>
+                <a class="dropdown-item" [ngClass]="{'active': isActive('/users')}" [routerLink]="['/users']" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">Người dùng</a>
               </li>
             </ul>
           </li>
           
-          <li class="nav-item dropdown" [hidden]="!(roles.includes('superadmin') || roles.includes('admin') || roles.includes('user') && appCom.checkPermission(['trafficevents:read']))" [ngClass]="{'active': isActiveList(['/map/events/stats'])}">
+          <li class="nav-item dropdown" [hidden]="!(appCom.checkRoles(['user', 'admin']) && appCom.checkPermission(['trafficevents:read']))" [ngClass]="{'active': isActiveList(['/map/events/stats'])}">
             <a class="nav-link dropdown" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Thống kê
             </a>

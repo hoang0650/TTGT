@@ -23,8 +23,18 @@
             </div>
         </div>
         <div class="field align-button">
-            <button class="ui button red" type="button" (click)="closePopup()">Đóng</button>
-            <button class="ui button blue" type="button" [disabled]="!popupForm.valid" (click)="openEditor(); $event.stopPropagation()">Cập nhật</button>
+            <button class="btn btn-danger" type="button" (click)="closePopup()">Đóng</button>
+
+            <div class="btn-group float float-right" role="group">
+                <button *ngIf="event.status == 'created' && !event['tmpStatus']" data-tooltip="Duyệt" data-position="top center" (click)="eventManager.approveEvent(event);$event.stopPropagation()"
+                    class="btn btn-success"><i class="checkmark icon"></i></button>
+                <button *ngIf="event.status == 'created' && !event['tmpStatus']" data-tooltip="Không duyệt" data-position="top center" (click)="eventManager.rejectEvent(event);$event.stopPropagation()"
+                    class="btn btn-danger"><i class="remove icon"></i></button>
+                <button *ngIf="event.status == 'approved' || event['tmpStatus']  == 'approved'" data-tooltip="Dừng cảnh báo" data-position="top center" (click)="eventManager.expireEvent(event);$event.stopPropagation()"
+                    class="btn btn-danger"><i class="hourglass end icon"></i></button>
+                <button *ngIf="event.status != 'rejected' || event['tmpStatus']  == 'rejected'" data-tooltip="Cập nhật" data-position="top center" (click)="eventManager.editEvent(event);$event.stopPropagation()"
+                    class="btn btn-primary"><i class="pen icon"></i></button>
+            </div>
         </div>
     </form>
 </div>
@@ -60,7 +70,7 @@
         </div>
         <div class="field align-button">
             <button class="ui button red" type="button" (click)="cancelEditor(); $event.stopPropagation()">Hủy</button>
-            <button class="ui button blue" type="button" [disabled]="!popupForm.valid" (click)="eventManager.updateEvent(tmpEvent)">Đăng lại</button>
+            <button class="ui button blue float float-right" type="button" [disabled]="!popupForm.valid" (click)="eventManager.updateEvent(tmpEvent)">Đăng lại</button>
         </div>
     </form>
 </div>

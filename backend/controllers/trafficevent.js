@@ -74,7 +74,8 @@ function createOnTtgt (req, res) {
     tevt.createdAt = new Date();
     tevt.creator = {
         source: 'TTGT',
-        name: req.user['https://hoang0650.com/name']
+        name: req.user['https://hoang0650.com/name'],
+        user_id: req.user.sub
     };
     tevt.origins = [{ geohash: geohash.encode(tevt.loc.coordinates[1], tevt.loc.coordinates[0], 7) }];
 
@@ -127,7 +128,8 @@ function updateEvent (req, res) {
             requestTE.createdAt = new Date();
             requestTE.creator = {
                 source: 'TTGT',
-                name: req.user['https://hoang0650.com/name']
+                name: req.user['https://hoang0650.com/name'],
+                user_id: req.user.sub
             };
             requestTE.history = [eventHistory('create', req.user.name)];
             requestTE.status = 'created';
@@ -140,6 +142,7 @@ function updateEvent (req, res) {
             res.status(500).send('tevt');
         });
     } else {
+        console.log(tevt.status);
         res.status(500).end();
     }
 };
@@ -206,13 +209,23 @@ function expireEvent (req, res) {
     }
 };
 
-
-
 function findAllApproved (req, res) {
     TrafficEvent.aggregate(
         [
             {
-                $match: query()
+                $match: {
+                    $or: [
+                        {
+                            status: 'approved',
+                            createdAt: queryEventInTime()
+                        },
+    
+                        {
+                            "creator.user_id":req.user.sub,
+                            createdAt: queryEventInTime()
+                        }
+                    ]
+                }
             },
             {
                 $group: {
@@ -223,9 +236,7 @@ function findAllApproved (req, res) {
         ]
     ).exec((err, tevtIds) => {
         const listId = [];
-        // for(const i = tevtIds.length - 6; i < tevtIds.length; i++) {
-        //     listId.push(tevtIds[i].tevtId);
-        // }
+
         tevtIds.forEach(function (tevtId) {
             listId.push(tevtId.tevtId);
         }, this);
@@ -252,7 +263,6 @@ function streamEvent (req, res) {
         'Cache-Control': 'no-cache',
         Connection: 'keep-alive'
     })
-
     
     Stream.on('push', (event, data) => {
         res.write("data: "+JSON.stringify(data)+"\n\n")
@@ -308,7 +318,7 @@ function findAllWithoutCondition (req, res) {
                         {
                             $match: {
                                 createdAt: checkExpireTime(),
-                                status: { $nin: [ 'updated'] }
+                                status: { $nin: [ 'updated', 'rejected'] }
                                 //created, approved, expired, rejected, updated
                             }
                         },

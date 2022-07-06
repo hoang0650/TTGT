@@ -14,8 +14,7 @@ declare var $: any;
   styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
-
-  isScrolled:boolean = false;
+  
   currentState:boolean = false;
   active = 0;
   noWrapSlides:boolean = true;
@@ -56,6 +55,36 @@ export class MainComponent implements OnInit {
     this.pullDown();
     this.getAllType()
     this.getInfoOfUser()
+    this.receiveEventStream()
+  }
+
+  receiveEventStream() {
+    return this.mapService.streamEvent().subscribe({
+      next: (data:any) => {
+        if (this.listEventType) {
+          
+          if (data.type && data.data) {
+            
+            let newEvent = data.data
+            newEvent.color = this.listEventType[newEvent.type].color;
+
+            if (data.type == "updatedEvent") {
+              this.listEvent = this.listEvent.filter((event:any) => {
+                return event._id != data.previousEventId && event._id != newEvent._id
+              })
+            } else if (data.type == "approvedEvent" || data.type == "rejectedEvent" || data.type == "expiredEvent") {
+              this.listEvent = this.listEvent.filter((event:any) => {
+                return event._id != newEvent._id
+              })
+            } 
+            
+            if (newEvent.status == 'approved') {
+              this.listEvent.push(newEvent)
+            }
+          }
+        }
+      }
+    })
   }
 
   imageError(event:any) {

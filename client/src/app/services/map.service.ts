@@ -91,6 +91,10 @@ export class MapService {
           obs.error(event)
         })
       }
+
+      return () => {
+        eventSource.close();
+      };
     })
   }
 

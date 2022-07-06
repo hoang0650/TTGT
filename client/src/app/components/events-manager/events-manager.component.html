@@ -10,20 +10,33 @@
 
         <div class="ui secondary segment no-padding">
             <nz-affix [nzTarget]="mapLayoutInfo" class="map-header">
-                <div  class="affix-header">
+                <div class="affix-header">
                     <div class="container">
-                        <div class="row">
-                            <div class="col-6 mb-3">
+                        <div class="row mb-3">
+                            <div class="input-group mb-1">
                                 <select class="form-select" aria-label="Example select with button addon" [(ngModel)]="status" (change)="refresh()">
                                     <option *ngFor="let statusData of statusListArray" value="{{statusData.id}}">{{statusData.name}} </option>
                                 </select>
-                            </div>
-                            
-                            <div class="col-6 mb-3 pl-5">
-                                <button class="btn btn-primary" [disabled]="isLoadingStatus" (click)="refresh()">
-                                    <i nz-icon><i class="refresh icon"></i></i>
-                                    Làm mới
-                                </button>
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" [disabled]="isLoadingStatus" (click)="refresh()">
+                                        <i class="refresh icon"></i> Làm mới
+                                    </button>
+                                </div>
+                              </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="btn-group d-flex" role="group">
+                                    <button class="btn btn-primary" style="pointer-events: none;">
+                                        <span class="d-block d-xl-none">Lọc</span>
+                                        <span class="d-none d-xl-block">Lọc theo màu</span>
+                                    </button>
+                                    <button class="btn" [ngClass]="{'btn-primary':filter['color'] == 'yellow', 'btn-secondary':filter['color'] != 'yellow'}" (click)="filterListEvent('yellow')"><i class="circle yellow icon small-icon m-0"></i></button>
+                                    <button class="btn" [ngClass]="{'btn-primary':filter['color'] == 'red', 'btn-secondary':filter['color'] != 'red'}" (click)="filterListEvent('red')"><i class="circle red icon small-icon m-0"></i></button>
+                                    <button class="btn" [ngClass]="{'btn-primary':filter['color'] == 'green', 'btn-secondary':filter['color'] != 'green'}" (click)="filterListEvent('green')"><i class="circle green icon small-icon m-0"></i></button>
+                                    <button class="btn" [ngClass]="{'btn-primary':filter['color'] == 'orange', 'btn-secondary':filter['color'] != 'orange'}" (click)="filterListEvent('orange')"><i class="circle orange icon small-icon m-0"></i></button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -55,36 +68,49 @@
                             <i class="circle icon {{event.color}}"></i>
                         </div>
                         <div class="content">
-                            <div class="summary text-truncate">
-                                <a class="user">{{event.desc[0]}}</a>
-                                <div class="date">
-                                    <span>{{event.createdAt | amLocale:'vi' | amTimeAgo}}</span>
+                            <div class="row mb-2">
+                                <div class="col-7 text-break">
+                                    <a class="user">{{event.desc[0]}}</a>
+                                </div>
+                                <div class="col-5 text-right ps-0">
+                                    <small>{{event.createdAt | amLocale:'vi' | amTimeAgo}}</small>
                                 </div>
                             </div>
-                            <div class="extra text text-truncate">
-                                {{event.desc[1]}}
-                            </div>
-                            <div class="extra text text-truncate">
-                                <div class="ui label">
-                                    <i class="user icon" title="Người dùng"></i> {{event.creator.name}}
-                                </div>
-                                <div *ngIf="!event['tmpStatus']" style="float: right;" class="ui label float right {{statusList[event.status].color}}">
-                                    <i class="{{statusList[event.status].icon}} icon"></i>{{statusList[event.status].name}}
-                                </div>
-                                <div *ngIf="event['tmpStatus']" style="float: right;" class="ui label float right {{statusList[event.tmpStatus].color}}">
-                                    <i class="{{statusList[event.tmpStatus].icon}} icon"></i>{{statusList[event.tmpStatus].name}}
+
+                            <div class="row mb-2">
+                                <div class="col-7 text-break">
+                                    <a> {{event.desc[1]}}</a>
                                 </div>
                             </div>
-                            <div class="extra text text-truncate" [hidden]="!(appCom.checkPermission(['trafficevents:update']))" *ngIf="event._id == chooseEventId && event.status != 'rejected' && !(event['tmpStatus'] == 'expired')">
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <button *ngIf="event.status == 'created' && !event['tmpStatus']" data-tooltip="Duyệt" data-position="top center" (click)="approveEvent(event);$event.stopPropagation()"
-                                        class="btn btn-success"><i class="checkmark icon"></i></button>
-                                    <button *ngIf="event.status == 'created' && !event['tmpStatus']" data-tooltip="Không duyệt" data-position="top center" (click)="rejectEvent(event);$event.stopPropagation()"
-                                        class="btn btn-danger"><i class="remove icon"></i></button>
-                                    <button *ngIf="event.status == 'approved' || event['tmpStatus']  == 'approved'" data-tooltip="Dừng cảnh báo" data-position="top center" (click)="expireEvent(event);$event.stopPropagation()"
-                                        class="btn btn-danger"><i class="times icon"></i></button>
-                                    <button *ngIf="event.status != 'rejected' || event['tmpStatus']  == 'rejected'" data-tooltip="Cập nhật" data-position="top center" (click)="editEvent(event);$event.stopPropagation()"
-                                        class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></button>
+
+                            <div class="row mb-2">
+                                <div class="col-7 text-break">
+                                    <div class="ui label">
+                                        <i class="user icon" title="Người dùng"></i> {{event.creator.name}}
+                                    </div>
+                                </div>
+                                <div class="col-5 text-right ps-0">
+                                    <div *ngIf="!event['tmpStatus']" class="ui label float float-right {{statusList[event.status].color}}">
+                                        <i class="{{statusList[event.status].icon}} icon"></i>{{statusList[event.status].name}}
+                                    </div>
+                                    <div *ngIf="event['tmpStatus']" class="ui label float float-right {{statusList[event.tmpStatus].color}}">
+                                        <i class="{{statusList[event.tmpStatus].icon}} icon"></i>{{statusList[event.tmpStatus].name}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" [hidden]="!(appCom.checkPermission(['trafficevents:update']))" *ngIf="event._id == chooseEventId && event.status != 'rejected' && !(event['tmpStatus'] == 'expired')">
+                                <div class="col-12">
+                                    <div class="btn-group" role="group">
+                                        <button *ngIf="event.status == 'created' && !event['tmpStatus']" data-tooltip="Duyệt" data-position="top center" (click)="approveEvent(event);$event.stopPropagation()"
+                                            class="btn btn-success"><i class="checkmark icon"></i></button>
+                                        <button *ngIf="event.status == 'created' && !event['tmpStatus']" data-tooltip="Không duyệt" data-position="top center" (click)="rejectEvent(event);$event.stopPropagation()"
+                                            class="btn btn-danger"><i class="remove icon"></i></button>
+                                        <button *ngIf="event.status == 'approved' || event['tmpStatus']  == 'approved'" data-tooltip="Dừng cảnh báo" data-position="top center" (click)="expireEvent(event);$event.stopPropagation()"
+                                            class="btn btn-danger"><i class="hourglass end icon"></i></button>
+                                        <button *ngIf="event.status != 'rejected' || event['tmpStatus']  == 'rejected'" data-tooltip="Cập nhật" data-position="top center" (click)="editEvent(event);$event.stopPropagation()"
+                                            class="btn btn-primary"><i class="pen icon"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

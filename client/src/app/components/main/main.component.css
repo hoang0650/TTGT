@@ -2226,9 +2226,10 @@ hr {
   overflow: auto;
 }
 .default-contain {
-height: 200px;
-overflow: hidden;
-position: relative;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
 }
 
 .default-contain .ui.list {
@@ -2243,3 +2244,18 @@ padding-right: 17px;
 }
 
 /*# sourceMappingURL=style.css.map */
+
+.ui.feed>.event>.content .summary>.date {
+  display: block;
+  float: right !important;
+  font-weight: 400;
+  font-size: .85714286em;
+  font-style: normal;
+  margin: 0 0 0 .5em;
+  padding: 0;
+  color: rgba(0,0,0,.4);
+}
+
+i.icon.circle:before {
+  font-size: xx-large;
+}

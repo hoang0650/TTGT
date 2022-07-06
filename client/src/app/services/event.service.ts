@@ -73,6 +73,10 @@ export class EventService {
           obs.error(event)
         })
       }
+
+      return () => {
+        eventSource.close();
+      };
     })
   }
 }
