@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfigureService } from 'src/app/services/configure.service';
 import { MapService } from 'src/app/services/map.service';
 import { AppComponent } from 'src/app/app.component';
@@ -7,13 +7,14 @@ import * as AOS from 'aos';
 import { AuthorizationService } from 'src/app/services/authorization.service';
 import { ActivatedRoute } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { Subscription } from 'rxjs';
 declare var $: any;
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.css']
 })
-export class MainComponent implements OnInit {
+export class MainComponent implements OnInit, OnDestroy {
   
   currentState:boolean = false;
   active = 0;
@@ -43,8 +44,12 @@ export class MainComponent implements OnInit {
   backend!: string;
   listEventType:any;
   listEvent: any;
+  subscriptions = new Subscription()
 
   constructor(public appCom: AppComponent,private configure: ConfigureService, private mapService: MapService, private auth: AuthorizationService, private route: ActivatedRoute, private nzMessage: NzMessageService) { }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe()
+  }
 
   ngOnInit(): void {
     var message = this.route.snapshot.queryParamMap.get("message")
@@ -55,7 +60,7 @@ export class MainComponent implements OnInit {
     this.pullDown();
     this.getAllType()
     this.getInfoOfUser()
-    this.receiveEventStream()
+    this.subscriptions.add(this.receiveEventStream())
   }
 
   receiveEventStream() {
@@ -92,7 +97,7 @@ export class MainComponent implements OnInit {
   }
 
   getInfoOfUser() {
-    this.mapService.getInfoOfUser().subscribe({
+    this.subscriptions.add(this.mapService.getInfoOfUser().subscribe({
       next: (res:any) => {
         this.appCom.roles = res.roles || ['guest']
         this.favoriteList = []
@@ -102,7 +107,7 @@ export class MainComponent implements OnInit {
           }
         })
       }
-    });
+    }))
   }
 
   pullDown() {
@@ -137,12 +142,12 @@ export class MainComponent implements OnInit {
 
 
   getAllType() {
-    this.mapService.getAllType().subscribe({
+    this.subscriptions.add(this.mapService.getAllType().subscribe({
       next: (res) => {
         this.listEventType = res;
         this.getAllEvent();
       }
-    })
+    }))
   }
 
   login() {

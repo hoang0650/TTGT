@@ -1,5 +1,5 @@
 <nz-layout>
-    <nz-sider nzCollapsible nzWidth="200px">
+    <nz-sider nzCollapsible [nzCollapsed]="true" nzWidth="200px">
         <ul nz-menu nzTheme="dark" nzMode="inline">
             <li nz-menu-item [nzSelected]="isActive('/config/camera')" [routerLink]="chooseConfigPageAble()? ['./camera']: null">
                 <i nz-icon><i class="fa-solid fa-video"></i></i>

@@ -222,19 +222,19 @@ changeUsersRole(action:string,data:object) {
     appMetadataToStar(metadata:any) {
       if (metadata && metadata.roles) {
         if (metadata.roles.indexOf('superadmin') > -1) {
-          return 'red star';
+          return 'red';
         }
         if (metadata.roles.indexOf('admin') > -1) {
-          return 'purple star';
+          return 'red';
         }
         if (metadata.roles.indexOf('user') > -1) {
-          return 'yellow star';
+          return 'green';
         }
         if (metadata.roles.indexOf('guest') > -1) {
-          return 'yellow outline star';
+          return 'blue';
         }
       }
-      return 'grey empty star';
+      return 'blue';
   }
 
   gotoInfo() {

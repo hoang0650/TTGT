@@ -16,7 +16,7 @@
                             <div class="map-navigate">
                                 <button class="btn btn-block rounded-pill m-0 mx-2" [ngClass]="{'btn-primary': !markers['cameras']?.['hidden'] && currentMode != 'cameras', 'btn-danger':markers['cameras']?.['hidden'], 'btn-success':!markers['cameras']?.['hidden'] && currentMode == 'cameras'}" 
                                     (click)="currentMode != 'cameras' ? setCurrentMode('cameras') : setVisible('cameras')" 
-                                    [attr.data-tooltip]="currentMode != 'cameras' ? 'Camera' : (markers['cameras']?.['hidden'] ? 'Ẩn camera' : 'Hiện camera')" data-position="top left">
+                                    [attr.data-tooltip]="currentMode != 'cameras' ? 'Camera' : (markers['cameras']?.['hidden'] ? 'Ẩn camera' : 'Hiện camera')" data-position="bottom left">
                                     <i class="fa-solid fa-camera" *ngIf="currentMode != 'cameras'"></i>
                                     <i class="fa-solid fa-eye" *ngIf="currentMode == 'cameras' && !markers['cameras']?.['hidden']"></i>
                                     <i class="fa-solid fa-eye-slash" *ngIf="currentMode == 'cameras' && markers['cameras']?.['hidden']"></i>
@@ -24,7 +24,7 @@
 
                                 <button class="btn btn-block rounded-pill m-0 mx-2" [ngClass]="{'btn-primary': !markers['parkings']?.['hidden'] && currentMode != 'parkings', 'btn-danger':markers['parkings']?.['hidden'], 'btn-success':!markers['parkings']?.['hidden'] && currentMode == 'parkings'}" 
                                     (click)="currentMode != 'parkings' ? setCurrentMode('parkings') : setVisible('parkings')" 
-                                    [attr.data-tooltip]="currentMode != 'parkings' ? 'Bãi xe' : (markers['parkings']?.['hidden'] ? 'Ẩn bãi xe' : 'Hiện bãi xe')" data-position="top center">
+                                    [attr.data-tooltip]="currentMode != 'parkings' ? 'Bãi xe' : (markers['parkings']?.['hidden'] ? 'Ẩn bãi xe' : 'Hiện bãi xe')" data-position="bottom center">
                                     <i class="fa-solid fa-square-parking" *ngIf="currentMode != 'parkings'"></i>
                                     <i class="fa-solid fa-eye" *ngIf="currentMode == 'parkings' && !markers['parkings']?.['hidden']"></i>
                                     <i class="fa-solid fa-eye-slash" *ngIf="currentMode == 'parkings' && markers['parkings']?.['hidden']"></i>
@@ -32,7 +32,7 @@
 
                                 <button class="btn btn-block rounded-pill m-0 mx-2" [ngClass]="{'btn-primary': !markers['roadevents']?.['hidden'] && currentMode != 'roadevents', 'btn-danger':markers['roadevents']?.['hidden'], 'btn-success':!markers['roadevents']?.['hidden'] && currentMode == 'roadevents'}" 
                                     (click)="currentMode != 'roadevents' ? setCurrentMode('roadevents') : setVisible('roadevents')" 
-                                    [attr.data-tooltip]="currentMode != 'roadevents' ? 'Phân luồng' : (markers['roadevents']?.['hidden'] ? 'Ẩn phân luồng' : 'Hiện phân luồng')" data-position="top center">
+                                    [attr.data-tooltip]="currentMode != 'roadevents' ? 'Phân luồng' : (markers['roadevents']?.['hidden'] ? 'Ẩn phân luồng' : 'Hiện phân luồng')" data-position="bottom center">
                                     <i class="fa-solid fa-road" *ngIf="currentMode != 'roadevents'"></i>
                                     <i class="fa-solid fa-eye" *ngIf="currentMode == 'roadevents' && !markers['roadevents']?.['hidden']"></i>
                                     <i class="fa-solid fa-eye-slash" *ngIf="currentMode == 'roadevents' && markers['roadevents']?.['hidden']"></i>
@@ -40,7 +40,7 @@
 
                                 <button class="btn btn-block rounded-pill m-0 mx-2" [ngClass]="{'btn-primary': !markers['staticmaps']?.['hidden'] && currentMode != 'staticmaps', 'btn-danger':markers['staticmaps']?.['hidden'], 'btn-success':!markers['staticmaps']?.['hidden'] && currentMode == 'staticmaps'}" 
                                     (click)="currentMode != 'staticmaps' ? setCurrentMode('staticmaps') : setVisible('staticmaps')" 
-                                    [attr.data-tooltip]="currentMode != 'staticmaps' ? 'Thông tin tĩnh' : (markers['staticmaps']?.['hidden'] ? 'Ẩn thông tin tĩnh' : 'Hiện thông tin tĩnh')" data-position="top center">
+                                    [attr.data-tooltip]="currentMode != 'staticmaps' ? 'Thông tin tĩnh' : (markers['staticmaps']?.['hidden'] ? 'Ẩn thông tin tĩnh' : 'Hiện thông tin tĩnh')" data-position="bottom center">
                                     <i class="fa-solid fa-circle-info" *ngIf="currentMode != 'staticmaps'"></i>
                                     <i class="fa-solid fa-eye" *ngIf="currentMode == 'staticmaps' && !markers['staticmaps']?.['hidden']"></i>
                                     <i class="fa-solid fa-eye-slash" *ngIf="currentMode == 'staticmaps' && markers['staticmaps']?.['hidden']"></i>
@@ -48,7 +48,7 @@
 
                                 <button class="btn btn-block rounded-pill m-0 mx-2" [ngClass]="{'btn-primary': !markers['incidents']?.['hidden'] && currentMode != 'incidents', 'btn-danger':markers['incidents']?.['hidden'], 'btn-success':!markers['incidents']?.['hidden'] && currentMode == 'incidents'}" 
                                     (click)="currentMode != 'incidents' ? setCurrentMode('incidents') : setVisible('incidents')" 
-                                    [attr.data-tooltip]="currentMode != 'incidents' ? 'Cảnh báo' : (markers['incidents']?.['hidden'] ? 'Ẩn cảnh báo' : 'Hiện cảnh báo')" data-position="top right">
+                                    [attr.data-tooltip]="currentMode != 'incidents' ? 'Cảnh báo' : (markers['incidents']?.['hidden'] ? 'Ẩn cảnh báo' : 'Hiện cảnh báo')" data-position="bottom right">
                                     <i class="fa-solid fa-triangle-exclamation" *ngIf="currentMode != 'incidents'"></i>
                                     <i class="fa-solid fa-eye" *ngIf="currentMode == 'incidents' && !markers['incidents']?.['hidden']"></i>
                                     <i class="fa-solid fa-eye-slash" *ngIf="currentMode == 'incidents' && markers['incidents']?.['hidden']"></i>

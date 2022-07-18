@@ -432,7 +432,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
       var icon = _.cloneDeep(this.markerService.jamIcon[event.type])
       
       icon.html +=  `<div class="circle-cluster ${this.statusList[event.tmpStatus].color}"><i class="${this.statusList[event.tmpStatus].icon} icon m-auto"></i></div>`
-      icon.className = 'creEventMarker';
+      icon['className'] = 'creEventMarker';
       if (this.statusList[event.status].color == 'blue' || this.statusList[event.status].color == 'red') {
         icon.className += ' opacity';
       }

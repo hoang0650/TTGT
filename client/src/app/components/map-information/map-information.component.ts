@@ -491,6 +491,10 @@ export class MapInformationComponent implements OnInit, OnDestroy {
     
     this.incidents[trafficEvent._id] = marker
     this.markers['incidents'].addLayer(marker)
+
+    if (trafficEvent.status == "created") {
+      this.incidents[trafficEvent._id].openPopup()
+    }
   }
 
   createTrafficEventMarker(event:any) {
@@ -561,9 +565,10 @@ export class MapInformationComponent implements OnInit, OnDestroy {
     var eventType = this.listEventType[type];
     if (eventType) {
       this.event.desc[1] = eventType.name;
-      var icon = this.markerService.jamIcon[type]
-      this.newCreateEvent.setIcon(L.divIcon(icon))
+      var icon = _.cloneDeep(this.markerService.jamIcon[type])
+      icon.className = 'creEventMarker';
 
+      this.newCreateEvent.setIcon(L.divIcon(icon))
       this.component.changeDetectorRef.detectChanges()
     }
   }
@@ -623,22 +628,6 @@ export class MapInformationComponent implements OnInit, OnDestroy {
           delete this.newCreateEvent
           delete this.markers['newEvent']
           
-          
-          var latlng = [trafficEvent.loc.coordinates[1], trafficEvent.loc.coordinates[0]]
-      
-          var popup = L.popup({
-            closeButton:false,
-            className:'stis-create-incident-popup'
-          }).setContent(this.createCustomPopup(trafficEvent))
-
-          var marker = this.createTrafficEventMarker(trafficEvent).bindPopup(popup).on({
-            popupopen: () => {
-              this.chooseIncident(trafficEvent, true)
-            }
-          })
-          this.incidents[trafficEvent._id] = marker
-          this.markers['incidents']?.addLayer(marker)
-          marker.openPopup()
           this.nzMessage.success('Đã tạo cảnh báo mới, chờ quản trị viên duyệt')
           // this.setVisible('incidents', false)
         },
