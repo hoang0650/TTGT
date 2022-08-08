@@ -70,9 +70,9 @@ export class CamerasComponent implements OnInit, OnDestroy {
   }
 
   getMarkers() {
-    this.staticData.loadDistrictAPI().subscribe({
+    this.mapCom.subscriptions.add(this.staticData.loadDistrictAPI().subscribe({
       next: (hcmDistricts) => {
-        this.cameraService.query().subscribe({
+        this.mapCom.subscriptions.add(this.cameraService.query().subscribe({
           next: (cameras:any) => {
 
             this.cameras = cameras;
@@ -90,12 +90,12 @@ export class CamerasComponent implements OnInit, OnDestroy {
           error: (err) => {
             this.appCom.errorHandler(err)
           }
-        })
+        }))
       },
       error: (err) => {
         this.appCom.errorHandler(err)
       }
-    })
+    }))
   }
 
   focusToCamera(cam:any) {
@@ -188,6 +188,7 @@ export class CamerasComponent implements OnInit, OnDestroy {
     }).on({
       click: () => {
         this.selectCamera(camera)
+        this.mapCom.detectChanges()
       }
     })
 

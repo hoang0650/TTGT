@@ -113,7 +113,7 @@ function checkPermissions(permissions)
 
             const checkRoles = req.user.roles || ['guest']
             if(checkRoles.includes('superadmin')){
-            return next();
+                return next();
             }
 
             var permissionAction = ['none', 'read', 'update', 'manage']

@@ -223,7 +223,6 @@ export class RoadeventsCreateComponent implements OnInit, OnDestroy {
 
       if (type === 'custom') {
         this.currentDrawer = new L.Draw.Polygon(this.sideMap)
-        this.currentDrawer.enable()
       } else if (type === 'geo') {
         this.currentDrawer = new L.Draw.Polyline(this.sideMap, {
           allowIntersection: false,

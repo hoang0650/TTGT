@@ -7,7 +7,7 @@
 }
 
 .ui.feed>.event>.content .summary>.date {
-    display: inline-block;
+    display: block;
     float: right !important;
     font-weight: 400;
     font-size: .85714286em;
@@ -36,4 +36,8 @@
 
 i.icon.circle:before {
     font-size: xx-large;
+}
+
+i.icon.circle.small-icon:before {
+    font-size: medium;
 }

@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { Subscription } from 'rxjs';
 import { AppComponent } from 'src/app/app.component';
 import { EventService } from 'src/app/services/event.service';
+import { MarkerService } from 'src/app/services/marker.service';
 import { EventsManagerPopupComponent } from '../events-manager-popup/events-manager-popup.component';
 import { MapComponent } from '../map/map.component';
 
@@ -29,15 +30,13 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
   filter: any;
   isLoadingStatus: boolean;
   markers: any;
-  jamIcon: any;
   eventPopup: any;
   selectedEvent: any;
   sidebar: any;
   component: any;
-  subscriptions = new Subscription();
 
 
-  constructor(public mapCom:MapComponent, private eventService:EventService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, public appCom:AppComponent, private cdRef:ChangeDetectorRef) {
+  constructor(public mapCom:MapComponent, private eventService:EventService, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector, public appCom:AppComponent, private cdRef:ChangeDetectorRef, private markerService:MarkerService) {
     this.status = "all"
     this.filter = {status:this.status}
     this.markers = {}
@@ -106,45 +105,6 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
       },
     ]
 
-    this.jamIcon = {
-      normal: {
-        html: '<div class="marker-jam-normal"></div>',
-        iconSize: null,
-        iconAnchor: [24.75, 54.75],
-        popupAnchor: [0, -52.5]
-      },
-      congestion: {
-        html: '<div class="marker-jam-moderate"></div>',
-        iconSize: null,
-        iconAnchor: [24.75, 54.75],
-        popupAnchor: [0, -52.5],
-      },
-      incident: {
-        html: '<div class="marker-jam-incident"></div>',
-        iconSize: null,
-        iconAnchor: [24.75, 54.75],
-        popupAnchor: [0, -52.5]
-      },
-      jam: {
-        html: '<div class="marker-jam-extreme"></div>',
-        iconSize: null,
-        iconAnchor: [24.75, 54.75],
-        popupAnchor: [0, -52.5]
-      },
-      flood: {
-        html: '<div class="marker-jam-flood"></div>',
-        iconSize: null,
-        iconAnchor: [24.75, 54.75],
-        popupAnchor: [0, -52.5]
-      },
-      default: {
-        html: '<div class="marker-jam-default"></div>',
-        iconSize: null,
-        iconAnchor: [24.75, 54.75],
-        popupAnchor: [0, -52.5]
-      }
-    };
-
     this.sideMap = mapCom.sideMap
     this.markers = mapCom.markers
   }
@@ -154,13 +114,12 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
     this.refresh()
     this.mapCom.toggleLayout(true)
 
-    this.subscriptions.add(this.receiveEventStream())
+    this.mapCom.subscriptions.add(this.receiveEventStream())
   }
 
   ngOnDestroy(): void {
     this.mapCom.removeLayers()
     this.mapCom.toggleLayout(false)
-    this.subscriptions.unsubscribe()
   }
 
   receiveEventStream() {
@@ -199,42 +158,36 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
   }
   
   createNewMarkerEvent(event:any) {
-    var icon = this.jamIcon[event.type]
+    var icon = _.cloneDeep(this.markerService.jamIcon[event.type])
 
     
     icon.html +=  `<div class="circle-cluster blue"><i class="pen icon m-0 mt-1"></i></div>`
+
+    icon.className = 'creEventMarker';
+    if (this.statusList[event.status].color == 'blue' || this.statusList[event.status].color == 'red') {
+      icon.className += ' opacity';
+    }
 
     return L.marker([event.loc.coordinates[1], event.loc.coordinates[0]], {
       zIndexOffset: 1000,
       icon: L.divIcon(icon),
       draggable: true
     })
-    // return {
-    //   lat: event.loc.coordinates[1],
-    //   lng: event.loc.coordinates[0],
-    //   zIndexOffset: 1000,
-    //   icon: jamIcon[event.type],
-    //   draggable: false,
-    //   event: event
-    // };
   };
 
   createMarkerEvent(event:any) {
-    var icon = this.jamIcon[event.type]
-    icon.html +=  `<div class="circle-cluster ${this.statusList[event.status].color}"><i class="${this.statusList[event.status].icon} icon m-0 mt-1"></i></div>`
+    var icon = _.cloneDeep(this.markerService.jamIcon[event.type])
+    icon.html +=  `<div class="circle-cluster ${this.statusList[event.status].color}"><i class="${this.statusList[event.status].icon} icon m-auto"></i></div>`
+    icon.className = 'creEventMarker';
+    if (this.statusList[event.status].color == 'blue' || this.statusList[event.status].color == 'red') {
+      icon.className += ' opacity';
+    }
+    
     return L.marker([event.loc.coordinates[1], event.loc.coordinates[0]], {
       zIndexOffset: 1000,
       icon: L.divIcon(icon),
       draggable: false
     })
-    // return {
-    //   lat: event.loc.coordinates[1],
-    //   lng: event.loc.coordinates[0],
-    //   zIndexOffset: 1000,
-    //   icon: jamIcon[event.type],
-    //   draggable: false,
-    //   event: event
-    // };
   };
 
   drawMarker(event:any) {
@@ -258,7 +211,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
         this.cdRef.detectChanges()
         document.getElementById("incident_"+event._id)?.scrollIntoView({
           behavior:'smooth',
-          block: 'end'
+          block: 'end',
         })
 
         setTimeout(() => $(".ui.dropdown").dropdown(), 250)
@@ -309,20 +262,35 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
     });
   };
 
-  filterListEvent() {
+  filterListEvent(color?:string) {
+    var tmpColor = this.filter['color']
+
+    if (color) {
+      if (color != tmpColor) {
+        tmpColor = color
+      } else {
+        tmpColor = ""
+      }
+    }
+
+    
     if (this.status === 'all') {
       this.filter = {}
     } else {
       this.filter = {status: this.status};
     }
 
+    if (tmpColor) {
+      this.filter['color'] = tmpColor
+    }
+    
     if (this.listEvents) {
       this.listEventsForFilter = _.filter(this.listEvents, this.filter);
     }
   };
 
   getAllEventInData() {
-    this.eventService.getAllEventInData().subscribe({
+    this.mapCom.subscriptions.add(this.eventService.getAllEventInData().subscribe({
       next: (res:any) => {
         
         this.listEvents = res
@@ -338,7 +306,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
       error: (err) => {
         this.appCom.errorHandler(err)
       }
-    })
+    }))
   };
 
   removeMarkers() {
@@ -351,19 +319,8 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
     }
   }
 
-  createTrafficEventMarker(latlng:any, type:string) {
-    var icon = this.jamIcon[type]
-    icon.iconSize = [33.5, 40]
-    icon.iconAnchor = [0, 0]
-
-    return L.marker(latlng, {
-      icon: L.divIcon(icon),
-      draggable: false,
-    })
-  }
-
   getAllType() {
-    this.eventService.getAllType().subscribe({
+    this.mapCom.subscriptions.add(this.eventService.getAllType().subscribe({
       next: (res:any) => {
         this.listEventType = res
         
@@ -372,7 +329,7 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
       error: (err) => {
         this.appCom.errorHandler(err)
       }
-    })
+    }))
   };
 
   refresh() {
@@ -383,10 +340,8 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
 
   chooseEvent(event:any) {
     if (this.selectedEvent === event) {
-      // createEventPopup(L.latLng(event.loc.coordinates[1], event.loc.coordinates[0]), currentMode);
     } else {
       this.selectedEvent = event;
-      // createEventPopup(L.latLng(event.loc.coordinates[1], event.loc.coordinates[0]), 'view');
     }
 
     if (this.chooseEventId && this.markers[this.chooseEventId]) {
@@ -474,9 +429,14 @@ export class EventsManagerComponent implements OnInit, OnDestroy {
   chooseTypeEvent(event:any) {
     var eventType = this.listEventType[event.type];
     if (eventType) {
-      var icon = this.jamIcon[event.type]
+      var icon = _.cloneDeep(this.markerService.jamIcon[event.type])
       
-      icon.html +=  `<div class="circle-cluster ${this.statusList[event.tmpStatus].color}"><i class="${this.statusList[event.tmpStatus].icon} icon m-0 mt-1"></i></div>`
+      icon.html +=  `<div class="circle-cluster ${this.statusList[event.tmpStatus].color}"><i class="${this.statusList[event.tmpStatus].icon} icon m-auto"></i></div>`
+      icon['className'] = 'creEventMarker';
+      if (this.statusList[event.status].color == 'blue' || this.statusList[event.status].color == 'red') {
+        icon.className += ' opacity';
+      }
+      
       this.markers[event._id].setIcon(L.divIcon(icon))
     }
     

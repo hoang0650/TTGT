@@ -70,9 +70,6 @@ export class StatsEventsComponent implements OnInit, OnDestroy {
     this.mapCom.markers = {heatmap:this.heatmapLayer}
 
     this.refresh()
-    setTimeout(() => {
-      this.sideMap?.invalidateSize()
-    })
   }
 
   refreshExport() {
@@ -94,7 +91,7 @@ export class StatsEventsComponent implements OnInit, OnDestroy {
 
   loadWeeklyChart() {
     this.isWeeklyLoading = true;
-    this.statsService.getEventsWeekly({ startDate: this.startDate, endDate: this.endDate }).subscribe({
+    this.mapCom.subscriptions.add(this.statsService.getEventsWeekly({ startDate: this.startDate, endDate: this.endDate }).subscribe({
       next: (res:any) => {
         this.weekly = {
           datasets: [],
@@ -111,12 +108,12 @@ export class StatsEventsComponent implements OnInit, OnDestroy {
         this.appCom.errorHandler(err)
         this.isWeeklyLoading = false;
       }
-    })
+    }))
   }
 
    loadMonthlyChart() {
     this.isMonthlyLoading = true;
-    this.statsService.getEventsMonthly({ startDate: this.startDate, endDate: this.endDate }).subscribe({
+    this.mapCom.subscriptions.add(this.statsService.getEventsMonthly({ startDate: this.startDate, endDate: this.endDate }).subscribe({
       next: (res:any) => {
 
         this.monthly = {
@@ -134,13 +131,13 @@ export class StatsEventsComponent implements OnInit, OnDestroy {
         this.appCom.errorHandler(err)
         this.isMonthlyLoading = false;
       }
-    })
+    }))
   }
 
   loadHeatmap() {
     this.isHeatmapLoading = true;
 
-    this.statsService.getPointsForHeatmap({ startDate: this.startDate, endDate: this.endDate }).subscribe({
+    this.mapCom.subscriptions.add(this.statsService.getPointsForHeatmap({ startDate: this.startDate, endDate: this.endDate }).subscribe({
       next: (res:any) => {
         this.heatData['data'] = []
         res.forEach((latlng:any) => {
@@ -154,7 +151,7 @@ export class StatsEventsComponent implements OnInit, OnDestroy {
         this.appCom.errorHandler(err)
         this.isHeatmapLoading = false;
       }
-    })
+    }))
   }
 
   refresh() {

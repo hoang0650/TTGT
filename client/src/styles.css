@@ -180,10 +180,10 @@ nz-layout {
     background-size: 50.25px 60px;
 }
 
-.leaflet-div-icon {
+/* .leaflet-div-icon {
     background: none !important;
     border: none !important;
-}
+} */
 
 .marker-parking {
     width: 33.5px;

@@ -16,7 +16,7 @@
                             <div class="map-navigate">
                                 <button class="btn btn-block rounded-pill m-0 mx-2" [ngClass]="{'btn-primary': !markers['cameras']?.['hidden'] && currentMode != 'cameras', 'btn-danger':markers['cameras']?.['hidden'], 'btn-success':!markers['cameras']?.['hidden'] && currentMode == 'cameras'}" 
                                     (click)="currentMode != 'cameras' ? setCurrentMode('cameras') : setVisible('cameras')" 
-                                    [attr.data-tooltip]="currentMode != 'cameras' ? 'Camera' : (markers['cameras']?.['hidden'] ? 'Ẩn camera' : 'Hiện camera')" data-position="top left">
+                                    [attr.data-tooltip]="currentMode != 'cameras' ? 'Camera' : (markers['cameras']?.['hidden'] ? 'Ẩn camera' : 'Hiện camera')" data-position="bottom left">
                                     <i class="fa-solid fa-camera" *ngIf="currentMode != 'cameras'"></i>
                                     <i class="fa-solid fa-eye" *ngIf="currentMode == 'cameras' && !markers['cameras']?.['hidden']"></i>
                                     <i class="fa-solid fa-eye-slash" *ngIf="currentMode == 'cameras' && markers['cameras']?.['hidden']"></i>
@@ -24,7 +24,7 @@
 
                                 <button class="btn btn-block rounded-pill m-0 mx-2" [ngClass]="{'btn-primary': !markers['parkings']?.['hidden'] && currentMode != 'parkings', 'btn-danger':markers['parkings']?.['hidden'], 'btn-success':!markers['parkings']?.['hidden'] && currentMode == 'parkings'}" 
                                     (click)="currentMode != 'parkings' ? setCurrentMode('parkings') : setVisible('parkings')" 
-                                    [attr.data-tooltip]="currentMode != 'parkings' ? 'Bãi xe' : (markers['parkings']?.['hidden'] ? 'Ẩn bãi xe' : 'Hiện bãi xe')" data-position="top center">
+                                    [attr.data-tooltip]="currentMode != 'parkings' ? 'Bãi xe' : (markers['parkings']?.['hidden'] ? 'Ẩn bãi xe' : 'Hiện bãi xe')" data-position="bottom center">
                                     <i class="fa-solid fa-square-parking" *ngIf="currentMode != 'parkings'"></i>
                                     <i class="fa-solid fa-eye" *ngIf="currentMode == 'parkings' && !markers['parkings']?.['hidden']"></i>
                                     <i class="fa-solid fa-eye-slash" *ngIf="currentMode == 'parkings' && markers['parkings']?.['hidden']"></i>
@@ -32,7 +32,7 @@
 
                                 <button class="btn btn-block rounded-pill m-0 mx-2" [ngClass]="{'btn-primary': !markers['roadevents']?.['hidden'] && currentMode != 'roadevents', 'btn-danger':markers['roadevents']?.['hidden'], 'btn-success':!markers['roadevents']?.['hidden'] && currentMode == 'roadevents'}" 
                                     (click)="currentMode != 'roadevents' ? setCurrentMode('roadevents') : setVisible('roadevents')" 
-                                    [attr.data-tooltip]="currentMode != 'roadevents' ? 'Phân luồng' : (markers['roadevents']?.['hidden'] ? 'Ẩn phân luồng' : 'Hiện phân luồng')" data-position="top center">
+                                    [attr.data-tooltip]="currentMode != 'roadevents' ? 'Phân luồng' : (markers['roadevents']?.['hidden'] ? 'Ẩn phân luồng' : 'Hiện phân luồng')" data-position="bottom center">
                                     <i class="fa-solid fa-road" *ngIf="currentMode != 'roadevents'"></i>
                                     <i class="fa-solid fa-eye" *ngIf="currentMode == 'roadevents' && !markers['roadevents']?.['hidden']"></i>
                                     <i class="fa-solid fa-eye-slash" *ngIf="currentMode == 'roadevents' && markers['roadevents']?.['hidden']"></i>
@@ -40,7 +40,7 @@
 
                                 <button class="btn btn-block rounded-pill m-0 mx-2" [ngClass]="{'btn-primary': !markers['staticmaps']?.['hidden'] && currentMode != 'staticmaps', 'btn-danger':markers['staticmaps']?.['hidden'], 'btn-success':!markers['staticmaps']?.['hidden'] && currentMode == 'staticmaps'}" 
                                     (click)="currentMode != 'staticmaps' ? setCurrentMode('staticmaps') : setVisible('staticmaps')" 
-                                    [attr.data-tooltip]="currentMode != 'staticmaps' ? 'Thông tin tĩnh' : (markers['staticmaps']?.['hidden'] ? 'Ẩn thông tin tĩnh' : 'Hiện thông tin tĩnh')" data-position="top center">
+                                    [attr.data-tooltip]="currentMode != 'staticmaps' ? 'Thông tin tĩnh' : (markers['staticmaps']?.['hidden'] ? 'Ẩn thông tin tĩnh' : 'Hiện thông tin tĩnh')" data-position="bottom center">
                                     <i class="fa-solid fa-circle-info" *ngIf="currentMode != 'staticmaps'"></i>
                                     <i class="fa-solid fa-eye" *ngIf="currentMode == 'staticmaps' && !markers['staticmaps']?.['hidden']"></i>
                                     <i class="fa-solid fa-eye-slash" *ngIf="currentMode == 'staticmaps' && markers['staticmaps']?.['hidden']"></i>
@@ -48,7 +48,7 @@
 
                                 <button class="btn btn-block rounded-pill m-0 mx-2" [ngClass]="{'btn-primary': !markers['incidents']?.['hidden'] && currentMode != 'incidents', 'btn-danger':markers['incidents']?.['hidden'], 'btn-success':!markers['incidents']?.['hidden'] && currentMode == 'incidents'}" 
                                     (click)="currentMode != 'incidents' ? setCurrentMode('incidents') : setVisible('incidents')" 
-                                    [attr.data-tooltip]="currentMode != 'incidents' ? 'Cảnh báo' : (markers['incidents']?.['hidden'] ? 'Ẩn cảnh báo' : 'Hiện cảnh báo')" data-position="top right">
+                                    [attr.data-tooltip]="currentMode != 'incidents' ? 'Cảnh báo' : (markers['incidents']?.['hidden'] ? 'Ẩn cảnh báo' : 'Hiện cảnh báo')" data-position="bottom right">
                                     <i class="fa-solid fa-triangle-exclamation" *ngIf="currentMode != 'incidents'"></i>
                                     <i class="fa-solid fa-eye" *ngIf="currentMode == 'incidents' && !markers['incidents']?.['hidden']"></i>
                                     <i class="fa-solid fa-eye-slash" *ngIf="currentMode == 'incidents' && markers['incidents']?.['hidden']"></i>
@@ -294,7 +294,16 @@
         </div>
     </div>
 
-    <div [hidden]="!(currentMode == 'incidents')">
+    <div class="ui segments" [hidden]="!(currentMode == 'incidents')">
+        <ul class="nav nav-pills nav-fill" [hidden]="markers['incidents']?.['hidden']">
+            <li class="nav-item">
+                <button class="nav-link" [ngClass]="{active:incidentMode == 'approved'}" (click)="setIncidentMode('approved')">Cảnh báo được duyệt</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" [ngClass]="{active:incidentMode == 'submitted'}" (click)="setIncidentMode('submitted')">Cảnh báo bạn đăng</button>
+            </li>
+        </ul>
+      
         <div class="ui segment" [hidden]="!markers['incidents']?.['hidden']">
             <h4 class="ui center aligned header">
                 <div class="content">
@@ -303,34 +312,75 @@
             </h4>
         </div>
 
-
-        <div [hidden]="markers['incidents']?.['hidden']">
-            <div class="ui segment"  [hidden]="listEvent.length > 0">
-                <h4 class="ui center aligned header">
-                    <div class="content">
-                        Không có cảnh báo nào
-                    </div>
-                </h4>
-            </div>
+        <div class="ui segment" [hidden]="markers['incidents']?.['hidden'] || (listEvent | filter:{status:'approved'}).length > 0" [ngClass]="{'d-none':incidentMode != 'approved'}">
+            <h4 class="ui center aligned header">
+                <div class="content">
+                    Không có cảnh báo nào
+                </div>
+            </h4>
+        </div>
 
 
-            <div *ngIf="listEvent.length > 0">
-                <div class="ui segment incident" [ngClass]="{'active-incident': event._id == chosenMarkers['incident']}" *ngFor="let event of listEvent | orderBy:['createdAt']:['desc']">
-                    <div class="content">
-                        <div class="ui large feed">
-                            <div id="event-{{event._id}}" class="event" (click)="chooseIncident(event)">
-                                <div class="label event-icon">
-                                    <i class="circle icon {{listEventType[event.type].color}}"></i>
+        <div class="ui segment incident" [hidden]="markers['incidents']?.['hidden'] && listEvent.length > 0" [ngClass]="{'active-incident': event._id == chosenMarkers['incident'], 'd-none':incidentMode != 'approved'}" *ngFor="let event of listEvent | filter:{status:'approved'} | orderBy:['createdAt']:['desc']">
+            <div class="content">
+                <div class="ui large feed">
+                    <div id="event-{{event._id}}" class="event" (click)="chooseIncident(event)">
+                        <div class="label event-icon">
+                            <i class="circle icon {{listEventType[event.type].color}}"></i>
+                        </div>
+                        <div class="content">
+                            <div class="row mb-2">
+                                <div class="col-7 text-break">
+                                    <a class="user">{{event.desc[0]}}</a>
                                 </div>
-                                <div class="content">
-                                    <div class="summary">
-                                        <a class="user">{{event.desc[0]}}</a>
-                                        <div class="date">
-                                            <span>{{event.createdAt | amLocale:'vi' | amTimeAgo}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="extra text">
-                                        {{event.desc[1]}}
+                                <div class="col-5 text-right ps-0">
+                                    <small>{{event.createdAt | amLocale:'vi' | amTimeAgo}}</small>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-7 text-break">
+                                    <a> {{event.desc[1]}}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ui segment" [hidden]="markers['incidents']?.['hidden'] || (listEvent | filter: {creator: {user_id: appCom?.profile?.sub}}).length > 0" [ngClass]="{'d-none':incidentMode != 'submitted'}">
+            <h4 class="ui center aligned header">
+                <div class="content">
+                    Bạn không có đăng cảnh báo mới nào
+                </div>
+            </h4>
+        </div>
+
+        <div class="ui segment incident" [hidden]="markers['incidents']?.['hidden'] && listEvent.length > 0" [ngClass]="{'active-incident': event._id == chosenMarkers['incident'], 'd-none':incidentMode != 'submitted'}" *ngFor="let event of listEvent | filter: {creator: {user_id: appCom?.profile?.sub}} | orderBy:['createdAt']:['desc']">
+            <div class="content">
+                <div class="ui large feed">
+                    <div id="event-{{event._id}}" class="event" (click)="chooseIncident(event)">
+                        <div class="label event-icon">
+                            <i class="circle icon {{listEventType[event.type].color}}"></i>
+                        </div>
+                        <div class="content">
+                            <div class="row mb-2">
+                                <div class="col-7 text-break">
+                                    <a class="user">{{event.desc[0]}}</a>
+                                </div>
+                                <div class="col-5 text-right ps-0">
+                                    <small>{{event.createdAt | amLocale:'vi' | amTimeAgo}}</small>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-7 text-break">
+                                    <a> {{event.desc[1]}}</a>
+                                </div>
+                                <div class="col-5 text-right ps-0">
+                                    <div *ngIf="event['status']" class="ui label text-right {{statusList[event.status].color}}">
+                                        <i class="{{statusList[event.status].icon}} icon"></i>{{statusList[event.status].name}}
                                     </div>
                                 </div>
                             </div>

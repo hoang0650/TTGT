@@ -90,17 +90,17 @@ const routes: Routes = [
   { path: 'config', component:AdminComponent,
     children:[
       { path: '', redirectTo: 'camera', pathMatch: 'full'},
-      { path: 'camera', component: AdminConfigCameraComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:update"] }, },
-      { path: 'traffic', component: AdminConfigTrafficComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:update"] }, },
-      { path: 'event', component: AdminConfigEventComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin'], allowedPermissions:["settings:update"] }, },
+      { path: 'camera', component: AdminConfigCameraComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin', 'superadmin'], allowedPermissions:["settings:update"] }, },
+      { path: 'traffic', component: AdminConfigTrafficComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin', 'superadmin'], allowedPermissions:["settings:update"] }, },
+      { path: 'event', component: AdminConfigEventComponent, canActivate:[AuthGuard], data:{ allowedRoles:['user', 'admin', 'superadmin'], allowedPermissions:["settings:update"] }, },
    ],
   },
   {
-    path: 'users', component: AdminUsersComponent, canActivate:[AuthGuard], data:{ allowedRoles:['admin'], allowedPermissions:["settings:manage"] }
+    path: 'users', component: AdminUsersComponent, canActivate:[AuthGuard], data:{ allowedRoles:['admin', 'superadmin'], allowedPermissions:["settings:manage"] }
   },
   { path: 'unauthorized', component:UnauthorizedComponent },
   { path: 'notfound',component:NotFoundComponent},
-  // { path: '**', redirectTo: 'notfound'}
+  { path: '**', redirectTo: 'notfound'}
 ];
 
 @NgModule({ 

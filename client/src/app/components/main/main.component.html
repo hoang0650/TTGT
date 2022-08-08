@@ -46,70 +46,65 @@
 				<div class="col-lg-4 col-md-6 mt-5 mt-md-0 text-center">
 					<i class="ti-paint-bucket text-primary h1"></i>
 					<h3 class="mt-4 text-capitalize h5 ">Cảnh báo giao thông</h3>
-					<div class="regular text-muted" *ngIf="!appCom.profile"><p>Đăng nhập để xem nội dung này</p></div>
-					<div class="regular text-muted" *ngIf="!!appCom.profile">
-						<div *ngIf="listEvent?.length <= 0">
-							Hiện tại chưa có cảnh báo nào
-						</div>
-						<div [routerLink]="['/map']" [queryParams]="{type:'event', id: event._id}" *ngFor="let event of listEvent | orderBy:['createdAt']:['desc']">
-							<div class="ui large feed hoverable">
-								<div class="event" [ngClass]="{'inverted': !isScrolled}">
-									<div class="label event-icon">
-										<i class="circle icon {{event.color}}"></i>
-									</div>
-									<div class="content">
-										<div class="summary">
-											<a class="user">{{event.desc[0]}}</a>
-											<div class="date">
-												<span>{{event.createdAt | amLocale:'vi' | amTimeAgo }}</span>
-											</div>
+					<div class="default-contain">
+						<div class="regular text-muted" *ngIf="!appCom.profile"><p>Đăng nhập để xem nội dung này</p></div>
+						<div class="regular text-muted" *ngIf="!!appCom.profile && (listEvent | filter:{status:'approved'})?.length <= 0"><p>Hiện tại chưa có cảnh báo nào</p></div>
+
+						<ng-container *ngIf="!!appCom.profile && listEvent?.length > 0">
+							<div class="hoverable px-2" [routerLink]="['/map']" [queryParams]="{type:'event', id: event._id}" *ngFor="let event of listEvent | filter:{status:'approved'} | orderBy:['createdAt']:['desc']">
+								<div class="ui large feed">
+									<div class="event">
+										<div class="label event-icon">
+											<i class="circle icon {{event.color}}"></i>
 										</div>
-										<div class="extra text">
-											{{event.desc[1]}}
+										<div class="content">
+											<div class="row mb-2">
+												<div class="col-7 text-break">
+													<a class="user">{{event.desc[0]}}</a>
+												</div>
+												<div class="col-5 text-right ps-0">
+													<small>{{event.createdAt | amLocale:'vi' | amTimeAgo}}</small>
+												</div>
+											</div>
+				
+											<div class="row">
+												<div class="col-7 text-break">
+													<a> {{event.desc[1]}}</a>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-						</div>
+						</ng-container>
 					</div>
-					<!-- <nz-divider nzType="vertical"></nz-divider> -->
-					<hr class="vertical" />
 				</div>
 				
 				<div class="col-lg-4 col-md-6 mt-5 mt-md-0 text-center">
 					<i class="ti-shine text-primary h1"></i>
 					<h3 class="mt-4 text-capitalize h5 ">Tin tức - Sự kiện</h3>
-					<div class="regular text-muted" [ngClass]="{'scroll-contain': isScrolled, 'default-contain': !isScrolled}">
+					<div class="regular text-muted">
 						<div scroll-only-this="scroll-only-this"  class="ui relaxed divided list">
 							<a *ngFor="let content of contents" class="text-primary item limit-character hoverable" href="{{content.url}}" target="_blank" >{{content.title}}</a>
 						</div>
 					</div>
-					<nz-divider nzType="vertical"></nz-divider>
 				</div>
 				
-				<div class="col-lg-4 col-md-12 mt-5 mt-lg-0 text-center">
+				<div class="col-lg-4 col-md-12 my-5 mt-lg-0 text-center">
 					<i class="ti-thought text-primary h1"></i>
 					<h3 class="mt-4 text-capitalize h5 ">Camera quan tâm</h3>
-					<div class="regular text-muted" *ngIf="!appCom.profile"><p>Đăng nhập để xem nội dung này</p></div>
-					<div class="regular text-muted" [ngClass]="{'scroll-contain': isScrolled, 'default-contain': !isScrolled}">
-						<div class="regular text-muted" *ngIf="!!appCom.profile">
-							<div  *ngIf="!!appCom.profile">
-								<div *ngIf="favoriteList?.length <= 0">
-									Bạn chưa quan tâm camera nào cả
-								</div>
-								
-								<div class="regular text-muted" [ngClass]="{'scroll-contain': isScrolled, 'default-contain': !isScrolled}">
-									<form nz-form scroll-only-this="scroll-only-this">
-											<div class="ui relaxed divided list hoverable" *ngFor="let camera of favoriteList" [routerLink]="['/map']" [queryParams]="{type:'camera', id: camera.fId}">
-												<p>{{camera.fName}}</p>
-												<img nz-image width="90%" nzSrc="{{backend}}api/snapshot/{{camera.fId}}" (error)="imageError($event)">
-											</div>
-									</form>
-								</div>
+					<div class="default-contain">
+						<div class="regular text-muted" *ngIf="!appCom.profile"><p>Đăng nhập để xem nội dung này</p></div>
+	
+						<div class="regular text-muted" *ngIf="!!appCom.profile && favoriteList?.length <= 0"><p>Bạn chưa quan tâm camera nào cả</p></div>
+				
+						<ng-container *ngIf="!!appCom.profile && favoriteList?.length > 0">
+							<div class="event hoverable" *ngFor="let camera of favoriteList" [routerLink]="['/map']" [queryParams]="{type:'camera', id: camera.fId}">
+								<p>{{camera.fName}}</p>
+								<img nz-image width="90%" nzSrc="{{backend}}api/snapshot/{{camera.fId}}" (error)="imageError($event)">
 							</div>
-						</div>
+						</ng-container>
 					</div>
-					
 				</div>
 			</div>
 		</div>

@@ -37,6 +37,9 @@
 <div *ngIf="event">
     <h3 class="ui header center aligned">Thông tin cảnh báo</h3>
     <h5 *ngIf="event.status == 'created'" class="ui header center aligned text-danger">Đang chờ quản trị viên duyệt</h5>
+    <h5 *ngIf="event.status == 'approved'" class="ui header center aligned text-success">Đã được duyệt</h5>
+    <h5 *ngIf="event.status == 'expired'" class="ui header center aligned text-danger">Cảnh báo hết hạn</h5>
+    <h5 *ngIf="event.status == 'rejected'" class="ui header center aligned text-danger">Bị từ chối</h5>
     <form class="ui form stis-notice-popup" #popupForm="ngForm">
         <div class="field">
             <select class="ui dropdown" disabled required="required" name="eventType" [(ngModel)]="event['type']">
